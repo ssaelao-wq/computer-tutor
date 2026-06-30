@@ -7,6 +7,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Database Lazy Initialization Middleware
+app.use(async (req, res, next) => {
+  try {
+    await initializeDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: `Database failed to initialize: ${error.message}` });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 
 // Connection string configuration supporting direct URL or individual parameters
@@ -442,7 +452,4 @@ if (!process.env.VERCEL) {
     console.log(`Express Server running on port ${PORT}...`);
     await initializeDB();
   });
-} else {
-  // If running serverless on Vercel, initialize database connection pool immediately
-  initializeDB();
 }
