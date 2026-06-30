@@ -177,13 +177,15 @@ app.post('/api/auth/login', async (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
+  const cleanUsername = username.trim().toLowerCase();
+  const cleanPassword = password.trim();
   try {
-    const userRes = await db.query("SELECT * FROM user_profile WHERE username = $1", [username]);
+    const userRes = await db.query("SELECT * FROM user_profile WHERE LOWER(username) = $1", [cleanUsername]);
     if (userRes.rows.length === 0) {
       return res.status(401).json({ error: 'Invalid username or password' });
     }
     const user = userRes.rows[0];
-    if (user.password !== password) {
+    if (user.password !== cleanPassword) {
       return res.status(401).json({ error: 'Invalid username or password' });
     }
     
