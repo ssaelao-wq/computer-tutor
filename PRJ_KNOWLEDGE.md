@@ -52,3 +52,16 @@ graph TD
 * **Single Theme per Level**: To keep students immersed and focused, all sessions within the same level must share the exact same thematic setting (e.g. all Level 1 challenges operate on the Drone Infiltration story, while Level 2 is space-themed).
 * **Age-Appropriate Narrative**: Themes must feel adventurous, gamified, and exciting for teenagers (avoiding domestic, baby-ish concepts like baking cakes or washing dishes).
 * **Interactive Sandbox Simulations**: Level 1 exercises inside the Sandbox tab must feature interactive, visual, code-free simulators corresponding directly to that level's theme.
+
+---
+
+## 4. User Profiles & Authentication
+* **Authentication Method**: Token-based authentication using HTTP `Authorization: Bearer <token>` headers (where the token is currently the unique identifier of the user's profile).
+* **Database Schema Modifications**:
+  * `user_profile`:
+    * Added `username` VARCHAR(50) UNIQUE (e.g. control number or identifier)
+    * Added `password` VARCHAR(100) (security access key)
+    * Added `role` VARCHAR(20) DEFAULT 'student' (values: `'student'` or `'teacher'`)
+* **Role-Based Control**:
+  * **Teacher**: Authorized to access the Admin Panel, select campaign themes globally, register new students, and view student progress. Default account seeded: `somboon` / `somboon123`.
+  * **Student**: Restricted from the Admin Panel. Progress and journal records are isolated under their own authenticated user ID. Default demo account seeded: `student_demo` / `student123`.

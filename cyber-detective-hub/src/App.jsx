@@ -358,13 +358,23 @@ const LEADERBOARD_INITIAL = [
 ];
 
 export default function App() {
+  const [token, setToken] = useState(localStorage.getItem('detective_token') || null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  // Admin student states
+  const [students, setStudents] = useState([]);
+  const [newStudentUsername, setNewStudentUsername] = useState('');
+  const [newStudentPassword, setNewStudentPassword] = useState('');
+  const [newStudentName, setNewStudentName] = useState('');
+  const [adminStatusMsg, setAdminStatusMsg] = useState('');
+
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [points, setPoints] = useState(450);
-  const [solvedCases, setSolvedCases] = useState({
-    'l1-s1': true,
-    'l1-s2': true
-  });
-  const [journalEntries, setJournalEntries] = useState(INITIAL_JOURNAL);
+  const [points, setPoints] = useState(0);
+  const [solvedCases, setSolvedCases] = useState({});
+  const [journalEntries, setJournalEntries] = useState([]);
   
   // Dynamic Campaign Selection (Admin-Configurable)
   const [campaignId, setCampaignId] = useState('cyberpunk');
@@ -432,38 +442,153 @@ export default function App() {
   const [selectedJournalId, setSelectedJournalId] = useState('j1');
   const [activeJournalVersion, setActiveJournalVersion] = useState(2);
 
-  // Fetch initial data from local MySQL DB on startup
+  // Handle user authentication load
   useEffect(() => {
-    // 1. Fetch user data (points, solvedCases)
-    fetch('http://localhost:3001/api/user')
-      .then(res => res.json())
+    if (!token) {
+      setCurrentUser(null);
+      return;
+    }
+
+    fetch('/api/user', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Session expired or invalid");
+        return res.json();
+      })
       .then(data => {
+        setCurrentUser(data);
         if (data.points !== undefined) setPoints(data.points);
         if (data.solvedCases) setSolvedCases(data.solvedCases);
       })
-      .catch(err => console.warn("Local MySQL database offline, operating in offline fallback sandbox mode:", err.message));
+      .catch(err => {
+        console.warn("Auth token verification failed:", err.message);
+        setToken(null);
+        localStorage.removeItem('detective_token');
+      });
 
-    // 2. Fetch journal entries
-    fetch('http://localhost:3001/api/journal')
+    fetch('/api/journal', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
           setJournalEntries(data);
-          // Set active journal selection to the first entry if exists
           if (data[0]) {
             setSelectedJournalId(data[0].id);
             setActiveJournalVersion(data[0].version);
           }
         }
       })
-      .catch(err => console.warn("Local MySQL database offline, operating in offline fallback sandbox mode:", err.message));
-  }, []);
+      .catch(err => console.warn("Failed to fetch journals:", err.message));
+  }, [token]);
+
+  // Load student list for teacher admin panel
+  const fetchStudentsList = () => {
+    if (!token) return;
+    fetch('/api/admin/students', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setStudents(data);
+        }
+      })
+      .catch(err => console.warn("Failed to load students list:", err.message));
+  };
+
+  useEffect(() => {
+    if (token && currentUser && currentUser.role === 'teacher') {
+      fetchStudentsList();
+    }
+  }, [token, currentUser]);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setLoginError('');
+    if (!loginUsername || !loginPassword) {
+      setLoginError('Both username and password are required.');
+      return;
+    }
+
+    fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: loginUsername, password: loginPassword })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Invalid username or password");
+        return res.json();
+      })
+      .then(data => {
+        if (data.success && data.token) {
+          localStorage.setItem('detective_token', data.token);
+          setToken(data.token);
+          setLoginUsername('');
+          setLoginPassword('');
+        }
+      })
+      .catch(err => {
+        setLoginError(err.message);
+      });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('detective_token');
+    setToken(null);
+    setCurrentUser(null);
+    setPoints(0);
+    setSolvedCases({});
+    setJournalEntries([]);
+    setActiveTab('dashboard');
+  };
+
+  const handleAddStudent = (e) => {
+    e.preventDefault();
+    setAdminStatusMsg('');
+    if (!newStudentUsername || !newStudentPassword || !newStudentName) {
+      setAdminStatusMsg('All student fields are required.');
+      return;
+    }
+
+    fetch('/api/admin/students', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        username: newStudentUsername,
+        password: newStudentPassword,
+        name: newStudentName
+      })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to create student"); });
+        return res.json();
+      })
+      .then(data => {
+        setAdminStatusMsg(`Success: Student "${data.student.name}" registered successfully.`);
+        setNewStudentUsername('');
+        setNewStudentPassword('');
+        setNewStudentName('');
+        fetchStudentsList();
+      })
+      .catch(err => {
+        setAdminStatusMsg(`Error: ${err.message}`);
+      });
+  };
 
   const updatePointsDB = (newVal) => {
     setPoints(newVal);
-    fetch('http://localhost:3001/api/user/points', {
+    if (!token) return;
+    fetch('/api/user/points', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ points: newVal })
     })
     .catch(err => console.warn("Failed to sync points to DB:", err.message));
@@ -683,9 +808,12 @@ export default function App() {
     if (solvedCases[sessionId]) return;
 
     // Persist completed quest and reward to local MySQL DB
-    fetch('http://localhost:3001/api/user/quests', {
+    fetch('/api/user/quests', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ questId: sessionId, xpReward: xpValue })
     })
     .then(res => res.json())
@@ -708,9 +836,12 @@ export default function App() {
     const journalCode = sandboxCodeOutput || '// No code output saved.';
 
     // Save prompt spec to journal in MySQL DB
-    fetch('http://localhost:3001/api/journal', {
+    fetch('/api/journal', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({
         id: journalId,
         title: journalTitle,
@@ -722,7 +853,9 @@ export default function App() {
     .then(data => {
       if (data.success) {
         // Fetch fresh list from server
-        fetch('http://localhost:3001/api/journal')
+        fetch('/api/journal', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
           .then(res => res.json())
           .then(list => setJournalEntries(list));
       }
@@ -796,6 +929,59 @@ export default function App() {
   const selectedJournal = journalEntries.find(j => j.id === selectedJournalId);
   const activeJournalHistory = selectedJournal ? selectedJournal.history.find(h => h.version === activeJournalVersion) : null;
 
+  if (!token) {
+    return (
+      <div className="login-outer-container">
+        <div className="login-card glass-panel animate-in">
+          <div className="login-logo">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+            <h1 className="login-title">DETECTIVE HUB</h1>
+            <p className="login-subtitle">AI-Era Computer Curriculum Portal</p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="login-form">
+            <div className="form-group">
+              <label htmlFor="username">Username / Control Number</label>
+              <input
+                id="username"
+                type="text"
+                className="login-input"
+                placeholder="e.g. somboon"
+                value={loginUsername}
+                onChange={e => setLoginUsername(e.target.value)}
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="password">Security Access Key</label>
+              <input
+                id="password"
+                type="password"
+                className="login-input"
+                placeholder="••••••••"
+                value={loginPassword}
+                onChange={e => setLoginPassword(e.target.value)}
+                required
+              />
+            </div>
+            
+            {loginError && <div className="login-error">{loginError}</div>}
+            
+            <button type="submit" className="btn-cyber login-btn">
+              Authenticate Profile
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  const accountName = currentUser ? (currentUser.name || currentUser.username) : 'Detective Me';
+  const displayRole = currentUser ? (currentUser.role === 'teacher' ? 'Teacher' : 'Student') : 'Novice';
+
   return (
     <div className="cyber-container">
       {/* Sidebar navigation */}
@@ -850,20 +1036,29 @@ export default function App() {
             Leaderboard
           </button>
 
-          <button className={`nav-item ${activeTab === 'admin' ? 'active' : ''}`} onClick={() => setActiveTab('admin')} style={{ marginTop: 'auto', borderTop: '1px solid var(--border-color)', borderRadius: 0, paddingTop: 16 }}>
+          {currentUser && currentUser.role === 'teacher' && (
+            <button className={`nav-item ${activeTab === 'admin' ? 'active' : ''}`} onClick={() => setActiveTab('admin')} style={{ marginTop: 'auto', borderTop: '1px solid var(--border-color)', borderRadius: 0, paddingTop: 16 }}>
+              <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              Admin Panel
+            </button>
+          )}
+
+          <button className="nav-item btn-cyber-red" onClick={handleLogout} style={{ borderTop: '1px solid var(--border-color)', borderRadius: 0, padding: 12, display: 'flex', gap: 10, width: '100%', cursor: 'pointer', background: 'transparent', textAlign: 'left', font: 'inherit', color: 'var(--accent-red)' }}>
             <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
             </svg>
-            Admin Panel
+            Log Out
           </button>
         </nav>
 
         <div className="sidebar-footer">
           <div className="avatar"></div>
           <div className="user-info">
-            <div className="username">Detective Me</div>
-            <div className="rank">{rank.title}</div>
+            <div className="username">{accountName}</div>
+            <div className="rank">{displayRole} &bull; {rank.title}</div>
           </div>
         </div>
       </aside>
@@ -2113,6 +2308,96 @@ export default function App() {
                         <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>{theme.description}</p>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
+                  <div>
+                    <h4 style={{ color: 'var(--accent-cyan)', margin: 0, fontSize: '1.1rem', marginBottom: 12 }}>Register New Student Profile</h4>
+                    <form onSubmit={handleAddStudent} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      <div className="form-group">
+                        <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Student Name / Alias</label>
+                        <input
+                          type="text"
+                          className="login-input"
+                          placeholder="e.g. Somchai S."
+                          value={newStudentName}
+                          onChange={e => setNewStudentName(e.target.value)}
+                          required
+                          style={{ padding: '8px 12px' }}
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Username / Student ID</label>
+                        <input
+                          type="text"
+                          className="login-input"
+                          placeholder="e.g. std001"
+                          value={newStudentUsername}
+                          onChange={e => setNewStudentUsername(e.target.value)}
+                          required
+                          style={{ padding: '8px 12px' }}
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Security Access Key</label>
+                        <input
+                          type="password"
+                          className="login-input"
+                          placeholder="••••••••"
+                          value={newStudentPassword}
+                          onChange={e => setNewStudentPassword(e.target.value)}
+                          required
+                          style={{ padding: '8px 12px' }}
+                        />
+                      </div>
+                      
+                      {adminStatusMsg && (
+                        <div className="badge-cyber" style={{ 
+                          padding: 8, 
+                          textAlign: 'center', 
+                          color: adminStatusMsg.startsWith('Error') ? 'var(--accent-red)' : 'var(--accent-green)',
+                          background: adminStatusMsg.startsWith('Error') ? 'rgba(255,51,102,0.1)' : 'rgba(57,255,20,0.1)',
+                          borderColor: adminStatusMsg.startsWith('Error') ? 'var(--accent-red)' : 'var(--accent-green)'
+                        }}>
+                          {adminStatusMsg}
+                        </div>
+                      )}
+                      
+                      <button type="submit" className="btn-cyber btn-cyber-green" style={{ justifyContent: 'center', padding: '10px 14px' }}>
+                        Create Student Profile
+                      </button>
+                    </form>
+                  </div>
+
+                  <div>
+                    <h4 style={{ color: 'var(--accent-cyan)', margin: 0, fontSize: '1.1rem', marginBottom: 12 }}>Active Student Roster & Progress</h4>
+                    <div style={{ maxHeight: '320px', overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'rgba(6, 8, 20, 0.4)' }}>
+                      {students.length === 0 ? (
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', padding: 16, margin: 0, textAlign: 'center' }}>No students registered yet.</p>
+                      ) : (
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', background: 'rgba(0, 242, 254, 0.04)' }}>
+                              <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Name</th>
+                              <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Username</th>
+                              <th style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)' }}>Points</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {students.map(student => (
+                              <tr key={student.id} style={{ borderBottom: '1px solid rgba(0, 242, 254, 0.05)' }}>
+                                <td style={{ padding: 10, color: 'var(--text-primary)', fontWeight: 500 }}>{student.name}</td>
+                                <td style={{ padding: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{student.username}</td>
+                                <td style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)', fontWeight: 600 }}>{student.points} XP</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                    </div>
                   </div>
                 </div>
 
