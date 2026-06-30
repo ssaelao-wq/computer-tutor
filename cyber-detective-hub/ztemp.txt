@@ -1,0 +1,10 @@
+I already run the MySQL service (MySQLSSL). You can store these configure in .env, and we can use vite_db as database name. Please fill-in the port number.
+
+# Database Configuration
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASSWORD=$Tinroad87
+DB_NAME=vite_db
+DB_PORT=3306
+
+Open question: Yes, you can install concurrently. By the way, if you need me to run SQL statement, please let me know.
