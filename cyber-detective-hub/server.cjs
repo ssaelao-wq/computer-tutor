@@ -182,11 +182,17 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const userRes = await db.query("SELECT * FROM user_profile WHERE LOWER(username) = $1", [cleanUsername]);
     if (userRes.rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid username or password' });
+      const allUsersRes = await db.query("SELECT username FROM user_profile LIMIT 10");
+      const usernames = allUsersRes.rows.map(r => r.username);
+      return res.status(401).json({ 
+        error: `User not found: '${cleanUsername}'. Registered usernames in DB: ${JSON.stringify(usernames)}` 
+      });
     }
     const user = userRes.rows[0];
     if (user.password !== cleanPassword) {
-      return res.status(401).json({ error: 'Invalid username or password' });
+      return res.status(401).json({ 
+        error: `Password mismatch for '${cleanUsername}'. Expected: '${user.password}', Got: '${cleanPassword}'` 
+      });
     }
     
     res.json({
@@ -201,7 +207,7 @@ app.post('/api/auth/login', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: `DB Error: ${error.message}` });
   }
 });
 
