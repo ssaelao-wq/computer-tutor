@@ -20,8 +20,12 @@ app.use(async (req, res, next) => {
 const PORT = process.env.PORT || 3001;
 
 // Connection string configuration supporting direct URL or individual parameters
-const connectionString = process.env.DATABASE_URL || 
-  `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'postgres'}`;
+let connectionString = process.env.DATABASE_URL;
+if (connectionString) {
+  connectionString = connectionString.trim().replace(/^['"]|['"]$/g, '');
+} else {
+  connectionString = `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'postgres'}`;
+}
 
 // Enable SSL if connecting to Supabase cloud databases (any non-localhost database)
 const db = new Pool({
