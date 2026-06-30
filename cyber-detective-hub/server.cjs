@@ -13,23 +13,31 @@ const PORT = process.env.PORT || 3001;
 const connectionString = process.env.DATABASE_URL || 
   `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'postgres'}`;
 
-// Enable SSL if connecting to Supabase cloud databases
+// Enable SSL if connecting to Supabase cloud databases (any non-localhost database)
 const db = new Pool({
   connectionString,
-  ssl: connectionString.includes('supabase.co') ? { rejectUnauthorized: false } : false
+  ssl: connectionString.includes('localhost') || connectionString.includes('127.0.0.1') ? false : { rejectUnauthorized: false }
 });
+
+let dbInitialized = false;
+let dbInitError = null;
 
 // Connect and initialize database tables
 async function initializeDB() {
+  if (dbInitialized) return;
   try {
     console.log("Connecting to PostgreSQL/Supabase database...");
     const res = await db.query('SELECT NOW()');
     console.log("Database connection established successfully at:", res.rows[0].now);
     await createTables();
     console.log("Database initialization completed successfully.");
+    dbInitialized = true;
   } catch (error) {
     console.error('Database connection / initialization failed:', error.message);
-    process.exit(1);
+    dbInitError = error.message;
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 }
 
@@ -173,6 +181,9 @@ async function requireTeacher(req, res, next) {
 
 // Authentication Login
 app.post('/api/auth/login', async (req, res) => {
+  if (dbInitError) {
+    return res.status(500).json({ error: `Database failed to initialize: ${dbInitError}` });
+  }
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
