@@ -517,9 +517,12 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: loginUsername, password: loginPassword })
     })
-      .then(res => {
-        if (!res.ok) throw new Error("Invalid username or password");
-        return res.json();
+      .then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Invalid username or password");
+        }
+        return data;
       })
       .then(data => {
         if (data.success && data.token) {
