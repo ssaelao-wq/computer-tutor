@@ -27,8 +27,12 @@ This guideline is designed for the tutor to lead one-on-one sessions for student
 * **Sequential Control**: Explain that a computer has zero common sense. If step 2 requires data from step 1, running step 2 first triggers an error or system crash.
 
 ### 2. Socratic Prompting
-* *"Look at the terminal. Why did the drone crash on step 3?"* (Coordinates were null).
-* *"How can the drone know where the door is before it performs a scan?"*
+* **Mapping to Exercise 1.2 (Variable Coordinates)**:
+  * *Tutor Prompt*: *"How can the drone know where the door is before it performs a scan?"*
+  * *Explanation*: If the student sequences `fly_door` before `scan_door`, the drone will fail because its coordinate destination memory is `null` or undefined. Use this question to guide the student to discover the logical **data dependency**—the drone must scan to populate the target variables *before* it can read those variables for navigation.
+* **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
+  * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the drone crash on step 3?"* (or whichever step is executing).
+  * *Explanation*: In the preloaded scrambled sequence, instructions are out of order (e.g. attempting to fly before powering on). The terminal outputs specific error messages. Use this prompt to direct the student's eyes to the terminal log messages instead of letting them guess the solution, helping them connect log readings to step re-ordering.
 
 ### 3. Digital Sandbox Exercises & Solutions
 * **Exercise 1.1 (Basic Route)**:
