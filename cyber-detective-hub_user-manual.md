@@ -176,6 +176,7 @@ Only the sessions with active simulation compiler test suites appear as cards on
   - *Session 1*: Robotic Chef Sequence Instructions
   - *Session 2*: Variable Data Type Classification
   - *Session 3*: Airlock State Machine Transitions
+  - *Session 4*: Climate Controller Conditionals & Safety Overrides
   - *Session 5*: Counting & Condition Loops
 * **Level 2 (AI Copilot)**:
   - *Session 5*: The AI Sandbox Prompt Duel
