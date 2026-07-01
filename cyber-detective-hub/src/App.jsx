@@ -51,6 +51,14 @@ const CAMPAIGN_THEMES = {
             xp: 100
           },
           {
+            id: 'l1-s3',
+            title: 'Session 3: "Airlock Security State Machines"',
+            objective: 'Model system behaviors using State, Transitions, and Commands.',
+            activity: 'Design an Airlock Security State Machine. Map transitions from CLOSED to OPEN using cycle commands and secure alarm overrides.',
+            homework: 'Design a state transition table for a smart device (like a smart lock or alarm clock) and log it in your Prompt Journal.',
+            xp: 100
+          },
+          {
             id: 'l1-s5',
             title: 'Session 5: "The Automated Pet Grid"',
             objective: 'Distinguish counting/condition loops and prevent infinite loops in feeders.',
@@ -158,6 +166,14 @@ const CAMPAIGN_THEMES = {
             xp: 100
           },
           {
+            id: 'l1-s3',
+            title: 'Session 3: "Habitat Airlock Pressurization"',
+            objective: 'Configure state transitions for safe depressurization sequences.',
+            activity: 'Airlock Controller Configuration: Write state transitions between DEPRESSURIZED, PRESSURIZING, and PRESSURIZED states to prevent toxic leaks.',
+            homework: 'Draw a state machine transition diagram for a space capsule airlock and list its error states.',
+            xp: 100
+          },
+          {
             id: 'l1-s5',
             title: 'Session 5: "Water Recycling Loops"',
             objective: 'Design recycling check loops that repeat until tanks are full.',
@@ -262,6 +278,14 @@ const CAMPAIGN_THEMES = {
             objective: 'Classify magical scroll records and potion ingredient ranges.',
             activity: 'Design a spell registration form (e.g., mana cost must be a number 0-100, element choice restricted).',
             homework: 'Look up common stats in games. Classify elements as variables.',
+            xp: 100
+          },
+          {
+            id: 'l1-s3',
+            title: 'Session 3: "Magical Barrier Wards"',
+            objective: 'Enchant barrier gates using strict transition states (Locked, Sealed, Breach).',
+            activity: 'Wizarding Gates Spell: Program a state machine that transits gates between LOCKED and OPEN. Manage intruder alert triggers.',
+            homework: 'Map out the states of a wizarding dungeon vault door. Write the spell keywords that trigger each transition.',
             xp: 100
           },
           {
