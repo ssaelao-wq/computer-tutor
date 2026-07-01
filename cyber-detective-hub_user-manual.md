@@ -174,11 +174,17 @@ Only accessible if logged in as a **Teacher**.
 
 ## ❓ FAQ & Troubleshooting
 
-### 1. I submitted a case but my score didn't update!
+### 1. Why do I only see some sessions (like Sessions 1, 2, and 5) in "Quest Files" but all 12 sessions in the "Curriculum Guide"?
+* **Interactive Sandbox Quests vs. Full Academic Curriculum**:
+  - The **Curriculum Guide** is the full academic syllabus. It lists all 12 sessions (Sessions 1 to 12) because it contains the entire learning timeline, including paperless warm-ups, group presentations, and whiteboard/notebook lessons.
+  - The **Quest Files** board (and the **Prompt Sandbox**) only lists the specific sessions that have **fully interactive code compilers and digital simulations** built directly into this software.
+  - For example, in Level 1, Sessions 1, 2, and 5 are loaded with automated simulation terminals, telemetry monitors, and compilation checks. The other sessions in the curriculum are designed for direct tutor-led activities, visual flowcharts, or workbook review, which do not require code compiler testing.
+
+### 2. I submitted a case but my score didn't update!
 Make sure you click the green **Submit Case File** button inside the *Prompt Sandbox* tab after running a successful simulator compile, not just the "Run Simulator" button.
 
-### 2. I changed a student's level, but they still see the old level.
+### 3. I changed a student's level, but they still see the old level.
 Ask the student to perform a **browser refresh** (Ctrl + F5 or Cmd + Shift + R) or log out and log back in to clear cached tokens and download the updated profile information.
 
-### 3. Can students access other levels?
+### 4. Can students access other levels?
 No. Once a student is logged in, their client dashboard locks out all non-assigned level selectors on both the Quest Files and Curriculum Guide tabs. Only their assigned level remains active.
