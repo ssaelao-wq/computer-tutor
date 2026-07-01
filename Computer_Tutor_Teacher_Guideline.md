@@ -11,6 +11,30 @@ This guideline is designed for the tutor to lead one-on-one sessions for student
 
 ---
 
+## 🛠️ Portal Management: Admin Panel, Student Levels & Journals
+
+Before running classes, tutors must familiarize themselves with the administrative controls and workspaces inside the application:
+
+### 1. Student Levels & Navigation Restrictions
+* **Configuring Student Levels**: 
+  - Access the **Admin Panel** tab (only visible for accounts with the `teacher` role).
+  - Use the registration form to create a student profile and select their initial curriculum level (`L1`, `L2`, `L3`, or `L4`).
+  - In the student roster table, teachers can click the **Level select dropdown** on any student to dynamically change their level.
+* **Navigation Locks**:
+  - Setting a student's level to **L1** automatically deactivates tabs for Levels 2, 3, and 4 in the **Quest Files** and **Curriculum Guide** views. 
+  - Locked tabs display a padlock (`🔒`) and are disabled to keep students focused on their active level milestones.
+  - Tutors bypass these locks so they can click and audit any level tab at any time.
+
+### 2. Interactive Prompt Journals
+* **Homework and Notebook Logging**:
+  - The **Prompt Journal** tab is a fully interactive text/code editor workspace.
+  - All text containers have **automatic text-wrapping** enabled, preventing horizontal overflow logs.
+  - Students write their notes, logic schemas, or homework answers inside the **Code Output History** editor.
+  - Click **Save Changes** (Blue button) to overwrite the current selected version in the database.
+  - Click **Save as New Version** (Green button) to save the current edits as a new draft while keeping previous versions intact.
+
+---
+
 ## Session 1: "Literal Logic & Digital Infiltration"
 
 ### Minute-by-Minute Timeline
@@ -357,91 +381,27 @@ This guideline is designed for the tutor to lead one-on-one sessions for student
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-  ##### **Exercise 4.1: Basic Climate**
-  * **How to do it**:
-    1. In the thermostat rules editor, write the basic conditional structure:
-       ```javascript
-       if (temp > 25) {
-         mode = "cooling";
-       } else if (temp < 18) {
-         mode = "heating";
-       } else {
-         mode = "idle";
-       }
-       ```
-    2. Click **Run Simulator** and watch the system adjust the temperature output correctly.
-  * **Purpose of the Exercise**:
-    - Introduce multi-branch conditional execution using `if`, `else if`, and `else`.
-  * **What the Student Learns**:
-    - How branching decision gates run one block of code exclusively.
-  * **Tutor Check Question**: *"If the temperature is 26, does the `mode = "heating"` block get executed? Why not?"* (No, because the first IF condition evaluates to true, so the computer skips all remaining ELSE IF/ELSE branches).
+Instead of typing raw Javascript in a blank box, the **Session 4 Sandbox** features a **Thermostat Rules Configurator** that teaches students how to represent nested conditionals and safety overrides visually. 
 
-  ##### **Exercise 4.2: Window Override**
-  * **How to do it**:
-    1. Insert a primary override condition check at the very top of the script:
-       ```javascript
-       if (isWindowOpen === true) {
-         mode = "idle";
-       } else if (temp > 25) {
-         // ... rest of basic climate rules
-       ```
-    2. Click **Run Simulator** and open the virtual window to verify it forces the mode to `idle`.
-  * **Purpose of the Exercise**:
-    - Teach overriding and order of precedence in conditionals.
-  * **What the Student Learns**:
-    - Priority rules must be placed at the top of the conditional block, as checks are made from top to bottom.
-  * **Tutor Check Question**: *"What happens if we put the `isWindowOpen` check at the bottom after the `else`?"* (The system would heat or cool the room even with the window open, wasting energy, because those top rules would evaluate to true first).
+The student is tasked with configuring 6 rule lines in order of priority (from top to bottom) to control a smart climate gateway.
 
-  ##### **Exercise 4.3: Security Lockout**
-  * **How to do it**:
-    1. Write a compound conditional statement checking both temperature limits and emergency overrides:
-       ```javascript
-       if (temp > 45 && isEmergencyOverride === false) {
-         triggerAlarm();
-       }
-       ```
-    2. Click **Run Simulator** to test triggering.
-  * **Purpose of the Exercise**:
-    - Practice logical AND (`&&`) operators to verify multiple concurrent constraints.
-  * **What the Student Learns**:
-    - Compound logic gates: The `&&` operator evaluates to true ONLY if all checked variables evaluate to true.
-  * **Tutor Check Question**: *"If temperature is 50, but `isEmergencyOverride` is `true`, does the alarm fire?"* (No, because `isEmergencyOverride === false` is false, and AND requires both to be true).
+#### 📋 The Solution Matrix (Correct Configuration):
+1. **If Fire Alarm is active** ➔ `EMERGENCY_SHUTDOWN` (Highest priority override)
+2. **If Security Lockout is active** ➔ `OFF` (Second priority override)
+3. **If Window Open is active** ➔ `VENT` (Third priority override)
+4. **If Temperature < 18°C** ➔ `HEAT` (Normal heating trigger)
+5. **If Temperature > 26°C** ➔ `AC` (Normal cooling trigger)
+6. **Else (Default state)** ➔ `OFF` (Comfort zone idle state)
 
-  ##### **Exercise 4.4: Multi-Zone Priority**
-  * **How to do it**:
-    1. Write a nested conditional checking safety zones first:
-       ```javascript
-       if (zone === "safety") {
-         if (temp > 30) {
-           mode = "emergency_cooling";
-         }
-       } else {
-         if (temp > 25) {
-           mode = "cooling";
-         }
-       }
-       ```
-    2. Click **Run Simulator** to verify zone responses.
-  * **Purpose of the Exercise**:
-    - Introduce nested conditions (placing conditional branches inside other conditional branches).
-  * **What the Student Learns**:
-    - Hierarchy in logical design. Outer checks must pass before inner checks are evaluated.
-  * **Tutor Check Question**: *"If `zone` is `"office"`, can the drone trigger `emergency_cooling`? Why not?"* (No, because the outer check restricts `emergency_cooling` to the `"safety"` zone only).
+#### 🕹️ How to run the Simulation:
+1. Students select the target modes for each of the 6 dropdown inputs in the configurator.
+2. Click **Run Climate Simulation Tests**.
+3. The visual telemetry panel will change in real-time as the compiler runs 6 separate environmental test scenarios (Fire Alarm, Lockout Override, Window Ventilation, Cold Trigger, Hot Trigger, Comfort Zone).
+4. Verify if the terminal print checks output `PASSED` for all test cases.
 
-  ##### **Exercise 4.5: System Health**
-  * **How to do it**:
-    1. Compose a conditional that checks system warnings using logical OR (`||`):
-       ```javascript
-       if (batteryWarning === true || sensorFailure === true) {
-         mode = "safe_mode";
-       }
-       ```
-    2. Click **Run Simulator** to verify entering safe mode.
-  * **Purpose of the Exercise**:
-    - Enforce logical OR (`||`) triggers for safe state recovery.
-  * **What the Student Learns**:
-    - The logical OR operator evaluates to true if *at least one* condition is met.
-  * **Tutor Check Question**: *"If the sensor is healthy, but the battery drops below limits, does safe_mode active?"* (Yes, because OR only requires one condition to be true).
+* **Purpose of the Exercise**:
+  - Teach order of precedence in conditionals. Students learn that putting a rule with higher precedence (like Fire Alarm) at the bottom will fail because the compiler evaluates branches sequentially from top to bottom.
+* **Tutor Check Question**: *"If the window is open (which requires VENT), but a fire alarm is active, why does the system shut down instead of venting?"* (Because the Fire Alarm check is placed at Rule 1, which evaluates first. The computer stops looking at lower priority rules as soon as it matches a true condition).
 
 ### 4. Homework Evaluation Checklist
 * Review student's "Weather Decision Rules" in the Journal:
