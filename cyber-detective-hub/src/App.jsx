@@ -1536,6 +1536,10 @@ export default function App() {
               <div className="session-list-layout">
                 {/* Session list side panel */}
                 <div className="sessions-sidebar-list">
+                  <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Active Coding Missions</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Playable Sandbox Quests Only</div>
+                  </div>
                   {activeLevelSessions.map(session => (
                     <div 
                       key={session.id} 
@@ -1600,21 +1604,18 @@ export default function App() {
                   <div className="detail-section">
                     <h4>⚔️ Class Mission (In-Session Quest)</h4>
                     <div className="detail-section-body">{selectedSession.activity}</div>
-                  </div>
-
-                  <div className="detail-section">
-                    <h4>📝 Intel Delivery (Homework Quest)</h4>
+                  </div>                  <div className="detail-section">
+                    <h4>📝 Intel Delivery (Practice at Home Task)</h4>
                     <div className="detail-section-body homework-box">
                       <h5>
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 16, height: 16}}>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
-                        Practice at Home Quest
+                        Practice at Home Task
                       </h5>
                       <p>{selectedSession.homework}</p>
                     </div>
                   </div>
-
                   {!solvedCases[selectedSession.id] && (
                     <div style={{ marginTop: 32, borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'flex', justifyContent: 'flex-end' }}>
                       <button className="btn-cyber btn-cyber-green" onClick={() => claimCaseEvidence(selectedSession.id, selectedSession.xp)}>
@@ -1692,6 +1693,10 @@ export default function App() {
               <div className="curriculum-layout">
                 {/* Left panel: List of sessions */}
                 <div className="curriculum-sidebar-list">
+                  <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Curriculum Syllabus</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Full 12-Lesson Course Catalog</div>
+                  </div>
                   {(() => {
                     const filteredData = CURRICULUM_DATA.filter(s => {
                       const levelMatches = s.level === curriculumLevel || curriculumSearchQuery.trim() !== '';
@@ -1771,12 +1776,18 @@ export default function App() {
                   
                   const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(currentSession.id);
 
+                  const activeCampaignSessions = CAMPAIGN_THEMES[campaignId].levels[curriculumLevel]?.sessions || [];
+                  const campaignSessionMatch = activeCampaignSessions.find(s => s.id === currentSession.id);
+                  const displayHomework = campaignSessionMatch ? campaignSessionMatch.homework : currentSession.homework;
+                  const displayActivity = campaignSessionMatch ? campaignSessionMatch.activity : currentSession.coreActivity;
+                  const displayTitle = campaignSessionMatch ? campaignSessionMatch.title : currentSession.title;
+
                   return (
                     <div className="glass-panel curriculum-detail-view animate-in">
                       <div className="detail-header">
                         <div className="detail-header-left">
                           <span className="detail-module-path">{currentSession.module}</span>
-                          <h2>{currentSession.title}</h2>
+                          <h2>{displayTitle}</h2>
                           <div className="detail-meta-row">
                             <span className="badge-cyber badge-cyan">{currentSession.duration} Duration</span>
                             <span className="badge-cyber badge-green">Level {currentSession.level}</span>
@@ -1827,11 +1838,10 @@ export default function App() {
                                   {currentSession.handsOn}
                                 </div>
                               </div>
-
                               <div className="detail-section">
                                 <h4>⚔️ Active Classroom Mission</h4>
                                 <div className="detail-section-body">
-                                  {currentSession.coreActivity}
+                                  {displayActivity}
                                 </div>
                               </div>
                             </>
@@ -1855,7 +1865,7 @@ export default function App() {
                               <div className="detail-section teacher-box">
                                 <h4>♟️ Activity Orchestration Guide (60 min)</h4>
                                 <div className="detail-section-body">
-                                  {currentSession.coreActivity}
+                                  {displayActivity}
                                 </div>
                               </div>
                             </>
@@ -1863,18 +1873,17 @@ export default function App() {
 
                           {/* Homework Box */}
                           <div className="detail-section">
-                            <h4>📝 Intel Delivery (Homework Quest)</h4>
+                            <h4>📝 Intel Delivery (Practice at Home Task)</h4>
                             <div className="detail-section-body homework-box">
                               <h5>
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 16, height: 16}}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                 </svg>
                                 Practice at Home Task
                               </h5>
-                              <p>{currentSession.homework}</p>
+                              <p>{displayHomework}</p>
                             </div>
-                          </div>
-                        </div>
+                          </div>                        </div>
 
                         <div className="curriculum-side-col">
                           {/* Ethics Moment Card */}
