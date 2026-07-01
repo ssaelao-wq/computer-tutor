@@ -26,30 +26,60 @@ This guideline is designed for the tutor to lead one-on-one sessions for student
 * **The Concept of Variables**: Explain variables as "labeled lockboxes" in the computer's memory. A box labeled `targetCoords` holds a coordinate value. The computer cannot read the value until it is scanned and placed inside that specific box.
 * **Sequential Control**: Explain that a computer has zero common sense. If step 2 requires data from step 1, running step 2 first triggers an error or system crash.
 
-### 2. Socratic Prompting
+---
+
+### 2. Deep-Dive Discussion Guidelines & Conceptual Knowledge
+
+#### 🎯 Phase A | In-App Flowchart Sequencer (00:35 - 01:00)
+* **What the Tutor Explains**: 
+  - Before writing code, software engineers use visual maps called **flowcharts** or chronological blueprints to trace how instructions execute.
+  - Explain that flowcharts have a strict start and end point, and follow a single "flow of control" line.
+* **Conceptual Knowledge & Focus**:
+  - **Logical Continuity**: The system cannot skip steps. A gap in the flowchart (like a missing connection arrow) is equivalent to a compilation error.
+  - **Implicit vs. Explicit Instructions**: Humans assume implicit instructions (e.g. "go inside" implies opening the door first). Computers require every single action to be explicitly stated.
+* **Tutor-Student Discussion Prompts**:
+  - *"Why is a flowchart a visual representation of chronological logic?"*
+  - *"If we try to bypass a firewall before scanning the subnet, what does the subnet connector receive? Why does it fail?"*
+  - *"How does data (like target IP addresses) flow from one block to the next?"*
+
+#### 🕹️ Phase B | Sandbox Lab: Drone Infiltration Simulator (01:00 - 01:30)
+* **What the Tutor Explains**:
+  - Introduce the Sandbox environment. Explain that the visual drone is controlled strictly by the list of sequenced action commands compiled by the student.
+  - Explain the concepts of **preconditions** (states that must be true before an action can run) and **state variables** (variables representing active system status, e.g. `powerState = "ON"` or `"OFF"`).
+* **Step-by-Step Exercise Facilitation**:
+  - **Exercise 1.1 (Basic Route)**: Student must order commands: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`. 
+    - *Tutor Ask*: *"Why did we need to turn the power on first? What happens if you try to scan a door with the power offline?"*
+  - **Exercise 1.2 (Variable Coordinates)**: Student must sequence: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
+    - *Tutor Ask*: *"How does scanning the door help the flying step? What variable is loaded in memory during the scan?"* (Explain that `scan_door` reads coordinate signals and stores them in the variable `targetCoords`, which `fly_door` then reads).
+  - **Exercise 1.3 (Sequence Correction)**: Student is given a preloaded sequence that crashes. They must trace the failure, remove/rearrange blocks, and run it successfully.
+    - *Tutor Ask*: *"Look at step 1 in the buggy code. Why is the drone flying before power is turned on?"*
+
+#### 🔍 Phase C | Assessment & Debugging: Auditing Logs (01:30 - 01:50)
+* **What the Tutor Explains**:
+  - When systems fail, they output debug logs (text messages that record every action and error code). Learning to read logs is 90% of a developer's day.
+  - Introduce **Error Propagation**: When one early step fails, all subsequent steps fail too, often hiding the real root cause under a pile of secondary errors.
+* **Diagnostic Walkthroughs**:
+  - **Log Case A**: `💥 CRITICAL ERROR: Attempted to scan while drone is unpowered! System offline.`
+    - *Tutor Ask*: *"What is the root cause? How do we fix it?"* (Root cause is missing or late `power_on` step).
+  - **Log Case B**: `💥 CRITICAL ERROR: Target coordinates undefined. Drone collided with a concrete pillar!`
+    - *Tutor Ask*: *"Why are target coordinates undefined? What step did we forget to run before flying?"* (Forgot `scan_door` which populates the coordinates variable).
+  - **Log Case C**: `💥 CRITICAL ERROR: Bypass failed. Drone is too far from the door card reader. Keycard data lost!`
+    - *Tutor Ask*: *"The keycard reader is functional, so why did the bypass fail?"* (Attempted `unlock_door` before executing `fly_door`).
+
+---
+
+### 3. Socratic Prompting
 * **Mapping to Exercise 1.1 (Basic Route)**:
   * *Tutor Prompt*: *"What is the absolute first thing you must do before a device can perform any electronic commands?"* (Turn on power).
   * *Explanation*: Absolute beginners might attempt to execute actions like `fly_door` or `scan_door` directly. Use this prompt to direct them to the dependency of electrical systems requiring boot/power states before processing commands.
 
 * **Mapping to Exercise 1.2 (Variable Coordinates)**:
-  * *The Exercise*: The student needs to write a sequence where the drone boots, scans to locate the door coordinates, and flies to those coordinates.
   * *Tutor Prompt*: *"How can the drone know where the door is before it performs a scan?"*
   * *Explanation*: If the student sequences `fly_door` before `scan_door`, the drone will fail because its coordinate destination memory is `null` or undefined. Use this question to guide the student to discover the logical **data dependency**—the drone must scan to populate the target variables *before* it can read those variables for navigation.
   
 * **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
-  * *The Exercise*: The student is faced with a preloaded, scrambled sequence that crashes immediately.
   * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the drone crash on step 3?"* (or whichever step is executing).
   * *Explanation*: In the preloaded scrambled sequence, instructions are out of order (e.g. attempting to fly before powering on). The terminal outputs specific error messages. Use this prompt to direct the student's eyes to the terminal log messages instead of letting them guess the solution, helping them connect log readings to step re-ordering.
-
-### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 1.1 (Basic Route)**:
-  * *Solution*: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`
-  * *Objective*: Learn sequence order.
-* **Exercise 1.2 (Variable Coordinates)**:
-  * *Solution*: `power_on` ➔ `scan_door` (places target coordinates inside the memory variable) ➔ `fly_door` ➔ `unlock_door`
-  * *Objective*: Understand how variables must be loaded before they are referenced.
-* **Exercise 1.3 (Sequence Correction)**:
-  * *Solution*: Scrambled input block: `fly_door` ➔ `power_on` ➔ `scan_door` ➔ `unlock_door`. Drag blocks to re-order into the standard sequential order.
 
 ### 4. Homework Evaluation Checklist
 * The student must document a household appliance (e.g. Microwave) in the Journal:
