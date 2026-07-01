@@ -476,6 +476,7 @@ export default function App() {
   // Journal selection states
   const [selectedJournalId, setSelectedJournalId] = useState('j1');
   const [activeJournalVersion, setActiveJournalVersion] = useState(2);
+  const [editingJournalCode, setEditingJournalCode] = useState('');
 
   // Handle user authentication load
   useEffect(() => {
@@ -991,6 +992,85 @@ export default function App() {
 
   const selectedJournal = journalEntries.find(j => j.id === selectedJournalId);
   const activeJournalHistory = selectedJournal ? selectedJournal.history.find(h => h.version === activeJournalVersion) : null;
+
+  // Sync editing journal text with database value
+  useEffect(() => {
+    if (activeJournalHistory) {
+      setEditingJournalCode(activeJournalHistory.code || '');
+    } else {
+      setEditingJournalCode('');
+    }
+  }, [selectedJournalId, activeJournalVersion, activeJournalHistory]);
+
+  const handleSaveJournalCode = () => {
+    if (!selectedJournalId || !activeJournalVersion || !activeJournalHistory) return;
+    fetch('/api/journal/version', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        entryId: selectedJournalId,
+        version: activeJournalVersion,
+        prompt: activeJournalHistory.prompt,
+        code: editingJournalCode
+      })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to save journal"); });
+        return res.json();
+      })
+      .then(() => {
+        fetch('/api/journal', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+          .then(res => res.json())
+          .then(data => {
+            setJournalEntries(data);
+            alert("Journal version saved successfully!");
+          });
+      })
+      .catch(err => {
+        console.error("Save journal failed:", err.message);
+        alert("Save journal failed: " + err.message);
+      });
+  };
+
+  const handleAddNewJournalVersion = () => {
+    if (!selectedJournalId || !activeJournalHistory) return;
+    fetch('/api/journal/version', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        entryId: selectedJournalId,
+        prompt: activeJournalHistory.prompt,
+        code: editingJournalCode
+      })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to create version"); });
+        return res.json();
+      })
+      .then(data => {
+        fetch('/api/journal', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+          .then(res => res.json())
+          .then(list => {
+            setJournalEntries(list);
+            setActiveJournalVersion(data.nextVersion);
+            alert("New version created successfully!");
+          });
+      })
+      .catch(err => {
+        console.error("Failed to create version:", err.message);
+        alert("Failed to create version: " + err.message);
+      });
+  };
 
   if (!token) {
     return (
@@ -2320,14 +2400,52 @@ export default function App() {
 
                     <div className="prompt-comparison-box">
                       <div className="prompt-comparison-title">Structured Prompt Specification</div>
-                      <div className="prompt-comparison-text">{activeJournalHistory?.prompt}</div>
+                      <div className="prompt-comparison-text" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                        {activeJournalHistory?.prompt}
+                      </div>
                     </div>
 
                     <div className="diff-box-container">
-                      <div className="diff-box-header">Code Output History</div>
-                      <pre className="diff-lines-code">
-                        {activeJournalHistory?.code}
-                      </pre>
+                      <div className="diff-box-header">Code Output History (Editable)</div>
+                      <textarea
+                        value={editingJournalCode}
+                        onChange={e => setEditingJournalCode(e.target.value)}
+                        className="diff-lines-code"
+                        style={{
+                          width: '100%',
+                          minHeight: '260px',
+                          background: 'rgba(6, 8, 20, 0.7)',
+                          color: 'var(--text-primary)',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: '4px',
+                          padding: '12px',
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.85rem',
+                          lineHeight: 1.5,
+                          resize: 'vertical',
+                          whiteSpace: 'pre-wrap',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word'
+                        }}
+                        placeholder="Write your journal notes or script here..."
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: 12, marginTop: 12, marginBottom: 16 }}>
+                      <button 
+                        className="btn-cyber btn-cyber-primary" 
+                        onClick={handleSaveJournalCode}
+                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                      >
+                        Save Changes
+                      </button>
+                      <button 
+                        className="btn-cyber btn-cyber-green" 
+                        onClick={handleAddNewJournalVersion}
+                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                      >
+                        Save as New Version
+                      </button>
                     </div>
                   </>
                 ) : (

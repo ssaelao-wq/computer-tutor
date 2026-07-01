@@ -408,6 +408,25 @@ app.post('/api/journal/version', authenticateToken, async (req, res) => {
   }
 });
 
+// Update an existing journal version
+app.put('/api/journal/version', authenticateToken, async (req, res) => {
+  const { entryId, version, prompt, code } = req.body;
+  if (!entryId || !version || !prompt) {
+    return res.status(400).json({ error: 'Missing parameters' });
+  }
+
+  try {
+    await db.query(`
+      UPDATE journal_versions
+      SET prompt = $1, code = $2
+      WHERE entry_id = $3 AND version = $4
+    `, [prompt, code || '', entryId, parseInt(version)]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Admin Route: Get all students
 app.get('/api/admin/students', authenticateToken, requireTeacher, async (req, res) => {
   try {
