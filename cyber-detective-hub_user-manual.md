@@ -134,6 +134,17 @@ The Dashboard is the landing screen loaded upon logging in. It aggregates person
 
 The Quest Files view serves as the interactive campaign selection map where you can review your available missions.
 
+### 💡 What is a "Quest" vs. a "Session"?
+It is important to understand the difference between these two terms:
+* **The Session**: Represents the complete 2-hour lesson plan (including the warm-up game, the teacher's lesson lecture, discussion topics, class activities, and homework). All 12 sessions are listed inside the **Curriculum Guideline** tab.
+* **The Quest**: The specific **interactive programming task / coding lab** within that session. It is the digital assignment where you open the sandbox editor, write scripts, test compiling, and submit your solution.
+
+### ⚙️ What are the Conditions for a Session to have a Quest?
+Not every session in the curriculum has a playable quest on the Quest Board. A session only has a quest if it meets these three conditions:
+1. **Programmatic Verification (Automated Test Suite)**: The task must involve logic or scripts (like loops, coordinates, or data validations) that the app's compiler can execute and test automatically.
+2. **UI Simulation Support (Visual Telemetry)**: The application must have a custom visual telemetry board coded for that lesson (like the drone path logs, airlock doors, or variable sorting bins) to visually simulate your code.
+3. **Active Scripting Target**: The goal must be to write rules or code. Theoretical lessons (such as designing schemas on whiteboards or discussing ethics) do not have sandbox quests and are logged directly in the **Prompt Journal** notebook instead.
+
 ### Screen Layout:
 1. **Level Selector Tabs (Top Row)**:
    - Row of four button selectors: `Level 1: Logic`, `Level 2: AI Copilot`, `Level 3: Architect`, and `Level 4: Engineer`.
