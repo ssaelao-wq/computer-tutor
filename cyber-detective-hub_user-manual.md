@@ -215,19 +215,26 @@ You might wonder: *If I can open the sandbox directly by clicking "Open in Sandb
 
 ## 📝 Chapter 7: The Prompt Journal & Homework System
 
-The Prompt Journal serves as your engineering notebook where you log logic blueprints, write pseudocode, and complete homework.
+The Prompt Journal serves as your digital engineering notebook. Here, students document logic breakdowns, write specifications, complete assignments, and track iterations of their code profiles.
 
-### Layout:
+### 1. Screen Layout:
 * **Journal List (Left Sidebar)**:
-  - Vertical list of notebooks created for each session.
-  - Displays session title (e.g. `L1 S1: Automated Cauldron`) and last update date.
-* **Notebook Workspace (Right Column)**:
-  - **Notebook Header**: Title and creation date of the selected entry.
-  - **Version Tabs (`v1`, `v2`, etc.)**: Buttons to toggle between stored iterations of your notebook entries.
-  - **Prompt Specification (Read-only)**: The instructions or homework prompts.
-  - **Logic Editor (Editable)**: Large text area where students type their logic explanations, pseudocode, or script responses.
-  - **Save Version Button (Blue)**: Saves edits to the current selected version in the database.
-  - **Add New Version Button (Green)**: Creates a new version tab slot (e.g. increments from `v2` to `v3`) to write a clean revision while preserving your previous history.
+  - Lists your saved case logs in a vertical deck. Clicking a card loads that notebook entry.
+  - Displays session title, creation date, and version numbers.
+* **Workspace Area (Right Column)**:
+  - **Notebook Header**: Displays the quest name and date timestamp.
+  - **Version Toggle Row**: Switch between different stored iterations of your homework (e.g. `Version 1`, `Version 2`).
+  - **Structured Prompt Specification Box**: Displays the lesson instructions or prompt template.
+  - **Code Output History Box (Interactive Code Editor)**:
+    - This is an **interactive `<textarea>` editor**.
+    - If you want to write or edit your journal entries, simply select the text area and start typing your script or text logic.
+    - **Text-Wrapping Enabled**: All text boxes in the journal wrap code lines automatically. Long lines of text or code will wrap down to the next line instead of overflowing horizontally, ensuring you can read your entire submission without needing to scroll left and right.
+
+### 2. Action Controls & Saving to Database:
+* **Save Changes Button (Blue)**:
+  - Overwrites the selected version inside the database. Clicking this sends a `PUT` request to `/api/journal/version` on the backend server, storing your edits in the PostgreSQL database.
+* **Save as New Version Button (Green)**:
+  - Creates a new version (e.g. increments from `v1` to `v2`) to save your current edits as a new draft while keeping your previous history intact. This triggers a `POST` request to `/api/journal/version` to compile a new database record.
 
 ---
 
