@@ -38,9 +38,9 @@ This guideline is designed for the tutor to lead one-on-one sessions for student
   - **Logical Continuity**: The system cannot skip steps. A gap in the flowchart (like a missing connection arrow) is equivalent to a compilation error.
   - **Implicit vs. Explicit Instructions**: Humans assume implicit instructions (e.g. "go inside" implies opening the door first). Computers require every single action to be explicitly stated.
 * **Tutor-Student Discussion Prompts**:
-  - *"Why is a flowchart a visual representation of chronological logic?"*
-  - *"If we try to bypass a firewall before scanning the subnet, what does the subnet connector receive? Why does it fail?"*
-  - *"How does data (like target IP addresses) flow from one block to the next?"*
+  - *"Why is a flowchart a visual representation of chronological logic? How does the path line guide the drone's brain step-by-step?"*
+  - *"If we tell the drone to fly to the warehouse door before we scan it, what does the drone's target coordinates variable contain? Why does it crash?"*
+  - *"How does data (like the door's coordinates) get saved in one step and used in a later step?"*
 
 #### 🕹️ Phase B | Sandbox Lab: Drone Infiltration Simulator (01:00 - 01:30)
 * **What the Tutor Explains**:
