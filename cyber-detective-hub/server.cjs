@@ -65,6 +65,7 @@ async function createTables() {
       role VARCHAR(20) DEFAULT 'student',
       name VARCHAR(100) NOT NULL,
       points INT DEFAULT 0,
+      student_level VARCHAR(10) DEFAULT 'L1',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -79,6 +80,9 @@ async function createTables() {
   try {
     await db.query("ALTER TABLE user_profile ADD COLUMN IF NOT EXISTS role VARCHAR(20) DEFAULT 'student'");
   } catch (e) { console.log("role migration status:", e.message); }
+  try {
+    await db.query("ALTER TABLE user_profile ADD COLUMN IF NOT EXISTS student_level VARCHAR(10) DEFAULT 'L1'");
+  } catch (e) { console.log("student_level migration status:", e.message); }
 
   // 2. Completed Quests Table
   await db.query(`
@@ -228,7 +232,8 @@ app.post('/api/auth/login', async (req, res) => {
         username: user.username,
         name: user.name,
         role: user.role,
-        points: user.points
+        points: user.points,
+        student_level: user.student_level || 'L1'
       }
     });
   } catch (error) {
@@ -256,6 +261,7 @@ app.get('/api/user', authenticateToken, async (req, res) => {
       name: usersRes.rows[0].name,
       role: usersRes.rows[0].role,
       points: usersRes.rows[0].points,
+      student_level: usersRes.rows[0].student_level || 'L1',
       solvedCases: solvedQuestsMap
     });
   } catch (error) {
@@ -405,7 +411,7 @@ app.post('/api/journal/version', authenticateToken, async (req, res) => {
 // Admin Route: Get all students
 app.get('/api/admin/students', authenticateToken, requireTeacher, async (req, res) => {
   try {
-    const studentsRes = await db.query("SELECT id, username, name, role, points, created_at FROM user_profile WHERE role = 'student' ORDER BY created_at DESC");
+    const studentsRes = await db.query("SELECT id, username, name, role, points, student_level, created_at FROM user_profile WHERE role = 'student' ORDER BY created_at DESC");
     res.json(studentsRes.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -414,10 +420,11 @@ app.get('/api/admin/students', authenticateToken, requireTeacher, async (req, re
 
 // Admin Route: Add new student
 app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, res) => {
-  const { username, password, name } = req.body;
+  const { username, password, name, level } = req.body;
   if (!username || !password || !name) {
     return res.status(400).json({ error: 'Username, password and name are required' });
   }
+  const studentLevel = level || 'L1';
   try {
     const checkUser = await db.query("SELECT id FROM user_profile WHERE username = $1", [username]);
     if (checkUser.rows.length > 0) {
@@ -426,9 +433,9 @@ app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, r
     
     const studentId = 'std_' + Date.now();
     await db.query(`
-      INSERT INTO user_profile (id, username, password, role, name, points) 
-      VALUES ($1, $2, $3, 'student', $4, 0)
-    `, [studentId, username, password, name]);
+      INSERT INTO user_profile (id, username, password, role, name, points, student_level) 
+      VALUES ($1, $2, $3, 'student', $4, 0, $5)
+    `, [studentId, username, password, name, studentLevel]);
 
     // Seed default journal entry for new student
     await db.query(`
@@ -441,7 +448,24 @@ app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, r
       VALUES ($1, 1, $2, $3)
     `, [studentId + '_j1', 'Write a function to make a sandwich. Take bread and butter. Spread the butter on the bread and serve.', '// Version 1: Literal sandwich maker\nfunction makeSandwich(bread, butter) {\n  console.log("Spreading " + butter + " on " + bread);\n  return "Sandwich Ready";\n}']);
 
-    res.json({ success: true, student: { id: studentId, username, name, role: 'student', points: 0 } });
+    res.json({ success: true, student: { id: studentId, username, name, role: 'student', points: 0, student_level: studentLevel } });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin Route: Update student level
+app.post('/api/admin/students/level', authenticateToken, requireTeacher, async (req, res) => {
+  const { studentId, level } = req.body;
+  if (!studentId || !level) {
+    return res.status(400).json({ error: 'studentId and level are required' });
+  }
+  if (!['L1', 'L2', 'L3', 'L4'].includes(level)) {
+    return res.status(400).json({ error: 'Level must be L1, L2, L3, or L4' });
+  }
+  try {
+    await db.query("UPDATE user_profile SET student_level = $1 WHERE id = $2 AND role = 'student'", [level, studentId]);
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

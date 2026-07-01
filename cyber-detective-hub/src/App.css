@@ -368,6 +368,21 @@
   box-shadow: 0 0 10px rgba(0, 242, 254, 0.05);
 }
 
+.level-tab:disabled,
+.level-tab.disabled-tab {
+  color: var(--text-muted) !important;
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.level-tab:disabled:hover,
+.level-tab.disabled-tab:hover {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+}
+
 .session-list-layout {
   display: grid;
   grid-template-columns: 1fr 2fr;

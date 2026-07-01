@@ -369,6 +369,7 @@ export default function App() {
   const [newStudentUsername, setNewStudentUsername] = useState('');
   const [newStudentPassword, setNewStudentPassword] = useState('');
   const [newStudentName, setNewStudentName] = useState('');
+  const [newStudentLevel, setNewStudentLevel] = useState('L1');
   const [adminStatusMsg, setAdminStatusMsg] = useState('');
 
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -388,6 +389,40 @@ export default function App() {
   const [curriculumSessionId, setCurriculumSessionId] = useState('l1-s1');
   const [isTeacherMode, setIsTeacherMode] = useState(false);
   const [curriculumSearchQuery, setCurriculumSearchQuery] = useState('');
+
+  // Student auto-routing to active level
+  useEffect(() => {
+    if (currentUser && currentUser.role === 'student' && currentUser.student_level) {
+      const levelNum = parseInt(currentUser.student_level.replace('L', '')) || 1;
+      setSelectedLevel(levelNum);
+      setCurriculumLevel(levelNum);
+      
+      const defaultSessionMap = {
+        1: 'l1-s1',
+        2: 'l2-s5',
+        3: 'l3-s1',
+        4: 'l4-s1'
+      };
+      const defaultCurriculumMap = {
+        1: 'l1-s1',
+        2: 'l2-s1',
+        3: 'l3-s1',
+        4: 'l4-s1'
+      };
+      
+      setSelectedSessionId(defaultSessionMap[levelNum] || 'l1-s1');
+      setCurriculumSessionId(defaultCurriculumMap[levelNum] || 'l1-s1');
+    }
+  }, [currentUser]);
+
+  const isLevelDisabled = (levelNum) => {
+    if (!currentUser) return false;
+    if (currentUser.role === 'teacher') return false; // Teachers can access everything
+    
+    // Students can only access their assigned level
+    const userLevelNum = parseInt(currentUser.student_level?.replace('L', '')) || 1;
+    return userLevelNum !== levelNum;
+  };
   
   // Sandbox states
   const [sandboxRole, setSandboxRole] = useState('Junior Robot Chef Controller');
@@ -564,7 +599,8 @@ export default function App() {
       body: JSON.stringify({
         username: newStudentUsername,
         password: newStudentPassword,
-        name: newStudentName
+        name: newStudentName,
+        level: newStudentLevel
       })
     })
       .then(res => {
@@ -576,10 +612,34 @@ export default function App() {
         setNewStudentUsername('');
         setNewStudentPassword('');
         setNewStudentName('');
+        setNewStudentLevel('L1');
         fetchStudentsList();
       })
       .catch(err => {
         setAdminStatusMsg(`Error: ${err.message}`);
+      });
+  };
+
+  const handleUpdateStudentLevel = (studentId, level) => {
+    if (!token) return;
+    fetch('/api/admin/students/level', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ studentId, level })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to update level"); });
+        return res.json();
+      })
+      .then(() => {
+        fetchStudentsList();
+      })
+      .catch(err => {
+        console.error("Failed to update student level:", err.message);
+        alert("Failed to update student level: " + err.message);
       });
   };
 
@@ -1198,10 +1258,34 @@ export default function App() {
           {activeTab === 'cases' && (
             <div className="tab-cases animate-in">
               <div className="level-selector">
-                <button className={`level-tab ${selectedLevel === 1 ? 'active' : ''}`} onClick={() => { setSelectedLevel(1); setSelectedSessionId('l1-s1'); }}>Level 1: Logic</button>
-                <button className={`level-tab ${selectedLevel === 2 ? 'active' : ''}`} onClick={() => { setSelectedLevel(2); setSelectedSessionId('l2-s5'); }}>Level 2: AI Copilot</button>
-                <button className={`level-tab ${selectedLevel === 3 ? 'active' : ''}`} onClick={() => { setSelectedLevel(3); setSelectedSessionId('l3-s1'); }}>Level 3: Architect</button>
-                <button className={`level-tab ${selectedLevel === 4 ? 'active' : ''}`} onClick={() => { setSelectedLevel(4); setSelectedSessionId('l4-s1'); }}>Level 4: Engineer</button>
+                <button 
+                  className={`level-tab ${selectedLevel === 1 ? 'active' : ''} ${isLevelDisabled(1) ? 'disabled-tab' : ''}`} 
+                  onClick={() => { setSelectedLevel(1); setSelectedSessionId('l1-s1'); }}
+                  disabled={isLevelDisabled(1)}
+                >
+                  {isLevelDisabled(1) && '🔒 '}Level 1: Logic
+                </button>
+                <button 
+                  className={`level-tab ${selectedLevel === 2 ? 'active' : ''} ${isLevelDisabled(2) ? 'disabled-tab' : ''}`} 
+                  onClick={() => { setSelectedLevel(2); setSelectedSessionId('l2-s5'); }}
+                  disabled={isLevelDisabled(2)}
+                >
+                  {isLevelDisabled(2) && '🔒 '}Level 2: AI Copilot
+                </button>
+                <button 
+                  className={`level-tab ${selectedLevel === 3 ? 'active' : ''} ${isLevelDisabled(3) ? 'disabled-tab' : ''}`} 
+                  onClick={() => { setSelectedLevel(3); setSelectedSessionId('l3-s1'); }}
+                  disabled={isLevelDisabled(3)}
+                >
+                  {isLevelDisabled(3) && '🔒 '}Level 3: Architect
+                </button>
+                <button 
+                  className={`level-tab ${selectedLevel === 4 ? 'active' : ''} ${isLevelDisabled(4) ? 'disabled-tab' : ''}`} 
+                  onClick={() => { setSelectedLevel(4); setSelectedSessionId('l4-s1'); }}
+                  disabled={isLevelDisabled(4)}
+                >
+                  {isLevelDisabled(4) && '🔒 '}Level 4: Engineer
+                </button>
               </div>
 
               {/* Display level main quest overarching target */}
@@ -1309,10 +1393,34 @@ export default function App() {
             <div className="tab-curriculum animate-in">
               <div className="curriculum-top-bar">
                 <div className="level-selector">
-                  <button className={`level-tab ${curriculumLevel === 1 ? 'active' : ''}`} onClick={() => { setCurriculumLevel(1); setCurriculumSessionId('l1-s1'); }}>Level 1: Foundations</button>
-                  <button className={`level-tab ${curriculumLevel === 2 ? 'active' : ''}`} onClick={() => { setCurriculumLevel(2); setCurriculumSessionId('l2-s1'); }}>Level 2: AI & Language</button>
-                  <button className={`level-tab ${curriculumLevel === 3 ? 'active' : ''}`} onClick={() => { setCurriculumLevel(3); setCurriculumSessionId('l3-s1'); }}>Level 3: Architecture</button>
-                  <button className={`level-tab ${curriculumLevel === 4 ? 'active' : ''}`} onClick={() => { setCurriculumLevel(4); setCurriculumSessionId('l4-s1'); }}>Level 4: Engineering</button>
+                  <button 
+                    className={`level-tab ${curriculumLevel === 1 ? 'active' : ''} ${isLevelDisabled(1) ? 'disabled-tab' : ''}`} 
+                    onClick={() => { setCurriculumLevel(1); setCurriculumSessionId('l1-s1'); }}
+                    disabled={isLevelDisabled(1)}
+                  >
+                    {isLevelDisabled(1) && '🔒 '}Level 1: Foundations
+                  </button>
+                  <button 
+                    className={`level-tab ${curriculumLevel === 2 ? 'active' : ''} ${isLevelDisabled(2) ? 'disabled-tab' : ''}`} 
+                    onClick={() => { setCurriculumLevel(2); setCurriculumSessionId('l2-s1'); }}
+                    disabled={isLevelDisabled(2)}
+                  >
+                    {isLevelDisabled(2) && '🔒 '}Level 2: AI & Language
+                  </button>
+                  <button 
+                    className={`level-tab ${curriculumLevel === 3 ? 'active' : ''} ${isLevelDisabled(3) ? 'disabled-tab' : ''}`} 
+                    onClick={() => { setCurriculumLevel(3); setCurriculumSessionId('l3-s1'); }}
+                    disabled={isLevelDisabled(3)}
+                  >
+                    {isLevelDisabled(3) && '🔒 '}Level 3: Architecture
+                  </button>
+                  <button 
+                    className={`level-tab ${curriculumLevel === 4 ? 'active' : ''} ${isLevelDisabled(4) ? 'disabled-tab' : ''}`} 
+                    onClick={() => { setCurriculumLevel(4); setCurriculumSessionId('l4-s1'); }}
+                    disabled={isLevelDisabled(4)}
+                  >
+                    {isLevelDisabled(4) && '🔒 '}Level 4: Engineering
+                  </button>
                 </div>
                 
                 <div className="curriculum-search-mode-container">
@@ -2356,6 +2464,28 @@ export default function App() {
                           style={{ padding: '8px 12px' }}
                         />
                       </div>
+
+                      <div className="form-group">
+                        <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Student Assigned Level</label>
+                        <select
+                          className="login-input"
+                          value={newStudentLevel}
+                          onChange={e => setNewStudentLevel(e.target.value)}
+                          style={{ 
+                            padding: '8px 12px', 
+                            background: 'rgba(6, 8, 20, 0.8)', 
+                            color: 'var(--text-primary)', 
+                            border: '1px solid var(--border-color)', 
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <option value="L1">Level 1: Logic</option>
+                          <option value="L2">Level 2: AI Copilot</option>
+                          <option value="L3">Level 3: Architect</option>
+                          <option value="L4">Level 4: Engineer</option>
+                        </select>
+                      </div>
                       
                       {adminStatusMsg && (
                         <div className="badge-cyber" style={{ 
@@ -2386,6 +2516,7 @@ export default function App() {
                             <tr style={{ borderBottom: '1px solid var(--border-color)', background: 'rgba(0, 242, 254, 0.04)' }}>
                               <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Name</th>
                               <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Username</th>
+                              <th style={{ padding: 10, textAlign: 'center', color: 'var(--accent-cyan)' }}>Assigned Level</th>
                               <th style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)' }}>Points</th>
                             </tr>
                           </thead>
@@ -2394,6 +2525,26 @@ export default function App() {
                               <tr key={student.id} style={{ borderBottom: '1px solid rgba(0, 242, 254, 0.05)' }}>
                                 <td style={{ padding: 10, color: 'var(--text-primary)', fontWeight: 500 }}>{student.name}</td>
                                 <td style={{ padding: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{student.username}</td>
+                                <td style={{ padding: 10, textAlign: 'center' }}>
+                                  <select
+                                    value={student.student_level || 'L1'}
+                                    onChange={e => handleUpdateStudentLevel(student.id, e.target.value)}
+                                    style={{
+                                      padding: '4px 8px',
+                                      background: 'rgba(6, 8, 20, 0.8)',
+                                      color: 'var(--text-primary)',
+                                      border: '1px solid var(--border-color)',
+                                      borderRadius: '4px',
+                                      fontSize: '0.8rem',
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    <option value="L1">L1: Logic</option>
+                                    <option value="L2">L2: AI Copilot</option>
+                                    <option value="L3">L3: Architect</option>
+                                    <option value="L4">L4: Engineer</option>
+                                  </select>
+                                </td>
                                 <td style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)', fontWeight: 600 }}>{student.points} XP</td>
                               </tr>
                             ))}
