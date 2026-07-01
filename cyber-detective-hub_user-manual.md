@@ -164,6 +164,30 @@ Not every session in the curriculum has a playable quest on the Quest Board. A s
      - **Objectives Checklist**: Bullet-point goals explaining what needs to be coded.
      - **Open in Sandbox Button**: A cyan-bordered button at the bottom. Clicking this loads the session template data into memory and redirects the screen automatically to the **Prompt Sandbox** tab.
 
+### 🧪 The Quest vs. The Sandbox Analogy
+If you click **Open in Sandbox** inside a quest card, you will notice it loads that session's workspace. Here is how they relate:
+* **The Quest (The Assignment Brief)**: This is the instruction sheet defining your role, the inputs, constraints, edge cases, and points reward size.
+* **The Sandbox (The Science Lab Equipment)**: This is the digital workshop containing the tools—the text editor, the compile check buttons, the Telemetry variable screens, and the diagnostic terminal.
+* *Analogy*: You browse the **Quest Files** cabinet to choose which assignment sheet to study. Once you click **Open in Sandbox**, you carry that assignment sheet into the **Prompt Sandbox** lab to build and run your script.
+
+### 📋 Active Sandbox Quests Index (Playable labs per Level)
+Only the sessions with active simulation compiler test suites appear as cards on your Quest Files board:
+* **Level 1 (Logic)**:
+  - *Session 1*: Robotic Chef Sequence Instructions
+  - *Session 2*: Variable Data Type Classification
+  - *Session 3*: Airlock State Machine Transitions
+  - *Session 5*: Counting & Condition Loops
+* **Level 2 (AI Copilot)**:
+  - *Session 5*: The AI Sandbox Prompt Duel
+  - *Session 6*: The Obfuscation Prompt Constraint
+* **Level 3 (Architect)**:
+  - *Session 1*: Client-Server Database Schema Access
+  - *Session 9*: Interactive Satellites Vulnerability Bounty
+* **Level 4 (Engineer)**:
+  - *Session 1*: Cloud Database Connection CRUD Operations
+  - *Session 2*: Security Keys & Environment Variables
+  - *Session 5*: Telemetry Row-Level Security Policies
+
 ---
 
 ## 💻 Chapter 6: The Interactive Prompt Sandbox
