@@ -108,10 +108,12 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Cyber Security-Drone Simulator (30 mins)**
    - *Activity*: Student launches Level 1 Session 1 Sandbox.
-   - *Action*: Complete three progressive exercises:
+   - *Action*: Complete five progressive exercises:
      - **Exercise 1.1 (Basic Route)**: Click commands in the correct sequence (`power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`) to bypass the warehouse outer door.
      - **Exercise 1.2 (Variable Coordinates)**: Sequence the drone to boot, scan to load the coordinates variable, fly to the coordinates, and bypass the door.
      - **Exercise 1.3 (Sequence Correction)**: Debug an incorrect, preloaded sequence that crashes the drone by rearranging the sequence order.
+     - **Exercise 1.4 (Variable Overwrite)**: Sequence scanning Gate A and Gate B in order to verify that target variable values overwrite.
+     - **Exercise 1.5 (Power Check Logic)**: Sequence drone actions to verify power states must remain active for subsequent operations.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Log Auditing (20 mins)**
@@ -130,6 +132,10 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **Exercise 1.2 (Variable Coordinates) Solution**: Sequence: `power_on` ➔ `scan_door` (this loads/binds target coordinates data to target variables) ➔ `fly_door` (which accesses the target variable coords) ➔ `unlock_door`.
   - *Tutor Guide*: Teach the dependency concept. If we fly before scanning, the coordinate variable is `null`, causing a collision.
 - **Exercise 1.3 (Sequence Correction) Solution**: Target error in preloaded sequence: `fly_door` occurs before `power_on` and `scan_door`. The student must drag block 2 (`power_on`) and block 3 (`scan_door`) to the top, sorting the flow to: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
+- **Exercise 1.4 (Variable Overwrite) Solution**: Sequence: `power_on` ➔ `scan_door_A` ➔ `scan_door_B` ➔ `fly_door` ➔ `unlock_door` (drone will fly to B).
+  - *Tutor Guide*: Show how `targetCoords` is overwritten by the latest scan, teaching variable assignment principles.
+- **Exercise 1.5 (Power Check Logic) Solution**: Run a sequence and remove the middle `power_off` step: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ (remove `power_off`) ➔ `unlock_door`.
+  - *Tutor Guide*: Point out that switching off power blocks the final lock mechanism, showing states must persist.
 - **Homework Evaluation**: Ensure the student's submitted text lists:
   - *Input*: Button presses, dial rotations, weight sensor values.
   - *Process*: Checking timer counter limits, comparing temperature variables.
@@ -162,10 +168,12 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Backpack Sorter & Lock Validator (30 mins)**
    - *Activity*: Student launches Level 1 Session 2 Sandbox.
-   - *Action*: Complete three progressive exercises:
+   - *Action*: Complete five progressive exercises:
      - **Exercise 2.1 (Backpack Sorting)**: Sort all backpack data items into the correct type compartments (Strings, Numbers, Booleans).
      - **Exercise 2.2 (Rules Configuration)**: Configure validation rules for the lockbox inputs (`username = string`, `passcode = number`, `isAdmin = boolean`).
      - **Exercise 2.3 (Boundary Auditing)**: Apply validation constraints (e.g., age must be positive, passcode must be > 1000) to reject out-of-bound inputs.
+     - **Exercise 2.4 (Type Casting)**: Convert text string passcode `"1234"` to a numeric `1234` using type conversion blocks.
+     - **Exercise 2.5 (Boolean Inversion)**: Enforce a blacklist override filter using Boolean NOT inversion logic.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Data Auditing (20 mins)**
@@ -188,6 +196,10 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
   - `passcode` ➔ `Must be Number`
   - `isAdmin` ➔ `Must be Boolean`
 - **Exercise 2.3 (Boundary Auditing) Solution**: Configure logic boundaries: Check age boundaries (> 0) and passcode length (value >= 1000).
+- **Exercise 2.4 (Type Casting) Solution**: Use the typecasting block `Number(passcodeString)` to parse `"1234"` into value `1234`.
+  - *Tutor Guide*: Show how numeric validation fails if the passcode remains a String, demonstrating data type strictness.
+- **Exercise 2.5 (Boolean Inversion) Solution**: Build comparison logic: `isBlocked = !isWhitelisted`.
+  - *Tutor Guide*: Teach how the logical NOT operator `!` flips Boolean variables to create reciprocal conditions.
 - **Homework Evaluation**: Check that the student describes two real forms (e.g., game signup, email signup) and correctly identifies data types (e.g., Email field is String validation; Phone field requires Number type) and lists common error banners.
 
 ---
@@ -217,10 +229,12 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Security Vault State Controller (30 mins)**
    - *Activity*: Student launches Level 1 Session 3 Sandbox.
-   - *Action*: Complete three progressive exercises:
+   - *Action*: Complete five progressive exercises:
      - **Exercise 3.1 (Basic Transition)**: Configure transition rules to move from `CLOSED` to `OPEN` when inserting a keycard, and from `OPEN` to `CLOSED` when pushing the door.
      - **Exercise 3.2 (Hazard Logic)**: Set up rules where pushing the door while `CLOSED` transitions it to `ALARM_LOCKED`.
      - **Exercise 3.3 (Deadlock Resolution)**: Repair a state machine by writing the reset rule `ALARM_LOCKED` + `reset_alarm` ➔ `CLOSED` to prevent getting locked out forever.
+     - **Exercise 3.4 (Multi-State Auth)**: Create a multi-state validation rule sequence: `CLOSED` ➔ `PASSCODE_VALID` ➔ `OPEN`.
+     - **Exercise 3.5 (Timeout Auto-Close)**: Configure automatic timed safety closing transition: `OPEN` + `timer_expired` ➔ `CLOSED`.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: State Diagnostics (20 mins)**
@@ -242,6 +256,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **Exercise 3.3 (Deadlock Resolution) Solution**: Add rule:
   - `ALARM_LOCKED` + `reset_alarm` ➔ `Transition to CLOSED`
   - *Tutor Guide*: Demonstrate what happens if this rule is missing—once the alarm goes off, clicking "reset" fails to change the visual locked state, locking the student out of the vault forever.
+- **Exercise 3.4 (Multi-State Auth) Solution**: Enforce transition path keys:
+  - `CLOSED` + `enter_passcode` ➔ `Transition to PASSCODE_VALID`
+  - `PASSCODE_VALID` + `scan_keycard` ➔ `Transition to OPEN`
+  - *Tutor Guide*: Show that scanning keycard directly from `CLOSED` fails, highlighting sequential state requirements.
+- **Exercise 3.5 (Timeout Auto-Close) Solution**: Add rule:
+  - `OPEN` + `timer_expired` ➔ `Transition to CLOSED`
+  - *Tutor Guide*: Explain how time can act as an event trigger in security state machines.
 - **Homework Evaluation**: Ensure the student maps out states (e.g. elevator: `G`, `1`, `2`, `DoorOpen`), events (e.g. `press_1`, `timer_elapsed`), and shows a clean, loop-free transition table.
 
 ---
@@ -276,10 +297,12 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Thermostat Controller (30 mins)**
    - *Activity*: Student launches Level 1 Session 4 Sandbox.
-   - *Action*: Complete three progressive exercises:
+   - *Action*: Complete five progressive exercises:
      - **Exercise 4.1 (Basic Climate)**: Write a conditional rule (e.g., if temp > 25 cool, else if temp < 18 heat, else idle).
      - **Exercise 4.2 (Window Override)**: Add an override condition checking `isWindowOpen === true` to shut down the climate controls.
      - **Exercise 4.3 (Security Lockout)**: Write an alert trigger condition checking if temperature exceeds high hazard levels AND system override is inactive.
+     - **Exercise 4.4 (Multi-Zone Priority)**: Write a nested conditional checking zone priority before checking standard temp rules.
+     - **Exercise 4.5 (System Health)**: Write an OR conditional check to put the system in `safe_mode` if battery is low OR sensor fails.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Truth Table Audits (20 mins)**
@@ -308,6 +331,17 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
   ```javascript
   if (temp > 45 && isEmergencyOverride === false) { triggerAlarm(); }
   ```
+- **Exercise 4.4 (Multi-Zone Priority) Solution**:
+  ```javascript
+  if (zone === "safety" && temp > 30) { mode = "emergency_cooling"; }
+  else if (temp > 25) { mode = "cooling"; }
+  ```
+  - *Tutor Guide*: Show how order of nesting matters. Enforcing fire/safety checks must always be done at the top level.
+- **Exercise 4.5 (System Health) Solution**:
+  ```javascript
+  if (batteryWarning === true || sensorFailure === true) { mode = "safe_mode"; }
+  ```
+  - *Tutor Guide*: Teach how OR `||` checks when either condition triggers safe state.
 - **Homework Evaluation**: Ensure the student's submitted decision rules tree covers all conditions (e.g., handling rain, temperature limits) and uses proper logic operators (`&&`, `||`, `!`).
 
 ---
@@ -339,10 +373,12 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: SmartPetFeeder Loop Controller (30 mins)**
    - *Activity*: Student launches Level 1 Session 5 Sandbox.
-   - *Action*: Complete loop-based challenges:
+   - *Action*: Complete five progressive exercises:
      - **Exercise 5.1 (Fixed Sweep)**: Write a loop to clean solar panels exactly 5 times using a counting loop `for (let i = 0; i < 5; i++)`.
      - **Exercise 5.2 (Pumping Level)**: Write a conditional loop `while (waterLevel < 100)` to fill a telemetry chamber.
      - **Exercise 5.3 (Exit Debugger)**: Fix an infinite loop by adding `counter++` to ensure the condition terminates.
+     - **Exercise 5.4 (Nested Loop Grid)**: Write a nested `for` loop to scan solar grid panels across columns and rows.
+     - **Exercise 5.5 (Early Loop Exit)**: Write a loop containing an early exit `break;` statement if system battery capacity falls below safety parameters.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Loop Tracing (20 mins)**
@@ -364,6 +400,23 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
   while (waterLevel < 100) { pumpWater(); }
   ```
 - **Exercise 5.3 (Exit Debugger) Solution**: Target code has `let i = 0; while (i < 3) { doSomething(); }` getting stuck. The student must insert the increment code `i++;` inside the loop body to allow exit.
+- **Exercise 5.4 (Nested Loop Grid) Solution**:
+  ```javascript
+  for (let col = 0; col < 3; col++) {
+    for (let row = 0; row < 3; row++) {
+      sweepPanelGrid(col, row);
+    }
+  }
+  ```
+  - *Tutor Guide*: Show how the inner loop completes all rows for each single increment of the outer column loop.
+- **Exercise 5.5 (Early Loop Exit) Solution**:
+  ```javascript
+  while (waterLevel < 100) {
+    pumpWater();
+    if (battery < 20) { break; }
+  }
+  ```
+  - *Tutor Guide*: Teach how `break;` immediately terminates a loop, overriding the main condition.
 - **Homework Evaluation**: Check if the student's loops have a clear initialization, condition check, and increment/exit mechanism.
 
 ---
@@ -390,11 +443,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Smart Light Grid (30 mins)**
    - *Activity*: Student launches the block workspace in the app.
-   - *Action*: Complete three progressive exercises:
+   - *Action*: Complete five progressive exercises:
      - **Exercise 6.1 (Block Assembly)**: Connect logic blocks (loops + conditional checks) to dim grid lights when motion ceases.
      - **Exercise 6.2 (Syntax Link)**: Select equivalent Javascript lines for visual block nodes.
      - **Exercise 6.3 (Code Override)**: Edit parameters in the raw JavaScript code output panel directly to override emergency alarm settings.
-     - Earning $+100$ XP.
+     - **Exercise 6.4 (Variable Loop Assembler)**: Nest a list item reference block inside a counting block loop.
+     - **Exercise 6.5 (Assertion Block Compiler)**: Connect composite logical AND/OR blocks to write conditional validation rules.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Code Review (20 mins)**
    - *Activity*: Tutor presents a short compiled code block with an error. The student identifies which visual logic block corresponds to the error.
@@ -409,6 +464,10 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **Exercise 6.1 (Block Assembly) Solution**: Visual stack: `IF motionDetected === false THEN setBrightness(50)`.
 - **Exercise 6.2 (Syntax Link) Solution**: Matching: `Repeat 10 times` block connects to `for (let i = 0; i < 10; i++)`.
 - **Exercise 6.3 (Code Override) Solution**: Set parameter in custom code string: `overrideAlarms(true)`.
+- **Exercise 6.4 (Variable Loop Assembler) Solution**: Place list access block inside repeat: `lightList[i].turnOff()`.
+  - *Tutor Guide*: Show how the loop counter `i` is used as an index variable to access specific lights.
+- **Exercise 6.5 (Assertion Block Compiler) Solution**: Compile nested conditional: `if (isDaylight === false && (motionDetected === true || emergencyOverride === true))`.
+  - *Tutor Guide*: Guide the student to nest block structures to represent parenthetical ordering in standard code.
 - **Homework Evaluation**: Check that the student submitted the correct syntax representation:
   ```javascript
   if (temperature > 30) { turnOnFan(); }
@@ -447,8 +506,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Traffic Intersection Controller (30 mins)**
    - *Activity*: Student launches Level 1 Session 7 Sandbox.
-   - *Action*: Decompose a traffic light sensor system by configuring two independent functions (`function timerLoop()` and `function pedestrianSensor()`) to avoid signal collisions.
-   - *Rewards*: Earning $+100$ XP.
+   - *Action*: Complete five progressive exercises:
+     - **Exercise 7.1 (Stopwatch Modules)**: Decompose stopwatch interface components into distinct function declarations.
+     - **Exercise 7.2 (Module Dependencies)**: Connect dependent signal routing lines showing timer loop function binds.
+     - **Exercise 7.3 (Deadlock Mitigation)**: Separate timer state loops from rendering states to prevent interface deadlocks.
+     - **Exercise 7.4 (Sub-System Isolation)**: Decouple database log writes from main signal timing loops to ensure local safety system resilience.
+     - **Exercise 7.5 (Shared Variable Locks)**: Write execution wrappers to coordinate shared status variable changes.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Interface Review (20 mins)**
    - *Activity*: Tutor reviews the student's function mapping. The student traces what happens when one function fails (e.g. `pedestrianSensor` stops running).
@@ -460,9 +524,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Choose your favorite game or application. Open the Journal tab under "Session 7 Homework", identify 3 distinct sub-systems, and write empty JavaScript function signatures representing each one.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 7)
-- **Exercise 7.1 (Stopwatch Modules)**: Student configures: `function startTimer()`, `function incrementTime()`, `function renderDisplay()`.
-- **Exercise 7.2 (Module Dependencies)**: Connecting dependencies: `incrementTime` relies on the periodic output trigger of `startTimer`.
-- **Exercise 7.3 (Deadlock Mitigation)**: Avoid deadlock by separating loop timers from UI rendering states.
+- **Exercise 7.1 (Stopwatch Modules) Solution**: Student configures: `function startTimer()`, `function incrementTime()`, `function renderDisplay()`.
+- **Exercise 7.2 (Module Dependencies) Solution**: Connecting dependencies: `incrementTime` relies on the periodic output trigger of `startTimer`.
+- **Exercise 7.3 (Deadlock Mitigation) Solution**: Avoid deadlock by separating loop timers from UI rendering states.
+- **Exercise 7.4 (Sub-System Isolation) Solution**: Wrap database logging inside a separate function block `logPedestrianActivity()` so database failures don't crash `timerLoop()`.
+  - *Tutor Guide*: Show how modular isolation keeps core lights working even if logging crashes.
+- **Exercise 7.5 (Shared Variable Locks) Solution**: Declare gate condition variable `let isUpdating = false;` to check before writing state updates.
+  - *Tutor Guide*: Teach how sharing variable states requires mutual exclusion rules to prevent corruption.
 - **Homework Evaluation**: Student must write 3 clean JavaScript function skeletons:
   ```javascript
   function checkCollision() { }
@@ -496,8 +564,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Logic Blueprint Builder (30 mins)**
    - *Activity*: Student launches the Sandbox designer.
-   - *Action*: Build out the rules engine for a digital quiz app by specifying condition blocks using JS assignment (`=`) and logical constraints (`score >= threshold`).
-   - *Rewards*: Earning $+100$ XP.
+   - *Action*: Complete five progressive exercises:
+     - **Exercise 8.1 (Var Mapping)**: Match UI inputs to their correct variable data type declarations.
+     - **Exercise 8.2 (Variables Declaration)**: Declare state tracking variables using JS syntax.
+     - **Exercise 8.3 (Operators Logic)**: Construct compound comparison checks using logical operators.
+     - **Exercise 8.4 (Data Validation Blueprint)**: Map boundary constraints verifying variable email formatting rules.
+     - **Exercise 8.5 (Fail-State Design Blueprint)**: Configure default fallback variable assignments if system state is invalid.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Edge Auditing (20 mins)**
    - *Activity*: Tutor reviews the variable mapping. The student is asked: "What happens if our boolean flag starts as `null`?"
@@ -509,13 +582,25 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Refine your Habit Tracker blueprint. In the Journal tab under "Session 8 Homework", define 4 variables with appropriate types, and write 2 conditional statements using JavaScript operators (`&&` or `||`) that check when a habit streak is broken.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 8)
-- **Exercise 8.1 (Var Mapping)**: Match inputs: `nameInput` ➔ `String`, `ageInput` ➔ `Number`.
-- **Exercise 8.2 (Variables Declaration)**:
+- **Exercise 8.1 (Var Mapping) Solution**: Match inputs: `nameInput` ➔ `String`, `ageInput` ➔ `Number`.
+- **Exercise 8.2 (Variables Declaration) Solution**:
   ```javascript
   let score = 0;
   let isFinished = false;
   ```
-- **Exercise 8.3 (Operators Logic)**: Combining checks: `if (attempts < maxAttempts && solved === false)`.
+- **Exercise 8.3 (Operators Logic) Solution**: Combining checks: `if (attempts < maxAttempts && solved === false)`.
+- **Exercise 8.4 (Data Validation Blueprint) Solution**: Define constraints variables in layout:
+  ```javascript
+  let email = "";
+  let isValid = email.includes("@");
+  ```
+  - *Tutor Guide*: Emphasize checking that fields exist and are formatted before processing.
+- **Exercise 8.5 (Fail-State Design Blueprint) Solution**: Declare fallback initial state values:
+  ```javascript
+  let systemStatus = "offline";
+  let backupPower = 100;
+  ```
+  - *Tutor Guide*: Guide the student to define safe baseline values to protect against startup failures.
 - **Homework Evaluation**: The student's journal response must declare 4 variables with clean Types, and have statements like:
   ```javascript
   if (missedDays > 1 || isCompletedToday === false) { streakCount = 0; }
@@ -547,8 +632,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Smart Home Sensor Grid (30 mins)**
    - *Activity*: Student launches Level 1 Session 9 Sandbox.
-   - *Action*: Hook up a temperature sensor output to a thermostat processing function by writing a function invocation that passes temperature as an argument: `adjustClimate(currentTemp)`.
-   - *Rewards*: Earning $+100$ XP.
+   - *Action*: Complete five progressive exercises:
+     - **Exercise 9.1 (Pipeline Routing)**: Hook up a temperature sensor output to a thermostat processing function.
+     - **Exercise 9.2 (Parameter Binding)**: Call security validation check function passing token and gate arguments.
+     - **Exercise 9.3 (Return Binding)**: Capture airlock processing status function return inside a memory status variable.
+     - **Exercise 9.4 (Multi-Param Computation)**: Call safety calculation function passing pressure limits and safety factor arguments.
+     - **Exercise 9.5 (Callback Pipeline Hook)**: Chain functions so validator returns feed directly to trigger alerts.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Diagnostic Audits (20 mins)**
    - *Activity*: Tutor reviews pipeline data types. Student identifies what happens if a function returns an unexpected data type (e.g., returning a String instead of a Boolean).
@@ -560,9 +650,20 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: In the Journal tab under "Session 9 Homework", design the interface contract for an online shop. Write the signature of a function named `calculateTotal` that takes two parameters (`price` and `taxRate`) and returns the total value in code syntax.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 9)
-- **Exercise 9.1 (Pipeline Routing)**: Student binds `readSensor()` output values directly as the input parameter value for the `processData(val)` function.
-- **Exercise 9.2 (Parameter Binding)**: Pass arguments: `checkAccess(token, gateId)`.
-- **Exercise 9.3 (Return Binding)**: Capture function return: `let status = updateAirlock(sensorFeed)`.
+- **Exercise 9.1 (Pipeline Routing) Solution**: Student binds `readSensor()` output values directly as the input parameter value for the `processData(val)` function.
+- **Exercise 9.2 (Parameter Binding) Solution**: Pass arguments: `checkAccess(token, gateId)`.
+- **Exercise 9.3 (Return Binding) Solution**: Capture function return: `let status = updateAirlock(sensorFeed)`.
+- **Exercise 9.4 (Multi-Param Computation) Solution**: Pass three values in function invocation:
+  ```javascript
+  let alert = checkSafetyMargin(currentPressure, maxPressure, safetyFactor);
+  ```
+  - *Tutor Guide*: Show how parameter order in function definition maps exactly to argument order in function call.
+- **Exercise 9.5 (Callback Pipeline Hook) Solution**: Chain return values:
+  ```javascript
+  let isValid = validatePasscode(userInput);
+  triggerAirlock(isValid);
+  ```
+  - *Tutor Guide*: Teach how the output variable of one function acts as the input variable for another, forming a modular pipeline.
 - **Homework Evaluation**: The student's function signature must match standard JavaScript parameter rules:
   ```javascript
   function calculateTotal(price, taxRate) {
@@ -602,8 +703,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Fuzz Test Validator (30 mins)**
    - *Activity*: Student launches Level 1 Session 10 Sandbox.
-   - *Action*: Configure fuzzer constraints to evaluate if extreme inputs (e.g., blank strings or negative ages) trigger exceptions.
-   - *Rewards*: Earning $+100$ XP.
+   - *Action*: Complete five progressive exercises:
+     - **Exercise 10.1 (Fuzz checks)**: Configure validators to test extreme inputs.
+     - **Exercise 10.2 (Test assertion Objects)**: Write JS test objects containing input and expected output keys.
+     - **Exercise 10.3 (Boundary Fix)**: Set bounds to block extreme numeric parameters.
+     - **Exercise 10.4 (Null Checks Validation)**: Write test assertions verifying how systems handle `null` inputs.
+     - **Exercise 10.5 (Array Limits Validation)**: Write test assertions checking array length overflows.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Diagnostics (20 mins)**
    - *Activity*: Tutor runs a suite of test case objects. The student explains why a boundary check failed.
@@ -615,13 +721,23 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Create a suite of 5 test case objects in code syntax for a login form checking password rules (e.g., minimum 8 characters). Type these into the Journal tab under "Session 10 Homework".
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 10)
-- **Exercise 10.1 (Fuzz checks)**: Connect boundaries: check how the system behaves if input is `undefined`.
-- **Exercise 10.2 (Test assertion Objects)**: Write syntax objects:
+- **Exercise 10.1 (Fuzz checks) Solution**: Connect boundaries: check how the system behaves if input is `undefined`.
+- **Exercise 10.2 (Test assertion Objects) Solution**: Write syntax objects:
   ```javascript
   const testCase1 = { input: -5, expected: "Error: Negative input" };
   const testCase2 = { input: "", expected: "Error: Empty input" };
   ```
-- **Exercise 10.3 (Boundary Fix)**: Rectify bounds on numbers to block extreme inputs.
+- **Exercise 10.3 (Boundary Fix) Solution**: Rectify bounds on numbers to block extreme inputs.
+- **Exercise 10.4 (Null Checks Validation) Solution**: Define test case:
+  ```javascript
+  const testCaseNull = { input: null, expected: "Error: Invalid Input" };
+  ```
+  - *Tutor Guide*: Show how undefined inputs crash systems if they are not caught by null check guards.
+- **Exercise 10.5 (Array Limits Validation) Solution**: Define limit check test:
+  ```javascript
+  const testCaseLength = { input: [1,2,3,4,5,6], expected: "Error: Overflow" };
+  ```
+  - *Tutor Guide*: Teach how lists of data require boundary length validation.
 - **Homework Evaluation**: Student must write 5 test case objects inside the app:
   ```javascript
   const testCases = [
@@ -664,8 +780,13 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Indestructible Keypad (30 mins)**
    - *Activity*: Student launches Level 1 Session 11 Sandbox.
-   - *Action*: Wrap entry check functions in a `try/catch` loop to handle incorrect passcode attempts gracefully.
-   - *Rewards*: Earning $+100$ XP.
+   - *Action*: Complete five progressive exercises:
+     - **Exercise 11.1 (Catch blocks)**: Wrap entry check functions in try/catch handlers.
+     - **Exercise 11.2 (Throw assertions)**: Write custom guard rules throwing descriptive Error statements.
+     - **Exercise 11.3 (Keypad Guard)**: Implement a lockout limit increment tracker within the catch block.
+     - **Exercise 11.4 (Error Log Wrapper)**: Wrap authorization runs in logging catch handlers to write to system logs.
+     - **Exercise 11.5 (Retry Loop Recovery)**: Write a retry execution loop attempting recovery cycles up to 3 times before failing.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Flow Diagnostics (20 mins)**
    - *Activity*: Tutor triggers anomalies. Student verifies the system degrades gracefully without crashing.
@@ -677,9 +798,30 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: In the Journal tab under "Session 11 Homework", write a simple JavaScript conditional check that checks if a variable `email` contains "@" and throws an error if it doesn't.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 11)
-- **Exercise 11.1 (Catch blocks)**: Configure fallback statements: `catch(err) { displayMessage(err.message); }`.
-- **Exercise 11.2 (Throw assertions)**: Write guards: `if (!cardKey) { throw new Error("Card key missing"); }`.
-- **Exercise 11.3 (Keypad Guard)**: Implement lockout increment rules: increment attempts on catch blocks, lock system when `attempts >= 3`.
+- **Exercise 11.1 (Catch blocks) Solution**: Configure fallback statements: `catch(err) { displayMessage(err.message); }`.
+- **Exercise 11.2 (Throw assertions) Solution**: Write guards: `if (!cardKey) { throw new Error("Card key missing"); }`.
+- **Exercise 11.3 (Keypad Guard) Solution**: Implement lockout increment rules: increment attempts on catch blocks, lock system when `attempts >= 3`.
+- **Exercise 11.4 (Error Log Wrapper) Solution**: In catch block, call logging wrapper:
+  ```javascript
+  catch (error) {
+    writeToSystemLog("Auth failed: " + error.message);
+  }
+  ```
+  - *Tutor Guide*: Show how log archives help developers diagnose silent errors that occur in production.
+- **Exercise 11.5 (Retry Loop Recovery) Solution**: Write loop with internal exception handling:
+  ```javascript
+  let success = false;
+  for (let i = 0; i < 3; i++) {
+    try {
+      success = attemptConnection();
+      if (success) { break; }
+    } catch (e) {
+      writeToSystemLog("Retry " + (i+1));
+    }
+  }
+  if (!success) { throw new Error("Connection failed"); }
+  ```
+  - *Tutor Guide*: Guide the student to construct retry loops that automatically resolve transient network failures.
 - **Homework Evaluation**: The student's script must verify `@` existence and run throw statements:
   ```javascript
   if (!email.includes("@")) {
@@ -699,6 +841,7 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
   2. Declare the state transition paths for 4 states.
   3. Define system variables with correct types and write their initial values in JS syntax (`let booksBorrowed = 0;`).
   4. Write 5 boundary test case objects checking parameters.
+  5. Write try/catch defensive validation code blocks to shield the system from parameter violations.
 
 **Part B: "The Blueprint Defense" — In-App (45 mins)**
 - The student presents their final application design in the App.

@@ -17,7 +17,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Drone Operator Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to move and retrieve an object. Tutor follows them strictly literally, demonstrating computer logical processing.",
     miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
     coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Power On, Scan, Tunnel, Bypass, Exfiltrate) in correct logical order.",
-    handsOn: "Complete 3 sandbox tasks: (1) Basic Infiltration routing sequence, (2) Variable coordinate scanning, (3) Sequence Debugging to repair crash states.",
+    handsOn: "Complete 5 sandbox tasks: (1) Basic Infiltration sequence, (2) Variable coordinate scans, (3) Sequence Debugging, (4) Variable Overwrite, (5) Power Check Logic.",
     homework: "Complete the 'Household IPO Blueprint' in the app's Journal tab. Write step-by-step algorithms, inputs, and outputs for a washing machine or microwave.",
     ethics: "Drone Crash Responsibility: If a drone crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
     adaptations: "Age 13-16: Use digital sandbox modules and audit terminal outputs. Discuss real IPO algorithms."
@@ -35,7 +35,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Crypto-Token Sorter: Sort mock data pieces (Strings, Numbers, Booleans) into separate containers in the app's warm-up screen.",
     miniLesson: "Data Types & Validation Guards: Strings (character arrays), Numbers (math values), Booleans (switches). GIGO (Garbage In, Garbage Out).",
     coreActivity: "Form Exploitation: student tests and configures input validation fields on a mock form, learning how input type constraints reject invalid inputs.",
-    handsOn: "Complete 3 sandbox tasks: (1) Sort backpack payloads by data type, (2) Configure database lock credentials validation rules, (3) Auditing and setting bounds.",
+    handsOn: "Complete 5 sandbox tasks: (1) Sort backpack payloads by data type, (2) Configure validation guards, (3) Set validation bounds, (4) Passcode Type Casting, (5) Boolean Inversion.",
     homework: "Locate two online sign-up forms. Document their input types and validation error messages in the app's Journal tab under 'Session 2 Homework'.",
     ethics: "Data validation inclusion: How strict validation bounds and schemas might affect real-world representation (e.g. names, gender options).",
     adaptations: "Age 13-16: Trace database validation exceptions and API schemas."
@@ -53,7 +53,7 @@ export const CURRICULUM_DATA = [
     warmUp: "State Explorer: Interacting with a virtual airlock dashboard to observe how current state limits trigger options.",
     miniLesson: "Finite State Machines: States (variable values), Transitions, Event Triggers, and State Tables (Current State + Event ➔ Next State).",
     coreActivity: "Device Blueprinting: Map state transitions for a microwave using a node-graph mapping tool on the app's practice screen.",
-    handsOn: "Complete 3 sandbox tasks: (1) Basic transition rules from CLOSED to OPEN, (2) Alarm hazard routing, (3) Deadlock reset repair.",
+    handsOn: "Complete 5 sandbox tasks: (1) Basic vault transitions, (2) Alarm hazard routing, (3) Deadlock reset repair, (4) Multi-Factor Auth gates, (5) Timeout Auto-Close.",
     homework: "Map states and transition tables for a traffic light or elevator and submit them inside the app's Journal tab under 'Session 3 Homework'.",
     ethics: "System Safety: If an elevator traps passengers inside during a fire alarm state, is the code correct? Balancing security and life safety.",
     adaptations: "Age 13-16: Build state diagrams for complex systems and trace deadlocks."
@@ -71,7 +71,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Digital Decision Matcher: Interactive condition-to-action solver in the application.",
     miniLesson: "Flowcharts: Start/End, Process blocks, Decision diamonds, and Arrows. Logical operators (AND, OR, NOT).",
     coreActivity: "Thermostat Logic: Design flowchart logic for a climate controller with high-safety overrides and range checks.",
-    handsOn: "Write a conditional thermostat controller script in the Sandbox handling high heat safety overrides.",
+    handsOn: "Complete 5 sandbox tasks: (1) Basic Climate conditional, (2) Window Override, (3) Security Lockout AND logic, (4) Multi-Zone Priority nesting, (5) System Health OR check.",
     homework: "Complete the Weather Decision flowchart and condition rules tree inside the app's Journal tab.",
     ethics: "Self-Driving Cars: If a vehicle must choose between hitting obstacle A or B, who programs that decision? (Ethics of algorithmic choice)",
     adaptations: "Age 13-16: Use logic gates, Boolean logic operators (AND, OR, NOT)."
@@ -89,7 +89,7 @@ export const CURRICULUM_DATA = [
     warmUp: "In-App Loop Explorer: Trigger loops and counters in the app to see how variables change dynamically.",
     miniLesson: "Loop structures: counting loop `for` vs condition loop `while`. JavaScript loop syntax: `for (let i = 0; i < 5; i++)`.",
     coreActivity: "Infinite Loop Hunter: Trace 5 flowcharts and JavaScript loop scripts, find where they get stuck, and write bounds to fix them.",
-    handsOn: "Write a loop-based pet feeding controller in the Sandbox. Ensure counts terminate to prevent infinite food overflows.",
+    handsOn: "Complete 5 sandbox tasks: (1) Fixed Sweep count loop, (2) Pumping Level condition loop, (3) Infinite loop exit debugger, (4) Nested Loop Grid scanner, (5) Early Loop Exit break.",
     homework: "Identify loops in daily life. Write their logic in the Journal tab using JavaScript loops (e.g. `while(battery < 100)`).",
     ethics: "Notification loops: Should a social media app loop notifications infinitely to get your attention?",
     adaptations: "Age 13-16: Compare `for` and `while` logic, discuss CPU locks and execution cycles."
@@ -107,7 +107,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Block Translation: Match visual block configurations to equivalent lines of JavaScript syntax on the app screen.",
     miniLesson: "Code compilation: How visual blocks translate to JavaScript. Reading block-generated script outputs.",
     coreActivity: "Syntax Matcher: Draw connections linking logic blocks (loops, variables) to equivalent raw Javascript statements.",
-    handsOn: "Assemble a smart lighting grid controller in the Sandbox and audit the compiled Javascript syntax outputs.",
+    handsOn: "Complete 5 sandbox tasks: (1) Dimming Grid light blocks, (2) Syntax block matching, (3) Raw Code parameters override, (4) Array Index loop builder, (5) Nested logic compiler.",
     homework: "Write the Javascript code equivalent for a block condition checking temperature in the Journal tab under 'Session 6 Homework'.",
     ethics: "Smart grids security: Who is authorized to change municipal control scripts? Security overrides issues.",
     adaptations: "Age 13-16: Compare Blockly elements side-by-side with Javascript syntax blocks."
@@ -125,7 +125,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Stopwatch Deconstructor: Identify modular sub-systems of a digital stopwatch inside the app's analysis screen.",
     miniLesson: "Modular Design: Problem decomposition, abstraction, and sub-systems. Declaring functions: `function checkSensors() { ... }`.",
     coreActivity: "Game Decomposer: Match game features to sub-system modules and outline equivalent empty Javascript functions.",
-    handsOn: "Model decomposed intersections in the Sandbox. Write independent modules for timers and sensor handlers.",
+    handsOn: "Complete 5 sandbox tasks: (1) Stopwatch modular function setup, (2) Module Dependency binding, (3) Decoupled interface thread locks, (4) Database Log isolation, (5) Shared state synchronization.",
     homework: "Decompose a game or app and list 3 sub-systems and empty function signatures in the Journal tab.",
     ethics: "Component liability: If a sub-system module fails, whose code is responsible for the overall crash?",
     adaptations: "Age 13-16: Discuss modular code, namespaces, and clean function scopes."
@@ -143,7 +143,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Blueprint Matcher: Match wireframe sketches to logical variable declaration lists in the app.",
     miniLesson: "Blueprint planning. Declaring variables (`let score = 0;`) and logical operators (`&&`, `||`, `!`) in code statements.",
     coreActivity: "Habit Tracker Design: Map user screens and specify variables using Javascript assignment and comparison syntax.",
-    handsOn: "Draft elevator system pseudocode in the Sandbox, verifying passenger pick-up sequences.",
+    handsOn: "Complete 5 sandbox tasks: (1) Match UI inputs to data types, (2) Declare JS status variables, (3) Limit attempts using operators, (4) Validate email patterns, (5) Set offline fallback variables.",
     homework: "Define 4 variables and write 2 conditional statements in JavaScript syntax in the Journal tab under 'Session 8 Homework'.",
     ethics: "Plan vs speed: Why coding without planning leads to structural flaws and security vulnerabilities.",
     adaptations: "Age 13-16: Outline structured sequence blueprints with data types and variables."
@@ -161,7 +161,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Data Pipeline Game: Bind module output ports to filter inputs in the app screen and view changing streams.",
     miniLesson: "Communication contracts: Function inputs (parameters) and outputs (returns). Parameter binding syntax: `calculateTotal(price, taxRate)`.",
     coreActivity: "Interface Connector: Connect 3 components and write parameters (e.g. passing credentials) to secure data flows.",
-    handsOn: "Implement a multi-sensor home pipeline script in the Sandbox, verifying alarm overrides instantly cut power grid nodes.",
+    handsOn: "Complete 5 sandbox tasks: (1) Sensor pipeline input routing, (2) Call function with credentials arguments, (3) Capture output return status, (4) Compute margins with multi-parameters, (5) Chain passcode callbacks.",
     homework: "Design an online checkout interface signature using Javascript function syntax inside the Journal tab.",
     ethics: "Third-party leaks: What parameters should be sent to external APIs to protect client privacy?",
     adaptations: "Age 13-16: Trace function argument passing and verify types in returns."
@@ -179,7 +179,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Input Fuzzer: Try typing extreme values into fields on the warm-up UI to see what breaks.",
     miniLesson: "Testing types. Defining test assertions as JS object literals: `let testCase = { input: val, expected: output }`.",
     coreActivity: "Edge Case Builder: Complete a test case array script in the sandbox workspace to validate range limits.",
-    handsOn: "Write a test validator matrix in the Sandbox, checking extreme values (e.g. negative ages, blank usernames).",
+    handsOn: "Complete 5 sandbox tasks: (1) Fuzz field boundary exceptions, (2) Write expected output assertion objects, (3) Set calculator boundary checks, (4) Validate null input checks, (5) Enforce array length overflow rules.",
     homework: "Create a list of 5 test case objects in JS syntax in the Journal tab under 'Session 10 Homework'.",
     ethics: "QA ethics: Why testers who break code are helpful collaborators, not adversaries.",
     adaptations: "Age 13-16: Construct validation suites and analyze edge limits."
@@ -197,7 +197,7 @@ export const CURRICULUM_DATA = [
     warmUp: "Error message review: Review error screens in the app and sort them by clarity and helpfulness.",
     miniLesson: "Defensive Coding. Error handling: `try / catch` blocks and error throwing syntax: `throw new Error(\"Invalid value\")`.",
     coreActivity: "Safety Guard: Add conditional checks and fallback variables to a forms processor workspace.",
-    handsOn: "Write a secure smart lock script in the Sandbox handling incorrect password lockouts.",
+    handsOn: "Complete 5 sandbox tasks: (1) Wrap passcode checks in try/catch, (2) Throw custom validation errors, (3) Track failure attempts lockout, (4) Write warnings to system logs, (5) Auto-retry connection loops.",
     homework: "Write a Javascript syntax email validity check using a throw guard in the Journal tab under 'Session 11 Homework'.",
     ethics: "Safe failures: Should safety-critical devices shut down instantly or degrade gracefully?",
     adaptations: "Age 13-16: Program try-catch blocks and handle custom error states."
