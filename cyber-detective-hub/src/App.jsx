@@ -1372,6 +1372,7 @@ export default function App() {
             <h1>
               {activeTab === 'dashboard' && 'Operations Dashboard'}
               {activeTab === 'cases' && 'Quest Board'}
+              {activeTab === 'curriculum' && 'Curriculum Syllabus Catalog'}
               {activeTab === 'sandbox' && 'Prompt Sandbox (Strict Mode)'}
               {activeTab === 'journal' && 'Prompt Specification Journal'}
               {activeTab === 'leaderboard' && 'Active Decoders'}
