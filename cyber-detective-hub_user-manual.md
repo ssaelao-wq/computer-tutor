@@ -1,190 +1,325 @@
-# 🕵️‍♂️ Cyber Detective Hub - Complete User Manual
+# 🕵️‍♂️ Cyber Detective Hub - Exhaustive User & Instructor Manual
 
-Welcome to the **Cyber Detective Hub**! This application is your digital training ground and command center. Here, you will roleplay as a digital detective, analyzing logs, scripting code logic, and securing systems. 
+Welcome to the **Cyber Detective Hub**! This application is a gamified digital training environment designed for students aged 13–16 to learn computer science, computational logic, AI prompting, and software engineering.
 
-This guide is designed to help both **Students** and **Teachers** navigate the platform, solve cases, track scores, and manage student profiles.
-
----
-
-## 🧭 Navigation Menus (Left Sidebar)
-
-You can navigate through different rooms in the Hub using the sidebar on the left. Here is what each menu does:
-
-### 1. 📊 Dashboard
-Your personal command station.
-* **What you see**: Your current rank badge, total XP points, and overall case completion statistics.
-* **Activity Feed**: Shows a chronological timeline of your recent actions (e.g. submitting a quest, unlocking a rank, or revising a journal).
-
-### 2. 📁 Quest Files
-This is your Case Board containing all sub-quests.
-* **Level Selector**: Switch between Levels 1 to 4 to see sub-quests.
-  > [!NOTE]
-  > Students can only view and select the Level assigned to them by their teacher. Non-assigned levels will display a lock icon (`🔒`) and are deactivated.
-* **Quest Selection**: Click any quest card on the left sidebar to view details, XP reward, and objectives.
-* **Launch Case**: Click **Open in Sandbox** to load the case template directly into your Prompt Sandbox to start writing code.
-
-### 3. 📖 Curriculum Guide
-An interactive encyclopedia of all learning objectives and topics.
-* **Level Tabs**: View Foundations, AI Language, System Architecture, and Software Engineering tracks.
-* **Search Box**: Search for specific terms, concepts (e.g., `for`, `if`, loop, conditions).
-* **Perspective Toggle**:
-  - **Student Mode**: Displays the core goals, warm-ups, and hands-on activities.
-  - **Teacher Mode** (Only for teachers): Displays Socratic prompting guidelines, Socratic check questions, and exact step-by-step code solutions.
-
-### 4. 💻 Prompt Sandbox
-The coding workspace where you write, simulate, and compile instructions.
-* **State panel**: Displays the active *Role*, *Task*, *Input parameters*, and *Edge Case* constraints for the active case.
-* **Code Editor**: Write your JavaScript sequence rules, loops, and conditions here.
-* **Run Simulator**: Execute the code. Watch variables update in the **Telemetry Monitor** and inspect the **Execution Log** output.
-* **Submit Case File**: Click this green button once your script passes simulator runs to complete the quest and earn **+100 XP**.
-
-### 📝 Prompt Journal
-Your detective notebook and homework repository.
-* **Select Journal**: Click on a journal entry to view details.
-* **Revision System**: Compare two versions of your code solutions (e.g. `Version 1` literal logic vs `Version 2` precise validation guards).
-* **Save Notebook**: Save edits to your journal entries directly to the database.
-
-### 🏆 Leaderboard
-The global ranking system.
-* Displays all active detectives in the training academy sorted by total XP.
-* Compare your progress against peers and watch your rank climb!
+This document serves as the complete, definitive user manual. Whether you are a **student** logging in to solve quests, or a **teacher/admin** managing student profiles and visual themes, this manual details every screen element, system rule, database schema, and operational workflow.
 
 ---
 
-## 📈 The Scoring System (XP & Ranks)
-
-As you complete cases, you earn **Experience Points (XP)** which automatically level up your Detective Rank.
-
-### How Students Earn XP
-1. **Solve Sandbox Cases**: Click **Submit Case File** in the Prompt Sandbox after writing a correct solution to earn **+100 XP** per case.
-2. **Submit Homework**: Write your answers in the Prompt Journal and save them to receive credit from the teacher.
-
-### Detective Rank Progression Table
-
-| Rank Title | XP Threshold | Permissions / Status |
-| :--- | :--- | :--- |
-| **Junior Investigator** | `0 - 799 XP` | Default starting rank. Learning literal logic and basics. |
-| **Senior Investigator** | `800 - 1199 XP` | Access to advanced loops, functions, and testing parameters. |
-| **Master Detective** | `1200+ XP` | Completed Level 1 and graduated to high-level engineering. |
+## 📂 Table of Contents
+1. **Chapter 1: Welcome & Pedagogical Philosophy**
+2. **Chapter 2: System Architecture & Database Schema**
+3. **Chapter 3: The Left Sidebar Navigation**
+4. **Chapter 4: The Dashboard (Command Center)**
+5. **Chapter 5: The Quest Files (Cases Board)**
+6. **Chapter 6: The Interactive Prompt Sandbox**
+7. **Chapter 7: The Prompt Journal & Homework System**
+8. **Chapter 8: The Curriculum Guide & Syllabus Catalog**
+9. **Chapter 9: The Global Leaderboard**
+10. **Chapter 10: The Teacher Admin Console & Campaign Reskinning**
+11. **Chapter 11: Troubleshooting, FAQ, & Tutoring Best Practices**
 
 ---
 
-## 👩‍🏫 Teacher & Admin Guide
+## 🏛️ Chapter 1: Welcome & Pedagogical Philosophy
 
-If you are logged in as a **Teacher** (using the teacher profile credentials), an additional **Admin Panel** tab will appear at the bottom of your sidebar navigation.
+The **Cyber Detective Hub** bridges the gap between drag-and-drop block coding and real-world scripting. Designed specifically for teenagers (ages 13–16), the application frames computer science concepts inside an engaging roleplay narrative: the student is a **Detective** solving logical system errors and security vulnerabilities.
 
-### 1. Swap Campaign Themes
-Change the visual theme of the entire workspace:
-* **Cyberpunk Infiltration**: Focuses on drone routing, lock bypasses, and security logs.
+### The Pedagogical Approach
+1. **Socratic Scaffolding**: Rather than giving students raw answers, the hub encourages teachers to prompt students with guided questions.
+2. **Read Before You Write**: Level 1 focuses on reading, dry-running, and analyzing logical structures before students are expected to write complex lines of code.
+3. **Progressive Complexity**:
+   - **Level 1 (Logic)**: Teaches sequential processes, variable types, loops, and conditions side-by-side with visual flowcharts.
+   - **Level 2 (AI Copilot)**: Explores prompting as a specification language, instructing AI compilers, and requirement injection.
+   - **Level 3 (Architect)**: Investigates database modeling, client-server connections, and data validation rules.
+   - **Level 4 (Engineer)**: Teaches remote cloud integration, API endpoints, environment variables, and safe defaults.
+
+---
+
+## ⚙️ Chapter 2: System Architecture & Database Schema
+
+The Cyber Detective Hub is a full-stack web application built on standard modern web technologies.
+
+```mermaid
+graph TD
+    A[React Client Frontend] <-->|HTTP API Requests & Auth| B[Node/Express Backend Server]
+    B <-->|pg.Pool Queries| C[(PostgreSQL Database)]
+```
+
+### 1. The Tech Stack
+* **Frontend**: React.js, Vite (compiler), and Vanilla CSS (flexible, reactive styling).
+* **Backend**: Node.js Express server (`server.cjs`).
+* **Database**: PostgreSQL server managing user credentials, quest states, points, and journal logs.
+
+### 2. Database Tables
+The database maintains the state of your academy. The exact columns and constraints are:
+
+#### Table `user_profile`
+Maintains user data, security credentials, scores, and access levels.
+* `id` (VARCHAR(50), Primary Key): Unique identifier (e.g. `std_1720000000`).
+* `username` (VARCHAR(50), Unique): Access login name (e.g. `somchai_s`).
+* `password` (VARCHAR(100)): Secret security key.
+* `role` (VARCHAR(20), Default `'student'`): Determines system access level (`student` or `teacher`).
+* `name` (VARCHAR(100)): Display name shown on dashboards and leaderboards.
+* `points` (INT, Default `0`): Total XP accumulated.
+* `student_level` (VARCHAR(10), Default `'L1'`): Assigned curriculum level (`L1`, `L2`, `L3`, `L4`).
+* `created_at` (TIMESTAMP): Profile registration timestamp.
+
+#### Table `completed_quests`
+Logs every quest a student has solved.
+* `user_id` (VARCHAR(50)): Maps to `user_profile.id`.
+* `quest_id` (VARCHAR(50)): Identifier of the completed session (e.g. `l1-s1`).
+* `completed_at` (TIMESTAMP): Completion timestamp.
+
+#### Table `journal_entries`
+Stores notebooks created by students.
+* `id` (VARCHAR(50), Primary Key): Unique entry identifier.
+* `user_id` (VARCHAR(50)): Maps to `user_profile.id`.
+* `title` (VARCHAR(200)): Case title.
+* `date` (VARCHAR(20)): Creation date string.
+* `version` (INT): Active version counter.
+* `active_version` (INT): Current selected version.
+
+---
+
+## 🧭 Chapter 3: The Left Sidebar Navigation
+
+The Left Sidebar is your global remote control. It is anchored to the left of the viewport at all times.
+
+### Sidebar Components:
+1. **Logo Section (Top)**: Displays the **DETECTIVE HUB** logo alongside a security shield icon.
+2. **Dashboard Button**: Loads the global statistics and feed summary.
+3. **Quest Files Button**: Opens the case selector board.
+4. **Curriculum Guide Button**: Opens the interactive syllabus catalog.
+5. **Prompt Sandbox Button**: Loads the active coding compiler panel.
+6. **Prompt Journal Button**: Opens the student notebooks and homework.
+7. **Leaderboard Button**: Displays the global standings table.
+8. **Admin Panel Button** *(Teacher Access Only)*: Renders at the bottom of the navigation list only if the logged-in user possesses the `'teacher'` role, separated by a thin horizontal border.
+9. **Log Out Button (Red, Bottom)**: Clears local tokens, signs out the active user, and returns to the login screen.
+
+---
+
+## 📊 Chapter 4: The Dashboard (Command Center)
+
+The Dashboard is the landing screen loaded upon logging in. It aggregates personal progress metrics into a clean visual overview.
+
+```
++-----------------------------------------------------------------------+
+|  [Badge: Rank]    [XP Score]    [Quests Solved]    [Journal Notebooks] |
++-------------------------------+---------------------------------------+
+|                               |                                       |
+|  RANK PROGRESSION DETAIL      |   RECENT ACHIEVEMENTS FEED            |
+|  - Current Rank Status        |   - 20:15 Solved Case: Chef Grid      |
+|  - Next Rank Progress Bar     |   - 19:42 Saved Notebook Entry        |
+|                               |                                       |
++-------------------------------+---------------------------------------+
+```
+
+### Visual Layout & Details:
+* **Point Cards Row (Top)**:
+  - *Detective Rank Badge*: Shows your current tier logo. Ranks adjust dynamically based on your XP score.
+  - *Experience Points (XP)*: Displays your exact score in bright neon green text (e.g. `450 XP`).
+  - *Quests Solved Box*: Displays the number of database quest completions with a percentage progress indicator.
+  - *Saved Journals Box*: Lists the total number of entries written in your notebook.
+* **Rank Progression Panel (Left Column)**:
+  - Displays a visual progress bar outlining how many points are needed to unlock the next rank.
+  - Unlocked status messages tell the user what tools they have gained access to (e.g., "Loop Iterators Unlocked").
+* **Recent Achievements Feed (Right Column)**:
+  - A chronological feed pulling events from database logs.
+  - Shows timestamps (e.g. `20:15`) alongside descriptive event tags (e.g., `"Evidence submitted: Grid Variable Classification (+100 XP)"`).
+
+---
+
+## 📁 Chapter 5: The Quest Files (Cases Board)
+
+The Quest Files view serves as the interactive campaign selection map where you can review your available missions.
+
+### Screen Layout:
+1. **Level Selector Tabs (Top Row)**:
+   - Row of four button selectors: `Level 1: Logic`, `Level 2: AI Copilot`, `Level 3: Architect`, and `Level 4: Engineer`.
+   - **For Students**: Non-assigned level tabs display a padlock (`🔒`) and are disabled. If a student is assigned to Level 1, they cannot click Level 2, 3, or 4 tabs.
+   - **For Teachers**: All tabs remain clickable to allow instructors to audit all content.
+2. **Main Campaign Quest Banner**:
+   - Outlines the global target objective for the selected Level.
+   - Example: *"Operation: Safe City Grid — Design the logical blueprints for the city's automated infrastructure (drones, public transport, smart vending)."*
+3. **Sub-Quest Cards List (Left Column)**:
+   - Vertical listing of individual cases associated with the chosen level.
+   - Each card displays the session title, a brief objective summary, and a status badge:
+     - `ACTIVE` (Blue badge): The quest is incomplete.
+     - `COMPLETED` (Green badge): The quest has been successfully solved.
+4. **Sub-Quest Detailed Brief (Right Column)**:
+   - Displays information for the selected sub-quest card:
+     - **Quest Title** & **XP Reward**.
+     - **Objectives Checklist**: Bullet-point goals explaining what needs to be coded.
+     - **Open in Sandbox Button**: A cyan-bordered button at the bottom. Clicking this loads the session template data into memory and redirects the screen automatically to the **Prompt Sandbox** tab.
+
+---
+
+## 💻 Chapter 6: The Interactive Prompt Sandbox
+
+The Prompt Sandbox is the core compiler workspace where you build and test your logic.
+
+```
++------------------------------------+----------------------------------+
+| CASE SPECIFICATION & BRIEF         | CODE EDITOR WORKSPACE            |
+| - Assigned Role: Robot Controller  |                                  |
+| - Task: Create sandwich maker      | [Code Area]                      |
+| - Inputs: bread, butter, knife     |                                  |
+|                                    |                                  |
++------------------------------------+----------------------------------+
+| TELEMETRY MONITOR                  | COMPILER CONTROLS                |
+| - mode: "idle"                     | [Run Simulator] (Green)          |
+| - status: "success"                | [Submit Case File] (Blue)        |
+|                                    +----------------------------------+
+| SYSTEM LOG TERMINAL                |
+| > Compilation complete.            |
++------------------------------------+
+```
+
+### Detailed Screen Components:
+
+#### Left Column (Specifications & Diagnostics)
+* **Case Specification Panel**:
+  - *Assigned Role*: Your roleplay title (e.g. `Water Reclamation Controller`).
+  - *Task Target*: The exact task objectives.
+  - *Input Parameters*: Data variables fed into the code.
+  - *Edge Case Constraints*: Boundaries that must be handled safely (e.g. empty inputs).
+* **Telemetry State Monitor**:
+  - Live virtual register boards.
+  - Shows variable names and current values (e.g., `waterLevel: 45`, `gridStatus: "Active"`).
+  - When you run code, watch these registers update in real-time as your script executes!
+* **System Log Terminal**:
+  - Simulated terminal output window.
+  - Prints warnings, compiler notifications, success flags, or error trace logs.
+
+#### Right Column (Writing Code)
+* **The Code Editor**:
+  - A text editor preloaded with template scaffolding code and comments.
+  - Supports standard JavaScript styling.
+* **Control Actions Row**:
+  - **Run Simulator Button (Green)**: Runs compilation tests on your script. It passes parameters, evaluates rules, prints logs to the terminal, and updates the Telemetry monitors.
+  - **Submit Case File Button (Blue)**: This button is locked (unclickable) when you edit your code. It activates **ONLY** after you run the simulator and your code successfully passes all validation checks without crashing. Clicking it saves your success state, updates your XP score by +100, and logs the completion.
+
+---
+
+## 📝 Chapter 7: The Prompt Journal & Homework System
+
+The Prompt Journal serves as your engineering notebook where you log logic blueprints, write pseudocode, and complete homework.
+
+### Layout:
+* **Journal List (Left Sidebar)**:
+  - Vertical list of notebooks created for each session.
+  - Displays session title (e.g. `L1 S1: Automated Cauldron`) and last update date.
+* **Notebook Workspace (Right Column)**:
+  - **Notebook Header**: Title and creation date of the selected entry.
+  - **Version Tabs (`v1`, `v2`, etc.)**: Buttons to toggle between stored iterations of your notebook entries.
+  - **Prompt Specification (Read-only)**: The instructions or homework prompts.
+  - **Logic Editor (Editable)**: Large text area where students type their logic explanations, pseudocode, or script responses.
+  - **Save Version Button (Blue)**: Saves edits to the current selected version in the database.
+  - **Add New Version Button (Green)**: Creates a new version tab slot (e.g. increments from `v2` to `v3`) to write a clean revision while preserving your previous history.
+
+---
+
+## 📖 Chapter 8: The Curriculum Guide & Syllabus Catalog
+
+The Curriculum Guide is an interactive directory listing all curriculum details, modules, and teacher resources.
+
+### Screen Layout:
+1. **Level Selectors (Top Left)**: Four level buttons (`Level 1: Foundations`, etc.). Just like the Quest Board, students are restricted to their assigned level, while teachers can inspect everything.
+2. **Curriculum Search Field (Top Right)**: Input search box. Type search queries (e.g., "loops", "conditions") to filter the displayed session cards instantly.
+3. **Perspective Toggle Switch (Top Right)**:
+   - **Student Mode**: Shows course objectives, warm-ups, core activity outlines, hands-on tasks, and homework descriptions.
+   - **Teacher Mode** *(Only visible/usable by teachers)*: Expands every card to show Socratic prompting guidelines, Socratic check questions, and exact step-by-step code solutions.
+
+---
+
+## 🏆 Chapter 9: The Global Leaderboard
+
+The Leaderboard showcases the standings of all detectives registered in the training academy.
+
+### Screen Layout & Table Columns:
+1. **Rank Position**: Your numerical rank (#1, #2, #3, etc.) displayed with colored numbers.
+2. **Detective Alias**: The student's display name.
+3. **Status Badge**: Displays your rank title badge:
+   - `Junior` (Green badge): `0 - 799 XP`
+   - `Senior` (Cyan badge): `800 - 1199 XP`
+   - `Master` (Purple badge): `1200+ XP`
+4. **Current Operation**: Displays the active session the student is currently working on.
+5. **Total XP**: Points score.
+* **Highlighting**: Your profile row is highlighted in neon green with a labeled `YOU` badge to help you find your standing instantly.
+
+---
+
+## 👩‍🏫 Chapter 10: The Teacher Admin Console & Campaign Reskinning
+
+The Admin Panel is a specialized management dashboard accessible only to users with the `'teacher'` role.
+
+### 1. Active Campaign Theme Selection
+Enables teachers to change the visual theme and storytelling layer of the application:
+* **Cyberpunk Metropolis**: Focuses on drone routing, variable locks, and security grids.
 * **Mars Rover Colony**: Focuses on airlock controllers, telemetry pipelines, and solar grids.
 * **Wizarding School Castle**: Focuses on automated cauldrons, spell lock triggers, and alchemy scales.
+> [!TIP]
+> Changing themes dynamically re-skins the overarching Level Quest descriptions, sub-quest titles, and sandbox brief parameters.
 
-### 2. Register New Student Profiles
-To register a student for a 1-on-1 tutoring course:
-1. Navigate to **Admin Panel** ➔ **Register New Student Profile**.
-2. Enter the student's **Name / Alias**, **Username**, and **Access Password**.
-3. Select the starting level from the **Student Assigned Level** dropdown (`Level 1` to `Level 4`).
-4. Click **Create Student Profile** to register them.
+### 2. Register New Student Profile Form
+Enables teachers to enroll new student profiles:
+1. **Student Name / Alias**: Enter the student's display name.
+2. **Username / Student ID**: Enter their login username.
+3. **Security Access Key**: Enter a password.
+4. **Student Assigned Level**: Select their starting level (`Level 1` to `Level 4`).
+5. Click the green **Create Student Profile** button. The student is registered in the database, and a default starting journal entry is generated.
 
-### 3. Change Student Levels
-If a student passes an assessment and is ready to graduate to the next level:
-1. Locate the student's row in the **Active Student Roster** table on the right.
-2. Click the dropdown menu in the **Assigned Level** column.
-3. Select their new level (e.g., change from `L1` to `L2`). 
-4. The system will save changes immediately. The next time the student logs in (or refreshes their browser), they will be automatically routed to the new Level tab, and other levels will lock.
+### 3. Active Student Roster Table
+A complete management table of all registered student accounts:
+* **Display Columns**: *Name*, *Username*, *Assigned Level*, and *Points*.
+* **Real-time Level Changes**:
+  - The *Assigned Level* column contains a `<select>` dropdown menu showing the student's level (`L1` to `L4`).
+  - To upgrade a student, click the select box and pick the new level. The system sends a POST request to `/api/admin/students/level` to update the database profile immediately. The next time the student logs in, their navigation tabs will update automatically.
 
-### 4. Administer Student Scores (Add / Deduct XP)
-To test rank progression, debug unlocked panels, or adjust student scores:
-* Under **Local Detective Statistics Overrides**, click:
-  - **Deduct 100 XP**: Subtracts 100 points.
-  - **Add 100 XP**: Adds 100 points.
-  - **Promote to Master Rank**: Sets points to 1200 instantly to test graduate view.
-
----
-
-## 🧭 Step-by-Step Screen Guide
-
-### 1. Dashboard Screen Layout & Flow
-The Dashboard gives you an overview of your progress.
-* **Rank Progression Panel (Left)**: Displays your current rank name, a visual progress bar indicating how close you are to the next rank tier, and a lock status showing unlocked access tiers.
-* **Stats Overview Grid (Top)**: Four indicator boxes showing your **Current Rank**, **XP Score**, **Solved Quests count**, and **Saved Journal entries**.
-* **Recent Achievements Feed (Right)**: A live timeline showing updates (e.g., "Assigned key updated", "Solved case: Level 1 Session 5").
-* **Student Workflow**: Use this screen to verify that your points updated successfully after completing a case.
-
-### 2. Quest Files (Cases) Screen Layout & Flow
-This is where you choose your next coding challenge.
-* **Top Level Tabs**: Buttons representing Level 1 to 4. Students will see lock padlocks (`🔒`) on non-assigned levels, and clicking them does nothing. Teachers can click any tab to inspect curriculum content.
-* **Overarching Case Brief (Top Banner)**: A green/blue highlighted panel showing the main quest target for the selected Level (e.g., "Build an automated airlock pressure pipeline to shield the colony from sandstorms").
-* **Sub-Quest Cards List (Left Column)**: Clickable card lists showing individual sessions. Each card displays:
-  - **Sub-Quest Title** (e.g., *Session 5: Round and Round - Loops*)
-  - **Status Badge**: Displays `ACTIVE` (cyan) if incomplete, or `COMPLETED` (green) if solved.
-* **Detailed Brief Workspace (Right Column)**: Displays information for the selected session card:
-  - **Quest Name** and **XP Reward** size.
-  - **Learning Objectives Checklist** (what concepts are tested in this case).
-  - **Open in Sandbox Button**: Clicking this loads the session template data into your workspace and shifts your screen tab automatically to the *Prompt Sandbox*.
-
-### 3. Curriculum Guide Screen Layout & Flow
-This is your learning catalog and directory.
-* **Curriculum Level Tabs (Top)**: Select Level 1, 2, 3, or 4 tracks. Restricts students to their assigned level.
-* **Search Field (Right)**: Type keywords (e.g., "conditions", "functions") to filter list views to specific matching session entries instantly.
-* **Mode Toggle Slider**: Select **Student Mode** to review objectives and assignments, or **Teacher Mode** to unlock exact solutions, Socratic prompts, and check questions.
-* **Session Cards (Grid)**: Displays detailed timelines, warm-ups, board lesson points, hands-on tasks, and homework scopes.
-
-### 4. Prompt Sandbox Screen Layout & Flow
-Your primary environment to compile and verify code solutions.
-* **Case Specification Panel (Left)**: Displays the context:
-  - **Assigned Role**: Your virtual job title (e.g. IoT Embedded System Architect).
-  - **Target Task**: The problem statement.
-  - **Input variables**: Parameters passed to your script.
-  - **Edge Case constraints**: Boundary constraints (e.g. handling null, limits).
-* **Telemetry State Monitor (Middle-Left)**: Live registers reflecting variable states (e.g., `mode = "idle"`, `waterLevel = 45`). These values change dynamically as the simulator runs your code.
-* **System Log Terminal (Bottom-Left)**: Black compiler window showing code execution logs. Prints compile-time successes or runtime exception messages.
-* **Code Editor Panel (Right)**:
-  - Editable workspace with preloaded script templates and comments.
-  - **Run Simulator Button (Green)**: Compiles and runs the code against sandbox state parameters. Watch the variables change in the Telemetry monitor and check the Log terminal.
-  - **Submit Case File Button (Blue)**: Disables during edit mode; becomes clickable ONLY after a successful simulator test run. Click this to save your completion to the database, earn **+100 XP**, and post a log to the dashboard timeline.
-
-### 5. Prompt Journal Screen Layout & Flow
-Your homework logging notebook.
-* **Journal List (Left Sidebar)**: Clickable list of saved case journals.
-* **Editor Workspace (Right Column)**:
-  - **Notebook Header**: Title and creation date of the entry.
-  - **Version selector buttons (v1, v2)**: Allows comparing your progression (e.g. from raw pseudo-rules to refined logic scripts).
-  - **Prompt Spec (Read-only)**: The lesson prompt.
-  - **Code Editor (Editable)**: Large text area where you write your logic or prompt configuration.
-  - **Save Version Button (Blue)**: Saves the text changes directly to the database.
-  - **Add New Version Button (Green)**: Compiles a new version slot (e.g., creating `Version 3`) to save a new iteration.
-
-### 6. Leaderboard Screen Layout & Flow
-The student rankings list.
-* Displays a table of all registered student profiles.
-* Lists **Rank Position**, **Name**, **Rank badge** (Junior/Senior/Master), **Current active operation**, and **Total XP Score**.
-* Your user row is highlighted with a green outline and a "YOU" badge.
-
-### 7. Admin Panel Screen Layout & Flow
-Only accessible if logged in as a **Teacher**.
-* **Active Campaign Cards Grid (Top)**: Select Cyberpunk, Mars, or Fantasy themes to reskin the entire platform layout instantly.
-* **Register Student Profile Form (Left)**: Form containing fields for Name, Username, Security Password, and a dropdown selector for the student's starting Level. Click **Create Student Profile** to save.
-* **Active Student Roster Table (Right)**:
-  - Shows registered students, usernames, and points.
-  - **Assigned Level Dropdown Selector**: Displays their current level. Click this select box to change their level (e.g. upgrade from `L1` to `L2`). The database updates immediately, locking out other levels for the student.
-  - **Local Statistics Overrides (Bottom)**: Deduction, Addition, and Promotion buttons to adjust your points for debugging purposes.
+### 4. Local Detective Statistics Overrides
+Quick buttons allowing teachers to add or deduct points from their active user account for debugging and demonstration purposes:
+* **Deduct 100 XP**: Subtracts 100 points.
+* **Add 100 XP**: Adds 100 points.
+* **Promote to Master Rank**: Sets points to 1200 instantly to test graduate view.
 
 ---
 
-## ❓ FAQ & Troubleshooting
+## ❓ Chapter 11: Troubleshooting, FAQ, & Tutoring Best Practices
 
-### 1. Why do I only see some sessions (like Sessions 1, 2, and 5) in "Quest Files" but all 12 sessions in the "Curriculum Guide"?
-* **Interactive Sandbox Quests vs. Full Academic Curriculum**:
-  - The **Curriculum Guide** is the full academic syllabus. It lists all 12 sessions (Sessions 1 to 12) because it contains the entire learning timeline, including paperless warm-ups, group presentations, and whiteboard/notebook lessons.
-  - The **Quest Files** board (and the **Prompt Sandbox**) only lists the specific sessions that have **fully interactive code compilers and digital simulations** built directly into this software.
-  - For example, in Level 1, Sessions 1, 2, and 5 are loaded with automated simulation terminals, telemetry monitors, and compilation checks. The other sessions in the curriculum are designed for direct tutor-led activities, visual flowcharts, or workbook review, which do not require code compiler testing.
+### 1. Troubleshooting & FAQ
 
-### 2. I submitted a case but my score didn't update!
-Make sure you click the green **Submit Case File** button inside the *Prompt Sandbox* tab after running a successful simulator compile, not just the "Run Simulator" button.
+#### Q: I registered a student, but they get a "Username already exists" error.
+A: Student usernames must be globally unique. Choose a different username (e.g. add their student ID number like `somchai_s_001`).
 
-### 3. I changed a student's level, but they still see the old level.
-Ask the student to perform a **browser refresh** (Ctrl + F5 or Cmd + Shift + R) or log out and log back in to clear cached tokens and download the updated profile information.
+#### Q: A student was upgraded to Level 2, but they still see Level 1.
+A: Have the student click the **Log Out** button and sign back in, or force-refresh their browser tab (**Ctrl + F5** or **Cmd + Shift + R**) to download the updated user profile from the database.
 
-### 4. Can students access other levels?
-No. Once a student is logged in, their client dashboard locks out all non-assigned level selectors on both the Quest Files and Curriculum Guide tabs. Only their assigned level remains active.
+#### Q: The simulator runs successfully, but the "Submit Case File" button is disabled.
+A: Ensure the script output log displays a success status check. If the terminal prints any runtime warning flags or if the telemetry variables fail constraint checks, the submit button remains deactivated.
+
+---
+
+### 2. Tutoring Best Practices (2-Hour Sessions)
+
+Teachers can use this application structure to guide students through the 2-hour learning schedule:
+
+```mermaid
+gantt
+    title 2-Hour Tutoring Session Breakdown
+    dateFormat  m
+    axisFormat %M
+    Warm-up            :active, 0, 15m
+    Board Lesson       : 15m, 35m
+    Concept Practice   : 35m, 60m
+    Sandbox Lab        : 60m, 95m
+    Debugging / Audit  : 95m, 110m
+    Homework & Wrap    : 110m, 120m
+```
+
+1. **00:00 - 00:15 | Socratic Warm-Up**: Review the warm-up task in the Curriculum Guide. Act out code commands literally.
+2. **00:15 - 00:35 | Concept Discussion**: Present the board lesson. Discuss how loops, conditions, or data variables function.
+3. **00:35 - 01:00 | Concept Practice**: Use the notebook/journal to sketch visual flowcharts.
+4. **01:00 - 01:35 | Sandbox Lab**: Select the active Quest File, launch the Sandbox, and write/test the program logic.
+5. **01:35 - 01:50 | Auditing logs**: Intentionally introduce logic errors (Chaos Monkey constraints) and ask the student to debug using the telemetry logs.
+6. **01:50 - 02:00 | Wrap-up**: Log homework in the Journal tab and review.
