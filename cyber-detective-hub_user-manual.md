@@ -200,6 +200,17 @@ The Prompt Sandbox is the core compiler workspace where you build and test your 
   - **Run Simulator Button (Green)**: Runs compilation tests on your script. It passes parameters, evaluates rules, prints logs to the terminal, and updates the Telemetry monitors.
   - **Submit Case File Button (Blue)**: This button is locked (unclickable) when you edit your code. It activates **ONLY** after you run the simulator and your code successfully passes all validation checks without crashing. Clicking it saves your success state, updates your XP score by +100, and logs the completion.
 
+### 💡 Purpose of the Dedicated "Prompt Sandbox" Sidebar Menu
+You might wonder: *If I can open the sandbox directly by clicking "Open in Sandbox" inside Quest Files, why is there a separate "Prompt Sandbox" button in the left sidebar navigation?*
+
+* **1. Persistent Workspace Recovery (No Code Loss)**:
+  - The Prompt Sandbox maintains a persistent state. If you are writing a complex block of code and need to switch tabs (e.g., to read a lesson objective in the *Curriculum Guide* or check notes in your *Prompt Journal*), your code is not lost!
+  - Clicking the **Prompt Sandbox** sidebar button takes you right back to your active editor, restoring your current typed script, state variables, and terminal logs exactly where you left off.
+* **2. Distraction-Free IDE Access**:
+  - It functions as your active compiler. Having it in the sidebar means you have one-click access to run diagnostic checks, write prototype loops, and dry-run syntax rules without needing to navigate back through case menus.
+* **3. Reviewing Live Telemetry**:
+  - If you run simulation checks and get an error message, you can switch tabs to read details of the case, and click the sidebar tab to immediately return to your terminal diagnostic outputs.
+
 ---
 
 ## 📝 Chapter 7: The Prompt Journal & Homework System
