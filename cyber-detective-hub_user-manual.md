@@ -220,16 +220,44 @@ The Prompt Journal serves as your engineering notebook where you log logic bluep
 
 ---
 
-## 📖 Chapter 8: The Curriculum Guide & Syllabus Catalog
+## 📖 Chapter 8: The Curriculum Guideline & Syllabus Catalog
 
-The Curriculum Guide is an interactive directory listing all curriculum details, modules, and teacher resources.
+The **Curriculum Guideline** menu (labeled "Curriculum Guide" on the sidebar) acts as a digital interactive binder containing the entire academic syllabus, lesson timelines, and instructor guides.
 
-### Screen Layout:
-1. **Level Selectors (Top Left)**: Four level buttons (`Level 1: Foundations`, etc.). Just like the Quest Board, students are restricted to their assigned level, while teachers can inspect everything.
-2. **Curriculum Search Field (Top Right)**: Input search box. Type search queries (e.g., "loops", "conditions") to filter the displayed session cards instantly.
-3. **Perspective Toggle Switch (Top Right)**:
-   - **Student Mode**: Shows course objectives, warm-ups, core activity outlines, hands-on tasks, and homework descriptions.
-   - **Teacher Mode** *(Only visible/usable by teachers)*: Expands every card to show Socratic prompting guidelines, Socratic check questions, and exact step-by-step code solutions.
+### 1. Header Toolbar Controls (Top of the Screen)
+* **Curriculum Level Selector Tabs (Left)**:
+  - Button options: `Level 1: Foundations`, `Level 2: AI & Language`, `Level 3: Architecture`, and `Level 4: Engineering`.
+  - **Student Restriction**: Student profiles can only select their active assigned level (others display the padlock `🔒` and are disabled to prevent students from skipping ahead). Teachers have unrestricted access to all levels.
+* **Curriculum Search Input Box (Middle-Right)**:
+  - An interactive search bar with placeholder *"Search topics, activities, concepts..."*.
+  - **How it works**: As you type, the screen dynamically filters the session cards list in real-time, showing only the cards whose title, module name, core activities, or objectives match your text. A small clear button (`×`) appears inside the input box to reset filters quickly.
+* **Perspective Mode Toggle Switch (Right)**:
+  - Labeled with **Student Mode** (left) and **Teacher Mode** (right) text parameters, with a sliding round switch button in the middle.
+  - **For Students**: This switch remains hidden or read-only (locked in Student Mode).
+  - **For Teachers**: Teachers can toggle this switch to immediately expand the lesson cards with secret, backend-authorized tutoring data.
+
+### 2. Session Cards Layout (Detailed Field Breakdown)
+Each session appears as a premium, glass-themed card. Under **Student Mode**, the card displays:
+* **Header Row**: Shows the module classification (e.g. *Module 1: Logic & Sequence*) and the session timeline identifier (e.g. *Session 1: foundations*).
+* **Objectives List**: Bulleted checklists detailing exactly what the student will know and be able to do by the end of the 2 hours.
+* **Warm-Up Panel**: A brief 10–15 minute introductory activity.
+* **Mini-Lesson Panel**: The core concept introduction guidelines used by the tutor.
+* **Core Practice Activity**: An offline or drag-and-drop sequencing task to model the logic flow.
+* **Hands-On Sandbox Lab**: A description of the matching interactive programming task that needs to be compiled in the *Prompt Sandbox* tab.
+* **Homework Brief**: Outlines the notebook journaling task to be submitted inside the *Prompt Journal* tab.
+* **Ethics Moment**: Discusses social and security implications of code logic.
+* **Classroom Adaptations**: Tips on adjusting lesson presentation based on age groups.
+
+### 3. Teacher Mode Extensions (Instructor Guideline Overlays)
+When the **Teacher Mode** toggle is switched **ON**, three additional panels expand at the bottom of every session card:
+* **💡 Socratic Prompting Guidelines**:
+  - Contains exact, context-specific questions to guide struggling students rather than feeding them direct code syntax.
+  - Example: *"Look at the terminal. Why did the drone crash on step 3?"* or *"How can the drone know where the door is before it performs a scan?"*
+* **🔍 Socratic Check Questions**:
+  - Concept-checking questions to test a student's understanding before allowing them to advance.
+  - Example: *"If we bypass the firewall before scanning, what does the connector receive? Why does it fail?"*
+* **🔑 Teacher Solutions Key**:
+  - Displays the exact, expected Javascript code block answers or logic sequence answers required to pass the Sandbox checks. This serves as a quick reference sheet for the tutor during active coding runs.
 
 ---
 
