@@ -124,6 +124,17 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response digitally through the app.
 
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
+- **Exercise 1.1 (Basic Route) Solution**: Sequence: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
+  - *Tutor Guide*: If the student skips `power_on`, show how the terminal logs `CRITICAL ERROR: System offline`.
+- **Exercise 1.2 (Variable Coordinates) Solution**: Sequence: `power_on` ➔ `scan_door` (this loads/binds target coordinates data to target variables) ➔ `fly_door` (which accesses the target variable coords) ➔ `unlock_door`.
+  - *Tutor Guide*: Teach the dependency concept. If we fly before scanning, the coordinate variable is `null`, causing a collision.
+- **Exercise 1.3 (Sequence Correction) Solution**: Target error in preloaded sequence: `fly_door` occurs before `power_on` and `scan_door`. The student must drag block 2 (`power_on`) and block 3 (`scan_door`) to the top, sorting the flow to: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
+- **Homework Evaluation**: Ensure the student's submitted text lists:
+  - *Input*: Button presses, dial rotations, weight sensor values.
+  - *Process*: Checking timer counter limits, comparing temperature variables.
+  - *Output*: Activating heater/motor coils, sounding audible buzzer notifications.
+
 ---
 
 #### Session 2: "Backpack Classification & Lock Verification" (2 hours)
@@ -166,6 +177,18 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Locate two real-world sign-up forms online. In the application's Journal tab under "Session 2 Homework", list three input fields from those forms, identify their expected data types, and describe what validation error appears if you enter incorrect data types.
+
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 2)
+- **Exercise 2.1 (Backpack Sorting) Solution**: Drag-and-drop elements:
+  - *Strings*: `"Vault_A"`, `"intruder_alert"`
+  - *Numbers*: `101`, `0.05`
+  - *Booleans*: `true`, `false`
+- **Exercise 2.2 (Rules Configuration) Solution**: Set the dropdown verification fields to:
+  - `username` ➔ `Must be String`
+  - `passcode` ➔ `Must be Number`
+  - `isAdmin` ➔ `Must be Boolean`
+- **Exercise 2.3 (Boundary Auditing) Solution**: Configure logic boundaries: Check age boundaries (> 0) and passcode length (value >= 1000).
+- **Homework Evaluation**: Check that the student describes two real forms (e.g., game signup, email signup) and correctly identifies data types (e.g., Email field is String validation; Phone field requires Number type) and lists common error banners.
 
 ---
 
@@ -210,6 +233,19 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Draw or design a state machine transition table for an everyday device (like a traffic light or elevator). Write the states, events, and transitions into the app's Journal tab under "Session 3 Homework".
 
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 3)
+- **Exercise 3.1 (Basic Transition) Solution**: Transition rules table configurations:
+  - `CLOSED` + `insert_keycard` ➔ `Transition to OPEN`
+  - `OPEN` + `push_door` ➔ `Transition to CLOSED`
+- **Exercise 3.2 (Hazard Logic) Solution**:
+  - `CLOSED` + `push_door` ➔ `Transition to ALARM_LOCKED`
+- **Exercise 3.3 (Deadlock Resolution) Solution**: Add rule:
+  - `ALARM_LOCKED` + `reset_alarm` ➔ `Transition to CLOSED`
+  - *Tutor Guide*: Demonstrate what happens if this rule is missing—once the alarm goes off, clicking "reset" fails to change the visual locked state, locking the student out of the vault forever.
+- **Homework Evaluation**: Ensure the student maps out states (e.g. elevator: `G`, `1`, `2`, `DoorOpen`), events (e.g. `press_1`, `timer_elapsed`), and shows a clean, loop-free transition table.
+
+---
+
 ---
 
 
@@ -219,38 +255,60 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **Learning Objectives:**
 - Construct conditional logic (IF / ELSE IF / ELSE)
-- Combine conditions with AND, OR, NOT
+- Combine conditions with logical operators (AND, OR, NOT)
+- Map flowcharts to decision logic trees in the application
 
-**Warm-Up (15 min):**
-- **"The Sorting Hat"** — Tutor reads scenarios. Students hold up TRUE or FALSE cards. Start simple ("The sky is blue"), progress to compound ("The sky is blue AND it is raining").
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"The Decision Tree Builder"**
-  - Scenario: Design a theme park ride access system.
-  - Rules: Must be taller than 120cm. Must be older than 8. Must NOT have a heart condition. If accompanied by adult, height rule drops to 100cm.
-  - Students build a decision tree (on paper or whiteboard) covering ALL combinations.
-  - Tutor introduces edge cases: *"What about someone who is exactly 120cm? What about someone who doesn't know if they have a heart condition?"*
+1. **Warm-Up: The Digital Sorting Hat (15 mins)**
+   - *Activity*: Interactive true/false check game on the application screen.
+   - *Action*: The student is presented with complex conditions (e.g. `"The vault is open AND the alarm is off"`) and clicks True or False indicators based on mock system state variables.
+   - *Debrief*: Show how computers combine inputs to make singular decisions.
 
-- **"Truth Table Puzzles"**
-  - Present logic puzzles as truth tables:
-    - "The door opens IF (key is correct AND alarm is off) OR (emergency override is active)"
-    - Students fill in all possible combinations and determine results.
-  - Progress to a 3-variable truth table.
+2. **Core Concept Board Lesson: Conditionals & Logic Operators (20 mins)**
+   - *Topic 1*: Branching logic using IF, ELSE IF, and ELSE.
+   - *Topic 2*: Truth operations: AND (`&&`), OR (`||`), and NOT (`!`).
+   - *Topic 3*: Visual flowchart nodes: decision diamonds.
 
-**Mini-Lesson (20 min):**
-- Formalize: **IF**, **ELSE IF**, **ELSE** as decision branches
-- **AND** (both must be true), **OR** (at least one true), **NOT** (flip the value)
-- Visual notation for decision diamonds in flowcharts
+3. **Digital Concept Practice: The Decision Tree Builder (25 mins)**
+   - *Activity*: Inside the application, the student maps conditional rules for a security clearance check.
+   - *Action*: Drag-and-drop conditions to determine if access is granted (e.g., taller than 120cm AND older than 8 AND no heart conditions).
 
-**Closing Activity (15 min):**
-- **"Write the Rules for a Game"** — Students write all the conditional rules for Rock-Paper-Scissors. Must cover every combination including ties and invalid inputs.
+4. **Digital Sandbox Lab: Thermostat Controller (30 mins)**
+   - *Activity*: Student launches Level 1 Session 4 Sandbox.
+   - *Action*: Complete three progressive exercises:
+     - **Exercise 4.1 (Basic Climate)**: Write a conditional rule (e.g., if temp > 25 cool, else if temp < 18 heat, else idle).
+     - **Exercise 4.2 (Window Override)**: Add an override condition checking `isWindowOpen === true` to shut down the climate controls.
+     - **Exercise 4.3 (Security Lockout)**: Write an alert trigger condition checking if temperature exceeds high hazard levels AND system override is inactive.
+     - Earning $+100$ XP on completion.
 
-**Ethics Moment (10 min):**
-- *"A loan application AI uses rules: IF income > X AND credit_score > Y THEN approve. What if these rules accidentally discriminate against certain groups of people?"* Introduction to algorithmic bias through conditionals.
+5. **Assessment & Debrief: Truth Table Audits (20 mins)**
+   - *Activity*: Tutor presents a 3-variable truth table with logical holes. Student identifies inputs that slip past the checks.
+
+6. **Ethics & Algorithmic Choice (10 mins)**
+   - *Topic*: Loan approval systems. If code rules reject applicants automatically, how do developers ensure rules are fair?
 
 **📝 Homework (Practice at Home):**
-- Design a decision tree for a real-life decision: "What should I wear today?" Include at least 4 conditions (weather, temperature, activity planned, dress code) using AND, OR, and NOT. Create a complete truth table for at least 2 combined conditions.
-- Bring your decision tree and truth table to the next session.
+- **In-App Homework Quest**: Complete the "Weather Decision Rule Tree" inside the app's Journal tab. Write a conditional decision flow using `if`, `else if`, and logical operators to choose clothes based on weather parameters.
+
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 4)
+- **Exercise 4.1 (Basic Climate) Solution**:
+  ```javascript
+  if (temp > 25) { mode = "cooling"; }
+  else if (temp < 18) { mode = "heating"; }
+  else { mode = "idle"; }
+  ```
+- **Exercise 4.2 (Window Override) Solution**:
+  ```javascript
+  if (isWindowOpen === true) { mode = "idle"; }
+  else if (temp > 25) { mode = "cooling"; }
+  // ... rest of rules
+  ```
+- **Exercise 4.3 (Security Lockout) Solution**:
+  ```javascript
+  if (temp > 45 && isEmergencyOverride === false) { triggerAlarm(); }
+  ```
+- **Homework Evaluation**: Ensure the student's submitted decision rules tree covers all conditions (e.g., handling rain, temperature limits) and uses proper logic operators (`&&`, `||`, `!`).
 
 ---
 
@@ -282,8 +340,9 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 4. **Digital Sandbox Lab: SmartPetFeeder Loop Controller (30 mins)**
    - *Activity*: Student launches Level 1 Session 5 Sandbox.
    - *Action*: Complete loop-based challenges:
-     - Write a feeding loop constraint: repeat feeding 3 times if weight < 100g.
-     - Prevent infinite loop overflows by setting `clicks < maxClicks` bounds.
+     - **Exercise 5.1 (Fixed Sweep)**: Write a loop to clean solar panels exactly 5 times using a counting loop `for (let i = 0; i < 5; i++)`.
+     - **Exercise 5.2 (Pumping Level)**: Write a conditional loop `while (waterLevel < 100)` to fill a telemetry chamber.
+     - **Exercise 5.3 (Exit Debugger)**: Fix an infinite loop by adding `counter++` to ensure the condition terminates.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Loop Tracing (20 mins)**
@@ -294,6 +353,18 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Identify two loops in your daily routine. Open the Journal tab under "Session 5 Homework" and write down their logic using basic JavaScript-like loops (e.g. `while (battery < 100)` or `for (let step = 0; step < 10000; step++)`).
+
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 5)
+- **Exercise 5.1 (Fixed Sweep) Solution**:
+  ```javascript
+  for (let i = 0; i < 5; i++) { sweepPanel(); }
+  ```
+- **Exercise 5.2 (Pumping Level) Solution**:
+  ```javascript
+  while (waterLevel < 100) { pumpWater(); }
+  ```
+- **Exercise 5.3 (Exit Debugger) Solution**: Target code has `let i = 0; while (i < 3) { doSomething(); }` getting stuck. The student must insert the increment code `i++;` inside the loop body to allow exit.
+- **Homework Evaluation**: Check if the student's loops have a clear initialization, condition check, and increment/exit mechanism.
 
 ---
 
@@ -319,9 +390,11 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 4. **Digital Sandbox Lab: Smart Light Grid (30 mins)**
    - *Activity*: Student launches the block workspace in the app.
-   - *Action*: Program the lighting grid using visual logic blocks, then toggle the "Show Code" panel to inspect and verify the Javascript output compilation.
-   - *Challenge*: Add an emergency override trigger in Javascript syntax parameters to dim the grid.
-   - *Rewards*: Earning $+100$ XP.
+   - *Action*: Complete three progressive exercises:
+     - **Exercise 6.1 (Block Assembly)**: Connect logic blocks (loops + conditional checks) to dim grid lights when motion ceases.
+     - **Exercise 6.2 (Syntax Link)**: Select equivalent Javascript lines for visual block nodes.
+     - **Exercise 6.3 (Code Override)**: Edit parameters in the raw JavaScript code output panel directly to override emergency alarm settings.
+     - Earning $+100$ XP.
 
 5. **Assessment & Debrief: Code Review (20 mins)**
    - *Activity*: Tutor presents a short compiled code block with an error. The student identifies which visual logic block corresponds to the error.
@@ -331,6 +404,16 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: In the Journal tab under "Session 6 Homework", write the JavaScript syntax equivalent for a block condition that checks: "If the temperature is greater than 30 degrees, turn on the fan, otherwise turn off the fan." Use simple `if` / `else` syntax.
+
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 6)
+- **Exercise 6.1 (Block Assembly) Solution**: Visual stack: `IF motionDetected === false THEN setBrightness(50)`.
+- **Exercise 6.2 (Syntax Link) Solution**: Matching: `Repeat 10 times` block connects to `for (let i = 0; i < 10; i++)`.
+- **Exercise 6.3 (Code Override) Solution**: Set parameter in custom code string: `overrideAlarms(true)`.
+- **Homework Evaluation**: Check that the student submitted the correct syntax representation:
+  ```javascript
+  if (temperature > 30) { turnOnFan(); }
+  else { turnOffFan(); }
+  ```
 
 ---
 
@@ -376,6 +459,17 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Choose your favorite game or application. Open the Journal tab under "Session 7 Homework", identify 3 distinct sub-systems, and write empty JavaScript function signatures representing each one.
 
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 7)
+- **Exercise 7.1 (Stopwatch Modules)**: Student configures: `function startTimer()`, `function incrementTime()`, `function renderDisplay()`.
+- **Exercise 7.2 (Module Dependencies)**: Connecting dependencies: `incrementTime` relies on the periodic output trigger of `startTimer`.
+- **Exercise 7.3 (Deadlock Mitigation)**: Avoid deadlock by separating loop timers from UI rendering states.
+- **Homework Evaluation**: Student must write 3 clean JavaScript function skeletons:
+  ```javascript
+  function checkCollision() { }
+  function applyGravity() { }
+  function addPoints() { }
+  ```
+
 ---
 
 #### Session 8: "Designing Before Building" (2 hours)
@@ -413,6 +507,19 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Refine your Habit Tracker blueprint. In the Journal tab under "Session 8 Homework", define 4 variables with appropriate types, and write 2 conditional statements using JavaScript operators (`&&` or `||`) that check when a habit streak is broken.
+
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 8)
+- **Exercise 8.1 (Var Mapping)**: Match inputs: `nameInput` ➔ `String`, `ageInput` ➔ `Number`.
+- **Exercise 8.2 (Variables Declaration)**:
+  ```javascript
+  let score = 0;
+  let isFinished = false;
+  ```
+- **Exercise 8.3 (Operators Logic)**: Combining checks: `if (attempts < maxAttempts && solved === false)`.
+- **Homework Evaluation**: The student's journal response must declare 4 variables with clean Types, and have statements like:
+  ```javascript
+  if (missedDays > 1 || isCompletedToday === false) { streakCount = 0; }
+  ```
 
 ---
 
@@ -452,9 +559,16 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: In the Journal tab under "Session 9 Homework", design the interface contract for an online shop. Write the signature of a function named `calculateTotal` that takes two parameters (`price` and `taxRate`) and returns the total value in code syntax.
 
----
-
-### Module 4: Thinking Like a Tester (Sessions 10–11)
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 9)
+- **Exercise 9.1 (Pipeline Routing)**: Student binds `readSensor()` output values directly as the input parameter value for the `processData(val)` function.
+- **Exercise 9.2 (Parameter Binding)**: Pass arguments: `checkAccess(token, gateId)`.
+- **Exercise 9.3 (Return Binding)**: Capture function return: `let status = updateAirlock(sensorFeed)`.
+- **Homework Evaluation**: The student's function signature must match standard JavaScript parameter rules:
+  ```javascript
+  function calculateTotal(price, taxRate) {
+    return price + (price * taxRate);
+  }
+  ```
 
 ---
 
@@ -499,6 +613,22 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Create a suite of 5 test case objects in code syntax for a login form checking password rules (e.g., minimum 8 characters). Type these into the Journal tab under "Session 10 Homework".
+
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 10)
+- **Exercise 10.1 (Fuzz checks)**: Connect boundaries: check how the system behaves if input is `undefined`.
+- **Exercise 10.2 (Test assertion Objects)**: Write syntax objects:
+  ```javascript
+  const testCase1 = { input: -5, expected: "Error: Negative input" };
+  const testCase2 = { input: "", expected: "Error: Empty input" };
+  ```
+- **Exercise 10.3 (Boundary Fix)**: Rectify bounds on numbers to block extreme inputs.
+- **Homework Evaluation**: Student must write 5 test case objects inside the app:
+  ```javascript
+  const testCases = [
+    { input: "1234567", expected: "Invalid" }, // too short
+    { input: "12345678", expected: "Valid" }
+  ];
+  ```
 
 ---
 
@@ -546,6 +676,17 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: In the Journal tab under "Session 11 Homework", write a simple JavaScript conditional check that checks if a variable `email` contains "@" and throws an error if it doesn't.
 
+#### 📖 Tutor Manual: Exercises & Homework Solutions (Session 11)
+- **Exercise 11.1 (Catch blocks)**: Configure fallback statements: `catch(err) { displayMessage(err.message); }`.
+- **Exercise 11.2 (Throw assertions)**: Write guards: `if (!cardKey) { throw new Error("Card key missing"); }`.
+- **Exercise 11.3 (Keypad Guard)**: Implement lockout increment rules: increment attempts on catch blocks, lock system when `attempts >= 3`.
+- **Homework Evaluation**: The student's script must verify `@` existence and run throw statements:
+  ```javascript
+  if (!email.includes("@")) {
+    throw new Error("Invalid email format");
+  }
+  ```
+
 ---
 
 ### Level 1 Assessment & Graduation (Session 12)
@@ -587,6 +728,12 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - Rubric average score of 3.0 or higher.
 - Can successfully solve all Sandbox interactive tasks.
 - Can trace and explain short JavaScript statements containing conditional limits and loop parameters.
+
+#### 📖 Tutor Manual: Assessment Solutions (Session 12)
+- **Part A (Blueprint Check)**: Verify the student mapped 4 logical states (e.g. `Idle`, `Search`, `Loaned`, `Reserved`) with correct transition keys, set variables like `let borrowLimit = 5;`, and defined boundary test case objects.
+- **Part B (Defense Check)**: Test student checks against invalid inputs (e.g. checking that borrowing is blocked when `booksBorrowed >= borrowLimit`).
+- **Part C (Diagnostic Check)**: The student must resolve the loop error by identifying that a counting index starts out of bounds or increments in the wrong direction.
+- **Take-Home Evaluation**: Assess the student's level of self-reflection on variables and literal logical instruction sets.
 
 ---
 
