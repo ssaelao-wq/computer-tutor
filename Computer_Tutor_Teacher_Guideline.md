@@ -27,10 +27,17 @@ This guideline is designed for the tutor to lead one-on-one sessions for student
 * **Sequential Control**: Explain that a computer has zero common sense. If step 2 requires data from step 1, running step 2 first triggers an error or system crash.
 
 ### 2. Socratic Prompting
+* **Mapping to Exercise 1.1 (Basic Route)**:
+  * *Tutor Prompt*: *"What is the absolute first thing you must do before a device can perform any electronic commands?"* (Turn on power).
+  * *Explanation*: Absolute beginners might attempt to execute actions like `fly_door` or `scan_door` directly. Use this prompt to direct them to the dependency of electrical systems requiring boot/power states before processing commands.
+
 * **Mapping to Exercise 1.2 (Variable Coordinates)**:
+  * *The Exercise*: The student needs to write a sequence where the drone boots, scans to locate the door coordinates, and flies to those coordinates.
   * *Tutor Prompt*: *"How can the drone know where the door is before it performs a scan?"*
   * *Explanation*: If the student sequences `fly_door` before `scan_door`, the drone will fail because its coordinate destination memory is `null` or undefined. Use this question to guide the student to discover the logical **data dependency**—the drone must scan to populate the target variables *before* it can read those variables for navigation.
+  
 * **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
+  * *The Exercise*: The student is faced with a preloaded, scrambled sequence that crashes immediately.
   * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the drone crash on step 3?"* (or whichever step is executing).
   * *Explanation*: In the preloaded scrambled sequence, instructions are out of order (e.g. attempting to fly before powering on). The terminal outputs specific error messages. Use this prompt to direct the student's eyes to the terminal log messages instead of letting them guess the solution, helping them connect log readings to step re-ordering.
 
