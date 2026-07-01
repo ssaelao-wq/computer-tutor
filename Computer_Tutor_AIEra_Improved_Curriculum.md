@@ -1,5 +1,5 @@
 # Computer Tutor in the AI Era — Complete Curriculum (Improved)
-
+ 
 ## 1. Executive Summary
 
 The landscape of software engineering has fundamentally changed. AI now handles the historical bottleneck of writing syntax and debugging compiler errors. However, skipping coding entirely creates a dangerous disconnect — to effectively direct AI, a creator must understand the constraints, mechanics, and underlying logic of systems.
@@ -81,45 +81,48 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 ### Module 1: Inputs, Processing, and Outputs (Sessions 1–3)
 
-#### Session 1: "Literal Logic & Drone Infiltration" (2 hours)
+#### Session 1: "Literal Logic & Digital Infiltration" (2 hours)
 
 **Learning Objectives:**
 - Understand that computers execute commands sequentially, literally, and without common sense
-- Map out input-process-output (IPO) data paths
-- Create strict instruction chains to solve navigation objectives
+- Map out input-process-output (IPO) data paths in the application
+- Create strict instruction chains to solve progressive navigation objectives
 
 **Lesson Timeline & Content Breakdown (2 hours):**
 
-1. **Warm-Up: The Human Drone Navigation (15 mins)**
-   - *Activity*: One student plays the "Drone Operator" (coder) and another plays the "Tactical Infiltration Drone" (computer).
-   - *Action*: The Operator gives commands to navigate the Drone from the back of the classroom to the front door.
-   - *Constraint*: The Drone follows instructions **strictly literally** (e.g., if told to "walk forward" without specifying steps, they walk until hitting a wall. If told to "turn right" while moving, they turn but keep sliding).
-   - *Debrief*: Highlight that computers do not assume intent. If an instruction is missing or out of order, the program crashes or executes a logical error.
+1. **Warm-Up: The Tutor Drone Simulation (15 mins)**
+   - *Activity*: One-on-one interactive roleplay. The student plays the "Drone Operator" (coder) and the tutor plays the "Tactical Infiltration Drone" (computer).
+   - *Action*: The student gives step-by-step navigation instructions to the tutor to retrieve an object.
+   - *Constraint*: The tutor follows commands **strictly literally** (e.g., if told to "walk forward" without specifying steps, they keep walking until blocked. If told to "grab object" before reaching it, they grab thin air).
+   - *Debrief*: Highlight that computers do not assume intent. If instructions are out of order, the program crashes or triggers a logic error.
 
 2. **Core Concept Board Lesson: The IPO Model & Sequential Control (20 mins)**
-   - *Topic 1*: The Input-Process-Output (IPO) framework. Trace everyday instances (e.g. card key reader: input=ID badge, process=validate lookup, output=unlocked light).
-   - *Topic 2*: Linear command chains and order dependency. Show how the outcome of step $N$ depends on step $N-1$ (e.g., you cannot decrypt a vault partition before establishing a secure tunnel).
-   - *Topic 3*: The concept of variables as labeled registers containing one state value.
+   - *Topic 1*: The Input-Process-Output (IPO) framework. Trace everyday examples on the app screen (e.g. card key reader: input=ID badge, process=validate lookup, output=unlocked light).
+   - *Topic 2*: Linear command chains and order dependency. Show how step $N$ depends on step $N-1$.
+   - *Topic 3*: Variables as labeled registers containing one state value.
 
-3. **Classroom Practice 1: The Sequence Blueprinting Board Game (25 mins)**
-   - *Activity*: Working in pairs, students are given a map of a security grid and a set of command cards (`Power On`, `Scan Subnet`, `Establish SSH Tunnel`, `Bypass Firewall`, `Exfiltrate Logs`).
-   - *Action*: Students must arrange their paper cards in the exact logical order to reach the center target without triggering an alarm.
-   - *Self-Audit*: The partner acts as the "Malicious Compiler," tracing the steps literally and highlighting gaps (e.g., "You tried to Bypass Firewall before scanning the network. Command ignored, drone detected!").
+3. **Digital Concept Practice: The In-App Sequence Blueprint (25 mins)**
+   - *Activity*: In the application's digital learning panel, the student interacts with a flowchart sequencer.
+   - *Action*: The student arranges digital command blocks (`Power On`, `Scan Subnet`, `Establish SSH Tunnel`, `Bypass Firewall`, `Exfiltrate Logs`) in the exact logical order to reach a target.
+   - *Self-Audit*: The student runs a simulator to see if the sequence triggers alarms or completes the security bypass.
 
 4. **Digital Sandbox Lab: Cyber Security-Drone Simulator (30 mins)**
-   - *Activity*: Students open the **Cyber Detective Hub** website, go to Level 1 Session 1, and launch the Sandbox.
-   - *Action*: They interact with the visual **Drone Navigator Simulator**. They drag and test sequence patterns (`power_on`, `scan_door`, `fly_door`, `unlock_door`).
-   - *Practice Challenge*: Students must purposely write a sequence that causes the drone to crash, log the specific terminal error, and then write the correct sequence to bypass the door, earning $+100$ XP.
+   - *Activity*: Student launches Level 1 Session 1 Sandbox.
+   - *Action*: Complete three progressive exercises:
+     - **Exercise 1.1 (Basic Route)**: Click commands in the correct sequence (`power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`) to bypass the warehouse outer door.
+     - **Exercise 1.2 (Variable Coordinates)**: Sequence the drone to boot, scan to load the coordinates variable, fly to the coordinates, and bypass the door.
+     - **Exercise 1.3 (Sequence Correction)**: Debug an incorrect, preloaded sequence that crashes the drone by rearranging the sequence order.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Log Auditing (20 mins)**
    - *Activity*: The tutor displays three different failed execution logs from the Drone Navigator.
-   - *Challenge*: Students must inspect the output messages, identify the logical step that failed, and explain *why* the order was illegal.
+   - *Challenge*: The student inspects the output messages, identifies the logical step that failed, and explains *why* the order was illegal.
 
 6. **Ethics & Automation Discussion (10 mins)**
    - *Topic*: If a self-driving delivery drone crashes because of a logic error in its code, who is responsible? The coder who wrote the sequence, the company that deployed it, or the operator who clicked "Run"?
 
 **📝 Homework (Practice at Home):**
-- Choose a household system (e.g., an automatic washing machine or a microwave). Write down a step-by-step sequential algorithm for its operation. Identify the inputs, the processing logic, and the outputs. Bring your instruction list to the next session.
+- **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response digitally through the app.
 
 ---
 
@@ -133,34 +136,36 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **Lesson Timeline & Content Breakdown (2 hours):**
 
 1. **Warm-Up: The Crypto-Token Sorting Arena (15 mins)**
-   - *Activity*: Hand students cards printed with various data pieces (e.g. `"Vault_A"`, `101`, `true`, `"intruder_alert"`, `0.05`, `false`).
-   - *Action*: Students race to group them into three folders labeled: "Text Strings", "Quantities & Codes (Numbers)", and "Toggles (Yes/No Booleans)".
-   - *Debrief*: Computers process different data types using completely different physical circuitry. You cannot perform mathematical addition on a text word.
+   - *Activity*: The student completes a drag-and-drop game on the application's warm-up screen.
+   - *Action*: Sort various data cards (e.g. `"Vault_A"`, `101`, `true`, `"intruder_alert"`, `0.05`, `false`) into three folders: "Text Strings", "Quantities & Codes (Numbers)", and "Toggles (Yes/No Booleans)".
+   - *Debrief*: Highlight that data types dictate what operations are valid; you cannot perform math on a word.
 
 2. **Core Concept Board Lesson: Data Types & Validation Guards (20 mins)**
-   - *Topic 1*: Define Strings (anything inside quotation marks), Numbers (integers and decimals), and Booleans (binary state flags: true/false).
+   - *Topic 1*: Define Strings, Numbers, and Booleans.
    - *Topic 2*: The principle of **"Garbage In, Garbage Out"** (GIGO). Explain how inputs must be checked before being processed.
    - *Topic 3*: Configuration of validation filters (type matching, range checking, existence checks).
 
-3. **Classroom Practice 2: Form Exploitation Exercise (25 mins)**
-   - *Activity*: Students are handed a printed mock "Admin Registration Form" with inputs: `username`, `age`, `security_key`, `is_authorized`.
-   - *Action*: Students act as "Hacker Exploiter" and "Security Guard." The Hacker attempts to bypass the login by filling in bad data (e.g. writing "banana" in the `age` field, or "YES" in the `is_authorized` boolean field).
-   - *Action*: The Security Guard must write explicit type constraints (e.g., "Age must be integer type between 13 and 99; if not, reject form") to block every bypass attempt.
+3. **Digital Concept Practice: Form Validation Explorer (25 mins)**
+   - *Activity*: Inside the application, the student interacts with a mock registration form.
+   - *Action*: The student tests inputs by writing illegal values (e.g., words in age fields) to trigger input validation guards, then configures filters to block malicious inputs.
 
 4. **Digital Sandbox Lab: Backpack Sorter & Lock Validator (30 mins)**
-   - *Activity*: Students open the **Cyber Detective Hub** Sandbox for Level 1 Session 2.
-   - *Action*: They use the interactive **Backpack Sorting Bay** to classify items, then configure the dropdown selectors for the **Lockbox Verification Rules** (`username = string`, `passcode = number`, `isAdmin = boolean`).
-   - *Practice Challenge*: Students run credential tests to observe how incorrect rule configurations allow malicious payloads to slip past or block legitimate users, then patch their rules to unlock the lockbox and claim $+100$ XP.
+   - *Activity*: Student launches Level 1 Session 2 Sandbox.
+   - *Action*: Complete three progressive exercises:
+     - **Exercise 2.1 (Backpack Sorting)**: Sort all backpack data items into the correct type compartments (Strings, Numbers, Booleans).
+     - **Exercise 2.2 (Rules Configuration)**: Configure validation rules for the lockbox inputs (`username = string`, `passcode = number`, `isAdmin = boolean`).
+     - **Exercise 2.3 (Boundary Auditing)**: Apply validation constraints (e.g., age must be positive, passcode must be > 1000) to reject out-of-bound inputs.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Data Auditing (20 mins)**
    - *Activity*: Tutor shows a database record containing corrupt data (e.g. a phone number containing letters).
-   - *Action*: Students work to write the exact data type validation rules that should have been put in place to prevent this corruption.
+   - *Action*: Student writes the exact data type validation rules that should have been put in place to prevent this corruption.
 
 6. **Ethics & Data Privacy Moment (10 mins)**
    - *Topic*: If a registration form forces you to choose between two genders, what happens to users who don't fit? How does strict data typing affect real-world representation?
 
 **📝 Homework (Practice at Home):**
-- Locate three sign-up forms online (e.g. email registration, game account creation). List three input fields from those forms and write: (1) what data type they expect, and (2) what validation error appears if you enter incorrect data types.
+- **In-App Homework Quest**: Locate two real-world sign-up forms online. In the application's Journal tab under "Session 2 Homework", list three input fields from those forms, identify their expected data types, and describe what validation error appears if you enter incorrect data types.
 
 ---
 
@@ -173,36 +178,37 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **Lesson Timeline & Content Breakdown (2 hours):**
 
-1. **Warm-Up: The Classroom State Machine (15 mins)**
-   - *Activity*: Define three physical states for the classroom: `IDLE` (sitting), `ACTIVE` (standing), and `ALARM` (waving arms).
-   - *Action*: The tutor calls out trigger events: "Signal Received", "Time Elapsed", "Security Breach". Students transition physical postures based on rules written on the board.
-   - *Debrief*: Highlight that a system behaves differently in response to the *same* trigger depending on its *current state* (e.g., "Signal Received" in IDLE stands you up, but in ALARM does nothing).
+1. **Warm-Up: The In-App State Explorer (15 mins)**
+   - *Activity*: Interactive simulation on the application screen.
+   - *Action*: The student clicks trigger buttons on a virtual airlock simulation (`Press Open`, `Lock Airlock`, `Sensor Detects Object`) to observe how the current state limits future operations.
+   - *Debrief*: Highlight that a system behaves differently depending on its *current state* (e.g., pressing open does nothing if the state is locked).
 
 2. **Core Concept Board Lesson: Finite State Machines (20 mins)**
-   - *Topic 1*: States (snapshots of a system's current variables) vs Transitions (changes from one state to another).
-   - *Topic 2*: Event Triggers (inputs that cause transitions).
-   - *Topic 3*: State Tables (the logical matrix mapping `Current State + Event ➔ Next State`). Show how to construct them to prevent illegal states.
+   - *Topic 1*: States (snapshots of a system's current variables) vs Transitions.
+   - *Topic 2*: Event Triggers.
+   - *Topic 3*: State Tables (the logical matrix mapping `Current State + Event ➔ Next State`).
 
-3. **Classroom Practice 3: Smart-Device Transition Blueprinting (25 mins)**
-   - *Activity*: Students choose a smart device (e.g., smart microwave, digital watch, traffic light controller).
-   - *Action*: Students draw circles representing states (e.g., `COOKING`, `PAUSED`, `DOOR_OPEN`, `COMPLETE`) and arrows representing events (e.g., `press_start`, `open_door`, `timer_expires`).
-   - *Validation*: A classmate tests the diagram to find "Deadlocks" (e.g. if the door is open while cooking, how does it transition back? Is there a state where the user gets stuck forever?).
+3. **Digital Concept Practice: Device Transition Blueprinting (25 mins)**
+   - *Activity*: Inside the application, the student maps out state transition pathways for a smart device (like a smart microwave) using a drag-and-drop node graph.
+   - *Action*: The student tests the connections to ensure there are no deadlocks.
 
 4. **Digital Sandbox Lab: Security Vault State Controller (30 mins)**
-   - *Activity*: Students open the **Cyber Detective Hub** Sandbox for Level 1 Session 3.
-   - *Action*: They use the **Transition Rules Map** dropdowns to link states and events (e.g., `CLOSED` + `insert_keycard` ➔ `OPEN`, `CLOSED` + `push_door` ➔ `ALARM_LOCKED`).
-   - *Practice Challenge*: Students interact with the vault graphics panel. They must test their transitions by triggering events live. The system rewards $+100$ XP only when all door states (`CLOSED`, `OPEN`, `ALARM_LOCKED`) are verified, and the system is successfully reset to `CLOSED` without getting deadlocked.
+   - *Activity*: Student launches Level 1 Session 3 Sandbox.
+   - *Action*: Complete three progressive exercises:
+     - **Exercise 3.1 (Basic Transition)**: Configure transition rules to move from `CLOSED` to `OPEN` when inserting a keycard, and from `OPEN` to `CLOSED` when pushing the door.
+     - **Exercise 3.2 (Hazard Logic)**: Set up rules where pushing the door while `CLOSED` transitions it to `ALARM_LOCKED`.
+     - **Exercise 3.3 (Deadlock Resolution)**: Repair a state machine by writing the reset rule `ALARM_LOCKED` + `reset_alarm` ➔ `CLOSED` to prevent getting locked out forever.
+     - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: State Diagnostics (20 mins)**
    - *Activity*: Present a state transition table containing a security hole (e.g., pushing the vault door during `ALARM_LOCKED` transitions it to `OPEN` without a keycard).
-   - *Action*: Students identify the logic flaw and rewrite the state table to patch the vulnerability.
+   - *Action*: Student identifies the logic flaw and rewrites the state table to patch the vulnerability.
 
 6. **Ethics & System Safety Discussion (10 mins)**
    - *Topic*: If a smart elevator's state machine code locks the doors during a fire alarm state (preventing smoke entering but trapping people inside), was the system design correct? How do we balance security with life safety?
 
 **📝 Homework (Practice at Home):**
-- Draw a simple state machine diagram for a device you interact with (e.g. an elevator, vending machine, or traffic signal). List: (1) all states, (2) all events, and (3) a transition table showing how it moves from state to state. Include at least one error state (e.g., "What happens if the batteries die?").
-- Bring your state diagram to the next session.
+- **In-App Homework Quest**: Draw or design a state machine transition table for an everyday device (like a traffic light or elevator). Write the states, events, and transitions into the app's Journal tab under "Session 3 Homework".
 
 ---
 
@@ -251,80 +257,80 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 #### Session 5: "Round and Round — Loops" (2 hours)
 
 **Learning Objectives:**
-- Distinguish between "repeat N times" and "repeat until condition" loops
-- Identify and prevent infinite loops
+- Distinguish between "repeat N times" (`for` loops) and "repeat until condition" (`while` loops)
+- Identify and prevent infinite loops using exit conditions
+- Read and write simple syntax loop boundaries (e.g., `for (let i = 0; i < 5; i++)`)
 
-**Warm-Up (15 min):**
-- **"The Stuck Robot"** — Tutor acts as a robot that says "Hello" forever. Students must figure out how to make it stop. Introduce the concept: *"What's the EXIT CONDITION?"*
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"Loop the Playground"**
-  - Students identify loops in daily life:
-    - Brushing teeth = repeat stroke until clean (condition loop)
-    - School week = repeat 5 times (count loop)
-    - Breathing = repeat forever while alive (infinite loop with purpose)
-  - For each, identify: What repeats? When does it stop? What would an infinite loop look like?
+1. **Warm-Up: The In-App Loop Explorer (15 mins)**
+   - *Activity*: One-on-one interactive loop simulation in the app.
+   - *Action*: The student triggers counts and conditions on the screen (e.g., running a water pump loop) to see how variables change on each iteration.
+   - *Debrief*: Introduce the concept of loop counters and exit conditions.
 
-- **"Spot the Infinite Loop" Puzzles**
-  - Tutor presents 5 flowcharts. 3 have hidden infinite loops.
-  - Students trace execution with a pencil, stepping through each iteration.
-  - They must mark exactly where and why the loop never ends.
+2. **Core Concept Board Lesson: Loops & JavaScript Syntax (20 mins)**
+   - *Topic 1*: Counting Loops (`for`) vs. Condition Loops (`while`).
+   - *Topic 2*: Introducing 5%-10% JavaScript syntax:
+     - `for (let i = 0; i < 5; i++) { ... }` (runs exactly 5 times)
+     - `while (waterTank < 100) { ... }` (runs until tank is full)
+   - *Topic 3*: The danger of infinite loops when the exit condition is never met.
 
-- **"Loop Builder Challenge: The Sneaky Cat"**
-  - Design a flowchart for a smart pet feeder.
-  - **The Twist:** The feeder normally dispenses food every 6 hours (loop). But it has to handle the **Sneaky Cat constraint**: If the pet plate weight indicates food is still there, do NOT dispense. If the cat tries to trigger the feeder button twice in 5 minutes, block it and sound a buzzer, but if the dog hasn't been fed in 12 hours, sound a different alarm.
-  - Must include: exit conditions and nested decision loops.
+3. **Digital Concept Practice: Spot the Infinite Loop (25 mins)**
+   - *Activity*: Inside the application, the student is presented with 5 loop code snippets and flowcharts.
+   - *Action*: The student inspects each snippet (e.g., `while (true)` or `for (let i = 0; i < 5; i--)`) to identify the buggy loop and correct the boundary condition using simple syntax edits.
 
-**Mini-Lesson (20 min):**
-- Two types of loops: **Counting Loop** (do this 10 times) vs. **Condition Loop** (do this until X happens)
-- **Nested loops** — briefly: a loop inside a loop (clock: seconds inside minutes inside hours)
-- The danger of infinite loops and why EXIT CONDITIONS are critical
+4. **Digital Sandbox Lab: SmartPetFeeder Loop Controller (30 mins)**
+   - *Activity*: Student launches Level 1 Session 5 Sandbox.
+   - *Action*: Complete loop-based challenges:
+     - Write a feeding loop constraint: repeat feeding 3 times if weight < 100g.
+     - Prevent infinite loop overflows by setting `clicks < maxClicks` bounds.
+     - Earning $+100$ XP on completion.
 
-**Closing Activity (15 min):**
-- **Quick Design:** Create a loop flowchart for a washing machine cycle. Must have at least 2 loops (wash cycle repeats, rinse cycle repeats) with clear exit conditions.
+5. **Assessment & Debrief: Loop Tracing (20 mins)**
+   - *Activity*: The student traces code execution: what is the value of variable `count` after a loop finishes? The student writes the tracing logs directly in the app.
+
+6. **Ethics & Loop Abuse Discussion (10 mins)**
+   - *Topic*: Should social media notification loops run infinitely? How loops are used to capture attention.
 
 **📝 Homework (Practice at Home):**
-- Identify 3 loops in your daily routine. For each one, write down: (1) What action repeats? (2) Is it a counting loop or condition loop? (3) What is the exit condition? (4) What would an accidental infinite loop look like?
-- Bonus: Design a flowchart for a "bedtime routine checker" that loops through a checklist (brush teeth, pajamas, set alarm) and only says "Goodnight!" when all items are done.
+- **In-App Homework Quest**: Identify two loops in your daily routine. Open the Journal tab under "Session 5 Homework" and write down their logic using basic JavaScript-like loops (e.g. `while (battery < 100)` or `for (let step = 0; step < 10000; step++)`).
 
 ---
 
-#### Session 6: "Building with Blocks" (2 hours)
+#### Session 6: "Building with Blocks to Code" (2 hours)
 
 **Learning Objectives:**
-- Apply conditionals and loops in a visual programming environment
-- Build a working interactive project using logic blocks
+- Apply conditionals and loops in a visual block programming environment
+- Map visual blocks directly to JavaScript syntax statements
+- Build a working smart-grid controller and trace its generated code outputs
 
-**Warm-Up (15 min):**
-- Quick introduction to the block-based programming tool being used. Tutor demonstrates: sequence, conditional block, loop block, variable block.
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (75 min):**
-- Students build **one** of three projects (their choice):
+1. **Warm-Up: Block Translation (15 mins)**
+   - *Activity*: In-app translation game. The student matches a visual Blockly block (e.g. an "if" block) to its JavaScript syntax equivalent: `if (status === "active")`.
 
-  **Project A: "Traffic Light Simulator"**
-  - Teaches: sequencing + timing loops
-  - Requirements: Light changes Green → Yellow → Red → Green in a timed loop. Pedestrian button interrupts the cycle.
+2. **Core Concept Board Lesson: Code Generation (20 mins)**
+   - *Topic 1*: How blocks represent structured code syntax under the hood.
+   - *Topic 2*: Reading generated JavaScript files. Show side-by-side comparisons of Blockly structures vs. clean text files.
 
-  **Project B: "Password Gate"**
-  - Teaches: conditionals + boolean logic + input validation
-  - Requirements: User types a password. If correct, show "Access Granted." If wrong, show "Try Again." After 3 wrong attempts, show "Locked Out."
+3. **Digital Concept Practice: Syntax Matcher (25 mins)**
+   - *Activity*: Inside the application, the student completes a logic-matching puzzle.
+   - *Action*: Draw lines connecting visual block stacks to their corresponding lines of text code (conditions, variables, and iterations).
 
-  **Project C: "Counting Collector"**
-  - Teaches: loops + variables + score tracking
-  - Requirements: Character moves around collecting items. Each item adds to a score variable. Game ends when score reaches a target OR time runs out.
+4. **Digital Sandbox Lab: Smart Light Grid (30 mins)**
+   - *Activity*: Student launches the block workspace in the app.
+   - *Action*: Program the lighting grid using visual logic blocks, then toggle the "Show Code" panel to inspect and verify the Javascript output compilation.
+   - *Challenge*: Add an emergency override trigger in Javascript syntax parameters to dim the grid.
+   - *Rewards*: Earning $+100$ XP.
 
-- Tutor circulates, asking Socratic questions: *"Why did you use a loop here? What happens if the user clicks the button twice very fast?"*
+5. **Assessment & Debrief: Code Review (20 mins)**
+   - *Activity*: Tutor presents a short compiled code block with an error. The student identifies which visual logic block corresponds to the error.
 
-**Showcase & Peer Testing (20 min):**
-- Students test each other's projects and try to find edge cases or break them.
-- Brief discussion: *"What surprised you? What did someone else think of that you didn't?"*
-
-**Ethics Moment (10 min):**
-- *"You built a password gate with 3 attempts. What if someone malicious tries to lock OTHER people out by deliberately entering wrong passwords? How would you redesign it?"*
+6. **Ethics Moment (10 mins)**
+   - *Topic*: Smart City overrides. Who should have authorization to change municipal light grid scripts?
 
 **📝 Homework (Practice at Home):**
-- Extend your Session 6 block project with ONE new feature (e.g., add a difficulty level, a high score, a new rule). Before building, write a mini-blueprint: What will you add? What existing parts will it affect? What edge cases should you test?
-- Bring your mini-blueprint AND the updated project to the next session.
+- **In-App Homework Quest**: In the Journal tab under "Session 6 Homework", write the JavaScript syntax equivalent for a block condition that checks: "If the temperature is greater than 30 degrees, turn on the fan, otherwise turn off the fan." Use simple `if` / `else` syntax.
 
 ---
 
@@ -337,41 +343,38 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **Learning Objectives:**
 - Decompose a complex system into independent sub-systems
 - Identify dependencies between sub-systems
+- Define sub-systems as basic JavaScript function declarations (e.g. `function processSystem()`)
 
-**Warm-Up (15 min):**
-- **"How Many Parts?"** — Show a picture of a bicycle. How many independent systems does it have? (steering, braking, pedaling, seating, lighting). Which depend on each other?
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"Decompose the Game"**
-  - Take a familiar game (Pacman, Tetris, or Flappy Bird — chosen by vote).
-  - As a group, list every behavior the game has.
-  - Then organize behaviors into independent sub-systems:
-    - *Pacman example:* Ghost AI movement, Player movement, Score counter, Pellet collision detection, Power-up effects, Level progression, Game Over logic
-  - For each sub-system, draw a mini-flowchart.
-  - Draw arrows between sub-systems showing data flow: "Ghost AI needs to know Player position" → arrow from Player to Ghost AI.
+1. **Warm-Up: Decompose the Device (15 mins)**
+   - *Activity*: Interactive simulation in the app. The student is shown an interface of a digital stopwatch and identifies its independent systems (Start/Stop Trigger, Timer Counter, Display Renderer).
+   - *Debrief*: Introduce decomposition as modular structure.
 
-- **"The Feature Negotiation"**
-  - Each student proposes their dream app in one sentence.
-  - Then they must cut it down using a prioritization matrix:
+2. **Core Concept Board Lesson: Modular Design & Function Syntax (20 mins)**
+   - *Topic 1*: Decomposition = breaking a problem into independent modules.
+   - *Topic 2*: Introducing 5%-10% syntax for modules: JavaScript functions.
+     - `function checkSensors() { ... }`
+     - `function triggerBuzzer() { ... }`
+   - *Topic 3*: Specifying inputs and outputs for functions.
 
-  | Feature | Must Have | Nice to Have | Future |
-  |---------|-----------|-------------|--------|
-  | (students fill in) | | | |
+3. **Digital Concept Practice: The Game Decomposer (25 mins)**
+   - *Activity*: Inside the application, the student maps out a simple game (like Flappy Bird).
+   - *Action*: Drag-and-drop game features into categories, then outline the equivalent empty function signatures (`function fly()`, `function checkCollision()`, `function updateScore()`).
 
-  - Rule: You can only have 3 "Must Have" features for version 1.
-  - Debrief: *"Why is this hard? Why can't we build everything at once?"*
+4. **Digital Sandbox Lab: Traffic Intersection Controller (30 mins)**
+   - *Activity*: Student launches Level 1 Session 7 Sandbox.
+   - *Action*: Decompose a traffic light sensor system by configuring two independent functions (`function timerLoop()` and `function pedestrianSensor()`) to avoid signal collisions.
+   - *Rewards*: Earning $+100$ XP.
 
-**Mini-Lesson (20 min):**
-- **Decomposition** = breaking a problem into smaller, manageable pieces
-- **Abstraction** = ignoring irrelevant details to focus on what matters
-- **Interface** = how sub-systems communicate with each other (what information they share)
+5. **Assessment & Debrief: Interface Review (20 mins)**
+   - *Activity*: Tutor reviews the student's function mapping. The student traces what happens when one function fails (e.g. `pedestrianSensor` stops running).
 
-**Closing Activity (15 min):**
-- Students draw a "system map" of their school: Administration, Classrooms, Cafeteria, Library. What information flows between them? (student records, schedules, meal counts)
+6. **Ethics & Component Responsibility (10 mins)**
+   - *Topic*: Modular failures. If a smart lock's password module fails but the door motor stays unlocked, whose code component is at fault?
 
 **📝 Homework (Practice at Home):**
-- Choose your favorite app or game and decompose it into at least 4 sub-systems. For each sub-system, write: (1) What it does, (2) What data it needs, (3) Which other sub-systems it communicates with. Draw a simple system map with arrows showing data flow.
-- Also create a prioritization matrix for a "dream app" idea: list 6+ features and categorize them as Must Have / Nice to Have / Future.
+- **In-App Homework Quest**: Choose your favorite game or application. Open the Journal tab under "Session 7 Homework", identify 3 distinct sub-systems, and write empty JavaScript function signatures representing each one.
 
 ---
 
@@ -380,76 +383,74 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 **Learning Objectives:**
 - Create a complete architectural blueprint for a simple application
 - Define user journeys (what the user sees and does at each step)
+- Declare program variables and logic constraints using Javascript syntax declarations
 
-**Warm-Up (15 min):**
-- **"Architect vs. Builder"** — Show two scenarios: (A) Start building a house immediately. (B) Draw blueprints first, then build. Which house will be better? Why? Connect to software: *"AI can build fast, but it needs YOUR blueprint."*
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"The Blueprint Challenge"**
-  - Students design a mini-app (choose one):
-    - A quiz game with score tracking
-    - A daily habit tracker
-    - A recipe collection organizer
-  - Their blueprint must include:
-    1. **User Journey Map** — Step by step, what does the user see and do? (Screen 1: Welcome → Screen 2: Choose quiz topic → ...)
-    2. **Sub-system Diagram** — At least 3 components with labeled connections
-    3. **Data Inventory** — What "named boxes" (variables) does each component need?
-    4. **Edge Case List** — At least 5 "what if" scenarios
-    5. **Rules List** — All the IF/THEN rules governing behavior
+1. **Warm-Up: Blueprint Match (15 mins)**
+   - *Activity*: In-app card match. The student matches screen wireframes to their logical variable lists.
+   - *Debrief*: Connecting visual UI to code storage.
 
-- Tutor reviews each blueprint, asking: *"I'm a user who just opened your app. Walk me through exactly what I see and do."*
+2. **Core Concept Board Lesson: Variables & Logic Operators (20 mins)**
+   - *Topic 1*: Declaring variables in Javascript: `let score = 0;`, `const maxAttempts = 3;`.
+   - *Topic 2*: Combining conditions with logical operators: `&&` (AND), `||` (OR), `!` (NOT).
+     - Example: `if (age >= 13 && hasParentalConsent === true)`
 
-**Mini-Lesson (20 min):**
-- **User Journey Mapping** — Every good system starts with the user's experience
-- **"Outside-In" Design** — Start with what the user wants, then figure out what the system needs to make it happen
-- Show a simple example: A calculator app journey (Open → See number pad → Tap numbers → Tap operation → See result)
+3. **Digital Concept Practice: User Journey & Data Maps (25 mins)**
+   - *Activity*: Inside the application, the student outlines the design of a Habit Tracker.
+   - *Action*: The student designs the screen flow and maps out variables (`let habitName;`, `let currentStreak;`, `let isCompletedToday;`) using proper syntax types.
 
-**Closing Activity (15 min):**
-- **Peer Blueprint Review** — Students swap blueprints and write 3 questions they'd ask the designer. *"What happens when...?" "Where does this data come from?" "What if the user does X instead of Y?"*
+4. **Digital Sandbox Lab: Logic Blueprint Builder (30 mins)**
+   - *Activity*: Student launches the Sandbox designer.
+   - *Action*: Build out the rules engine for a digital quiz app by specifying condition blocks using JS assignment (`=`) and logical constraints (`score >= threshold`).
+   - *Rewards*: Earning $+100$ XP.
+
+5. **Assessment & Debrief: Edge Auditing (20 mins)**
+   - *Activity*: Tutor reviews the variable mapping. The student is asked: "What happens if our boolean flag starts as `null`?"
+
+6. **Ethics & Professional Planning (10 mins)**
+   - *Topic*: Code execution speeds vs planning. Why rushing to write code without a blueprint causes structural security bugs.
 
 **📝 Homework (Practice at Home):**
-- Complete your architectural blueprint from the session. Refine it to include: (1) a polished user journey map with at least 5 screens/steps, (2) at least 5 edge cases with brief notes on how to handle each, (3) a full data inventory listing every variable, its type, and its valid range.
-- Bring the refined blueprint — it will be used in the next 3 sessions.
+- **In-App Homework Quest**: Refine your Habit Tracker blueprint. In the Journal tab under "Session 8 Homework", define 4 variables with appropriate types, and write 2 conditional statements using JavaScript operators (`&&` or `||`) that check when a habit streak is broken.
 
 ---
 
 #### Session 9: "Connecting the Pieces" (2 hours)
 
 **Learning Objectives:**
-- Draw interaction diagrams showing how sub-systems communicate
-- Understand that interfaces must be precisely defined
+- Map communication pathways showing how sub-systems share parameters
+- Pass data between functions using parameters and return values
+- Read and define interface contracts in basic coding syntax
 
-**Warm-Up (15 min):**
-- **"Telephone Game: Data Edition"** — A chain of students passes a piece of information, but each must transform it (e.g., "add 3", "convert to text"). Demonstrate how data changes as it flows through a system.
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"System Interaction Design"**
-  - Using their blueprints from Session 8, students now focus on connections:
-    - For each arrow between sub-systems: What exactly is sent? What format? What happens if the message is lost or corrupted?
-  - Example for a quiz game:
-    - Question Bank → Quiz Engine: sends {question_text, correct_answer, difficulty}
-    - Quiz Engine → Score Tracker: sends {is_correct, time_taken}
-    - Score Tracker → Display: sends {total_score, streak_count}
-  - Students must describe each connection in plain English with exact data descriptions.
+1. **Warm-Up: The Data Pipeline Game (15 mins)**
+   - *Activity*: Simulation in the app. The student binds the output of a data generator module to the input of a processing filter to see values update in real-time.
 
-- **"The Broken Connection" Puzzle**
-  - Tutor presents a system diagram with intentionally broken/missing connections.
-  - Students must identify: What's missing? What would break? How would the user experience the failure?
+2. **Core Concept Board Lesson: Function Parameters & Returns (20 mins)**
+   - *Topic 1*: Function inputs: Parameters. Function outputs: Returns.
+   - *Topic 2*: Reading parameter syntax in Javascript:
+     - `function computeDiscount(price, discountRate) { return price * discountRate; }`
+     - How arguments map to parameters during execution.
 
-**Mini-Lesson (20 min):**
-- **Interfaces as Contracts** — When two systems communicate, they agree on a "contract": what data will be sent, in what format, and what to do when something goes wrong.
-- Preview of Level 2: *"In the next level, you'll learn how these contracts look in actual code — and how to tell AI exactly what contracts to implement."*
+3. **Digital Concept Practice: Interface Contracts (25 mins)**
+   - *Activity*: Inside the application, the student connects 3 sub-systems (Registration ➔ Validator ➔ Database).
+   - *Action*: Write the matching parameter lists (e.g. passing `username` and `password` to the validator) to ensure data flows securely.
 
-**Showcase & Discussion (15 min):**
-- Students present their completed blueprints (journey map + system diagram + interaction diagram).
-- Class votes on "Most Complete Design" and "Most Creative Edge Cases."
+4. **Digital Sandbox Lab: Smart Home Sensor Grid (30 mins)**
+   - *Activity*: Student launches Level 1 Session 9 Sandbox.
+   - *Action*: Hook up a temperature sensor output to a thermostat processing function by writing a function invocation that passes temperature as an argument: `adjustClimate(currentTemp)`.
+   - *Rewards*: Earning $+100$ XP.
 
-**Ethics Moment (10 min):**
-- *"Your quiz app stores scores. What if someone demands you delete their data? What if a parent wants to see their child's data? Who should have access to what?"*
+5. **Assessment & Debrief: Diagnostic Audits (20 mins)**
+   - *Activity*: Tutor reviews pipeline data types. Student identifies what happens if a function returns an unexpected data type (e.g., returning a String instead of a Boolean).
+
+6. **Ethics & Data Sharing Privacy (10 mins)**
+   - *Topic*: Third-party integrations. What parameters should be sent to external APIs (e.g., payment logs vs user personal emails)?
 
 **📝 Homework (Practice at Home):**
-- Pick any popular service you use (a messaging app, a music streaming service, an online store). Draw a system interaction diagram showing at least 3 sub-systems and the data that flows between them. For each connection, describe: What data is sent? What format? What happens if the connection fails?
-- Write a one-paragraph reflection: "What surprised me most about how systems communicate?"
+- **In-App Homework Quest**: In the Journal tab under "Session 9 Homework", design the interface contract for an online shop. Write the signature of a function named `calculateTotal` that takes two parameters (`price` and `taxRate`) and returns the total value in code syntax.
 
 ---
 
@@ -461,130 +462,131 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **Learning Objectives:**
 - Systematically identify edge cases and boundary conditions
-- Categorize failure types (input errors, logic errors, environment errors)
+- Categorize failures into Input, Logic, and State errors
+- Format test cases as JavaScript object declarations (e.g., `let testCase = { input: val, expected: output }`)
 
-**Warm-Up (15 min):**
-- **"What Could Go Wrong?"** — Show a picture of a simple vending machine. In 3 minutes, list as many failure scenarios as possible. Student with the most unique scenarios wins.
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"Edge Case Olympics"**
-  - Present 3 simple system descriptions. For each, students compete to find the most edge cases:
-    1. "A calculator that divides two numbers" → What about division by zero? What about very large numbers? Negative numbers? Decimals with many digits?
-    2. "A login form with username and password" → Empty fields? Spaces in password? Very long input? Copy-paste? Same user logging in twice?
-    3. "A countdown timer" → What if set to 0? Negative time? Device goes to sleep mid-countdown? Two timers at once?
-  - Score: 1 point per valid edge case, 3 points for one nobody else found.
+1. **Warm-Up: Fuzz the Input (15 mins)**
+   - *Activity*: In-app typing game. The student tries to input extreme values into a custom field to see what characters the app validates.
+   - *Debrief*: Introduce boundary values and input rules.
 
-- **"The Evil User" Role Play**
-  - Pairs: One student is the Designer, one is the Evil User.
-  - Designer describes their Session 8 app blueprint.
-  - Evil User tries to find every way to break it, confuse it, or make it do something unintended.
-  - After 10 minutes, swap roles.
-  - Each pair documents their findings.
+2. **Core Concept Board Lesson: Failure Categories & Test Case Syntax (20 mins)**
+   - *Topic 1*: Input, Logic, State, and Environment failures.
+   - *Topic 2*: Representing test assertions as JavaScript object literals:
+     ```javascript
+     const testCase = {
+       input: "ByteSlayer",
+       expected: "Valid Username"
+     };
+     ```
+   - *Topic 3*: Testing boundary limits (e.g., length, null, negative values).
 
-**Mini-Lesson (20 min):**
-- **Categories of Failures:**
-  - **Input Failures** — Bad data enters the system
-  - **Logic Failures** — The rules are wrong or incomplete
-  - **State Failures** — The system is in a condition nobody anticipated
-  - **Environment Failures** — External factors (no internet, battery dies, time zone differences)
-- **Boundary Testing** — Always test at the edges: 0, 1, max value, negative, empty, null
+3. **Digital Concept Practice: The Edge Case Matrix (25 mins)**
+   - *Activity*: Inside the application, the student compiles a list of test case objects.
+   - *Action*: Fill in the `input` and `expected` keys in a test script workspace for a simple calculator.
 
-**Closing Activity (15 min):**
-- Each student adds at least 5 new edge cases to their blueprint from Session 8, categorized by failure type.
+4. **Digital Sandbox Lab: Fuzz Test Validator (30 mins)**
+   - *Activity*: Student launches Level 1 Session 10 Sandbox.
+   - *Action*: Configure fuzzer constraints to evaluate if extreme inputs (e.g., blank strings or negative ages) trigger exceptions.
+   - *Rewards*: Earning $+100$ XP.
+
+5. **Assessment & Debrief: Diagnostics (20 mins)**
+   - *Activity*: Tutor runs a suite of test case objects. The student explains why a boundary check failed.
+
+6. **Ethics & The QA Mindset (10 mins)**
+   - *Topic*: Collaborative validation. Why breaking software during testing is a helping action, not a malicious one.
 
 **📝 Homework (Practice at Home):**
-- Choose any everyday system (a school attendance tracker, an alarm clock app, a parking meter). Write down at least 10 edge cases, categorized by failure type (Input / Logic / State / Environment). For each, describe what the user would experience if the edge case isn’t handled.
-- Bonus challenge: Ask a family member to think of edge cases for the same system — see how many unique ones they find that you missed!
+- **In-App Homework Quest**: Create a suite of 5 test case objects in code syntax for a login form checking password rules (e.g., minimum 8 characters). Type these into the Journal tab under "Session 10 Homework".
 
 ---
 
 #### Session 11: "Designing for Failure" (2 hours)
 
 **Learning Objectives:**
-- Design graceful failure handling (error messages, fallbacks, defaults)
-- Understand that good systems fail *safely*, not silently
+- Design graceful failure safeguards (default fallbacks, user alerts)
+- Read and compose simple Javascript `try/catch` and error throwing syntax
+- Ensure code fails safely and transparently
 
-**Warm-Up (15 min):**
-- **"Good Error vs. Bad Error"** — Show real examples of error messages. Students rank them: Which ones help the user? Which ones are confusing? What makes an error message useful?
+**Lesson Timeline & Content Breakdown (2 hours):**
 
-**Core Activity (60 min):**
-- **"The Safety Net Designer"**
-  - Using the edge cases from Session 10, students now design how their system HANDLES each failure:
-    - For each edge case, define:
-      1. How does the system detect this problem?
-      2. What does the system do? (show error, use default, ask for retry, etc.)
-      3. What does the USER see and experience?
-  - Rule: **"Crash" is never an acceptable answer.** Every failure must be handled gracefully.
+1. **Warm-Up: Good vs Bad Errors (15 mins)**
+   - *Activity*: In-app diagnostic. Student reviews error messages (e.g., "Error code 0x932f" vs. "Please enter a valid age") and ranks them by helpfulness.
 
-- **"The Failure Flow"**
-  - Students add "error paths" to their flowcharts — red arrows showing what happens when things go wrong.
-  - These error paths must eventually lead back to a working state (retry, fallback, safe shutdown).
+2. **Core Concept Board Lesson: Error Catching Syntax (20 mins)**
+   - *Topic 1*: Defensive planning. Silent failures vs explicit crashes.
+   - *Topic 2*: Introducing `try/catch` blocks and throwing errors:
+     ```javascript
+     try {
+       if (passcode < 1000) {
+         throw new Error("Passcode too short");
+       }
+     } catch (error) {
+       console.log(error.message); // Fallback handling
+     }
+     ```
+   - *Topic 3*: Defining safe default fallbacks.
 
-**Mini-Lesson (20 min):**
-- **Graceful Degradation** — When part of a system fails, the rest should still work
-- **Default Values** — When input is missing, use a sensible default
-- **User Communication** — Always tell the user what happened and what they can do about it
-- Real example: *"When your internet drops while watching a video, the app doesn't crash — it shows 'Reconnecting...' and buffers. That's graceful degradation."*
+3. **Digital Concept Practice: The Safety Net (25 mins)**
+   - *Activity*: Inside the application, the student adds error control paths.
+   - *Action*: Write `if (input === "") { throw new Error("Empty input"); }` guards to prevent empty form processing.
 
-**Closing Activity (15 min):**
-- Students finalize their blueprints with complete error handling. This becomes part of their Level 1 assessment portfolio.
+4. **Digital Sandbox Lab: Indestructible Keypad (30 mins)**
+   - *Activity*: Student launches Level 1 Session 11 Sandbox.
+   - *Action*: Wrap entry check functions in a `try/catch` loop to handle incorrect passcode attempts gracefully.
+   - *Rewards*: Earning $+100$ XP.
 
-**Ethics Moment (10 min):**
-- *"An AI medical diagnosis app says 'Error: Cannot determine result.' Is it better to show this error or to guess? When is saying 'I don't know' the most responsible answer?"*
+5. **Assessment & Debrief: Flow Diagnostics (20 mins)**
+   - *Activity*: Tutor triggers anomalies. Student verifies the system degrades gracefully without crashing.
+
+6. **Ethics & Safety Diagnostics (10 mins)**
+   - *Topic*: Safe failures. Should an autopilot fail by disengaging instantly or by holding coordinates?
 
 **📝 Homework (Practice at Home):**
-- Take your finalized blueprint (with edge cases from Session 10) and add complete error handling for ALL identified edge cases. For each, write: (1) Detection method, (2) System response, (3) User-facing message. Write a one-page "Error Handling Guide" for your app that someone else could read and understand.
-- This is your final Level 1 portfolio piece — bring it polished and ready for the assessment session.
+- **In-App Homework Quest**: In the Journal tab under "Session 11 Homework", write a simple JavaScript conditional check that checks if a variable `email` contains "@" and throws an error if it doesn't.
 
 ---
 
-### Level 1 Assessment (Session 12) — Due Within 1 Week
+### Level 1 Assessment & Graduation (Session 12)
 
-#### In-Session Assessment (2 hours)
+#### In-Session Digital Assessment (2 hours)
 
-**Part A: "The Logic Architect" — Individual (45 min)**
-- Given a system description the student has never seen before (e.g., "Design a library book borrowing system"):
-  1. Create a complete IPO analysis
-  2. Draw a state diagram with at least 4 states
-  3. Identify all variables with data types
-  4. List at least 8 edge cases, categorized by failure type
-  5. Design error handling for the 3 most critical edge cases
+**Part A: "The Logic Blueprint Builder" — In-App (45 mins)**
+- Given a brand new system scenario (e.g., "Library Management System"):
+  1. Map the Input-Process-Output flow on the app workspace.
+  2. Declare the state transition paths for 4 states.
+  3. Define system variables with correct types and write their initial values in JS syntax (`let booksBorrowed = 0;`).
+  4. Write 5 boundary test case objects checking parameters.
 
-**Part B: "The Blueprint Defense" — Presentation (45 min)**
-- Students present their best blueprint (refined over Sessions 8–11)
-- Tutor and peers act as "stakeholders" asking questions:
-  - *"Walk me through the user journey"*
-  - *"What happens if [edge case]?"*
-  - *"Why did you choose to split the system this way?"*
-- 10 minutes per student (adjust based on class size)
+**Part B: "The Blueprint Defense" — In-App (45 mins)**
+- The student presents their final application design in the App.
+- The tutor plays the "Malicious QA Officer", selecting inputs that attempt to bypass constraints. The student explains how their validations and state rules handle each attempt.
 
-**Part C: "Off-Screen Logic Puzzle" — Pen & Paper (30 min)**
-- Without any digital tools, solve 3 logic puzzles:
-  1. Trace a flowchart and predict output for given inputs
-  2. Find the error in a broken flowchart
-  3. Design a conditional rule set for a given scenario
+**Part C: "In-App Code Diagnostic" — Code Puzzle (30 mins)**
+- Complete a digital logic match puzzle on the app screen:
+  1. Trace loop iterations and type the output values.
+  2. Find and patch a syntax/logic error in a short program containing loop bounds.
 
-#### Take-Home Component (Due within 1 week)
-
-- **Reflection Journal:** Write 1 page answering:
-  - What was the most surprising thing you learned about how computers think?
-  - Describe a real-world system you now see differently because of this course.
-  - What would you do differently if you redesigned your blueprint from scratch?
+#### Take-Home Component
+- **Self-Audit Reflections**: In the app's Journal tab under "Session 12 Assessment", submit a summary of:
+  1. What surprised you about computer literal logic.
+  2. A real-world device you now view as a state machine.
+  3. How writing logic rules changes how you think about AI prompt instructions.
 
 #### Level 1 Assessment Rubric
 
 | Dimension | Excellent (4) | Good (3) | Developing (2) | Beginning (1) |
 |-----------|--------------|----------|----------------|---------------|
-| **Logical Clarity** (40%) | All logic is unambiguous, complete, and correctly structured | Minor gaps in logic, but overall sound | Several logic errors or incomplete paths | Logic is unclear or fundamentally flawed |
-| **Specification Precision** (20%) | Variables, data types, and rules are precisely defined | Most elements defined, some vague areas | Many elements undefined or imprecise | Vague descriptions, no formal specification |
-| **Edge Case Coverage** (20%) | 8+ edge cases identified and categorized, with handling | 5–7 edge cases with some handling | 3–4 edge cases, minimal handling | Fewer than 3 edge cases, no handling |
-| **System Thinking** (10%) | Clear sub-systems with well-defined interfaces | Sub-systems identified but interfaces unclear | Some decomposition but systems are tangled | No meaningful decomposition |
-| **Communication** (10%) | Presentation is clear, confident, answers questions well | Generally clear, some hesitation with questions | Unclear presentation, struggles with questions | Cannot explain their own design |
+| **Logical Logic** | All sequences and conditionals are correct, unambiguous, and complete | Minor logic gaps, but overall robust | Several logic holes or loop anomalies | Unstructured rules, infinite loop flaws |
+| **Syntax Logic** | Correctly maps basic types, declarations (`let`, `const`), and logic gates | Minor syntax errors, but logical meaning is clear | Struggles with declaration syntax and checks | No syntax understanding, incorrect typing |
+| **Edge Case Logic** | 8+ test case objects defined and validated against constraints | 5–7 test cases with partial constraints | 3–4 basic tests, missing boundary checks | Fewer than 3 edge checks, no bounds |
+| **System Flow** | Clear modular decomposition with well-defined parameters | Systems identified but data passing is vague | Poor decomposition, high coupling | Monolithic logic, no functions used |
 
 **Graduation Criteria for Level 2:**
-- Score ≥ 3.0 average across all dimensions
-- Can decompose any system into ≥ 3 sub-systems with clear data flows
-- Can identify ≥ 5 edge cases for any given system
+- Rubric average score of 3.0 or higher.
+- Can successfully solve all Sandbox interactive tasks.
+- Can trace and explain short JavaScript statements containing conditional limits and loop parameters.
 
 ---
 

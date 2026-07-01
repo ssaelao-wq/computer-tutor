@@ -7,55 +7,56 @@ export const CURRICULUM_DATA = [
     id: "l1-s1",
     level: 1,
     module: "Module 1: Inputs, Processing, and Outputs",
-    title: "Session 1: \"How Computers Think\"",
+    title: "Session 1: \"Literal Logic & Digital Infiltration\"",
     duration: "2 hours",
     objectives: [
-      "Understand that computers follow instructions literally — no assumptions, no common sense",
-      "Identify the Input → Process → Output pattern in everyday systems"
+      "Understand that computers follow instructions sequentially, literally, and without common sense",
+      "Identify the Input → Process → Output pattern in everyday digital systems",
+      "Create sequential instruction lists in Sandbox simulation"
     ],
-    warmUp: "Simon Says: Robot Edition: Tutor gives instructions. Students follow ONLY literal instructions (e.g., 'raise your hand' — which hand? how high?). Ambiguity causes different outputs from different processors (students).",
-    miniLesson: "The IPO Model: Draw Input → Process → Output. Real-world examples (microwave, calculator). Labeled boxes (variables) - a box with a label holding one piece of information.",
-    coreActivity: "The Human Computer Simulation (Robot Chef & Malicious Assistant): Students write instructions to perform a simple task. A peer follows instructions literally. A malicious assistant tries to exploit gaps (e.g. placing sealed butter pack on bread). Rewrite with precision.",
-    handsOn: "Construct a sandwich maker flowchart in the Sandbox. Write precise steps handling sealed packages and verify robustness against malicious assistants.",
-    homework: "Choose a simple everyday task (e.g. brushing teeth, feeding a pet). Write robot-proof literal instructions. Test it on a family member and report failures.",
-    ethics: "If you gave bad instructions to a robot chef and someone got food they're allergic to, whose fault is it — yours or the robot's? (Responsibility for automation)",
-    adaptations: "Age 9-10: Use physical props (origami paper). Variables are labeled envelopes. Age 15-17: Discuss real IPO systems (search engines, algorithms)."
+    warmUp: "Drone Operator Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to move and retrieve an object. Tutor follows them strictly literally, demonstrating computer logical processing.",
+    miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
+    coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Power On, Scan, Tunnel, Bypass, Exfiltrate) in correct logical order.",
+    handsOn: "Complete 3 sandbox tasks: (1) Basic Infiltration routing sequence, (2) Variable coordinate scanning, (3) Sequence Debugging to repair crash states.",
+    homework: "Complete the 'Household IPO Blueprint' in the app's Journal tab. Write step-by-step algorithms, inputs, and outputs for a washing machine or microwave.",
+    ethics: "Drone Crash Responsibility: If a drone crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
+    adaptations: "Age 13-16: Use digital sandbox modules and audit terminal outputs. Discuss real IPO algorithms."
   },
   {
     id: "l1-s2",
     level: 1,
     module: "Module 1: Inputs, Processing, and Outputs",
-    title: "Session 2: \"Data Types Without Code\"",
+    title: "Session 2: \"Backpack Classification & Lock Verification\"",
     duration: "2 hours",
     objectives: [
       "Distinguish between data types: Numbers, Strings, and Booleans",
-      "Understand that different data types have different rules"
+      "Define type constraints and boundary validations (GIGO)"
     ],
-    warmUp: "The Mixing Bowl: Try to add 'apple' + 5. Explain why this doesn't work (data type mismatch).",
-    miniLesson: "Data Types: Numbers (math-ready), Strings (characters in quotes), Booleans (true/false switches). Classify real-world info (age, name, door locked status).",
-    coreActivity: "Design a character creation form with strict rules (e.g., age must be a number 5-100; name cannot be blank). Try to break a partner's form using invalid inputs.",
-    handsOn: "Build a form validation config schema in the Sandbox. Set rules for username, age range, and checkbox toggles.",
-    homework: "Find 3 real-world forms. For each, identify the data types expected and list what happens if you input the wrong data type.",
-    ethics: "Should a system let people input anything they want as their name? (Validation and data hygiene considerations)",
-    adaptations: "Age 9-10: Use colored cards for data types. Age 15-17: Discuss API validation errors."
+    warmUp: "Crypto-Token Sorter: Sort mock data pieces (Strings, Numbers, Booleans) into separate containers in the app's warm-up screen.",
+    miniLesson: "Data Types & Validation Guards: Strings (character arrays), Numbers (math values), Booleans (switches). GIGO (Garbage In, Garbage Out).",
+    coreActivity: "Form Exploitation: student tests and configures input validation fields on a mock form, learning how input type constraints reject invalid inputs.",
+    handsOn: "Complete 3 sandbox tasks: (1) Sort backpack payloads by data type, (2) Configure database lock credentials validation rules, (3) Auditing and setting bounds.",
+    homework: "Locate two online sign-up forms. Document their input types and validation error messages in the app's Journal tab under 'Session 2 Homework'.",
+    ethics: "Data validation inclusion: How strict validation bounds and schemas might affect real-world representation (e.g. names, gender options).",
+    adaptations: "Age 13-16: Trace database validation exceptions and API schemas."
   },
   {
     id: "l1-s3",
     level: 1,
     module: "Module 1: Inputs, Processing, and Outputs",
-    title: "Session 3: \"Systems in the Real World\"",
+    title: "Session 3: \"State Transition Controllers & The Vault\"",
     duration: "2 hours",
     objectives: [
-      "Model everyday systems using the IPO framework",
-      "Identify variables and states in physical machines"
+      "Model digital systems as Finite State Machines (FSM)",
+      "Map transition rules and identify deadlock scenarios"
     ],
-    warmUp: "Vending Machine Deconstruction: Trace inputs (coins, buttons) to outputs (soda, change).",
-    miniLesson: "System States: How machines remember past actions. Variables update state over time (e.g. currentBalance increases when coin is inserted).",
-    coreActivity: "Vending Machine Logic: Map out states (Idle, CoinInserted, ItemSelected). Write condition paths for success vs. out-of-stock.",
-    handsOn: "Write a vending machine state controller program in the Sandbox handling insufficient funds and stock counts.",
-    homework: "Observe a smart appliance at home (e.g. washing machine). Identify 3 inputs, 3 states, and 3 outputs.",
-    ethics: "Is it okay for a vending machine to eat your money? How should programmers handle unexpected errors gracefully?",
-    adaptations: "Age 9-10: Draw physical boxes for states. Age 15-17: Introduce State Transition Diagrams."
+    warmUp: "State Explorer: Interacting with a virtual airlock dashboard to observe how current state limits trigger options.",
+    miniLesson: "Finite State Machines: States (variable values), Transitions, Event Triggers, and State Tables (Current State + Event ➔ Next State).",
+    coreActivity: "Device Blueprinting: Map state transitions for a microwave using a node-graph mapping tool on the app's practice screen.",
+    handsOn: "Complete 3 sandbox tasks: (1) Basic transition rules from CLOSED to OPEN, (2) Alarm hazard routing, (3) Deadlock reset repair.",
+    homework: "Map states and transition tables for a traffic light or elevator and submit them inside the app's Journal tab under 'Session 3 Homework'.",
+    ethics: "System Safety: If an elevator traps passengers inside during a fire alarm state, is the code correct? Balancing security and life safety.",
+    adaptations: "Age 13-16: Build state diagrams for complex systems and trace deadlocks."
   },
   {
     id: "l1-s4",
@@ -67,13 +68,13 @@ export const CURRICULUM_DATA = [
       "Create conditional statements (If/Then/Else)",
       "Diagram logic flowcharts using decision diamonds"
     ],
-    warmUp: "The Weather Decision: Mime actions based on conditions ('If raining, open umbrella. Else, put on sunglasses').",
-    miniLesson: "Flowcharts: Start/End blocks, Process rectangles, Decision diamonds, Arrows. Nested conditions (If-Within-If).",
-    coreActivity: "The Thermostat Challenge: Design flowchart logic for a heater/cooler system with target ranges, emergency shutdowns, and status indicators.",
+    warmUp: "Digital Decision Matcher: Interactive condition-to-action solver in the application.",
+    miniLesson: "Flowcharts: Start/End, Process blocks, Decision diamonds, and Arrows. Logical operators (AND, OR, NOT).",
+    coreActivity: "Thermostat Logic: Design flowchart logic for a climate controller with high-safety overrides and range checks.",
     handsOn: "Write a conditional thermostat controller script in the Sandbox handling high heat safety overrides.",
-    homework: "Draw a flowchart for deciding what to wear based on temperature and weather conditions.",
+    homework: "Complete the Weather Decision flowchart and condition rules tree inside the app's Journal tab.",
     ethics: "Self-Driving Cars: If a vehicle must choose between hitting obstacle A or B, who programs that decision? (Ethics of algorithmic choice)",
-    adaptations: "Age 9-10: Walk physically on a floor-drawn flowchart grid. Age 15-17: Introduce Boolean Algebra logic gates (AND, OR, NOT)."
+    adaptations: "Age 13-16: Use logic gates, Boolean logic operators (AND, OR, NOT)."
   },
   {
     id: "l1-s5",
@@ -83,33 +84,33 @@ export const CURRICULUM_DATA = [
     duration: "2 hours",
     objectives: [
       "Distinguish between Counting Loops (For) and Condition Loops (While)",
-      "Identify and prevent infinite loops"
+      "Identify and prevent infinite loops using JavaScript syntax limits"
     ],
-    warmUp: "The Clapping Loop: Clap 5 times (Count). Clap while tutor's hand is up (Condition).",
-    miniLesson: "Loop structures: For loops (fixed count), While loops (until condition breaks). Loop variables (counters). Infinite loop danger.",
-    coreActivity: "The Sneaky Cat Feeder Challenge: Design flowchart for a feeder that checks bowl weight, tracks time limits, and triggers alarms on dogs.",
+    warmUp: "In-App Loop Explorer: Trigger loops and counters in the app to see how variables change dynamically.",
+    miniLesson: "Loop structures: counting loop `for` vs condition loop `while`. JavaScript loop syntax: `for (let i = 0; i < 5; i++)`.",
+    coreActivity: "Infinite Loop Hunter: Trace 5 flowcharts and JavaScript loop scripts, find where they get stuck, and write bounds to fix them.",
     handsOn: "Write a loop-based pet feeding controller in the Sandbox. Ensure counts terminate to prevent infinite food overflows.",
-    homework: "Identify 3 loops in daily life. Describe what repeats, the condition/count, and what an infinite loop would look like.",
-    ethics: "Should a social media app keep looping notifications infinitely to get your attention? (Ethical design and loop abuse)",
-    adaptations: "Age 9-10: Jump in circles for loops. Age 15-17: Discuss stack overflows and CPU resource locks."
+    homework: "Identify loops in daily life. Write their logic in the Journal tab using JavaScript loops (e.g. `while(battery < 100)`).",
+    ethics: "Notification loops: Should a social media app loop notifications infinitely to get your attention?",
+    adaptations: "Age 13-16: Compare `for` and `while` logic, discuss CPU locks and execution cycles."
   },
   {
     id: "l1-s6",
     level: 1,
     module: "Module 2: Visual Structures & Logical Loops",
-    title: "Session 6: \"Building with Blocks\"",
+    title: "Session 6: \"Building with Blocks to Code\"",
     duration: "2 hours",
     objectives: [
-      "Represent flowchart logic in block-based structures (Scratch/Blockly)",
-      "Map inputs and triggers to block stacks"
+      "Represent logic flow in visual block programming",
+      "Map Blockly blocks to raw JavaScript syntax statements"
     ],
-    warmUp: "Command Translate: Translate a flowchart rectangle into a Blockly code statement.",
-    miniLesson: "Block UI: Variables, control blocks, operators, events. Visual nesting of loops inside conditionals.",
-    coreActivity: "The Smart Light Grid: Program a lighting grid that turns on at night, dims if motion ceases, and flashes alerts on emergency triggers.",
-    handsOn: "Assemble a lighting grid controller in the Sandbox with Night, Motion, and Alert conditions.",
-    homework: "Find a simple online block game (e.g. Scratch project). Note down 3 event triggers and their actions.",
-    ethics: "Smart cities: Who should have access to override public smart lights? Security concerns of remote overrides.",
-    adaptations: "Age 9-10: Use physical color block lego templates. Age 15-17: Compare Blockly syntax directly to raw JS structures."
+    warmUp: "Block Translation: Match visual block configurations to equivalent lines of JavaScript syntax on the app screen.",
+    miniLesson: "Code compilation: How visual blocks translate to JavaScript. Reading block-generated script outputs.",
+    coreActivity: "Syntax Matcher: Draw connections linking logic blocks (loops, variables) to equivalent raw Javascript statements.",
+    handsOn: "Assemble a smart lighting grid controller in the Sandbox and audit the compiled Javascript syntax outputs.",
+    homework: "Write the Javascript code equivalent for a block condition checking temperature in the Journal tab under 'Session 6 Homework'.",
+    ethics: "Smart grids security: Who is authorized to change municipal control scripts? Security overrides issues.",
+    adaptations: "Age 13-16: Compare Blockly elements side-by-side with Javascript syntax blocks."
   },
   {
     id: "l1-s7",
@@ -118,16 +119,16 @@ export const CURRICULUM_DATA = [
     title: "Session 7: \"Breaking Big Problems Into Small Ones\"",
     duration: "2 hours",
     objectives: [
-      "Practice Decomposing complex tasks into independent sub-tasks",
-      "Recognize repeating sub-patterns (Abstraction)"
+      "Decompose complex systems into sub-systems",
+      "Represent modules as JavaScript function declarations"
     ],
-    warmUp: "Build a House: Break down 'building a house' into independent smaller steps.",
-    miniLesson: "Problem Decomposition: Breaking monoliths into units. Interfaces between units (e.g., roof needs walls first). Abstraction of details.",
-    coreActivity: "Traffic Light Intersection: Decompose a dual-road traffic system into components (light timers, sensor monitors, emergency overrides).",
+    warmUp: "Stopwatch Deconstructor: Identify modular sub-systems of a digital stopwatch inside the app's analysis screen.",
+    miniLesson: "Modular Design: Problem decomposition, abstraction, and sub-systems. Declaring functions: `function checkSensors() { ... }`.",
+    coreActivity: "Game Decomposer: Match game features to sub-system modules and outline equivalent empty Javascript functions.",
     handsOn: "Model decomposed intersections in the Sandbox. Write independent modules for timers and sensor handlers.",
-    homework: "Decompose your favorite video game session into at least 4 independent modules (rendering, controls, score, levels).",
-    ethics: "If a major decomposed system breaks, who is responsible? (Component liability vs. system architect fault)",
-    adaptations: "Age 9-10: Draw a mind map on a whiteboard. Age 15-17: Discuss microservices architecture at a high level."
+    homework: "Decompose a game or app and list 3 sub-systems and empty function signatures in the Journal tab.",
+    ethics: "Component liability: If a sub-system module fails, whose code is responsible for the overall crash?",
+    adaptations: "Age 13-16: Discuss modular code, namespaces, and clean function scopes."
   },
   {
     id: "l1-s8",
@@ -136,16 +137,16 @@ export const CURRICULUM_DATA = [
     title: "Session 8: \"Designing Before Building\"",
     duration: "2 hours",
     objectives: [
-      "Write pseudocode to outline programmatic logic",
-      "Establish program blueprints before writing prompts or code"
+      "Write blueprints defining user journeys",
+      "Declare variables and write assignment logic in JS syntax"
     ],
-    warmUp: "Recipe Sketch: Write a recipe in plain words, without cooking terms, using only logic variables.",
-    miniLesson: "Pseudocode Rules: Standard capitalization (IF, WHILE, FOR), indentation, explicit variable assignments, readable commands.",
-    coreActivity: "Elevator Control Blueprint: Write complete pseudocode for a building elevator (handling button presses, floor queues, safety breaks).",
+    warmUp: "Blueprint Matcher: Match wireframe sketches to logical variable declaration lists in the app.",
+    miniLesson: "Blueprint planning. Declaring variables (`let score = 0;`) and logical operators (`&&`, `||`, `!`) in code statements.",
+    coreActivity: "Habit Tracker Design: Map user screens and specify variables using Javascript assignment and comparison syntax.",
     handsOn: "Draft elevator system pseudocode in the Sandbox, verifying passenger pick-up sequences.",
-    homework: "Write pseudocode for an ATM cash withdrawal system handling validation and balance checks.",
-    ethics: "Is it better to rush and write buggy code or plan slower? Professional developer ethics and safety.",
-    adaptations: "Age 9-10: Fill-in-the-blank pseudocode sheets. Age 15-17: Introduce structured UML sequence drafts."
+    homework: "Define 4 variables and write 2 conditional statements in JavaScript syntax in the Journal tab under 'Session 8 Homework'.",
+    ethics: "Plan vs speed: Why coding without planning leads to structural flaws and security vulnerabilities.",
+    adaptations: "Age 13-16: Outline structured sequence blueprints with data types and variables."
   },
   {
     id: "l1-s9",
@@ -154,16 +155,16 @@ export const CURRICULUM_DATA = [
     title: "Session 9: \"Connecting the Pieces\"",
     duration: "2 hours",
     objectives: [
-      "Combine independent logic blocks into a coherent pipeline",
-      "Handle data flow from one sub-system's output to another's input"
+      "Map communication pathways between functions",
+      "Pass data values using parameters and returns in code syntax"
     ],
-    warmUp: "Logic Relay: Pass output values from Student A's logic card to Student B's input card.",
-    miniLesson: "Pipelines: Output → Input binding. Data transformations. Error propagation along a pipeline.",
-    coreActivity: "Smart Home System: Connect temperature controls, fire alarms, and security locks into a single system monitoring grid.",
+    warmUp: "Data Pipeline Game: Bind module output ports to filter inputs in the app screen and view changing streams.",
+    miniLesson: "Communication contracts: Function inputs (parameters) and outputs (returns). Parameter binding syntax: `calculateTotal(price, taxRate)`.",
+    coreActivity: "Interface Connector: Connect 3 components and write parameters (e.g. passing credentials) to secure data flows.",
     handsOn: "Implement a multi-sensor home pipeline script in the Sandbox, verifying alarm overrides instantly cut power grid nodes.",
-    homework: "Diagram the steps of ordering food online, tracing how data (items, card details) flow through modules.",
-    ethics: "If data flows through multiple vendors, who is responsible for privacy breaches? Data transfer ethics.",
-    adaptations: "Age 9-10: Pass paper cards along a string pipeline. Age 15-17: Introduce basic function parameters and returns."
+    homework: "Design an online checkout interface signature using Javascript function syntax inside the Journal tab.",
+    ethics: "Third-party leaks: What parameters should be sent to external APIs to protect client privacy?",
+    adaptations: "Age 13-16: Trace function argument passing and verify types in returns."
   },
   {
     id: "l1-s10",
@@ -172,16 +173,16 @@ export const CURRICULUM_DATA = [
     title: "Session 10: \"The Art of Breaking Things\"",
     duration: "2 hours",
     objectives: [
-      "Define happy path vs. edge case inputs",
-      "Systematically test systems using a Test Plan Matrix"
+      "Systematically define edge cases and boundaries",
+      "Format test inputs as JavaScript test case objects"
     ],
-    warmUp: "The Bad Chef: Try to make a sandwich with rocks, air, or infinite bread. Note the failures.",
-    miniLesson: "Testing: Happy Path (expected inputs), Edge Cases (extreme, empty, invalid inputs). Boundary values.",
-    coreActivity: "Fuzz the Form: Create a test matrix for your Session 2 forms. Execute tests manually to find unchecked exceptions.",
+    warmUp: "Input Fuzzer: Try typing extreme values into fields on the warm-up UI to see what breaks.",
+    miniLesson: "Testing types. Defining test assertions as JS object literals: `let testCase = { input: val, expected: output }`.",
+    coreActivity: "Edge Case Builder: Complete a test case array script in the sandbox workspace to validate range limits.",
     handsOn: "Write a test validator matrix in the Sandbox, checking extreme values (e.g. negative ages, blank usernames).",
-    homework: "Test a local web search bar with 5 edge-case strings (e.g. empty, symbols, HTML code). Log output behavior.",
-    ethics: "Is a tester who breaks software a helper or a troublemaker? (The collaborative mindset of software QA)",
-    adaptations: "Age 9-10: Mime computer crashes. Age 15-17: Introduce standard QA bug report formats."
+    homework: "Create a list of 5 test case objects in JS syntax in the Journal tab under 'Session 10 Homework'.",
+    ethics: "QA ethics: Why testers who break code are helpful collaborators, not adversaries.",
+    adaptations: "Age 13-16: Construct validation suites and analyze edge limits."
   },
   {
     id: "l1-s11",
@@ -190,16 +191,16 @@ export const CURRICULUM_DATA = [
     title: "Session 11: \"Designing for Failure\"",
     duration: "2 hours",
     objectives: [
-      "Implement defensive logic safeguards in systems",
-      "Catch errors early and display user-friendly fallbacks"
+      "Implement defensive logic safeguards",
+      "Read and compose try/catch block error handlers in Javascript"
     ],
-    warmUp: "Seatbelt check: Discuss why cars have airbags. Discuss why software needs error checks.",
-    miniLesson: "Defensive Coding: Try/Catch checks. Sanitization. Safe defaults. Fallback recovery states.",
-    coreActivity: "The Indestructible Smart Lock: Design logic for a keyless entry pad that locks out hacker brute-forces and runs offline fallbacks.",
+    warmUp: "Error message review: Review error screens in the app and sort them by clarity and helpfulness.",
+    miniLesson: "Defensive Coding. Error handling: `try / catch` blocks and error throwing syntax: `throw new Error(\"Invalid value\")`.",
+    coreActivity: "Safety Guard: Add conditional checks and fallback variables to a forms processor workspace.",
     handsOn: "Write a secure smart lock script in the Sandbox handling incorrect password lockouts.",
-    homework: "Look up 3 funny software errors (e.g. Y2K bug). Write down how developer checks could have prevented them.",
-    ethics: "Should safety critical systems (medical devices) be open source so everyone can audit their error catches?",
-    adaptations: "Age 9-10: Use cardboard shield drawings for error catches. Age 15-17: Introduce throw/catch syntax concepts."
+    homework: "Write a Javascript syntax email validity check using a throw guard in the Journal tab under 'Session 11 Homework'.",
+    ethics: "Safe failures: Should safety-critical devices shut down instantly or degrade gracefully?",
+    adaptations: "Age 13-16: Program try-catch blocks and handle custom error states."
   },
   {
     id: "l1-s12",
@@ -208,16 +209,16 @@ export const CURRICULUM_DATA = [
     title: "Session 12: \"Level 1 Capstone & Assessment\"",
     duration: "2 hours",
     objectives: [
-      "Demonstrate competency in logic, variables, loops, decomposition, and testing",
-      "Defend a flowchart logic blueprint against peer attacks"
+      "Demonstrate logic mapping and diagnostic tracing competency",
+      "Outline handler skeletons in Javascript syntax"
     ],
-    warmUp: "Checklist alignment: Verify assessment criteria.",
-    miniLesson: "System Defense: How to present a logical system clearly and answer security vulnerability critiques.",
-    coreActivity: "The Grid Defense Tournament: Students present flowcharts for an automated city transport grid. Peers play malicious assistants attempting to break it.",
+    warmUp: "Assessment alignment: Review task targets inside the app screen.",
+    miniLesson: "System Defense: How to present logical blueprints and defend against edge case fuzzer checks.",
+    coreActivity: "Digital Assessment: Map IPO, states, variables, and code syntax test cases for a brand new system scenario.",
     handsOn: "Run final verification on your city grid logic map in the Sandbox to pass fuzzer checks.",
-    homework: "Submit take-home project: Complete self-reflection documentation for the Level 1 Blueprint.",
-    ethics: "Peer reviews: Honesty vs. support. How to critique design templates construction ethically.",
-    adaptations: "All Ages: Group evaluations and public presentations."
+    homework: "Complete the self-reflection journal questions in the Journal tab under 'Session 12 Assessment'.",
+    ethics: "Design feedback: How to critique logic flowcharts and code rules construction constructively.",
+    adaptations: "Age 13-16: Digital presentation of logic blueprint and fuzzer testing logs."
   },
 
   // ================= LEVEL 2 =================
