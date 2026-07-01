@@ -59,6 +59,14 @@ const CAMPAIGN_THEMES = {
             xp: 100
           },
           {
+            id: 'l1-s4',
+            title: 'Session 4: "Decisions, Decisions"',
+            objective: 'Master conditional logic gates and climate overrides.',
+            activity: 'Climate Logic Controller: Program safety conditional overrides for the sector thermostat.',
+            homework: 'Draw a flowchart map for a thermostat controller checking window sensors, and write the rules in your Journal.',
+            xp: 100
+          },
+          {
             id: 'l1-s5',
             title: 'Session 5: "The Automated Pet Grid"',
             objective: 'Distinguish counting/condition loops and prevent infinite loops in feeders.',
@@ -174,6 +182,14 @@ const CAMPAIGN_THEMES = {
             xp: 100
           },
           {
+            id: 'l1-s4',
+            title: 'Session 4: "Habitat Environmental Control"',
+            objective: 'Build conditional logic safety gates for the colony dome temperature.',
+            activity: 'Life-Support Overrides: Program thermostat checks to shut down heater during oxygen leaks.',
+            homework: 'Document the window override rules logic for Mars habitats in your Prompt Journal.',
+            xp: 100
+          },
+          {
             id: 'l1-s5',
             title: 'Session 5: "Water Recycling Loops"',
             objective: 'Design recycling check loops that repeat until tanks are full.',
@@ -286,6 +302,14 @@ const CAMPAIGN_THEMES = {
             objective: 'Enchant barrier gates using strict transition states (Locked, Sealed, Breach).',
             activity: 'Wizarding Gates Spell: Program a state machine that transits gates between LOCKED and OPEN. Manage intruder alert triggers.',
             homework: 'Map out the states of a wizarding dungeon vault door. Write the spell keywords that trigger each transition.',
+            xp: 100
+          },
+          {
+            id: 'l1-s4',
+            title: 'Session 4: "Thermal Cauldron Runes"',
+            objective: 'Design decision runes to control magical potion boilers.',
+            activity: 'Boiler Potion Safety: Enchant thermostat runes to trigger fire suppression when temperatures breach.',
+            homework: 'Scribble the decision diamond logic layout for wand cooling rules in your Prompt Journal.',
             xp: 100
           },
           {
@@ -496,6 +520,21 @@ export default function App() {
   const [s3Logs, setS3Logs] = useState([]);
   const [s3Success, setS3Success] = useState(false);
   const [s3VisitedStates, setS3VisitedStates] = useState({ CLOSED: true, OPEN: false, ALARM_LOCKED: false });
+
+  // Level 1 Session 4 (Climate Controller) Simulator States
+  const [s4RuleFire, setS4RuleFire] = useState('EMERGENCY_SHUTDOWN');
+  const [s4RuleLockout, setS4RuleLockout] = useState('OFF');
+  const [s4RuleWindow, setS4RuleWindow] = useState('VENT');
+  const [s4RuleLowTemp, setS4RuleLowTemp] = useState('HEAT');
+  const [s4RuleHighTemp, setS4RuleHighTemp] = useState('AC');
+  const [s4RuleDefault, setS4RuleDefault] = useState('OFF');
+  const [s4Logs, setS4Logs] = useState([]);
+  const [s4Success, setS4Success] = useState(false);
+  const [s4CurrentTemp, setS4CurrentTemp] = useState(22);
+  const [s4CurrentAlarm, setS4CurrentAlarm] = useState(false);
+  const [s4CurrentLockout, setS4CurrentLockout] = useState(false);
+  const [s4CurrentWindow, setS4CurrentWindow] = useState(false);
+  const [s4CurrentOutput, setS4CurrentOutput] = useState('OFF');
 
   // Journal selection states
   const [selectedJournalId, setSelectedJournalId] = useState('j1');
@@ -977,6 +1016,12 @@ export default function App() {
       setSandboxConstraints(campaignId === 'cyberpunk' ? 'Must open sealed packages. Zero manual code edits.' : campaignId === 'mars' ? 'Open regulator valves, bypass solar loop anomalies.' : 'Goblin proof shields. Cauldron heat monitoring.');
       setSandboxInput(campaignId === 'cyberpunk' ? 'bread (sealed package), butter (sealed tub), knife' : campaignId === 'mars' ? 'oxygenLevel, SolarRadiationInput' : 'cauldronTemp, goblinBait');
       setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Null/missing inputs, unopened packets' : campaignId === 'mars' ? 'Radiation spikes, low levels' : 'Mana spikes, double cast');
+    } else if (session.id === 'l1-s4') {
+      setSandboxRole(campaignId === 'cyberpunk' ? 'Climate Control Security Architect' : campaignId === 'mars' ? 'Habitat Operations Supervisor' : 'Arch-Mage Climate Ward Warden');
+      setSandboxTask(campaignId === 'cyberpunk' ? 'Implement smart climate control conditional logic function' : campaignId === 'mars' ? 'Configure habitat atmospheric safety overrides' : 'Configure castle atmospheric shielding runes');
+      setSandboxConstraints('Use nested conditional statements to handle high priority override safety controls.');
+      setSandboxInput('temperature, windowOpen, fireAlarm, securityLockout');
+      setSandboxEdgeCases('Fire alarm must take priority over lockout. Active window open must prevent system heating/cooling.');
     } else if (session.id === 'l1-s5') {
       setSandboxRole('IoT Embedded System Architect');
       setSandboxTask(campaignId === 'cyberpunk' ? 'Implement SmartPetFeeder feeding logic loops' : campaignId === 'mars' ? 'Hydro Recycling Pump Loops' : 'Mana Stirling cauldron loops');
@@ -1012,6 +1057,96 @@ export default function App() {
     setSandboxCodeOutput(null);
     setChaosLogs([]);
     setSandboxSuccess(false);
+  };
+
+  const handleRunS4Simulation = () => {
+    setS4Logs([{ type: 'info', text: 'Initializing climate controller conditional audit...' }]);
+    
+    // Define the test scenarios
+    const scenarios = [
+      { temp: 15, alarm: true, lockout: false, window: false, expected: s4RuleFire, name: 'Fire Alarm Priority Override' },
+      { temp: 15, alarm: false, lockout: true, window: false, expected: s4RuleLockout, name: 'Security Lockout Override' },
+      { temp: 15, alarm: false, lockout: false, window: true, expected: s4RuleWindow, name: 'Window Open Ventilation' },
+      { temp: 12, alarm: false, lockout: false, window: false, expected: s4RuleLowTemp, name: 'Cold Temperature Heating' },
+      { temp: 32, alarm: false, lockout: false, window: false, expected: s4RuleHighTemp, name: 'Hot Temperature Cooling' },
+      { temp: 22, alarm: false, lockout: false, window: false, expected: s4RuleDefault, name: 'Normal Idle Zone' }
+    ];
+
+    let passedAll = true;
+
+    // Helper to evaluate student's rules in order of priority:
+    // 1. fireAlarm
+    // 2. securityLockout
+    // 3. windowOpen
+    // 4. temperature < 18
+    // 5. temperature > 26
+    // 6. else
+    const evaluateStudentLogic = (temp, alarm, lockout, window) => {
+      if (alarm) return s4RuleFire;
+      if (lockout) return s4RuleLockout;
+      if (window) return s4RuleWindow;
+      if (temp < 18) return s4RuleLowTemp;
+      if (temp > 26) return s4RuleHighTemp;
+      return s4RuleDefault;
+    };
+
+    let idx = 0;
+    const tick = () => {
+      if (idx >= scenarios.length) {
+        if (passedAll) {
+          // Double check if rules are logically correct to match the curriculum spec:
+          const isCorrectConfiguration = 
+            s4RuleFire === 'EMERGENCY_SHUTDOWN' &&
+            s4RuleLockout === 'OFF' &&
+            s4RuleWindow === 'VENT' &&
+            s4RuleLowTemp === 'HEAT' &&
+            s4RuleHighTemp === 'AC' &&
+            s4RuleDefault === 'OFF';
+
+          if (isCorrectConfiguration) {
+            setS4Logs(prev => [...prev, { type: 'success', text: '✓ ALL TESTS PASSED: Climate controller firmware certified!' }]);
+            setS4Success(true);
+            claimCaseEvidence('l1-s4', 100);
+          } else {
+            setS4Logs(prev => [...prev, { type: 'error', text: '✗ AUDIT FAILED: The output results matched your matrix, but your rules do not satisfy the environmental safety constraints!' }]);
+            setS4Success(false);
+          }
+        } else {
+          setS4Logs(prev => [...prev, { type: 'error', text: '✗ AUDIT FAILED: Some scenarios returned incorrect outputs.' }]);
+          setS4Success(false);
+        }
+        return;
+      }
+
+      const sc = scenarios[idx];
+      setS4CurrentTemp(sc.temp);
+      setS4CurrentAlarm(sc.alarm);
+      setS4CurrentLockout(sc.lockout);
+      setS4CurrentWindow(sc.window);
+      
+      const actualOutput = evaluateStudentLogic(sc.temp, sc.alarm, sc.lockout, sc.window);
+      setS4CurrentOutput(actualOutput);
+
+      let referenceOutput = 'OFF';
+      if (sc.alarm) referenceOutput = 'EMERGENCY_SHUTDOWN';
+      else if (sc.lockout) referenceOutput = 'OFF';
+      else if (sc.window) referenceOutput = 'VENT';
+      else if (sc.temp < 18) referenceOutput = 'HEAT';
+      else if (sc.temp > 26) referenceOutput = 'AC';
+
+      const success = (actualOutput === referenceOutput);
+      if (!success) {
+        passedAll = false;
+      }
+
+      const logText = `Scenario ${idx + 1} (${sc.name}): Inputs [Temp=${sc.temp}°C, Alarm=${sc.alarm}, Lockout=${sc.lockout}, Window=${sc.window}] => Mapped Action: ${actualOutput}. Result: ${success ? 'PASSED ✓' : 'FAILED ✗ (Expected ' + referenceOutput + ')'}`;
+      setS4Logs(prev => [...prev, { type: success ? 'success' : 'error', text: logText }]);
+
+      idx++;
+      setTimeout(tick, 400);
+    };
+
+    tick();
   };
 
   const selectedJournal = journalEntries.find(j => j.id === selectedJournalId);
@@ -1601,7 +1736,7 @@ export default function App() {
                         {sessions.map(s => {
                           const isSelected = curriculumSessionId === s.id;
                           // Check if it's a milestone session with a sandbox template hook
-                          const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(s.id);
+                          const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(s.id);
                           return (
                             <div 
                               key={s.id}
@@ -1634,7 +1769,7 @@ export default function App() {
                     );
                   }
                   
-                  const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(currentSession.id);
+                  const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(currentSession.id);
 
                   return (
                     <div className="glass-panel curriculum-detail-view animate-in">
@@ -2256,6 +2391,150 @@ export default function App() {
                 </div>
               )}
 
+              {/* LEVEL 1 SESSION 4: CLIMATE CONTROLLER CONDITIONALS */}
+              {sandboxSessionId === 'l1-s4' && (
+                <div className="simulator-grid state-grid">
+                  <div className="glass-panel sim-left">
+                    <div className="panel-header">
+                      <h3>Thermostat Rules Configurator</h3>
+                    </div>
+                    <div className="sim-panel-body state-rules">
+                      <p className="sim-instructions">
+                        Configure conditional decision rules for the climate control gateway in order of safety priority:
+                      </p>
+                      
+                      <div className="rules-matrix">
+                        <div className="matrix-row">
+                          <span className="matrix-label">1. If <strong>Fire Alarm</strong> is active ➔</span>
+                          <select value={s4RuleFire} onChange={(e) => setS4RuleFire(e.target.value)}>
+                            <option value="OFF">OFF</option>
+                            <option value="VENT">VENT</option>
+                            <option value="HEAT">HEAT</option>
+                            <option value="AC">AC</option>
+                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
+                          </select>
+                        </div>
+                        
+                        <div className="matrix-row">
+                          <span className="matrix-label">2. If <strong>Security Lockout</strong> is active ➔</span>
+                          <select value={s4RuleLockout} onChange={(e) => setS4RuleLockout(e.target.value)}>
+                            <option value="OFF">OFF</option>
+                            <option value="VENT">VENT</option>
+                            <option value="HEAT">HEAT</option>
+                            <option value="AC">AC</option>
+                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
+                          </select>
+                        </div>
+
+                        <div className="matrix-row">
+                          <span className="matrix-label">3. If <strong>Window Open</strong> is active ➔</span>
+                          <select value={s4RuleWindow} onChange={(e) => setS4RuleWindow(e.target.value)}>
+                            <option value="OFF">OFF</option>
+                            <option value="VENT">VENT</option>
+                            <option value="HEAT">HEAT</option>
+                            <option value="AC">AC</option>
+                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
+                          </select>
+                        </div>
+
+                        <div className="matrix-row">
+                          <span className="matrix-label">4. If <strong>Temperature &lt; 18°C</strong> ➔</span>
+                          <select value={s4RuleLowTemp} onChange={(e) => setS4RuleLowTemp(e.target.value)}>
+                            <option value="OFF">OFF</option>
+                            <option value="VENT">VENT</option>
+                            <option value="HEAT">HEAT</option>
+                            <option value="AC">AC</option>
+                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
+                          </select>
+                        </div>
+
+                        <div className="matrix-row">
+                          <span className="matrix-label">5. If <strong>Temperature &gt; 26°C</strong> ➔</span>
+                          <select value={s4RuleHighTemp} onChange={(e) => setS4RuleHighTemp(e.target.value)}>
+                            <option value="OFF">OFF</option>
+                            <option value="VENT">VENT</option>
+                            <option value="HEAT">HEAT</option>
+                            <option value="AC">AC</option>
+                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
+                          </select>
+                        </div>
+
+                        <div className="matrix-row">
+                          <span className="matrix-label">6. Else (Default state) ➔</span>
+                          <select value={s4RuleDefault} onChange={(e) => setS4RuleDefault(e.target.value)}>
+                            <option value="OFF">OFF</option>
+                            <option value="VENT">VENT</option>
+                            <option value="HEAT">HEAT</option>
+                            <option value="AC">AC</option>
+                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="glass-panel sim-middle">
+                    <div className="panel-header">
+                      <h3>Climate Telemetry & Output</h3>
+                      <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS4Logs([]); setS4Success(false); setS4CurrentTemp(22); setS4CurrentAlarm(false); setS4CurrentLockout(false); setS4CurrentWindow(false); setS4CurrentOutput('OFF'); }}>Reset</button>
+                    </div>
+                    
+                    <div className="sim-panel-body visual-state-panel">
+                      <div className="telemetry-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '15px' }}>
+                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>TEMP SENSOR</div>
+                          <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: s4CurrentTemp < 18 ? 'var(--accent-cyan)' : s4CurrentTemp > 26 ? 'var(--accent-orange)' : 'var(--text-primary)' }}>
+                            {s4CurrentTemp}°C
+                          </div>
+                        </div>
+                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SYSTEM STATUS</div>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 'bold', textTransform: 'uppercase', color: s4CurrentOutput === 'EMERGENCY_SHUTDOWN' ? 'var(--accent-red)' : s4CurrentOutput === 'HEAT' ? 'var(--accent-cyan)' : s4CurrentOutput === 'AC' ? 'var(--accent-orange)' : s4CurrentOutput === 'VENT' ? 'var(--accent-purple)' : 'var(--text-muted)' }}>
+                            {s4CurrentOutput}
+                          </div>
+                        </div>
+                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ALARM STATE</div>
+                          <div style={{ fontSize: '0.9rem', color: s4CurrentAlarm ? 'var(--accent-red)' : 'var(--text-muted)' }}>
+                            {s4CurrentAlarm ? '🚨 ALARM ACTIVE' : '🟢 SECURE'}
+                          </div>
+                        </div>
+                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>LOCKOUT STATE</div>
+                          <div style={{ fontSize: '0.9rem', color: s4CurrentLockout ? 'var(--accent-orange)' : 'var(--text-muted)' }}>
+                            {s4CurrentLockout ? '🔒 LOCKOUT ACTIVE' : '🔓 OPERATIONAL'}
+                          </div>
+                        </div>
+                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center', gridColumn: 'span 2' }}>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>WINDOW MONITOR</div>
+                          <div style={{ fontSize: '0.9rem', color: s4CurrentWindow ? 'var(--accent-purple)' : 'var(--text-muted)' }}>
+                            {s4CurrentWindow ? '🪟 WINDOW OPEN (VENT ON)' : '🚪 WINDOWS CLOSED'}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                        <button 
+                          className={`btn-cyber ${s4Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`} 
+                          onClick={handleRunS4Simulation}
+                        >
+                          {s4Success ? '✓ Simulation Certified' : 'Run Climate Simulation Tests'}
+                        </button>
+                      </div>
+
+                      <div className="state-terminal-logs" style={{ height: '140px', overflowY: 'auto' }}>
+                        {s4Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* FUNCTION TO CHECK COMPILATION FOR SESSION 3 STATE MACHINE */}
               {(() => {
                 window.checkCompletion = (activeSt, visitedSt) => {
@@ -2274,7 +2553,7 @@ export default function App() {
               })()}
 
               {/* STANDARD PROMPT SANDBOX FOR LEVEL 2-4 */}
-              {!['l1-s1', 'l1-s2', 'l1-s3'].includes(sandboxSessionId) && (
+              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4'].includes(sandboxSessionId) && (
                 <>
                   <div className="glass-panel sandbox-left">
                     <div className="panel-header">
