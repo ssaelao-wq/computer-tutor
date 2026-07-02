@@ -62,7 +62,7 @@ const CAMPAIGN_THEMES = {
             title: 'Session 1: "Literal Logic & Digital Infiltration"',
             objective: 'Design a precise sequential command blueprint to navigate systems.',
             activity: 'Drone Operator Roleplay: Student gives step-by-step instructions to tutor to move and retrieve an object. Tutor follows them strictly literally, demonstrating computer logical processing.',
-            homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab. Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response.',
+            homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab: Write a process to warm up food from a plate using a microwave. Identify preconditions, inputs, processing logic, and outputs (+50 XP).',
             xp: 100
           },
           {
@@ -70,7 +70,7 @@ const CAMPAIGN_THEMES = {
             title: 'Session 2: "Grid Variable Classification"',
             objective: 'Classify urban grid data variables and explore inputs/ranges.',
             activity: 'Design a character creation form with strict rules (e.g., age must be a number 5-100; name cannot be blank). Try to break a partner\'s form using invalid inputs.',
-            homework: 'Find 3 real-world forms. For each, identify the data types expected and list what happens if you input the wrong data type.',
+            homework: 'Find 3 real-world forms. For each, identify the data types expected and list what happens if you input the wrong data type (+50 XP).',
             xp: 100
           },
           {
@@ -78,7 +78,7 @@ const CAMPAIGN_THEMES = {
             title: 'Session 3: "Airlock Security State Machines"',
             objective: 'Model system behaviors using State, Transitions, and Commands.',
             activity: 'Design an Airlock Security State Machine. Map transitions from CLOSED to OPEN using cycle commands and secure alarm overrides.',
-            homework: 'Design a state transition table for a smart device (like a smart lock or alarm clock) and log it in your Prompt Journal.',
+            homework: 'Design a state transition table for a smart device (like a smart lock or alarm clock) and log it in your Prompt Journal (+50 XP).',
             xp: 100
           },
           {
@@ -86,7 +86,7 @@ const CAMPAIGN_THEMES = {
             title: 'Session 4: "Decisions, Decisions"',
             objective: 'Master conditional logic gates and climate overrides.',
             activity: 'Climate Logic Controller: Program safety conditional overrides for the sector thermostat.',
-            homework: 'Draw a flowchart map for a thermostat controller checking window sensors, and write the rules in your Journal.',
+            homework: 'Draw a flowchart map for a thermostat controller checking window sensors, and write the rules in your Journal (+50 XP).',
             xp: 100
           },
           {
@@ -94,7 +94,7 @@ const CAMPAIGN_THEMES = {
             title: 'Session 5: "The Automated Pet Grid"',
             objective: 'Distinguish counting/condition loops and prevent infinite loops in feeders.',
             activity: 'The Sneaky Cat Feeder Challenge: Design a flowchart for a feeder that dispenses food every 6 hours, blocks if the bowl is full, alerts if the cat attempts to double-eat within 5 minutes, and rings an alarm if the dog is unfed for 12 hours.',
-            homework: 'Identify 3 loops in your daily life. Describe what repeats, the condition/count, and what an infinite loop would look like.',
+            homework: 'Identify 3 loops in your daily life. Describe what repeats, the condition/count, and what an infinite loop would look like (+50 XP).',
             xp: 120
           }
         ]

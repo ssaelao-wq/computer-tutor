@@ -124,7 +124,7 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
    - *Topic*: If a self-driving delivery drone crashes because of a logic error in its code, who is responsible? The coder who wrote the sequence, the company that deployed it, or the operator who clicked "Run"?
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response digitally through the app.
+- **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
 - **Exercise 1.1 (Basic Route) Solution**: Sequence: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
@@ -137,9 +137,10 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **Exercise 1.5 (Power Check Logic) Solution**: Run a sequence and remove the middle `power_off` step: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ (remove `power_off`) ➔ `unlock_door`.
   - *Tutor Guide*: Point out that switching off power blocks the final lock mechanism, showing states must persist.
 - **Homework Evaluation**: Ensure the student's submitted text lists:
-  - *Input*: Button presses, dial rotations, weight sensor values.
-  - *Process*: Checking timer counter limits, comparing temperature variables.
-  - *Output*: Activating heater/motor coils, sounding audible buzzer notifications.
+  - *Preconditions*: powerState is "ON".
+  - *Input*: Keypad inputs (time duration string), door sensor state (Boolean), start button.
+  - *Process*: Checking timer counter limits in a loop, comparing door sensor state variables to halt.
+  - *Output*: Activating magnetron waves, countdown timer display, audio alarm beeps.
 
 ---
 

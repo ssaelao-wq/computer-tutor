@@ -173,11 +173,12 @@ Before running classes, tutors must familiarize themselves with the administrati
   * *Tutor Prompt*: *"We successfully flew to the door, so why did the unlock step fail when the drone's power was switched off?"*
   * *Explanation*: Students might think once the drone arrives, power is no longer needed. Use this question to illustrate that hardware preconditions are evaluated for *every* step, and state variables (like power state) must remain active throughout the device's entire operational pipeline.
 
-### 4. Homework Evaluation Checklist
-* The student must document a household appliance (e.g. Microwave) in the Journal:
-  * **Input**: Keypad numbers (String), door sensor (Boolean).
-  * **Process**: Count down timer seconds in a loop, check if door sensor is open.
-  * **Output**: Emit waves, beep, display counter numbers.
+### 4. Homework Evaluation Checklist (Grants +50 XP)
+* The student must document a microwave warming process in the Prompt Journal:
+  * **System Preconditions**: powerState must be "ON" (active electrical current).
+  * **Inputs**: Keypad duration text/string (e.g. "01:30"), door sensor (Boolean Yes/No), start button.
+  * **Process**: Count down timer seconds in a loop, verify power state active, check door sensor status mid-cycle (halt if opened).
+  * **Outputs**: Activate magnetron heating waves, countdown timer display value, audio speaker alarm beeps when finished.
 
 ---
 

@@ -18,7 +18,7 @@ export const CURRICULUM_DATA = [
     miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
     coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Power On, Scan, Tunnel, Bypass, Exfiltrate) in correct logical order.",
     handsOn: "Complete 5 sandbox tasks: (1) Basic Infiltration sequence, (2) Variable coordinate scans, (3) Sequence Debugging, (4) Variable Overwrite, (5) Power Check Logic.",
-    homework: "Complete the \"Household IPO Blueprint\" in the app's Journal tab. Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs.",
+    homework: "Complete the \"Household IPO Blueprint\" in the app's Journal tab: Write a process to warm up food from a plate using a microwave. Identify preconditions, inputs, processing logic, and outputs (+50 XP).",
     ethics: "Drone Crash Responsibility: If a drone crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
     adaptations: "Age 13-16: Use digital sandbox modules and audit terminal outputs. Discuss real IPO algorithms."
   },
@@ -36,7 +36,7 @@ export const CURRICULUM_DATA = [
     miniLesson: "Data Types & Validation Guards: Strings (character arrays), Numbers (math values), Booleans (switches). GIGO (Garbage In, Garbage Out).",
     coreActivity: "Form Exploitation: student tests and configures input validation fields on a mock form, learning how input type constraints reject invalid inputs.",
     handsOn: "Complete 5 sandbox tasks: (1) Sort backpack payloads by data type, (2) Configure validation guards, (3) Set validation bounds, (4) Passcode Type Casting, (5) Boolean Inversion.",
-    homework: "Locate two online sign-up forms. Document their input types and validation error messages in the app's Journal tab under 'Session 2 Homework'.",
+    homework: "Locate two online sign-up forms. Document their input types and validation error messages in the app's Journal tab under 'Session 2 Homework' (+50 XP).",
     ethics: "Data validation inclusion: How strict validation bounds and schemas might affect real-world representation (e.g. names, gender options).",
     adaptations: "Age 13-16: Trace database validation exceptions and API schemas."
   },
@@ -44,53 +44,53 @@ export const CURRICULUM_DATA = [
     id: "l1-s3",
     level: 1,
     module: "Module 1: Inputs, Processing, and Outputs",
-    title: "Session 3: \"State Transition Controllers & The Vault\"",
+    title: "Session 3: \"Airlock Security State Machines\"",
     duration: "2 hours",
     objectives: [
-      "Model digital systems as Finite State Machines (FSM)",
-      "Map transition rules and identify deadlock scenarios"
+      "Explain variables as states and map transition commands",
+      "Design systems using finite state machine logic tables"
     ],
-    warmUp: "State Explorer: Interacting with a virtual airlock dashboard to observe how current state limits trigger options.",
-    miniLesson: "Finite State Machines: States (variable values), Transitions, Event Triggers, and State Tables (Current State + Event ➔ Next State).",
-    coreActivity: "Device Blueprinting: Map state transitions for a microwave using a node-graph mapping tool on the app's practice screen.",
-    handsOn: "Complete 5 sandbox tasks: (1) Basic vault transitions, (2) Alarm hazard routing, (3) Deadlock reset repair, (4) Multi-Factor Auth gates, (5) Timeout Auto-Close.",
-    homework: "Map states and transition tables for a traffic light or elevator and submit them inside the app's Journal tab under 'Session 3 Homework'.",
-    ethics: "System Safety: If an elevator traps passengers inside during a fire alarm state, is the code correct? Balancing security and life safety.",
-    adaptations: "Age 13-16: Build state diagrams for complex systems and trace deadlocks."
+    warmUp: "The State Switchboard: Manually toggle switch states in the app and observe how other system states light up.",
+    miniLesson: "States, Transitions, and Commands: System configurations as distinct states; actions trigger transition paths; security overrides.",
+    coreActivity: "State Machine Mapping: Student maps transitions from CLOSED to OPEN using cycle commands and secure alarm overrides.",
+    handsOn: "Complete 5 sandbox tasks: (1) Basic Open/Close transition table, (2) Lock state transitions, (3) Safe Mode Override states, (4) Intruder Alert FSM, (5) Master Restore transition.",
+    homework: "Design a state transition table for a smart device (like a smart lock or alarm clock) and log it in your Prompt Journal (+50 XP).",
+    ethics: "Failsafes and safety FSMs: Designing transition rules that protect human lives (e.g. elevator brakes, medical devices).",
+    adaptations: "Age 13-16: Write FSM transition tables using formal notation and state graphs."
   },
   {
     id: "l1-s4",
     level: 1,
-    module: "Module 2: Visual Structures & Logical Loops",
+    module: "Module 1: Inputs, Processing, and Outputs",
     title: "Session 4: \"Decisions, Decisions\"",
     duration: "2 hours",
     objectives: [
-      "Create conditional statements (If/Then/Else)",
-      "Diagram logic flowcharts using decision diamonds"
+      "Construct multi-condition logic checks",
+      "Apply condition hierarchy and handle edge overrides"
     ],
-    warmUp: "Digital Decision Matcher: Interactive condition-to-action solver in the application.",
-    miniLesson: "Flowcharts: Start/End, Process blocks, Decision diamonds, and Arrows. Logical operators (AND, OR, NOT).",
-    coreActivity: "Thermostat Logic: Design flowchart logic for a climate controller with high-safety overrides and range checks.",
-    handsOn: "Complete 5 sandbox tasks: (1) Basic Climate conditional, (2) Window Override, (3) Security Lockout AND logic, (4) Multi-Zone Priority nesting, (5) System Health OR check.",
-    homework: "Complete the Weather Decision flowchart and condition rules tree inside the app's Journal tab.",
-    ethics: "Self-Driving Cars: If a vehicle must choose between hitting obstacle A or B, who programs that decision? (Ethics of algorithmic choice)",
-    adaptations: "Age 13-16: Use logic gates, Boolean logic operators (AND, OR, NOT)."
+    warmUp: "Truth Table Toggler: Toggle logical parameters (True/False) to observe compound Boolean AND/OR outcomes.",
+    miniLesson: "Conditional logic gates: IF / ELSE structures, Boolean arithmetic (AND, OR, NOT), priority of overrides.",
+    coreActivity: "Thermostat safety override: Program logical conditions to regulate sector climate.",
+    handsOn: "Complete 5 sandbox tasks: (1) Temperature checks, (2) Window sensor compound checks, (3) Emergency bypass priorities, (4) Sensor conflict detection, (5) Auto-shutdown conditions.",
+    homework: "Complete the Weather Decision flowchart and condition rules tree inside the app's Journal tab (+50 XP).",
+    ethics: "Automated bias: How algorithmic conditional thresholds might disproportionately affect individuals (e.g. credit decisions).",
+    adaptations: "Age 13-16: Write nested condition blocks in pseudocode and map decision trees."
   },
   {
     id: "l1-s5",
     level: 1,
-    module: "Module 2: Visual Structures & Logical Loops",
-    title: "Session 5: \"Round and Round - Loops\"",
+    module: "Module 1: Inputs, Processing, and Outputs",
+    title: "Session 5: \"The Automated Pet Grid\"",
     duration: "2 hours",
     objectives: [
-      "Distinguish between Counting Loops (For) and Condition Loops (While)",
-      "Identify and prevent infinite loops using JavaScript syntax limits"
+      "Distinguish between loop bounds: counting vs. conditions",
+      "Detect and trace infinite loop traps"
     ],
-    warmUp: "In-App Loop Explorer: Trigger loops and counters in the app to see how variables change dynamically.",
-    miniLesson: "Loop structures: counting loop `for` vs condition loop `while`. JavaScript loop syntax: `for (let i = 0; i < 5; i++)`.",
-    coreActivity: "Infinite Loop Hunter: Trace 5 flowcharts and JavaScript loop scripts, find where they get stuck, and write bounds to fix them.",
-    handsOn: "Complete 5 sandbox tasks: (1) Fixed Sweep count loop, (2) Pumping Level condition loop, (3) Infinite loop exit debugger, (4) Nested Loop Grid scanner, (5) Early Loop Exit break.",
-    homework: "Identify loops in daily life. Write their logic in the Journal tab using JavaScript loops (e.g. `while(battery < 100)`).",
+    warmUp: "Drone Fuel Loop: Trace how many loops a drone can complete based on a set variable decrement rate.",
+    miniLesson: "Loop structures: For (counting bounds) vs. While (conditional state bounds). Infinite loop crash triggers.",
+    coreActivity: "Feeder sequence blueprinting: Write loops that run while bounds are satisfied and terminate when variables transition.",
+    handsOn: "Complete 5 sandbox tasks: (1) Simple counter loops, (2) Loop break conditions, (3) Smart refill check loops, (4) Cat double-feed checks, (5) Infinite loop protection code.",
+    homework: "Identify loops in daily life. Write their logic in the Journal tab using JavaScript loops (e.g. `while(battery < 100)`) (+50 XP).",
     ethics: "Notification loops: Should a social media app loop notifications infinitely to get your attention?",
     adaptations: "Age 13-16: Compare `for` and `while` logic, discuss CPU locks and execution cycles."
   },
