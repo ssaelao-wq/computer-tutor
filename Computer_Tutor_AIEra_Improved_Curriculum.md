@@ -127,16 +127,16 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
-- **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas`.
-  - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the clutch first, it stalls or grinds, showing mechanical preconditions.
-- **Exercise 1.2 (Shifting Gears) Solution**: Sequence: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `shift_gear_2` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `shift_gear_3` ➔ `release_clutch_gas`.
-  - *Tutor Guide*: Show how speed builds in each gear sequentially. If they shift straight to 3rd gear, it stalls.
-- **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `shift_gear_2` ➔ `release_clutch_gas`.
-  - *Tutor Guide*: Students learn to debug chronological ordering using terminal logs.
-- **Exercise 1.4 (Gear Overwrite) Solution**: Correct sequence requires building speed in 1st gear before overwriting the `targetGear` variable to 2nd. The student must insert a `release_clutch_gas` after `shift_gear_1` before selecting `shift_gear_2`.
-  - *Tutor Guide*: Explains how variables store only one active state at a time.
-- **Exercise 1.5 (Emergency Brakes) Solution**: Sequence: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `apply_brakes` ➔ `engage_handbrake`.
-  - *Tutor Guide*: Highlight safety logic checks—applying brakes without clutch disconnects engine, stalling the car.
+- **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
+  - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the footbrake pedal or checking P/N gear first, it fails safety lockout switches.
+- **Exercise 1.2 (Reversing & Parking) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` (back out) ➔ `press_brake` (stop) ➔ `shift_d` ➔ `release_brake` ➔ `press_gas` (drive off).
+  - *Tutor Guide*: Show data dependency. Attempting to shift between Drive and Reverse without stopping the vehicle and depressing the footbrake destroys the transmission.
+- **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
+  - *Tutor Guide*: Students debug sequence ordering using safety switch reports in terminal logs.
+- **Exercise 1.4 (Gear Overwrite) Solution**: Correct sequence requires backing out (press gas in R) before shifting/overwriting the gear selector variable to Drive. Must insert backing out steps between `shift_r` and `shift_d`.
+  - *Tutor Guide*: Explains how variable overwrite wipes out the Reverse destination, causing the car to crash into the wall ahead.
+- **Exercise 1.5 (Emergency Brakes) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` ➔ `press_brake` ➔ `shift_p` ➔ `engage_handbrake`.
+  - *Tutor Guide*: Highlight continuous safety condition checks—parking safely requires locking transmission (P gear) and pulling handbrake.
 - **Homework Evaluation**: Ensure the student's submitted text lists:
   - *Preconditions*: powerState is "ON".
   - *Input*: Keypad inputs (time duration string), door sensor state (Boolean), start button.

@@ -2040,14 +2040,15 @@ export default function App() {
                           
                           // Pre-setup presets for specific exercises
                           if (num === 3) {
-                            // Exercise 1.3 Pre-setup (Scrambled car sequence)
+                            // Exercise 1.3 Pre-setup (Scrambled automatic car sequence)
                             setS1Sequence([
+                              { id: 'start_engine', label: 'Turn Ignition Key to Start' },
+                              { id: 'check_gear_pn', label: 'Check P/N Gear State' },
+                              { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' },
+                              { id: 'press_brake', label: 'Depress Brake Pedal' },
                               { id: 'release_handbrake', label: 'Release Handbrake' },
-                              { id: 'unlock_car', label: 'Unlock & Enter Vehicle' },
-                              { id: 'shift_gear_1', label: 'Shift to 1st Gear' },
-                              { id: 'start_engine', label: 'Turn Ignition Key to Start Engine' },
-                              { id: 'press_clutch', label: 'Depress Clutch Pedal' },
-                              { id: 'release_clutch_gas', label: 'Release Clutch & Press Gas' }
+                              { id: 'press_gas', label: 'Press Gas Pedal' },
+                              { id: 'release_brake', label: 'Release Brake Pedal' }
                             ]);
                           }
                         }}
@@ -2063,27 +2064,27 @@ export default function App() {
                       <div>
                         <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.1: Basic Start & Move (Logical Sequencing)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The security vehicle needs to start its engine and move off in 1st gear.
+                          <strong>Problem:</strong> The automatic security vehicle needs to start its engine and drive forward.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the commands to safely enter, start, and move: Unlock Car ➔ Depress Clutch ➔ Start Engine ➔ Shift to 1st Gear ➔ Release Handbrake ➔ Release Clutch & Gas.
+                          <strong>Instruction:</strong> Sequence the commands to safely start and move: Check P/N gear ➔ Press the brake ➔ Start engine ➔ Shift to D gear ➔ Release the handbrake ➔ Release the brake ➔ Press the gas.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Mechanical systems have strict preconditions. You cannot start the engine or shift gears without disengaging the clutch (clutchState = DOWN).
+                          <strong>Explanation:</strong> Computers execute steps literally. Automatic gearboxes have safety switches. The starter motor will not turn unless you depress the brake and ensure gear selector is in P or N.
                         </p>
                       </div>
                     )}
                     {s1ActiveExercise === 2 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Shifting Gears (Logical Progression)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Reversing & Parking (Variable State Dependency)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The vehicle needs to accelerate up to 3rd gear. Shifting requires clutch inputs and matching speed variable bounds (1st: 0-10 mph, 2nd: 10-25 mph, 3rd: 25+ mph).
+                          <strong>Problem:</strong> The vehicle needs to reverse out of a parking bay before shifting to Drive and moving forward. Shifting gears requires footbrake check states.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Start the engine and move in 1st gear, then shift to 2nd, press gas to build speed, and finally shift to 3rd gear and accelerate.
+                          <strong>Instruction:</strong> Start engine in P/N, shift to R, release handbrake/brake, press gas to back out, press brake to stop, shift to D, release brake, and press gas.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> You must build speed in each gear sequentially. Attempting to skip gears (1st ➔ 3rd) stalls the vehicle because your speed variable is out of bounds for 3rd gear.
+                          <strong>Explanation:</strong> Logical conditions must be met sequentially. Shifting from Reverse (R) to Drive (D) while the vehicle is in motion destroys the gearbox; you must brake first!
                         </p>
                       </div>
                     )}
@@ -2091,13 +2092,13 @@ export default function App() {
                       <div>
                         <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.3: Autopilot Sequence Correction (Debugging)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The preloaded autopilot driving script is scrambled and stalls on execution.
+                          <strong>Problem:</strong> The preloaded autopilot driving script is scrambled and fails safety checks.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Reorder the scrambled cards in the workspace so the vehicle unlocks, starts, shifts to 1st, releases handbrake, moves off, and up-shifts to 2nd gear.
+                          <strong>Instruction:</strong> Reorder the scrambled cards in the workspace so the vehicle runs its P/N checks, starts, shifts to D, releases the brakes, and drives off.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Watch the terminal output logs to trace where the sequence violates preconditions (e.g. releasing handbrake before starting). Rearrange to fix!
+                          <strong>Explanation:</strong> Watch the terminal output logs to trace where the sequence violates safety checks (e.g. attempting to start ignition in Drive gear).
                         </p>
                       </div>
                     )}
@@ -2105,13 +2106,13 @@ export default function App() {
                       <div>
                         <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Gear Variable Overwrite</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The gear stick is managed by the <code>targetGear</code> variable. Writing to it too early overwrites the value before the car builds speed.
+                          <strong>Problem:</strong> The gear stick is managed by the gear selector variable. Overwriting the gear variable too early leads to dangerous outcomes.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence: Unlock ➔ Clutch ➔ Start ➔ Shift 1st ➔ Shift 2nd (no gas first) ➔ Release Handbrake ➔ Release Clutch & Gas. Observe the stall, then correct it by building speed in 1st first.
+                          <strong>Instruction:</strong> Shift to R, then immediately to D without backing out first, and see what happens. Fix it by inserting the backing out steps before shifting to D.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Variables store only one value. Shifting to 2nd immediately overwrote `targetGear` to 2. Releasing the clutch at 0 mph in 2nd gear stalls the car!
+                          <strong>Explanation:</strong> Variables store only one value. Overwriting R with D immediately wipes out the Reverse destination, causing the vehicle to drive straight forward into the wall.
                         </p>
                       </div>
                     )}
@@ -2122,10 +2123,10 @@ export default function App() {
                           <strong>Problem:</strong> Safety overrides evaluate system states continuously. An obstacle is detected ahead.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Start the car, accelerate in 1st gear, and execute a secure emergency stop. Remember: braking without depressing the clutch stalls the engine!
+                          <strong>Instruction:</strong> Start the car, drive off in D, and execute a secure emergency stop. Remember to shift to Park (P) and engage the handbrake at the end!
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Real-world algorithms must verify that mechanical safety variables are set (clutch pedal must be down during stops to disconnect transmission).
+                          <strong>Explanation:</strong> Safety rules check conditions continuously. Parking safely requires engaging both the mechanical handbrake and the transmission lock (P gear).
                         </p>
                       </div>
                     )}
@@ -2137,34 +2138,34 @@ export default function App() {
                         <h3>Available Driving Commands</h3>
                       </div>
                       <div className="sim-panel-body drone-commands">
-                        <p className="sim-instructions" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Click commands to add to sequence workspace:</p>
+                        <p className="sim-instructions" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 10px 0' }}>Click commands to add to sequence workspace:</p>
                         <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'unlock_car', label: 'Unlock & Enter Vehicle' }])}>
-                            <span className="sim-action-icon">🔌</span> Unlock & Enter Vehicle
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'check_gear_pn', label: 'Check P/N Gear State' }])}>
+                            <span className="sim-action-icon">🔍</span> Check P/N Gear State
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_clutch', label: 'Depress Clutch Pedal' }])}>
-                            <span className="sim-action-icon">🦶</span> Depress Clutch Pedal
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_brake', label: 'Depress Brake Pedal' }])}>
+                            <span className="sim-action-icon">🦶</span> Depress Brake Pedal
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'start_engine', label: 'Turn Ignition Key to Start Engine' }])}>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'start_engine', label: 'Turn Ignition Key to Start' }])}>
                             <span className="sim-action-icon">🔑</span> Turn Ignition Key to Start
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_gear_1', label: 'Shift to 1st Gear' }])}>
-                            <span className="sim-action-icon">⚙️</span> Shift to 1st Gear
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to D (Drive)
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_gear_2', label: 'Shift to 2nd Gear' }])}>
-                            <span className="sim-action-icon">⚙️</span> Shift to 2nd Gear
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to R (Reverse)
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_gear_3', label: 'Shift to 3rd Gear' }])}>
-                            <span className="sim-action-icon">⚙️</span> Shift to 3rd Gear
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_p', label: 'Shift Gear Selector to P (Park)' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to P (Park)
                           </button>
                           <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_handbrake', label: 'Release Handbrake' }])}>
                             <span className="sim-action-icon">🛑</span> Release Handbrake
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_clutch_gas', label: 'Release Clutch & Press Gas' }])}>
-                            <span className="sim-action-icon">🚀</span> Release Clutch & Press Gas
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_brake', label: 'Release Brake Pedal' }])}>
+                            <span className="sim-action-icon">🦶</span> Release Brake Pedal
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'apply_brakes', label: 'Press Footbrake' }])}>
-                            <span className="sim-action-icon">🛑</span> Press Footbrake
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_gas', label: 'Press Gas Pedal' }])}>
+                            <span className="sim-action-icon">🚀</span> Press Gas Pedal
                           </button>
                           <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'engage_handbrake', label: 'Engage Handbrake' }])}>
                             <span className="sim-action-icon">🛑</span> Engage Handbrake
@@ -2219,20 +2220,19 @@ export default function App() {
                           onClick={() => {
                             if (s1Executing) return;
                             setS1Executing(true);
-                            setS1Logs([{ type: 'info', text: '🤖 Autopilot: Initializing manual transmission vehicle diagnostics...' }]);
+                            setS1Logs([{ type: 'info', text: '🤖 Autopilot: Initializing automatic transmission safety diagnostics...' }]);
                             
                             let currentStep = 0;
                             let hasError = false;
                             const logsToAppend = [];
                             
-                            // Car State Variables
-                            let unlocked = false;
-                            let clutchDown = false;
+                            // Automatic Car State Variables
+                            let checkedPN = false;
+                            let brakePressed = false;
                             let engineStarted = false;
-                            let gear = 0; // 0 = Neutral, 1, 2, 3
+                            let gear = 'P'; // P, N, D, R
                             let handbrakeReleased = false;
                             let speed = 0;
-                            let hasBraked = false;
                             
                             const runNext = () => {
                               if (s1Sequence.length === 0) {
@@ -2246,49 +2246,49 @@ export default function App() {
                                   const ids = s1Sequence.map(c => c.id).join(',');
                                   
                                   if (s1ActiveExercise === 1) {
-                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving in 1st gear. Autopilot basic setup complete!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving forward in Drive. Autopilot basic setup complete!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect start & move off sequence. Preconditions violated.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & drive off sequence.' }]);
                                     }
                                   } else if (s1ActiveExercise === 2) {
-                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,shift_gear_2,release_clutch_gas,press_clutch,shift_gear_3,release_clutch_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_r,release_handbrake,release_brake,press_gas,press_brake,shift_d,release_brake,press_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Gearbox shifted to 3rd gear. Cruising speed achieved!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Backed out in Reverse and drove forward in Drive successfully!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Cruising target sequence is incomplete or incorrect.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Reversing/Drive target sequence is incomplete or incorrect.' }]);
                                     }
                                   } else if (s1ActiveExercise === 3) {
-                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,shift_gear_2,release_clutch_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Autopilot sequence rearranged correctly. Cruising in 2nd!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Autopilot sequence rearranged correctly. Cruising in Drive!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Scrambled script sequence is still incorrect.' }]);
                                     }
                                   } else if (s1ActiveExercise === 4) {
-                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,shift_gear_2,release_clutch_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_r,release_handbrake,release_brake,press_gas,press_brake,shift_d,release_brake,press_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Overwrite prevented! Gear shifted after speed built.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Overwrite prevented! Reversing target cleared before shifting to Drive.' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Target gear variable overwritten too early.' }]);
                                     }
                                   } else if (s1ActiveExercise === 5) {
-                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,apply_brakes,engage_handbrake';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas,press_brake,shift_p,engage_handbrake';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Emergency stop executed safely! Vehicle parked.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Emergency stop executed safely! Vehicle parked in Park (P).' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Emergency stop failed or stalled.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Emergency stop failed or parked incorrectly.' }]);
                                     }
                                   }
                                 }
@@ -2298,112 +2298,90 @@ export default function App() {
  
                               const cmd = s1Sequence[currentStep];
  
-                              if (cmd.id === 'unlock_car') {
-                                unlocked = true;
-                                logsToAppend.push({ type: 'info', text: '🔑 [Ignition Core] Doors unlocked. Security agent inside cabin.' });
-                              } else if (cmd.id === 'press_clutch') {
-                                clutchDown = true;
-                                logsToAppend.push({ type: 'info', text: '🦶 [Pedal state] Clutch pedal depressed (clutchState = DOWN).' });
+                              if (cmd.id === 'check_gear_pn') {
+                                checkedPN = true;
+                                logsToAppend.push({ type: 'info', text: '🔍 [Transmission Log] Gear checked. Gear selector is currently in P (Park) (P/N Check = TRUE).' });
+                              } else if (cmd.id === 'press_brake') {
+                                brakePressed = true;
+                                logsToAppend.push({ type: 'info', text: '🦶 [Pedal Log] Footbrake pedal depressed (footbrakeState = DEPRESSED).' });
                               } else if (cmd.id === 'start_engine') {
-                                if (!unlocked) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted ignition while locked outside!' });
+                                if (!checkedPN) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to start engine without verifying gear is in P or N! Safety lockout active.' });
                                   hasError = true;
-                                } else if (!clutchDown) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Ignition active without depressing clutch! Transmission jerked, engine stalled.' });
+                                } else if (!brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to start engine without depressing footbrake! Starter safety switch locked.' });
                                   hasError = true;
                                 } else {
                                   engineStarted = true;
-                                  logsToAppend.push({ type: 'info', text: '🔑 [Ignition Core] Starter motor running. Engine active (engineState = RUNNING).' });
+                                  logsToAppend.push({ type: 'info', text: '🔑 [Ignition Log] Starter motor running. Engine active (engineState = RUNNING).' });
                                 }
-                              } else if (cmd.id === 'shift_gear_1') {
+                              } else if (cmd.id === 'shift_d') {
                                 if (!engineStarted) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
                                   hasError = true;
-                                } else if (!clutchDown) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 1st gear without depressing clutch! Gearbox grinded horribly.' });
+                                } else if (!brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector out of P/N without depressing the brake pedal.' });
                                   hasError = true;
                                 } else {
-                                  gear = 1;
-                                  logsToAppend.push({ type: 'info', text: '⚙️ [Gearbox State] Gearbox shifted to 1st Gear (targetGear = 1).' });
+                                  gear = 'D';
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to D (Drive) (currentGear = D).' });
                                 }
-                              } else if (cmd.id === 'shift_gear_2') {
+                              } else if (cmd.id === 'shift_r') {
                                 if (!engineStarted) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
                                   hasError = true;
-                                } else if (!clutchDown) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 2nd gear without depressing clutch! Gearbox grinded.' });
+                                } else if (!brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to R (Reverse) without depressing the brake pedal.' });
                                   hasError = true;
                                 } else {
-                                  gear = 2;
-                                  logsToAppend.push({ type: 'info', text: '⚙️ [Gearbox State] Gearbox shifted to 2nd Gear (targetGear = 2).' });
+                                  gear = 'R';
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to R (Reverse) (currentGear = R).' });
                                 }
-                              } else if (cmd.id === 'shift_gear_3') {
-                                if (!engineStarted) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
-                                  hasError = true;
-                                } else if (!clutchDown) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 3rd gear without depressing clutch! Gearbox grinded.' });
+                              } else if (cmd.id === 'shift_p') {
+                                if (!brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to P (Park) without depressing the brake pedal.' });
                                   hasError = true;
                                 } else {
-                                  gear = 3;
-                                  logsToAppend.push({ type: 'info', text: '⚙️ [Gearbox State] Gearbox shifted to 3rd Gear (targetGear = 3).' });
+                                  gear = 'P';
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to P (Park) (currentGear = P).' });
                                 }
                               } else if (cmd.id === 'release_handbrake') {
                                 handbrakeReleased = true;
-                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes State] Parking handbrake released (handbrakeState = OFF).' });
-                              } else if (cmd.id === 'release_clutch_gas') {
+                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Mechanical handbrake released (handbrakeState = OFF).' });
+                              } else if (cmd.id === 'release_brake') {
+                                brakePressed = false;
+                                logsToAppend.push({ type: 'info', text: '🦶 [Pedal Log] Footbrake pedal released (footbrakeState = RELEASED).' });
+                              } else if (cmd.id === 'press_gas') {
                                 if (!engineStarted) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Released clutch with engine offline. Car rolled backward.' });
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Pressed gas pedal with engine offline. Car stayed idle.' });
                                   hasError = true;
-                                } else if (gear === 0) {
-                                  logsToAppend.push({ type: 'info', text: '🚀 Engine revved in neutral. Speed = 0 mph.' });
+                                } else if (gear === 'P' || gear === 'N') {
+                                  logsToAppend.push({ type: 'info', text: '🚀 Engine revved in Neutral/Park. Speed = 0 mph.' });
                                 } else if (!handbrakeReleased) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Released clutch with handbrake engaged! Friction smoked the pads, engine stalled.' });
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Gas pedal pressed while handbrake is engaged! Friction smoked the pads, engine stalled.' });
                                   hasError = true;
-                                } else if (gear === 1) {
-                                  speed = 12;
-                                  clutchDown = false;
-                                  logsToAppend.push({ type: 'info', text: '🚀 Clutch released. Speed building... speed = 12 mph (Cruising in 1st).' });
-                                } else if (gear === 2) {
-                                  if (speed < 8) {
-                                    logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 2nd at too low speed (under 8 mph). Engine bogged down and stalled!' });
-                                    hasError = true;
-                                  } else {
-                                    speed = 28;
-                                    clutchDown = false;
-                                    logsToAppend.push({ type: 'info', text: '🚀 Clutch released. Accelerator pressed. Speed building... speed = 28 mph (Cruising in 2nd).' });
-                                  }
-                                } else if (gear === 3) {
-                                  if (speed < 20) {
-                                    logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 3rd at too low speed (under 20 mph). Engine bogged down and stalled!' });
-                                    hasError = true;
-                                  } else {
-                                    speed = 45;
-                                    clutchDown = false;
-                                    logsToAppend.push({ type: 'info', text: '🚀 Clutch released. Accelerator pressed. Speed building... speed = 45 mph (Cruising in 3rd).' });
-                                  }
-                                }
-                              } else if (cmd.id === 'apply_brakes') {
-                                if (!clutchDown && speed > 0) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Brakes applied to full halt without depressing clutch! Engine locked with drive wheels and stalled.' });
+                                } else if (brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Accelerator pressed while footbrake is fully depressed! Transmission overheated and stalled.' });
                                   hasError = true;
-                                } else {
-                                  speed = 0;
-                                  hasBraked = true;
-                                  logsToAppend.push({ type: 'info', text: '🛑 [Brakes State] Footbrake applied. Vehicle brought to a secure halt.' });
+                                } else if (gear === 'D') {
+                                  speed = 25;
+                                  logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = 25 mph (Driving forward in D).' });
+                                } else if (gear === 'R') {
+                                  speed = -10;
+                                  logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = -10 mph (Moving backward in R).' });
                                 }
                               } else if (cmd.id === 'engage_handbrake') {
-                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes State] Parking handbrake engaged (handbrakeState = ON).' });
+                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Parking handbrake engaged (handbrakeState = ON).' });
                               }
                               
                               setS1Logs(prev => [...prev, logsToAppend[logsToAppend.length - 1]]);
                               
                               if (hasError) {
-                                setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: System shutdown due to logic fault.' }]);
+                                setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Safety systems halted vehicle.' }]);
                                 setS1Executing(false);
                                 return;
                               }
-
+ 
                               currentStep++;
                               setTimeout(runNext, 800);
                             };

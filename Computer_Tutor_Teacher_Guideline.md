@@ -67,103 +67,103 @@ Before running classes, tutors must familiarize themselves with the administrati
   - *"How does data (like the door's coordinates) get saved in one step and used in a later step?"*
 
 #### 🕹️ Phase B | Sandbox Lab: Drone Infiltration Simu* **What the Tutor Explains**:
-  - Introduce the Sandbox environment. Explain that the manual car autopilot is controlled strictly by the list of sequenced action commands compiled by the student.
-  - Explain the concepts of **preconditions** (states that must be true before an action can run, e.g. clutch down to start/shift) and **state variables** (variables representing active system status, e.g. `speed = 12` or `clutchState = DOWN`).
+  - Introduce the Sandbox environment. Explain that the automatic car autopilot is controlled strictly by the list of sequenced action commands compiled by the student.
+  - Explain the concepts of **preconditions** (states that must be true before an action can run, e.g. footbrake down to shift/start) and **state variables** (variables representing active system status, e.g. `speed = 25` or `currentGear = "D"`).
 * **Step-by-Step Exercise Facilitation Guide**:
   ##### **Exercise 1.1: Basic Start & Move**
   * **How to do it**:
-    1. Click the command buttons to add cards to the workspace in the following order: `Unlock & Enter Vehicle` ➔ `Depress Clutch Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift to 1st Gear` ➔ `Release Handbrake` ➔ `Release Clutch & Press Gas`.
-    2. Click the **Run Autopilot Script** button. The vehicle will execute the steps sequentially and move off in first gear.
+    1. Click the command buttons to add cards to the workspace in the following order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`.
+    2. Click the **Run Autopilot Script** button. The vehicle will execute the steps sequentially and drive off in Drive gear.
   * **Purpose of the Exercise**:
-    - To introduce the student to the concept of **sequential processing** (how computers execute lines of code chronologically from top to bottom) and **hardware preconditions** (the car cannot start the engine or shift gears without disengaging the clutch pedal first).
+    - To introduce the student to the concept of **sequential processing** (how computers execute lines of code chronologically from top to bottom) and **hardware preconditions** (the car cannot start the engine or shift gears without disengaging shift locks using the brake pedal and checking P/N gear).
   * **What the Student Learns**:
     - Computers are literal and do not assume steps.
-    - An action block has zero effect or crashes if its prerequisites (e.g. clutchState = DOWN) are not initialized in a prior step.
-  * **Tutor Check Question**: *"Why did we need to depress the clutch first? What happens if you try to start the ignition key without pressing the clutch?"*
+    - An action block has zero effect or crashes if its safety prerequisites (e.g. brake pedal depressed) are not initialized in a prior step.
+  * **Tutor Check Question**: *"Why did we need to depress the brake pedal first? What happens if you try to start the engine without pressing the brake?"*
  
-  ##### **Exercise 1.2: Shifting Gears**
+  ##### **Exercise 1.2: Reversing & Parking**
   * **How to do it**:
-    1. Sequence the blocks in the logical order to reach 3rd gear: `Unlock & Enter Vehicle` ➔ `Depress Clutch Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift to 1st Gear` ➔ `Release Handbrake` ➔ `Release Clutch & Press Gas` ➔ `Depress Clutch Pedal` ➔ `Shift to 2nd Gear` ➔ `Release Clutch & Press Gas` ➔ `Depress Clutch Pedal` ➔ `Shift to 3rd Gear` ➔ `Release Clutch & Press Gas`.
+    1. Sequence the blocks in the logical order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (back out) ➔ `Depress Brake Pedal` (stop) ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`.
     2. Click **Run Autopilot Script** to execute.
   * **Purpose of the Exercise**:
-    - To demonstrate **variables as data storage containers** and explain **data dependency** (shifting gears depends on matching the speed variable limits: 1st for 0-10 mph, 2nd for 10-25 mph, 3rd for 25+ mph).
+    - To demonstrate **variables as data storage containers** and explain **data dependency** (you cannot shift between R and D while the vehicle speed is not 0 mph and footbrake is not pressed).
   * **What the Student Learns**:
-    - A variable is a temporary memory slot that must be built up sequentially.
-    - If the student tries to shift straight from 1st to 3rd gear, the vehicle speed variable is too low, leading to an engine stall.
-  * **Tutor Check Question**: *"Why does the vehicle speed variable matter when shifting up? What happens if we skip 2nd gear and try to shift straight to 3rd?"*
+    - A variable is a temporary memory slot.
+    - If the student tries to shift from R to D directly while moving (without braking first), it destroys the transmission.
+  * **Tutor Check Question**: *"Why must we depress the footbrake pedal before shifting from Reverse to Drive? What variable check prevents shifting while moving?"*
  
   ##### **Exercise 1.3: Autopilot Sequence Correction**
   * **How to do it**:
     1. The student is presented with a preloaded, scrambled script that stalls on execution.
     2. Click **Run Autopilot Script** to observe the crash.
-    3. Direct the student's eyes to the terminal outputs: `CRITICAL ERROR: Released clutch with handbrake engaged!` or `Ignition active without depressing clutch!`.
-    4. Reorder the blocks: use the **▲** and **▼** arrow buttons next to the cards to arrange them in order: `Unlock` ➔ `Clutch` ➔ `Start` ➔ `Shift 1st` ➔ `Release Handbrake` ➔ `Release Clutch & Gas` ➔ `Clutch` ➔ `Shift 2nd` ➔ `Release Clutch & Gas`.
+    3. Direct the student's eyes to the terminal outputs: `CRITICAL ERROR: Attempted to start engine without depressing footbrake!`.
+    4. Reorder the blocks: use the **▲** and **▼** arrow buttons next to the cards to arrange them in order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`.
     5. Click **Run Autopilot Script** to verify.
   * **Purpose of the Exercise**:
     - To introduce the core programming workflow of **debugging** (running code, analyzing failure logs, tracing back to the incorrect logic block, and rearranging instructions).
   * **What the Student Learns**:
     - Errors are literal reports indicating exactly where the logic broke down.
     - Use the new **▲** and **▼** arrow buttons to quickly shift blocks up or down.
-  * **Tutor Check Question**: *"Look at step 1 in the buggy code. Why is the handbrake released before starting the engine? How did the log alert help us locate the wrong block?"*
+  * **Tutor Check Question**: *"Look at the terminal log. Why did the starter motor fail to start the engine? Which block needed to move before the ignition key?"*
  
   ##### **Exercise 1.4: Gear Variable Overwrite**
   * **How to do it**:
-    1. Sequence the blocks in the following order: `Unlock` ➔ `Clutch` ➔ `Start` ➔ `Shift 1st` ➔ `Shift 2nd` (without moving off first to build speed) ➔ `Release Handbrake` ➔ `Release Clutch & Gas`.
+    1. Sequence the blocks in the following order: `Check P/N` ➔ `Depress Brake` ➔ `Start` ➔ `Shift R` ➔ `Shift D` (without backing out first) ➔ `Release Handbrake` ➔ `Release Brake` ➔ `Press Gas`.
     2. Click **Run Autopilot Script**.
-    3. Observe that the car stalls immediately. The terminal logs state that the target gear variable was overwritten to `2` before the car could move, making it stall since speed was still 0 mph.
-    4. Correct it by inserting a `Release Clutch & Press Gas` block immediately after `Shift to 1st Gear` to build speed before the gear variable is overwritten.
+    3. Observe that the car drives straight forward and crashes. The terminal logs state that the gear variable was overwritten to `D` before the car could reverse out of the bay.
+    4. Correct it by inserting the backing out steps (release brake, press gas, press brake) after `Shift R` before selecting `Shift D`.
   * **Purpose of the Exercise**:
-    - To introduce the concept of **variable overwriting**. A variable is a single memory slot; shifting gears immediately overwrites the previous value before the vehicle can make use of it.
+    - To introduce the concept of **variable overwriting**. A variable is a single memory slot; shifting gears immediately overwrites the previous value.
   * **What the Student Learns**:
     - Variables can only hold one value at a time.
-    - Overwriting a state variable too early causes dependency errors down the line.
-  * **Tutor Check Question**: *"Why did the vehicle stall when shifting 1st and 2nd in a row? What happened to our active gear variable?"*
+    - Overwriting a state variable too early wipes out previous instructions.
+  * **Tutor Check Question**: *"Why did the vehicle drive forward instead of reversing first? What happened to our active gear variable?"*
  
   ##### **Exercise 1.5: Emergency Brakes**
   * **How to do it**:
-    1. The student is challenged to test a sequence: Start the car, move in 1st gear, and execute an emergency brake.
-    2. Sequence: `Unlock` ➔ `Clutch` ➔ `Start` ➔ `Shift 1st` ➔ `Release Handbrake` ➔ `Release Clutch & Gas` ➔ `Depress Clutch Pedal` ➔ `Press Footbrake` ➔ `Engage Handbrake`.
-    3. Point out that if they press the footbrake without depressing the clutch first, it fails because the drive wheels lock while the engine is still connected, causing a stall.
+    1. The student is challenged to test a sequence: Start the car, drive off in D, and execute a secure emergency stop.
+    2. Sequence: `Check P/N` ➔ `Depress Brake` ➔ `Start` ➔ `Shift D` ➔ `Release Handbrake` ➔ `Release Brake` ➔ `Press Gas` ➔ `Depress Brake Pedal` ➔ `Shift Gear Selector to P (Park)` ➔ `Engage Handbrake`.
+    3. Point out that safe parking requires both transmission locks (P gear) and mechanical friction holds (handbrake).
   * **Purpose of the Exercise**:
     - To understand that **states are persistent and safety checks are run for every step**.
   * **What the Student Learns**:
-    - Safety checks are continuous. You must depress the clutch to disconnect transmission before locking the wheels.
-  * **Tutor Check Question**: *"Why does the engine stall if we hit the brakes without depressing the clutch pedal?"*
+    - Safety checks are continuous. You must shift to P and pull the handbrake to complete the script.
+  * **Tutor Check Question**: *"Why does the emergency sequence require us to shift back to Park (P) at the end?"*
  
 #### 🔍 Phase C | Assessment & Debugging: Auditing Logs (01:30 - 01:50)
 * **What the Tutor Explains**:
-  - When systems fail, they output debug logs (text messages that record every action and error code). Learning to read logs is 90% of a developer's day.
-  - Introduce **Error Propagation**: When one early step fails, all subsequent steps fail too, often hiding the real root cause under a pile of secondary errors.
+  - When systems fail, they output debug logs. Learning to read logs is 90% of a developer's day.
+  - Introduce **Error Propagation**: When one early step fails, all subsequent steps fail too.
 * **Diagnostic Walkthroughs**:
-  - **Log Case A**: `💥 CRITICAL ERROR: Ignition active without depressing clutch! Transmission jerked, engine stalled.`
-    - *Tutor Ask*: *"What is the root cause? How do we fix it?"* (Depress clutch pedal before starting ignition).
-  - **Log Case B**: `💥 CRITICAL ERROR: Shifted to 1st gear without depressing clutch! Gearbox grinded horribly.`
-    - *Tutor Ask*: *"Why did the gearbox grind? What step did we forget to run before shifting?"* (Forgot `press_clutch` which is a precondition for shifting).
-  - **Log Case C**: `💥 CRITICAL ERROR: Released clutch with handbrake engaged! Friction smoked the pads, engine stalled.`
-    - *Tutor Ask*: *"Why did the engine stall? How do we release the brakes?"* (Release handbrake before releasing clutch).
+  - **Log Case A**: `💥 CRITICAL ERROR: Attempted to start engine without depressing footbrake! Starter safety switch locked.`
+    - *Tutor Ask*: *"What is the root cause? How do we fix it?"* (Depress footbrake pedal before starting engine).
+  - **Log Case B**: `💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector out of P/N without depressing the brake pedal.`
+    - *Tutor Ask*: *"Why is the shift lock engaged? What step did we forget?"* (Depress footbrake before shifting).
+  - **Log Case C**: `💥 CRITICAL ERROR: Gas pedal pressed while handbrake is engaged! Friction smoked the pads, engine stalled.`
+    - *Tutor Ask*: *"Why did it stall?"* (Release handbrake before pressing gas).
  
 ---
  
 ### 3. Socratic Prompting
 * **Mapping to Exercise 1.1 (Basic Start & Move)**:
-  * *Tutor Prompt*: *"What is the absolute first thing you must do before a device can perform any mechanical driving commands?"* (Unlock the vehicle).
-  * *Explanation*: Absolute beginners might attempt to execute actions like shifting gears or pressing gas directly. Use this prompt to direct them to the dependency of entry.
+  * *Tutor Prompt*: *"What is the safety precondition that must be met before an automatic car lets you start the ignition?"* (Depress brake pedal and check P/N gear).
+  * *Explanation*: Direct them to the safety preconditions of ignition systems.
  
-* **Mapping to Exercise 1.2 (Shifting Gears)**:
-  * *Tutor Prompt*: *"Can you shift to 3rd gear when the car is stationary?"*
-  * *Explanation*: If the student sequences shifting up without building speed, the engine stalls. Use this question to guide the student to discover the logical **data dependency**—the car speed variable must be within range before shifting up.
+* **Mapping to Exercise 1.2 (Reversing & Parking)**:
+  * *Tutor Prompt*: *"Can you shift from Reverse to Drive while the car is moving backwards at 10 mph?"*
+  * *Explanation*: Guide them to discover the logical **data dependency**—the speed variable must be 0 and brake pedal pressed before shifting gears.
   
 * **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
-  * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the engine stall on step 3?"*
-  * *Explanation*: Use this prompt to direct the student's eyes to the terminal log messages, helping them connect log readings to step re-ordering with the arrow buttons.
+  * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the ignition fail on step 3?"*
+  * *Explanation*: Direct student's eyes to log messages to debug using the arrow buttons.
  
 * **Mapping to Exercise 1.4 (Gear Variable Overwrite)**:
-  * *Tutor Prompt*: *"Why did the vehicle stall when shifting 1st and 2nd in a row? What happened to our active gear variable?"*
-  * *Explanation*: Students learn variable overwrite—shifting to 2nd immediately replaced the gear stick variable with 2.
+  * *Tutor Prompt*: *"Why did the vehicle drive forward instead of reversing first? What happened to our active gear variable?"*
+  * *Explanation*: Reinforce variable overwrite principles.
  
 * **Mapping to Exercise 1.5 (Emergency Brakes)**:
-  * *Tutor Prompt*: *"Why did the engine stall when we hit the brakes without depressing the clutch pedal?"*
-  * *Explanation*: Emphasize mechanical state check dependencies during emergency actions.
+  * *Tutor Prompt*: *"Why does safe parking require both shifting to Park (P) and engaging the handbrake?"*
+  * *Explanation*: Emphasize safety state checks during emergency shutdowns.
  
 ### 4. Homework Evaluation Checklist (Grants +50 XP)
 * The student must document a microwave warming process in the Prompt Journal:
