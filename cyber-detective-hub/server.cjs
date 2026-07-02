@@ -158,11 +158,11 @@ async function createTables() {
       VALUES 
       ('j1', 1, 
       'Write a process to warm up food from a plate.', 
-      'Household IPO Blueprint: Microwave (Draft v1)\n\nInputs:\n- Start button pressed\n\nProcessing steps:\n- Turn on the microwave heating wave generator\n- Heat the food for 60 seconds\n- Beep when finished\n\nOutputs:\n- Hot food and alarm sound\n\n(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn''t verify if the door is closed first, and doesn''t define variables!)'
+      'Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]'
       ),
       ('j1', 2, 
       'Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.', 
-      'Household IPO Blueprint: Microwave (Detailed Spec v2)\n\nSystem Precondition:\n- powerState must be "ON" (active electrical current)\n\nInputs:\n- keypadInput: Text / String value (e.g. "01:30")\n- doorClosed: Switch / Boolean value (Yes/No)\n- startPressed: Switch / Boolean value (Yes/No)\n\nProcessing Logic Steps:\n1. Wait until startPressed becomes Yes.\n2. Check doorClosed state. If doorClosed is No, beep 3 times and halt operation.\n3. Parse the keypadInput to extract the total seconds (secondsRemaining).\n4. Loop while secondsRemaining is greater than 0:\n   a. Check doorClosed state. If door is opened (No), pause cooking and halt loop.\n   b. Turn on the microwave heating wave generator.\n   c. Subtract 1 second from secondsRemaining.\n   d. Wait exactly 1 second.\n5. Turn off the heating wave generator.\n6. Trigger the end-of-cycle alarm beep.\n\nOutputs:\n- magnetronWaves: Active radiation waves\n- countdownDisplay: Number representing seconds remaining\n- alarmSpeaker: End-of-cycle audio beep'
+      'Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)\n\nSystem Preconditions:\n- [Write preconditions, e.g. powerState is "ON"]\n\nInputs (Identify variables and types):\n- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)\n\nProcessing Logic Steps (Step-by-step algorithm and loops):\n1. [First Step]\n2. [Second Step]\n3. [Repeat/Loop Check Step]\n\nOutputs (Identify expected actions/results):\n- [Output Variable Name]: [Expected Action/Value]'
       )
     `).catch(() => {});
     console.log('Seeding completed.');
@@ -185,6 +185,19 @@ async function createTables() {
     UPDATE journal_versions 
     SET prompt = 'Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.' 
     WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2
+  `).catch(err => console.warn(err));
+
+  // Migration to update the actual code value in existing databases if it contains sandwich or microwave pre-fills
+  await db.query(`
+    UPDATE journal_versions 
+    SET code = 'Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]' 
+    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 1 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Draft v1)%')
+  `).catch(err => console.warn(err));
+
+  await db.query(`
+    UPDATE journal_versions 
+    SET code = 'Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)\n\nSystem Preconditions:\n- [Write preconditions, e.g. powerState is "ON"]\n\nInputs (Identify variables and types):\n- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)\n\nProcessing Logic Steps (Step-by-step algorithm and loops):\n1. [First Step]\n2. [Second Step]\n3. [Repeat/Loop Check Step]\n\nOutputs (Identify expected actions/results):\n- [Output Variable Name]: [Expected Action/Value]' 
+    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Detailed Spec v2)%')
   `).catch(err => console.warn(err));
 }
 

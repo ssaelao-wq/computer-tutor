@@ -14,50 +14,35 @@ const INITIAL_JOURNAL = [
       {
         version: 1,
         prompt: "Write a process to warm up food from a plate.",
-        code: `Household IPO Blueprint: Microwave (Draft v1)
+        code: `Household IPO Blueprint: [Enter Device Name] (Draft v1)
 
 Inputs:
-- Start button pressed
+- [Write your inputs here, e.g. start button clicked]
 
-Processing steps:
-- Turn on the microwave heating wave generator
-- Heat the food for 60 seconds
-- Beep when finished
+Processing Steps:
+- [Write your step-by-step process steps here]
 
 Outputs:
-- Hot food and alarm sound
-
-(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn't verify if the door is closed first, and doesn't define variables!)`
+- [Write your expected outputs here]`
       },
       {
         version: 2,
         prompt: "Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.",
-        code: `Household IPO Blueprint: Microwave (Detailed Spec v2)
+        code: `Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)
 
-System Precondition:
-- powerState must be "ON" (active electrical current)
+System Preconditions:
+- [Write preconditions, e.g. powerState is "ON"]
 
-Inputs:
-- keypadInput: Text / String value (e.g. "01:30")
-- doorClosed: Switch / Boolean value (Yes/No)
-- startPressed: Switch / Boolean value (Yes/No)
+Inputs (Identify variables and types):
+- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)
 
-Processing Logic Steps:
-1. Wait until startPressed becomes Yes.
-2. Check doorClosed state. If doorClosed is No, beep 3 times and halt operation.
-3. Parse the keypadInput to extract the total seconds (secondsRemaining).
-4. Loop while secondsRemaining is greater than 0:
-   a. Check doorClosed state. If door is opened (No), pause cooking and halt loop.
-   b. Turn on the microwave heating wave generator.
-   c. Subtract 1 second from secondsRemaining.
-   d. Wait exactly 1 second.
-5. Turn off the heating wave generator.
-6. Trigger the end-of-cycle alarm beep.
+Processing Logic Steps (Step-by-step algorithm and loops):
+1. [First Step]
+2. [Second Step]
+3. [Repeat/Loop Check Step]
 
-Outputs:
-- magnetronWaves: Active radiation waves
-- countdownDisplay: Number representing seconds remaining
-- alarmSpeaker: End-of-cycle audio beep`
+Outputs (Identify expected actions/results):
+- [Output Variable Name]: [Expected Action/Value]`
       }
     ]
   }
@@ -2919,12 +2904,16 @@ export default function App() {
               <div className="glass-panel journal-detail-view">
                 {selectedJournal ? (
                   <>
-                    <div className="journal-detail-header">
+                    <div className="journal-detail-header" style={{ marginBottom: '16px' }}>
                       <h2 className="journal-detail-title">{selectedJournal.title}</h2>
                       <span className="journal-detail-date">LOGGED AT {selectedJournal.date}</span>
+                      <div className="journal-detail-prompt-desc" style={{ marginTop: '10px', background: 'rgba(0, 0, 0, 0.15)', padding: '12px', borderRadius: '6px', borderLeft: '3px solid var(--accent-cyan)' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '4px' }}>Homework Task / Prompt Specification:</span>
+                        <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)', lineHeight: 1.4 }}>{activeJournalHistory?.prompt}</span>
+                      </div>
                     </div>
 
-                    <div className="journal-history-nav">
+                    <div className="journal-history-nav" style={{ marginBottom: '16px' }}>
                       {selectedJournal.history.map(hist => (
                         <button 
                           key={hist.version}
@@ -2936,22 +2925,15 @@ export default function App() {
                       ))}
                     </div>
 
-                    <div className="prompt-comparison-box">
-                      <div className="prompt-comparison-title">Structured Prompt Specification</div>
-                      <div className="prompt-comparison-text" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-                        {activeJournalHistory?.prompt}
-                      </div>
-                    </div>
-
                     <div className="diff-box-container">
-                      <div className="diff-box-header">Code Output History (Editable)</div>
+                      <div className="diff-box-header">Your Homework Solution (Editable)</div>
                       <textarea
                         value={editingJournalCode}
                         onChange={e => setEditingJournalCode(e.target.value)}
                         className="diff-lines-code"
                         style={{
                           width: '100%',
-                          minHeight: '260px',
+                          minHeight: '450px',
                           background: 'rgba(6, 8, 20, 0.7)',
                           color: 'var(--text-primary)',
                           border: '1px solid var(--border-color)',
