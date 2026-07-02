@@ -7,19 +7,19 @@ const INITIAL_JOURNAL = [
   {
     id: 'j1',
     date: '2026-06-24 14:32',
-    title: 'L1 S1: Automated Cauldron Cauldron',
+    title: 'L1 S1: Household IPO Blueprint',
     version: 2,
     activeVersion: 2,
     history: [
       {
         version: 1,
-        prompt: "Write a function to make a sandwich. Take bread and butter. Spread the butter on the bread and serve.",
-        code: `// Version 1: Literal sandwich maker\nfunction makeSandwich(bread, butter) {\n  // Ambiguity: Assumes bread is sliced and butter tub is open!\n  console.log("Spreading " + butter + " on " + bread);\n  return "Sandwich Ready";\n}`
+        prompt: "Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Write down a step-by-step sequential algorithm for its operation.",
+        code: `// Version 1: Simple Microwave Blueprint\n// Inputs: Start button clicked\n// Process: Cook food for 1 minute\n// Output: Beep when finished\n// (Ambiguity: Does not define variables, check if door is open, or count down time!)`
       },
       {
         version: 2,
-        prompt: "Write a function to make a sandwich. Inputs: bread (sealed package), butter (sealed tub), knife. Steps: (1) Open bread package, (2) take 2 slices, (3) open butter tub, (4) use knife to scoop butter, (5) spread butter on bread slices, (6) put slices together. Handle empty inputs.",
-        code: `// Version 2: Preciser instructions handling sealed packages\nfunction makeSandwich(bread, butter, knife) {\n  if (!bread || !butter || !knife) {\n    throw new Error("Missing ingredients or tools!");\n  }\n  \n  console.log("Opening sealed bread package...");\n  const slice1 = bread.getSlice();\n  const slice2 = bread.getSlice();\n  \n  console.log("Opening sealed butter tub...");\n  const openedButter = butter.open();\n  \n  console.log("Scooping butter with knife...");\n  const butterScoop = knife.scoop(openedButter, "10g");\n  \n  console.log("Spreading butter on slice 1...");\n  slice1.apply(butterScoop);\n  \n  console.log("Putting slices together...");\n  return [slice1, slice2].combine();\n}`
+        prompt: "Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.",
+        code: `// Version 2: Precise Microwave IPO Blueprint\n// Precondition: powerState === "ON"\n// Inputs:\n//   - keypadInput (String, e.g. "01:30")\n//   - doorClosed (Boolean)\n//   - startPressed (Boolean)\n//\n// Process:\n//   1. Wait until startPressed is true\n//   2. Check if doorClosed is true. If false, sound error_beep and halt\n//   3. Parse keypadInput time into secondsLeft variable\n//   4. Loop while secondsLeft > 0:\n//      a. If doorClosed becomes false, pause cooking and halt loop\n//      b. Emit magnetron waves (Output)\n//      c. Decrement secondsLeft by 1\n//      d. Wait 1 second\n//   5. Trigger beep_alarm (Output)\n//\n// Output:\n//   - magnetron_radiation (active wave emission)\n//   - timerDisplay (number of seconds remaining)\n//   - alarmSound (end-of-cycle beep)`
       }
     ]
   }

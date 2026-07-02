@@ -18,7 +18,7 @@ export const CURRICULUM_DATA = [
     miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
     coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Power On, Scan, Tunnel, Bypass, Exfiltrate) in correct logical order.",
     handsOn: "Complete 5 sandbox tasks: (1) Basic Infiltration sequence, (2) Variable coordinate scans, (3) Sequence Debugging, (4) Variable Overwrite, (5) Power Check Logic.",
-    homework: "Complete the 'Household IPO Blueprint' in the app's Journal tab. Write step-by-step algorithms, inputs, and outputs for a washing machine or microwave.",
+    homework: "Complete the \"Household IPO Blueprint\" in the app's Journal tab. Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs.",
     ethics: "Drone Crash Responsibility: If a drone crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
     adaptations: "Age 13-16: Use digital sandbox modules and audit terminal outputs. Discuss real IPO algorithms."
   },
