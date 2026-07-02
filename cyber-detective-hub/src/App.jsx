@@ -2048,10 +2048,10 @@ export default function App() {
                       <div>
                         <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.1: Basic Route (Power Precondition)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The security drone needs to fly to the warehouse door and unlock it.
+                          <strong>Problem:</strong> The security drone needs to fly to a fixed destination: <strong>Warehouse 01</strong> and unlock it.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the commands so that the drone powers up, flies to the door, and unlocks it.
+                          <strong>Instruction:</strong> Sequence the commands so that the drone powers up, flies to Warehouse 01, and unlocks it.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> Computers execute instructions literally from top to bottom. You must switch on the drone's power state before commencing flight.
@@ -2062,10 +2062,10 @@ export default function App() {
                       <div>
                         <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Variable Coordinates (Data Dependency)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The drone navigates using dynamic coordinates stored inside the variable <code>targetCoords</code>.
+                          <strong>Problem:</strong> The controller scans the sector and wants to navigate dynamically to <strong>Warehouse 03</strong> by storing its destination coordinates in the variable <code>targetCoords</code>.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Power on the drone, perform the scan to load the coordinates into memory, fly to the target door using the memory coordinates, and unlock it.
+                          <strong>Instruction:</strong> Power on the drone, scan the sector to save the selected target (Warehouse 03) into the variable <code>targetCoords</code>, fly to the target using the variable, and unlock it.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> A variable must be loaded with values (scanned) before it can be read by other actions (flying). Out-of-order execution reads an empty (<code>null</code>) variable and crashes.
@@ -2140,14 +2140,14 @@ export default function App() {
                                 </button>
                               </>
                             ) : (
-                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: 'Scan target and save to variable targetCoords' }])}>
-                                <span className="sim-action-icon">🔍</span> Scan target and save to targetCoords
+                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: (s1ActiveExercise === 2 || s1ActiveExercise === 3 || s1ActiveExercise === 5) ? 'Scan sector (save target "Warehouse 03" to targetCoords)' : 'Scan target and save to variable targetCoords' }])}>
+                                <span className="sim-action-icon">🔍</span> {(s1ActiveExercise === 2 || s1ActiveExercise === 3 || s1ActiveExercise === 5) ? 'Scan sector (save "Warehouse 03" to targetCoords)' : 'Scan target and save to targetCoords'}
                               </button>
                             )
                           )}
                           
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'fly_door', label: 'Fly drone to the door' }])}>
-                            <span className="sim-action-icon">🚀</span> Fly drone to the door
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'fly_door', label: s1ActiveExercise === 1 ? 'Fly drone to hardcoded destination: Warehouse 01' : 'Fly drone reading variable targetCoords' }])}>
+                            <span className="sim-action-icon">🚀</span> {s1ActiveExercise === 1 ? 'Fly drone to Warehouse 01 (Hardcoded)' : 'Fly drone reading targetCoords'}
                           </button>
 
                           {s1ActiveExercise === 5 && (
@@ -2267,8 +2267,8 @@ export default function App() {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to scan while drone is unpowered! System offline.' });
                                   hasError = true;
                                 } else {
-                                  scannedCoords = 'Door_Coordinates';
-                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: targetCoords = [X: 104, Y: 890]' });
+                                  scannedCoords = 'Warehouse_03_Coords';
+                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: targetCoords = "Warehouse 03" [X: 104, Y: 890]' });
                                 }
                               } else if (cmd.id === 'scan_gate_a') {
                                 if (!powerIsActive) {
@@ -2294,8 +2294,8 @@ export default function App() {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target coordinates variable (targetCoords) is empty (null). Drone crashed into the ground!' });
                                   hasError = true;
                                 } else {
-                                  const dest = s1ActiveExercise === 1 ? 'Hardcoded_Warehouse_Coordinates' : scannedCoords;
-                                  logsToAppend.push({ type: 'info', text: `Rotor speed increased. Drone navigating using coordinates stored in variable: ${dest}` });
+                                  const dest = s1ActiveExercise === 1 ? 'Warehouse_01_Coords' : scannedCoords;
+                                  logsToAppend.push({ type: 'info', text: `Rotor speed increased. Drone navigating to: ${dest === 'Warehouse_01_Coords' ? 'Warehouse 01 (Hardcoded Destination)' : 'Warehouse 03 (Coordinates read from variable targetCoords)'}` });
                                 }
                               } else if (cmd.id === 'unlock_door') {
                                 if (!powerIsActive) {

@@ -127,11 +127,11 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
-- **Exercise 1.1 (Basic Route) Solution**: Sequence: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
-  - *Tutor Guide*: If the student skips `power_on`, show how the terminal logs `CRITICAL ERROR: System offline`.
-- **Exercise 1.2 (Variable Coordinates) Solution**: Sequence: `power_on` ➔ `scan_door` (this loads/binds target coordinates data to target variables) ➔ `fly_door` (which accesses the target variable coords) ➔ `unlock_door`.
-  - *Tutor Guide*: Teach the dependency concept. If we fly before scanning, the coordinate variable is `null`, causing a collision.
-- **Exercise 1.3 (Sequence Correction) Solution**: Target error in preloaded sequence: `fly_door` occurs before `power_on` and `scan_door`. The student must drag block 2 (`power_on`) and block 3 (`scan_door`) to the top, sorting the flow to: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
+- **Exercise 1.1 (Basic Route) Solution**: Sequence: `power_on` ➔ `fly_door` ➔ `unlock_door` (Go directly to hardcoded destination: Warehouse 01).
+  - *Tutor Guide*: Show how sequential flow runs from top to bottom. If they omit `power_on`, it triggers a system offline crash.
+- **Exercise 1.2 (Variable Coordinates) Solution**: Sequence: `power_on` ➔ `scan_door` (locks Warehouse 03 target coordinates into variable `targetCoords`) ➔ `fly_door` (reads dynamic coordinates variable `targetCoords`) ➔ `unlock_door`.
+  - *Tutor Guide*: Teach data dependency. If they fly before scanning, `targetCoords` is empty (`null`), triggering a flight crash.
+- **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: `fly_door` occurs before `power_on` and `scan_door`. The student must drag the blocks to sort them into: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
 - **Exercise 1.4 (Variable Overwrite) Solution**: Sequence: `power_on` ➔ `scan_door_A` ➔ `scan_door_B` ➔ `fly_door` ➔ `unlock_door` (drone will fly to B).
   - *Tutor Guide*: Show how `targetCoords` is overwritten by the latest scan, teaching variable assignment principles.
 - **Exercise 1.5 (Power Check Logic) Solution**: Run a sequence and remove the middle `power_off` step: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ (remove `power_off`) ➔ `unlock_door`.
