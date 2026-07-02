@@ -129,8 +129,8 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
 - **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
   - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the footbrake pedal or checking P/N gear first, it fails safety lockout switches.
-- **Exercise 1.2 (Reversing & Parking) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` (reverse) ➔ `press_brake` (stop) ➔ `shift_d` ➔ `release_brake` ➔ `press_gas` (drive off).
-  - *Tutor Guide*: Show how safety preconditions operate. Moving between Reverse and Drive requires bringing the vehicle speed back to 0 using the brake pedal first to avoid gear grinds.
+- **Exercise 1.2 (Reversing & Parking) Solution**: Sequence: `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` ➔ `press_brake`.
+  - *Tutor Guide*: Show how safety preconditions operate. The car's engine is already running with the footbrake depressed in Park. The student sequences the reverse, move, and stop actions.
 - **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
   - *Tutor Guide*: Students debug sequence ordering using safety switch reports in terminal logs.
 - **Exercise 1.4 (Code Cleanup / Debugging Extra Steps) Solution**: Preloaded steps include an extra `shift_r` card in the middle of driving forward. Click the `×` button to delete it, reducing the sequence to Exercise 1.1's basic start & move.

@@ -2088,15 +2088,15 @@ export default function App() {
                     )}
                     {s1ActiveExercise === 2 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Reversing & Parking (Gear R State Locks)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Reversing & Parking (Gear R Autopilot)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The vehicle is parked inside a bay and must reverse out safely before shifting to Drive and moving forward.
+                          <strong>Problem:</strong> The vehicle is inside a parking bay with the engine running. It must reverse out and stop.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence commands: Check P/N ➔ Press Brake ➔ Start ➔ Shift R ➔ Release handbrake ➔ Release brake ➔ Press gas (reverse) ➔ Press Brake (stop) ➔ Shift D ➔ Release brake ➔ Press gas (drive off).
+                          <strong>Instruction:</strong> Sequence commands: Shift to R ➔ Release Handbrake ➔ Release Brake Pedal ➔ Press Gas Pedal ➔ Depress Brake Pedal.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Shifting between Reverse (R) and Drive (D) requires safety locks. The autopilot will lock up if you shift gears while the vehicle is in motion without pressing the footbrake first.
+                          <strong>Explanation:</strong> Preconditions are initial system states. Since the engine is already running and the footbrake is pre-held, the autopilot can immediately shift to R and backup.
                         </p>
                       </div>
                     )}
@@ -2164,13 +2164,6 @@ export default function App() {
                             { id: 'shift_p', label: 'Shift Gear Selector to P (Park)', icon: '⚙️' },
                             { id: 'engage_handbrake', label: 'Engage Handbrake', icon: '🛑' }
                           ];
-                          if (s1ActiveExercise === 2) {
-                            allCommands.push(
-                              { id: 'press_brake_stop', label: 'Depress Brake Pedal to Stop', icon: '🦶' },
-                              { id: 'release_brake_drive', label: 'Release Brake Pedal to Drive', icon: '🦶' },
-                              { id: 'press_gas_cruise', label: 'Press Gas Pedal to Cruise', icon: '🚀' }
-                            );
-                          }
                           const availableCommands = allCommands.filter(cmd => !s1Sequence.some(s => s.id === cmd.id));
                           return (
                             <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -2240,16 +2233,20 @@ export default function App() {
                           onClick={() => {
                             if (s1Executing) return;
                             setS1Executing(true);
-                            setS1Logs([{ type: 'info', text: '🤖 Autopilot: Initializing automatic transmission safety diagnostics...' }]);
+                            if (s1ActiveExercise === 2) {
+                              setS1Logs([{ type: 'info', text: '🤖 Autopilot: Preconditions check - Engine is RUNNING, footbrake is DEPRESSED, gear is in P.' }]);
+                            } else {
+                              setS1Logs([{ type: 'info', text: '🤖 Autopilot: Initializing automatic transmission safety diagnostics...' }]);
+                            }
                             
                             let currentStep = 0;
                             let hasError = false;
                             const logsToAppend = [];
                             
                             // Automatic Car State Variables
-                            let checkedPN = false;
-                            let brakePressed = false;
-                            let engineStarted = false;
+                            let checkedPN = s1ActiveExercise === 2;
+                            let brakePressed = s1ActiveExercise === 2;
+                            let engineStarted = s1ActiveExercise === 2;
                             let gear = 'P'; // P, D, R
                             let handbrakeReleased = false;
                             let speed = 0;
@@ -2275,13 +2272,13 @@ export default function App() {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & drive off sequence.' }]);
                                     }
                                   } else if (s1ActiveExercise === 2) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_r,release_handbrake,release_brake,press_gas,press_brake,shift_d,release_brake,press_gas';
+                                    const isCorrect = ids === 'shift_r,release_handbrake,release_brake,press_gas,press_brake';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Reversed out of bay and drove forward in Drive successfully!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle reversed out of parking bay and brought to a safe stop!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Reversing and Drive sequence is incomplete or incorrect.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Reversing and stop sequence is incomplete or incorrect.' }]);
                                     }
                                   } else if (s1ActiveExercise === 3) {
                                     const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';

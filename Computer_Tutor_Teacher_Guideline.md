@@ -84,14 +84,14 @@ Before running classes, tutors must familiarize themselves with the administrati
  
   ##### **Exercise 1.2: Reversing & Parking**
   * **How to do it**:
-    1. Click the command buttons in shuffled order to add cards: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (backing out) ➔ `Depress Brake Pedal` (stop vehicle) ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (cruise forward).
+    1. Click the command buttons to add cards to the workspace in the following order: `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (backing out) ➔ `Depress Brake Pedal` (stop vehicle).
     2. Click **Run Autopilot Script** to execute.
   * **Purpose of the Exercise**:
-    - To demonstrate **state-dependent safety lockouts** (shifting between Reverse and Drive is locked out unless the vehicle speed is 0 and the footbrake is depressed).
+    - To demonstrate **preconditions** (the vehicle starts with the engine running and footbrake pre-pressed, allowing direct shift and back out).
   * **What the Student Learns**:
-    - Safety checks operate dynamically based on current values.
-    - If the student tries to shift from R to D directly while backing out (without applying the brake), the simulation fails.
-  * **Tutor Check Question**: *"Why does the vehicle fail if you shift from Reverse to Drive without pressing the footbrake pedal first?"*
+    - Initial state preconditions set what commands are legal.
+    - Sequenced commands must align with current values (e.g. footbrake released before gas).
+  * **Tutor Check Question**: *"Why didn't we need to check P/N gear or start the engine in this exercise? What preconditions were already active?"*
  
   ##### **Exercise 1.3: Autopilot Sequence Correction**
   * **How to do it**:
@@ -151,8 +151,8 @@ Before running classes, tutors must familiarize themselves with the administrati
   * *Explanation*: Direct them to the safety preconditions of ignition systems.
  
 * **Mapping to Exercise 1.2 (Reversing & Parking)**:
-  * *Tutor Prompt*: *"Can you shift from Reverse to Drive while the car is moving backwards? What pedal must be pressed first?"*
-  * *Explanation*: Guide them to discover the safety lockout state checks—the vehicle speed must be 0 and the footbrake depressed before shifting gears.
+  * *Tutor Prompt*: *"Look at the initial setup log. The engine is already running and the brake is held. What gear do we shift to if we want to reverse out of a bay?"*
+  * *Explanation*: Guide them to understand initial system preconditions and mapping movements to gears.
   
 * **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
   * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the ignition fail on step 3?"*
