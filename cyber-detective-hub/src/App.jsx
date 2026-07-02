@@ -493,6 +493,7 @@ export default function App() {
   const [s1Logs, setS1Logs] = useState([]);
   const [s1Executing, setS1Executing] = useState(false);
   const [s1Success, setS1Success] = useState(false);
+  const [s1ActiveExercise, setS1ActiveExercise] = useState(1); // Exercises 1 to 5
 
   // Level 1 Session 2 (Backpack Sorter) Simulator States
   const [s2Items, setS2Items] = useState([
@@ -1926,162 +1927,335 @@ export default function App() {
             <div className="tab-sandbox sandbox-layout animate-in">
               
               {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
+              {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
               {sandboxSessionId === 'l1-s1' && (
-                <div className="simulator-grid">
-                  <div className="glass-panel sim-left">
-                    <div className="panel-header">
-                      <h3>Available Navigation Commands</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  {/* Exercise selector tabs */}
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <button 
+                        key={num}
+                        className={`btn-cyber btn-small ${s1ActiveExercise === num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS1ActiveExercise(num);
+                          setS1Sequence([]);
+                          setS1Logs([]);
+                          setS1Success(false);
+                          
+                          // Pre-setup presets for specific exercises
+                          if (num === 3) {
+                            // Exercise 1.3 Pre-setup (Scrambled sequence)
+                            setS1Sequence([
+                              { id: 'fly_door', label: 'Fly drone to the door' },
+                              { id: 'power_on', label: 'Turn on drone power' },
+                              { id: 'scan_door', label: 'Scan for target warehouse door' },
+                              { id: 'unlock_door', label: 'Use digital keycard to unlock' }
+                            ]);
+                          } else if (num === 4) {
+                            // Exercise 1.4 Pre-setup (Requires scanning Gate A then Gate B to demonstrate variable overwrite)
+                            // We can let the user sequence it, or preload a demo sequence
+                          }
+                        }}
+                      >
+                        Exercise 1.{num}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Exercise Card Header: Description, Instruction, and Explanation */}
+                  <div className="glass-panel" style={{ padding: '15px', background: 'rgba(0, 242, 254, 0.02)', border: '1px solid rgba(0, 242, 254, 0.1)' }}>
+                    {s1ActiveExercise === 1 && (
+                      <div>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.1: Basic Route (Power Precondition)</h4>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
+                          <strong>Problem:</strong> The security drone needs to fly to the warehouse door and unlock it.
+                        </p>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
+                          <strong>Instruction:</strong> Sequence the commands so that the drone powers up, scans the door coordinates, flies to the door, and unlocks it.
+                        </p>
+                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          <strong>Explanation:</strong> Computers execute instructions literally from top to bottom. You cannot perform scans or move without initializing hardware power first.
+                        </p>
+                      </div>
+                    )}
+                    {s1ActiveExercise === 2 && (
+                      <div>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Variable Coordinates (Data Dependency)</h4>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
+                          <strong>Problem:</strong> The drone navigates using dynamic coordinates stored inside the variable <code>targetCoords</code>.
+                        </p>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
+                          <strong>Instruction:</strong> Power on the drone, perform the scan to load the coordinates into memory, fly to the target door using the memory coordinates, and unlock it.
+                        </p>
+                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          <strong>Explanation:</strong> A variable must be loaded with values (scanned) before it can be read by other actions (flying). Out-of-order execution reads an empty (<code>null</code>) variable and crashes.
+                        </p>
+                      </div>
+                    )}
+                    {s1ActiveExercise === 3 && (
+                      <div>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.3: Sequence Correction (Debugging)</h4>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
+                          <strong>Problem:</strong> The preloaded autopilot script is scrambled, causes critical logs, and crashes on flight.
+                        </p>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
+                          <strong>Instruction:</strong> Review the scrambled sequence below. Rearrange or rebuild the sequence so that power initializes first, followed by scanning, flying, and unlocking.
+                        </p>
+                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          <strong>Explanation:</strong> Errors and trace logs indicate exactly where a program fails. Rearrange blocks to fix chronological violations.
+                        </p>
+                      </div>
+                    )}
+                    {s1ActiveExercise === 4 && (
+                      <div>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Variable Overwrite</h4>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
+                          <strong>Problem:</strong> Security locks require scanning both Gate A and Gate B. But variables can only store one value at a time.
+                        </p>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
+                          <strong>Instruction:</strong> Sequence the script: Power on ➔ Scan Gate A ➔ Scan Gate B ➔ Fly to door ➔ Unlock. Observe where the drone navigates.
+                        </p>
+                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          <strong>Explanation:</strong> When you write a new value into an existing variable slot, the older value gets overwritten. Gate B's scan overwrote Gate A's coordinates.
+                        </p>
+                      </div>
+                    )}
+                    {s1ActiveExercise === 5 && (
+                      <div>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.5: Power Check Logic (State Persistence)</h4>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
+                          <strong>Problem:</strong> Autopilot rules check state conditions before executing every task.
+                        </p>
+                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
+                          <strong>Instruction:</strong> Try running a script that shuts down power mid-way: Power on ➔ Scan ➔ Fly ➔ Power off ➔ Unlock. See what happens, then fix it by removing the shutdown step.
+                        </p>
+                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          <strong>Explanation:</strong> Computer systems check conditions during each action execution. Hardware needs active power throughout the entire cycle.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left">
+                      <div className="panel-header">
+                        <h3>Available Navigation Commands</h3>
+                      </div>
+                      <div className="sim-panel-body drone-commands">
+                        <p className="sim-instructions">Click commands to add them to your sequence workspace:</p>
+                        
+                        <div className="drone-actions-list">
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'power_on', label: 'Turn on drone power' }])}>
+                            <span className="sim-action-icon">🔌</span> Turn on drone power
+                          </button>
+                          
+                          {s1ActiveExercise === 4 ? (
+                            <>
+                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_a', label: 'Scan coordinates for Gate A' }])}>
+                                <span className="sim-action-icon">🔍</span> Scan coordinates for Gate A
+                              </button>
+                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_b', label: 'Scan coordinates for Gate B' }])}>
+                                <span className="sim-action-icon">🔍</span> Scan coordinates for Gate B
+                              </button>
+                            </>
+                          ) : (
+                            <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: 'Scan for target warehouse door' }])}>
+                              <span className="sim-action-icon">🔍</span> Scan for target warehouse door
+                            </button>
+                          )}
+                          
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'fly_door', label: 'Fly drone to the door' }])}>
+                            <span className="sim-action-icon">🚀</span> Fly drone to the door
+                          </button>
+
+                          {s1ActiveExercise === 5 && (
+                            <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'power_off', label: 'Turn off drone power' }])}>
+                              <span className="sim-action-icon">⏹️</span> Turn off drone power
+                            </button>
+                          )}
+
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'unlock_door', label: 'Use digital keycard to unlock' }])}>
+                            <span className="sim-action-icon">🔑</span> Use digital keycard to unlock
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="sim-panel-body drone-commands">
-                      <p className="sim-instructions">Click commands in the correct literal sequence to navigate the Security Drone through the warehouse door:</p>
-                      
-                      <div className="drone-actions-list">
-                        <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'power_on', label: 'Turn on drone power' }])}>
-                          <span className="sim-action-icon">🔌</span> Turn on drone power
-                        </button>
-                        <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: 'Scan for target warehouse door' }])}>
-                          <span className="sim-action-icon">🔍</span> Scan for target warehouse door
-                        </button>
-                        <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'fly_door', label: 'Fly drone to the door' }])}>
-                          <span className="sim-action-icon">🚀</span> Fly drone to the door
-                        </button>
-                        <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'unlock_door', label: 'Use digital keycard to unlock' }])}>
-                          <span className="sim-action-icon">🔑</span> Use digital keycard to unlock
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Command Sequence Workspace</h3>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS1Sequence([]); setS1Logs([]); setS1Success(false); }}>Reset</button>
+                      </div>
+                      <div className="sim-panel-body sequence-workspace">
+                        {s1Sequence.length === 0 ? (
+                          <div className="sequence-empty">
+                            Workspace Empty. Click commands on the left to sequence the script.
+                          </div>
+                        ) : (
+                          <div className="sequence-cards-list">
+                            {s1Sequence.map((cmd, idx) => (
+                              <div key={idx} className="sequence-card animate-in">
+                                <span className="sequence-number">Step {idx + 1}</span>
+                                <span className="sequence-label">{cmd.label}</span>
+                                <button className="btn-card-remove" onClick={() => setS1Sequence(prev => prev.filter((_, i) => i !== idx))}>×</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="sim-footer">
+                        <button 
+                          className="btn-cyber btn-cyber-primary" 
+                          onClick={() => {
+                            if (s1Executing) return;
+                            setS1Executing(true);
+                            setS1Logs([{ type: 'info', text: '🤖 Booting navigation system...' }]);
+                            
+                            let currentStep = 0;
+                            let hasError = false;
+                            const logsToAppend = [];
+                            let powerIsActive = false;
+                            let scannedCoords = null; // Stores target coordinates
+                            
+                            const runNext = () => {
+                              if (s1Sequence.length === 0) {
+                                setS1Logs(prev => [...prev, { type: 'error', text: 'Error: No instructions in workspace. Drone stayed idle.' }]);
+                                setS1Executing(false);
+                                return;
+                              }
+
+                              if (currentStep >= s1Sequence.length) {
+                                if (!hasError) {
+                                  const ids = s1Sequence.map(c => c.id).join(',');
+                                  
+                                  if (s1ActiveExercise === 1 || s1ActiveExercise === 2 || s1ActiveExercise === 3) {
+                                    const isCorrect = ids === 'power_on,scan_door,fly_door,unlock_door';
+                                    if (isCorrect) {
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Warehouse door bypassed! Telemetry extraction complete.' }]);
+                                      setS1Success(true);
+                                      claimCaseEvidence('l1-s1', 100);
+                                    } else {
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Target reached but incorrect order. Security lockdown triggered!' }]);
+                                    }
+                                  } else if (s1ActiveExercise === 4) {
+                                    // Requires power_on, scan_gate_a, scan_gate_b, fly_door, unlock_door
+                                    const isCorrect = ids === 'power_on,scan_gate_a,scan_gate_b,fly_door,unlock_door';
+                                    if (isCorrect) {
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Overwrite verified! Drone flew to Gate B and unlocked it.' }]);
+                                      setS1Success(true);
+                                      claimCaseEvidence('l1-s1', 100);
+                                    } else {
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect sequence. Target coordinates not set to Gate B.' }]);
+                                    }
+                                  } else if (s1ActiveExercise === 5) {
+                                    // Requires power_on, scan_door, fly_door, unlock_door (no power_off mid-way)
+                                    const isCorrect = ids === 'power_on,scan_door,fly_door,unlock_door';
+                                    if (isCorrect) {
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Persistent power verified! Access unlocked.' }]);
+                                      setS1Success(true);
+                                      claimCaseEvidence('l1-s1', 100);
+                                    } else {
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Check state variables and try again.' }]);
+                                    }
+                                  }
+                                }
+                                setS1Executing(false);
+                                return;
+                              }
+
+                              const cmd = s1Sequence[currentStep];
+
+                              if (cmd.id === 'power_on') {
+                                powerIsActive = true;
+                                logsToAppend.push({ type: 'info', text: 'System power initialized. Drone rotors active.' });
+                              } else if (cmd.id === 'power_off') {
+                                powerIsActive = false;
+                                logsToAppend.push({ type: 'info', text: '⚡ Power state changed to OFF. Systems shutting down.' });
+                              } else if (cmd.id === 'scan_door') {
+                                if (!powerIsActive) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to scan while drone is unpowered! System offline.' });
+                                  hasError = true;
+                                } else {
+                                  scannedCoords = 'Door_Coordinates';
+                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: targetCoords = [X: 104, Y: 890]' });
+                                }
+                              } else if (cmd.id === 'scan_gate_a') {
+                                if (!powerIsActive) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Scan failed. Drone is unpowered!' });
+                                  hasError = true;
+                                } else {
+                                  scannedCoords = 'Gate_A_Coordinates';
+                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: targetCoords = Gate_A [X: 42, Y: 11]' });
+                                }
+                              } else if (cmd.id === 'scan_gate_b') {
+                                if (!powerIsActive) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Scan failed. Drone is unpowered!' });
+                                  hasError = true;
+                                } else {
+                                  scannedCoords = 'Gate_B_Coordinates';
+                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved (OVERWRITTEN): targetCoords = Gate_B [X: 99, Y: 72]' });
+                                }
+                              } else if (cmd.id === 'fly_door') {
+                                if (!powerIsActive) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted flight with unpowered systems! Drone crashed.' });
+                                  hasError = true;
+                                } else if (!scannedCoords) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target coordinates undefined (null). Drone collided with a concrete pillar!' });
+                                  hasError = true;
+                                } else {
+                                  logsToAppend.push({ type: 'info', text: `Rotor speed increased. Drone navigating to coordinate container: ${scannedCoords}` });
+                                }
+                              } else if (cmd.id === 'unlock_door') {
+                                if (!powerIsActive) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Power offline. Keycard bypass module inactive.' });
+                                  hasError = true;
+                                } else if (!scannedCoords) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Bypass failed. Drone did not reach target card reader.' });
+                                  hasError = true;
+                                } else {
+                                  logsToAppend.push({ type: 'info', text: 'Bypass signal injected. Decoding gate locks...' });
+                                }
+                              }
+
+                              setS1Logs(prev => [...prev, logsToAppend[logsToAppend.length - 1]]);
+                              
+                              if (hasError) {
+                                setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: System shutdown due to logic fault.' }]);
+                                setS1Executing(false);
+                                return;
+                              }
+
+                              currentStep++;
+                              setTimeout(runNext, 800);
+                            };
+                            setTimeout(runNext, 600);
+                          }} 
+                          disabled={s1Executing}
+                        >
+                          {s1Executing ? 'Executing Sequence...' : 'Run Navigation Script'}
                         </button>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="glass-panel sim-middle">
-                    <div className="panel-header">
-                      <h3>Command Sequence Workspace</h3>
-                      <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS1Sequence([]); setS1Logs([]); setS1Success(false); }}>Reset</button>
-                    </div>
-                    <div className="sim-panel-body sequence-workspace">
-                      {s1Sequence.length === 0 ? (
-                        <div className="sequence-empty">
-                          Workspace Empty. Click commands on the left to sequence the script.
-                        </div>
-                      ) : (
-                        <div className="sequence-cards-list">
-                          {s1Sequence.map((cmd, idx) => (
-                            <div key={idx} className="sequence-card animate-in">
-                              <span className="sequence-number">Step {idx + 1}</span>
-                              <span className="sequence-label">{cmd.label}</span>
-                              <button className="btn-card-remove" onClick={() => setS1Sequence(prev => prev.filter((_, i) => i !== idx))}>×</button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="sim-footer">
-                      <button 
-                        className="btn-cyber btn-cyber-primary" 
-                        onClick={() => {
-                          if (s1Executing) return;
-                          setS1Executing(true);
-                          setS1Logs([{ type: 'info', text: '🤖 Booting navigation system...' }]);
-                          
-                          let currentStep = 0;
-                          let hasError = false;
-                          const logsToAppend = [];
-                          
-                          const runNext = () => {
-                            if (s1Sequence.length === 0) {
-                              setS1Logs(prev => [...prev, { type: 'error', text: 'Error: No instructions in workspace. Drone stayed idle.' }]);
-                              setS1Executing(false);
-                              return;
-                            }
-
-                            if (currentStep >= s1Sequence.length) {
-                              if (!hasError) {
-                                // Check if correct sequence of all 4 steps
-                                const ids = s1Sequence.map(c => c.id);
-                                const isCorrect = ids.join(',') === 'power_on,scan_door,fly_door,unlock_door';
-                                if (isCorrect) {
-                                  setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Warehouse door bypassed! Telemetry extraction complete.' }]);
-                                  setS1Success(true);
-                                  claimCaseEvidence('l1-s1', 100);
-                                } else {
-                                  setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Target reached but incorrect order. Security lockdown triggered!' }]);
-                                }
-                              }
-                              setS1Executing(false);
-                              return;
-                            }
-
-                            const cmd = s1Sequence[currentStep];
-                            const prevIds = s1Sequence.slice(0, currentStep).map(c => c.id);
-
-                            if (cmd.id === 'power_on') {
-                              logsToAppend.push({ type: 'info', text: 'System power initialized. Drone rotors active.' });
-                            } else if (cmd.id === 'scan_door') {
-                              if (!prevIds.includes('power_on')) {
-                                logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to scan while drone is unpowered! System offline.' });
-                                hasError = true;
-                              } else {
-                                logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: Security door lock detected.' });
-                              }
-                            } else if (cmd.id === 'fly_door') {
-                              if (!prevIds.includes('power_on')) {
-                                logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted flight with unpowered systems! Drone crashed.' });
-                                hasError = true;
-                              } else if (!prevIds.includes('scan_door')) {
-                                logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target coordinates undefined. Drone collided with a concrete pillar!' });
-                                hasError = true;
-                              } else {
-                                logsToAppend.push({ type: 'info', text: 'Rotor speed increased. Drone flown and hovering adjacent to target card reader.' });
-                              }
-                            } else if (cmd.id === 'unlock_door') {
-                              if (!prevIds.includes('power_on')) {
-                                logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Power offline. Keycard bypass module inactive.' });
-                                hasError = true;
-                              } else if (!prevIds.includes('fly_door')) {
-                                logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Bypass failed. Drone is too far from the door card reader. Keycard data lost!' });
-                                hasError = true;
-                              } else {
-                                logsToAppend.push({ type: 'info', text: 'Bypass signal injected. Decoding gate locks...' });
-                              }
-                            }
-
-                            setS1Logs(prev => [...prev, logsToAppend[logsToAppend.length - 1]]);
-                            
-                            if (hasError) {
-                              setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: System shutdown due to logic fault.' }]);
-                              setS1Executing(false);
-                              return;
-                            }
-
-                            currentStep++;
-                            setTimeout(runNext, 800);
-                          };
-                          setTimeout(runNext, 600);
-                        }} 
-                        disabled={s1Executing}
-                      >
-                        {s1Executing ? 'Executing Sequence...' : 'Run Navigation Script'}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="glass-panel sim-right">
-                    <div className="panel-header">
-                      <h3>Drone Telemetry Terminal</h3>
-                      {s1Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
-                    </div>
-                    <div className="sim-panel-body drone-terminal">
-                      {s1Logs.length === 0 ? (
-                        <div className="terminal-empty">Terminal offline. Run the navigation script to observe signals.</div>
-                      ) : (
-                        <div className="terminal-log-flow">
-                          {s1Logs.map((log, index) => (
-                            <div key={index} className={`terminal-log-item ${log.type}`}>
-                              {log.type === 'error' ? '💥 ' : log.type === 'success' ? '✓ ' : '🛰️ '}
-                              {log.text}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Drone Telemetry Terminal</h3>
+                        {s1Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
+                      </div>
+                      <div className="sim-panel-body drone-terminal">
+                        {s1Logs.length === 0 ? (
+                          <div className="terminal-empty">Terminal offline. Run the navigation script to observe signals.</div>
+                        ) : (
+                          <div className="terminal-log-flow">
+                            {s1Logs.map((log, index) => (
+                              <div key={index} className={`terminal-log-item ${log.type}`}>
+                                {log.type === 'error' ? '💥 ' : log.type === 'success' ? '✓ ' : '🛰️ '}
+                                {log.text}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

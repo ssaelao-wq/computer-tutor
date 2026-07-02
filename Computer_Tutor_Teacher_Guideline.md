@@ -165,6 +165,14 @@ Before running classes, tutors must familiarize themselves with the administrati
   * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the drone crash on step 3?"* (or whichever step is executing).
   * *Explanation*: In the preloaded scrambled sequence, instructions are out of order (e.g. attempting to fly before powering on). The terminal outputs specific error messages. Use this prompt to direct the student's eyes to the terminal log messages instead of letting them guess the solution, helping them connect log readings to step re-ordering.
 
+* **Mapping to Exercise 1.4 (Variable Overwrite)**:
+  * *Tutor Prompt*: *"We scanned Gate A and then scanned Gate B. Why did the drone end up flying to Gate B instead of Gate A?"*
+  * *Explanation*: Students might think scanning multiple things stores all of them in a list or remembers the first scan. Use this prompt to guide them to discover **variable re-assignment (overwriting)**—each write/scan to a variable replaces whatever value was previously held.
+
+* **Mapping to Exercise 1.5 (Power Check Logic)**:
+  * *Tutor Prompt*: *"We successfully flew to the door, so why did the unlock step fail when the drone's power was switched off?"*
+  * *Explanation*: Students might think once the drone arrives, power is no longer needed. Use this question to illustrate that hardware preconditions are evaluated for *every* step, and state variables (like power state) must remain active throughout the device's entire operational pipeline.
+
 ### 4. Homework Evaluation Checklist
 * The student must document a household appliance (e.g. Microwave) in the Journal:
   * **Input**: Keypad numbers (String), door sensor (Boolean).
