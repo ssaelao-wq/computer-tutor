@@ -129,14 +129,14 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
 - **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
   - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the footbrake pedal or checking P/N gear first, it fails safety lockout switches.
-- **Exercise 1.2 (Reversing & Parking) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` (back out) ➔ `press_brake` (stop) ➔ `shift_d` ➔ `release_brake` ➔ `press_gas` (drive off).
-  - *Tutor Guide*: Show data dependency. Attempting to shift between Drive and Reverse without stopping the vehicle and depressing the footbrake destroys the transmission.
+- **Exercise 1.2 (Dynamic Speed Limits) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `scan_speed_limit` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
+  - *Tutor Guide*: Show data dependency. The speedLimit variable must be loaded using the scan command before accelerating, otherwise the empty variable causes a safety halt.
 - **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
   - *Tutor Guide*: Students debug sequence ordering using safety switch reports in terminal logs.
-- **Exercise 1.4 (Gear Overwrite) Solution**: Correct sequence requires backing out (press gas in R) before shifting/overwriting the gear selector variable to Drive. Must insert backing out steps between `shift_r` and `shift_d`.
-  - *Tutor Guide*: Explains how variable overwrite wipes out the Reverse destination, causing the car to crash into the wall ahead.
-- **Exercise 1.5 (Emergency Brakes) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` ➔ `press_brake` ➔ `shift_p` ➔ `engage_handbrake`.
-  - *Tutor Guide*: Highlight continuous safety condition checks—parking safely requires locking transmission (P gear) and pulling handbrake.
+- **Exercise 1.4 (Variable Overwriting) Solution**: Correct sequence requires driving under Zone A's limit (pressing gas) before scanning Zone B's limit.
+  - *Tutor Guide*: Explains how variables only hold one value. Scanning Zone B immediately overwrites Zone A's limit, leading to a speeding violation crash.
+- **Exercise 1.5 (Emergency Halt) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` ➔ `press_brake`.
+  - *Tutor Guide*: Highlight continuous safety condition checks—depressing the footbrake pedal instantly changes speed to 0.
 - **Homework Evaluation**: Ensure the student's submitted text lists:
   - *Preconditions*: powerState is "ON".
   - *Input*: Keypad inputs (time duration string), door sensor state (Boolean), start button.

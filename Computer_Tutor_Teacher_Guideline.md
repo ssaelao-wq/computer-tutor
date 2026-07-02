@@ -81,16 +81,16 @@ Before running classes, tutors must familiarize themselves with the administrati
     - An action block has zero effect or crashes if its safety prerequisites (e.g. brake pedal depressed) are not initialized in a prior step.
   * **Tutor Check Question**: *"Why did we need to depress the brake pedal first? What happens if you try to start the engine without pressing the brake?"*
  
-  ##### **Exercise 1.2: Reversing & Parking**
+  ##### **Exercise 1.2: Dynamic Speed Limits**
   * **How to do it**:
-    1. Sequence the blocks in the logical order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (back out) ➔ `Depress Brake Pedal` (stop) ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`.
+    1. Sequence the blocks in the logical order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to D (Drive)` ➔ `Scan zone speed limit` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`.
     2. Click **Run Autopilot Script** to execute.
   * **Purpose of the Exercise**:
-    - To demonstrate **variables as data storage containers** and explain **data dependency** (you cannot shift between R and D while the vehicle speed is not 0 mph and footbrake is not pressed).
+    - To demonstrate **variables as data storage containers** and explain **data dependency** (you cannot accelerate if the target speedLimit variable is empty/null).
   * **What the Student Learns**:
     - A variable is a temporary memory slot.
-    - If the student tries to shift from R to D directly while moving (without braking first), it destroys the transmission.
-  * **Tutor Check Question**: *"Why must we depress the footbrake pedal before shifting from Reverse to Drive? What variable check prevents shifting while moving?"*
+    - If the student tries to accelerate without scanning first, the autopilot halts because it cannot read a target limit.
+  * **Tutor Check Question**: *"Why does the speedLimit variable matter when starting to accelerate? What happens if we try to press gas without scanning the local speed limit?"*
  
   ##### **Exercise 1.3: Autopilot Sequence Correction**
   * **How to do it**:
@@ -106,29 +106,29 @@ Before running classes, tutors must familiarize themselves with the administrati
     - Use the new **▲** and **▼** arrow buttons to quickly shift blocks up or down.
   * **Tutor Check Question**: *"Look at the terminal log. Why did the starter motor fail to start the engine? Which block needed to move before the ignition key?"*
  
-  ##### **Exercise 1.4: Gear Variable Overwrite**
+  ##### **Exercise 1.4: Variable Overwriting**
   * **How to do it**:
-    1. Sequence the blocks in the following order: `Check P/N` ➔ `Depress Brake` ➔ `Start` ➔ `Shift R` ➔ `Shift D` (without backing out first) ➔ `Release Handbrake` ➔ `Release Brake` ➔ `Press Gas`.
+    1. Sequence the blocks in the following order: `Check P/N` ➔ `Depress Brake` ➔ `Start` ➔ `Shift D` ➔ `Scan zone speed limit` (scans Zone A = 15 mph) ➔ `Scan zone speed limit` (scans Zone B = 50 mph) ➔ `Release Handbrake` ➔ `Release Brake` ➔ `Press Gas`.
     2. Click **Run Autopilot Script**.
-    3. Observe that the car drives straight forward and crashes. The terminal logs state that the gear variable was overwritten to `D` before the car could reverse out of the bay.
-    4. Correct it by inserting the backing out steps (release brake, press gas, press brake) after `Shift R` before selecting `Shift D`.
+    3. Observe that the car drives too fast in Zone A and crashes. The terminal logs state that the speed limit variable was overwritten to 50 mph before the car cleared Zone A.
+    4. Correct it by scanning Zone A ➔ driving through Zone A ➔ then scanning Zone B later.
   * **Purpose of the Exercise**:
-    - To introduce the concept of **variable overwriting**. A variable is a single memory slot; shifting gears immediately overwrites the previous value.
+    - To introduce the concept of **variable overwriting**. A variable is a single memory slot; scanning again immediately overwrites the previous value.
   * **What the Student Learns**:
     - Variables can only hold one value at a time.
-    - Overwriting a state variable too early wipes out previous instructions.
-  * **Tutor Check Question**: *"Why did the vehicle drive forward instead of reversing first? What happened to our active gear variable?"*
+    - Overwriting a state variable too early wipes out previous limits.
+  * **Tutor Check Question**: *"Why did the vehicle drive 50 mph instead of 15 mph? What happened to our active speedLimit variable?"*
  
-  ##### **Exercise 1.5: Emergency Brakes**
+  ##### **Exercise 1.5: Emergency Halt**
   * **How to do it**:
     1. The student is challenged to test a sequence: Start the car, drive off in D, and execute a secure emergency stop.
-    2. Sequence: `Check P/N` ➔ `Depress Brake` ➔ `Start` ➔ `Shift D` ➔ `Release Handbrake` ➔ `Release Brake` ➔ `Press Gas` ➔ `Depress Brake Pedal` ➔ `Shift Gear Selector to P (Park)` ➔ `Engage Handbrake`.
-    3. Point out that safe parking requires both transmission locks (P gear) and mechanical friction holds (handbrake).
+    2. Sequence: `Check P/N` ➔ `Depress Brake` ➔ `Start` ➔ `Shift D` ➔ `Release Handbrake` ➔ `Release Brake` ➔ `Press Gas` ➔ `Depress Brake Pedal`.
+    3. Point out that depressing the footbrake brings the moving vehicle speed variable instantly back to 0.
   * **Purpose of the Exercise**:
     - To understand that **states are persistent and safety checks are run for every step**.
   * **What the Student Learns**:
-    - Safety checks are continuous. You must shift to P and pull the handbrake to complete the script.
-  * **Tutor Check Question**: *"Why does the emergency sequence require us to shift back to Park (P) at the end?"*
+    - Safety checks are continuous. You must depress the footbrake to bring the speed back to 0.
+  * **Tutor Check Question**: *"How did we stop the vehicle in our sequence? What command did we use to bring speed back to 0?"*
  
 #### 🔍 Phase C | Assessment & Debugging: Auditing Logs (01:30 - 01:50)
 * **What the Tutor Explains**:
@@ -139,8 +139,8 @@ Before running classes, tutors must familiarize themselves with the administrati
     - *Tutor Ask*: *"What is the root cause? How do we fix it?"* (Depress footbrake pedal before starting engine).
   - **Log Case B**: `💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector out of P/N without depressing the brake pedal.`
     - *Tutor Ask*: *"Why is the shift lock engaged? What step did we forget?"* (Depress footbrake before shifting).
-  - **Log Case C**: `💥 CRITICAL ERROR: Gas pedal pressed while handbrake is engaged! Friction smoked the pads, engine stalled.`
-    - *Tutor Ask*: *"Why did it stall?"* (Release handbrake before pressing gas).
+  - **Log Case C**: `💥 CRITICAL ERROR: Target speed limit variable (speedLimit) is empty (null). Autopilot cannot calculate throttle output!`
+    - *Tutor Ask*: *"Why did the vehicle halt?"* (Scan speed limit to populate the variable before pressing gas).
  
 ---
  
@@ -149,20 +149,20 @@ Before running classes, tutors must familiarize themselves with the administrati
   * *Tutor Prompt*: *"What is the safety precondition that must be met before an automatic car lets you start the ignition?"* (Depress brake pedal and check P/N gear).
   * *Explanation*: Direct them to the safety preconditions of ignition systems.
  
-* **Mapping to Exercise 1.2 (Reversing & Parking)**:
-  * *Tutor Prompt*: *"Can you shift from Reverse to Drive while the car is moving backwards at 10 mph?"*
-  * *Explanation*: Guide them to discover the logical **data dependency**—the speed variable must be 0 and brake pedal pressed before shifting gears.
+* **Mapping to Exercise 1.2 (Dynamic Speed Limits)**:
+  * *Tutor Prompt*: *"What happens if you try to drive without scanning the speed limit sign first? How does the car know how fast to go?"*
+  * *Explanation*: Guide them to discover the logical **data dependency**—the speedLimit variable must be scanned and loaded before accelerating.
   
 * **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
   * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the ignition fail on step 3?"*
   * *Explanation*: Direct student's eyes to log messages to debug using the arrow buttons.
  
-* **Mapping to Exercise 1.4 (Gear Variable Overwrite)**:
-  * *Tutor Prompt*: *"Why did the vehicle drive forward instead of reversing first? What happened to our active gear variable?"*
+* **Mapping to Exercise 1.4 (Variable Overwriting)**:
+  * *Tutor Prompt*: *"Why did the vehicle drive at 50 mph in Zone A? What happened when we scanned the second sign too early?"*
   * *Explanation*: Reinforce variable overwrite principles.
  
-* **Mapping to Exercise 1.5 (Emergency Brakes)**:
-  * *Tutor Prompt*: *"Why does safe parking require both shifting to Park (P) and engaging the handbrake?"*
+* **Mapping to Exercise 1.5 (Emergency Halt)**:
+  * *Tutor Prompt*: *"How did we bring the speed from 25 mph down to 0 mph? Which pedal control did we trigger?"*
   * *Explanation*: Emphasize safety state checks during emergency shutdowns.
  
 ### 4. Homework Evaluation Checklist (Grants +50 XP)
