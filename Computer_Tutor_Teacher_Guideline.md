@@ -82,16 +82,15 @@ Before running classes, tutors must familiarize themselves with the administrati
     - An action block has zero effect or crashes if its safety prerequisites (e.g. brake pedal depressed) are not initialized in a prior step.
   * **Tutor Check Question**: *"Why did we need to depress the brake pedal first? What happens if you try to start the engine without pressing the brake?"*
  
-  ##### **Exercise 1.2: Reversing & Parking**
+  ##### **Exercise 1.2: Basic Start & Reverse**
   * **How to do it**:
-    1. Click the command buttons to add cards to the workspace in the following order: `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (backing out) ➔ `Depress Brake Pedal` (stop vehicle).
+    1. Click the command buttons in shuffled order to add cards: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (backing out).
     2. Click **Run Autopilot Script** to execute.
   * **Purpose of the Exercise**:
-    - To demonstrate **preconditions** (the vehicle starts with the engine running and footbrake pre-pressed, allowing direct shift and back out).
+    - To demonstrate that different configurations (shifting to Reverse instead of Drive) follow identical safety checklist preconditions.
   * **What the Student Learns**:
-    - Initial state preconditions set what commands are legal.
-    - Sequenced commands must align with current values (e.g. footbrake released before gas).
-  * **Tutor Check Question**: *"Why didn't we need to check P/N gear or start the engine in this exercise? What preconditions were already active?"*
+    - Logic flows are reusable and scalable with minor modifications.
+  * **Tutor Check Question**: *"How does this sequence compare to Exercise 1.1? What single step did we change to move backwards instead of forward?"*
  
   ##### **Exercise 1.3: Autopilot Sequence Correction**
   * **How to do it**:
