@@ -222,6 +222,14 @@ body {
   transform: translateY(1px);
 }
 
+.btn-small {
+  padding: 4px 10px !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1 !important;
+}
+
 /* Badge classes */
 .badge-cyber {
   padding: 4px 8px;

@@ -36,10 +36,10 @@ const CAMPAIGN_THEMES = {
         sessions: [
           {
             id: 'l1-s1',
-            title: 'Session 1: "The Automated Chef Grid"',
-            objective: 'Design a precise sandwich recipe instruction set for robotic kitchen grids.',
-            activity: 'Robot Chef & Malicious Assistant: Write instructions for a peer to make a sandwich. The assistant tries to exploit any loophole (like placing a sealed butter tub directly on sealed bread) to crash the robot.',
-            homework: 'Write step-by-step instructions for a simple daily routine. Ask a family member to follow it literally without making assumptions. Note where it fails.',
+            title: 'Session 1: "Literal Logic & Digital Infiltration"',
+            objective: 'Design a precise sequential command blueprint to navigate systems.',
+            activity: 'Drone Operator Roleplay: Student gives step-by-step instructions to tutor to move and retrieve an object. Tutor follows them strictly literally, demonstrating computer logical processing.',
+            homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab. Choose a household system (e.g., washing machine, microwave). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response.',
             xp: 100
           },
           {
@@ -161,8 +161,8 @@ const CAMPAIGN_THEMES = {
             id: 'l1-s1',
             title: 'Session 1: "Atmosphere Control Automation"',
             objective: 'Design a precise oxygen regulator control instruction set.',
-            activity: 'cauldron Spellcasting & The Goblin Saboteur: Write spell instructions. The saboteur goblin tries to find loopholes to blow up the cauldron. Write airlock regulations.',
-            homework: 'Write instructions for your daily morning spacesuit inspection. Ask a peer to check it literally.',
+            activity: 'Spacesuit Operator Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to spacesuit diagnostic system. System executes it literally.',
+            homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab. Choose a space colony life-support subsystem (e.g., water recycler, air regulator). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response.',
             xp: 100
           },
           {
