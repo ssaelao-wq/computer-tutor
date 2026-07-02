@@ -2051,10 +2051,10 @@ export default function App() {
                           <strong>Problem:</strong> The security drone needs to fly to the warehouse door and unlock it.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the commands so that the drone powers up, scans the door coordinates, flies to the door, and unlocks it.
+                          <strong>Instruction:</strong> Sequence the commands so that the drone powers up, flies to the door, and unlocks it.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Computers execute instructions literally from top to bottom. You cannot perform scans or move without initializing hardware power first.
+                          <strong>Explanation:</strong> Computers execute instructions literally from top to bottom. You must switch on the drone's power state before commencing flight.
                         </p>
                       </div>
                     )}
@@ -2129,19 +2129,21 @@ export default function App() {
                             <span className="sim-action-icon">🔌</span> Turn on drone power
                           </button>
                           
-                          {s1ActiveExercise === 4 ? (
-                            <>
-                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_a', label: 'Scan coordinates for Gate A' }])}>
-                                <span className="sim-action-icon">🔍</span> Scan coordinates for Gate A
+                          {s1ActiveExercise !== 1 && (
+                            s1ActiveExercise === 4 ? (
+                              <>
+                                <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_a', label: 'Scan coordinates for Gate A' }])}>
+                                  <span className="sim-action-icon">🔍</span> Scan coordinates for Gate A
+                                </button>
+                                <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_b', label: 'Scan coordinates for Gate B' }])}>
+                                  <span className="sim-action-icon">🔍</span> Scan coordinates for Gate B
+                                </button>
+                              </>
+                            ) : (
+                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: 'Scan target and save to variable targetCoords' }])}>
+                                <span className="sim-action-icon">🔍</span> Scan target and save to targetCoords
                               </button>
-                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_b', label: 'Scan coordinates for Gate B' }])}>
-                                <span className="sim-action-icon">🔍</span> Scan coordinates for Gate B
-                              </button>
-                            </>
-                          ) : (
-                            <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: 'Scan for target warehouse door' }])}>
-                              <span className="sim-action-icon">🔍</span> Scan for target warehouse door
-                            </button>
+                            )
                           )}
                           
                           <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'fly_door', label: 'Fly drone to the door' }])}>
@@ -2208,10 +2210,19 @@ export default function App() {
                                 if (!hasError) {
                                   const ids = s1Sequence.map(c => c.id).join(',');
                                   
-                                  if (s1ActiveExercise === 1 || s1ActiveExercise === 2 || s1ActiveExercise === 3) {
+                                  if (s1ActiveExercise === 1) {
+                                    const isCorrect = ids === 'power_on,fly_door,unlock_door';
+                                    if (isCorrect) {
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Basic route navigated successfully! Target reached.' }]);
+                                      setS1Success(true);
+                                      claimCaseEvidence('l1-s1', 100);
+                                    } else {
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic navigation sequence.' }]);
+                                    }
+                                  } else if (s1ActiveExercise === 2 || s1ActiveExercise === 3) {
                                     const isCorrect = ids === 'power_on,scan_door,fly_door,unlock_door';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Warehouse door bypassed! Telemetry extraction complete.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Variable-dependent route bypassed successfully! Telemetry extraction complete.' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
@@ -2279,21 +2290,22 @@ export default function App() {
                                 if (!powerIsActive) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted flight with unpowered systems! Drone crashed.' });
                                   hasError = true;
-                                } else if (!scannedCoords) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target coordinates undefined (null). Drone collided with a concrete pillar!' });
+                                } else if (!scannedCoords && s1ActiveExercise !== 1) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target coordinates variable (targetCoords) is empty (null). Drone crashed into the ground!' });
                                   hasError = true;
                                 } else {
-                                  logsToAppend.push({ type: 'info', text: `Rotor speed increased. Drone navigating to coordinate container: ${scannedCoords}` });
+                                  const dest = s1ActiveExercise === 1 ? 'Hardcoded_Warehouse_Coordinates' : scannedCoords;
+                                  logsToAppend.push({ type: 'info', text: `Rotor speed increased. Drone navigating using coordinates stored in variable: ${dest}` });
                                 }
                               } else if (cmd.id === 'unlock_door') {
                                 if (!powerIsActive) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Power offline. Keycard bypass module inactive.' });
                                   hasError = true;
-                                } else if (!scannedCoords) {
+                                } else if (!scannedCoords && s1ActiveExercise !== 1) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Bypass failed. Drone did not reach target card reader.' });
                                   hasError = true;
                                 } else {
-                                  logsToAppend.push({ type: 'info', text: 'Bypass signal injected. Decoding gate locks...' });
+                                  logsToAppend.push({ type: 'success', text: 'Keycard access code transmitted. Security lock offline.' });
                                 }
                               }
 
