@@ -2050,6 +2050,18 @@ export default function App() {
                               { id: 'press_gas', label: 'Press Gas Pedal' },
                               { id: 'release_brake', label: 'Release Brake Pedal' }
                             ]);
+                          } else if (num === 4) {
+                            // Exercise 1.4 Pre-setup (Preloaded steps with an extra incorrect step to remove)
+                            setS1Sequence([
+                              { id: 'check_gear_pn', label: 'Check P/N Gear State' },
+                              { id: 'press_brake', label: 'Depress Brake Pedal' },
+                              { id: 'start_engine', label: 'Turn Ignition Key to Start' },
+                              { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' },
+                              { id: 'release_handbrake', label: 'Release Handbrake' },
+                              { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)' }, // EXTRA step to remove!
+                              { id: 'release_brake', label: 'Release Brake Pedal' },
+                              { id: 'press_gas', label: 'Press Gas Pedal' }
+                            ]);
                           }
                         }}
                       >
@@ -2076,15 +2088,15 @@ export default function App() {
                     )}
                     {s1ActiveExercise === 2 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Dynamic Speed Limits (Variable Data Storage)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Reversing & Parking (Gear R State Locks)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The vehicle needs to drive under a local speed limit. To accelerate safely, the autopilot must read the local speed limit into a variable.
+                          <strong>Problem:</strong> The vehicle is parked inside a bay and must reverse out safely before shifting to Drive and moving forward.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Start the engine, shift to D, scan the zone speed limit (which saves 30 mph into the `speedLimit` variable), release handbrake, release brake, and press the gas.
+                          <strong>Instruction:</strong> Sequence commands: Check P/N ➔ Press Brake ➔ Start ➔ Shift R ➔ Release handbrake ➔ Release brake ➔ Press gas (reverse) ➔ Press Brake (stop) ➔ Shift D ➔ Release brake ➔ Press gas (drive off).
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> A variable is a temporary memory slot that holds dynamic values. If you attempt to accelerate without scanning first, the `speedLimit` variable is empty (null) and autopilot halts.
+                          <strong>Explanation:</strong> Shifting between Reverse (R) and Drive (D) requires safety locks. The autopilot will lock up if you shift gears while the vehicle is in motion without pressing the footbrake first.
                         </p>
                       </div>
                     )}
@@ -2104,15 +2116,15 @@ export default function App() {
                     )}
                     {s1ActiveExercise === 4 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Variable Overwriting (Safety Overwrite)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Code Cleanup (Debugging Extra Steps)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The vehicle must navigate Zone A (limit 15 mph) before entering Zone B (limit 50 mph).
+                          <strong>Problem:</strong> The preloaded script has an extra, incorrect step that causes a safety violation.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Scan the Zone A limit and drive. If you scan Zone B immediately after Zone A (without driving first), the variable is overwritten to 50 mph, causing a speeding crash in Zone A!
+                          <strong>Instruction:</strong> Examine the preloaded steps. Identify the extra card that does not belong in the sequence and delete it by clicking the `×` button.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Variables store only one value at a time. Overwriting `speedLimit` with 50 too early replaces the 15 mph limit, violating safety rules.
+                          <strong>Explanation:</strong> Unused or invalid logic blocks in a sequence can trigger safety lockouts or errors. Code cleanup is a key part of debugging.
                         </p>
                       </div>
                     )}
@@ -2140,31 +2152,35 @@ export default function App() {
                       <div className="sim-panel-body drone-commands">
                         <p className="sim-instructions" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 10px 0' }}>Click commands to add to sequence workspace:</p>
                         <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'check_gear_pn', label: 'Check P/N Gear State' }])}>
-                            <span className="sim-action-icon">🔍</span> Check P/N Gear State
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_brake', label: 'Depress Brake Pedal' }])}>
-                            <span className="sim-action-icon">🦶</span> Depress Brake Pedal
-                          </button>
                           <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'start_engine', label: 'Turn Ignition Key to Start' }])}>
                             <span className="sim-action-icon">🔑</span> Turn Ignition Key to Start
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_handbrake', label: 'Release Handbrake' }])}>
+                            <span className="sim-action-icon">🛑</span> Release Handbrake
                           </button>
                           <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' }])}>
                             <span className="sim-action-icon">⚙️</span> Shift Gear Selector to D (Drive)
                           </button>
-                          {(s1ActiveExercise === 2 || s1ActiveExercise === 4) && (
-                            <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_speed_limit', label: 'Scan zone speed limit (save to variable speedLimit)' }])}>
-                              <span className="sim-action-icon">🔍</span> Scan zone speed limit
-                            </button>
-                          )}
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_handbrake', label: 'Release Handbrake' }])}>
-                            <span className="sim-action-icon">🛑</span> Release Handbrake
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_gas', label: 'Press Gas Pedal' }])}>
+                            <span className="sim-action-icon">🚀</span> Press Gas Pedal
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'check_gear_pn', label: 'Check P/N Gear State' }])}>
+                            <span className="sim-action-icon">🔍</span> Check P/N Gear State
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to R (Reverse)
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_brake', label: 'Depress Brake Pedal' }])}>
+                            <span className="sim-action-icon">🦶</span> Depress Brake Pedal
                           </button>
                           <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_brake', label: 'Release Brake Pedal' }])}>
                             <span className="sim-action-icon">🦶</span> Release Brake Pedal
                           </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_gas', label: 'Press Gas Pedal' }])}>
-                            <span className="sim-action-icon">🚀</span> Press Gas Pedal
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_p', label: 'Shift Gear Selector to P (Park)' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to P (Park)
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'engage_handbrake', label: 'Engage Handbrake' }])}>
+                            <span className="sim-action-icon">🛑</span> Engage Handbrake
                           </button>
                         </div>
                       </div>
@@ -2221,15 +2237,13 @@ export default function App() {
                             let currentStep = 0;
                             let hasError = false;
                             const logsToAppend = [];
-                            let scanCount = 0;
                             
                             // Automatic Car State Variables
                             let checkedPN = false;
                             let brakePressed = false;
                             let engineStarted = false;
-                            let gear = 'P'; // P, D
+                            let gear = 'P'; // P, D, R
                             let handbrakeReleased = false;
-                            let speedLimit = null;
                             let speed = 0;
                             
                             const runNext = () => {
@@ -2253,13 +2267,13 @@ export default function App() {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & drive off sequence.' }]);
                                     }
                                   } else if (s1ActiveExercise === 2) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,scan_speed_limit,release_handbrake,release_brake,press_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_r,release_handbrake,release_brake,press_gas,press_brake,shift_d,release_brake,press_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Speed limit scanned and vehicle accelerated safely in Drive!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Reversed out of bay and drove forward in Drive successfully!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Target speed limit sequence is incomplete or incorrect.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Reversing and Drive sequence is incomplete or incorrect.' }]);
                                     }
                                   } else if (s1ActiveExercise === 3) {
                                     const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
@@ -2271,13 +2285,13 @@ export default function App() {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Scrambled script sequence is still incorrect.' }]);
                                     }
                                   } else if (s1ActiveExercise === 4) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,scan_speed_limit,release_handbrake,release_brake,press_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Overwrite prevented! Vehicle cruised safely in Zone A.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Debugging successful! Incorrect R-gear shift step removed.' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Overwrite detected. Speed limit variable was overwritten too early!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Extra incorrect step is still in the workspace!' }]);
                                     }
                                   } else if (s1ActiveExercise === 5) {
                                     const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas,press_brake';
@@ -2301,7 +2315,7 @@ export default function App() {
                                 logsToAppend.push({ type: 'info', text: '🔍 [Transmission Log] Gear checked. Gear selector is currently in P (Park) (P/N Check = TRUE).' });
                               } else if (cmd.id === 'press_brake') {
                                 brakePressed = true;
-                                if (speed > 0) {
+                                if (speed !== 0) {
                                   speed = 0;
                                   logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Footbrake pedal depressed. Vehicle brought to a secure halt.' });
                                 } else {
@@ -2329,24 +2343,24 @@ export default function App() {
                                   gear = 'D';
                                   logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to D (Drive) (currentGear = D).' });
                                 }
-                              } else if (cmd.id === 'scan_speed_limit') {
+                              } else if (cmd.id === 'shift_r') {
                                 if (!engineStarted) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Sensors offline. Engine is not running.' });
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
+                                  hasError = true;
+                                } else if (!brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to R (Reverse) without depressing the brake pedal.' });
                                   hasError = true;
                                 } else {
-                                  scanCount++;
-                                  if (s1ActiveExercise === 4) {
-                                    if (scanCount === 1) {
-                                      speedLimit = 15;
-                                      logsToAppend.push({ type: 'info', text: '🔍 [Sensor Log] Scan completed. speedLimit variable loaded with Zone A speed limit (15 mph).' });
-                                    } else {
-                                      speedLimit = 50;
-                                      logsToAppend.push({ type: 'info', text: '🔍 [Sensor Log] Scan completed (OVERWRITTEN). speedLimit variable loaded with Zone B speed limit (50 mph).' });
-                                    }
-                                  } else {
-                                    speedLimit = 30;
-                                    logsToAppend.push({ type: 'info', text: '🔍 [Sensor Log] Scan completed. speedLimit variable loaded with road speed limit (30 mph).' });
-                                  }
+                                  gear = 'R';
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to R (Reverse) (currentGear = R).' });
+                                }
+                              } else if (cmd.id === 'shift_p') {
+                                if (!brakePressed) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to P (Park) without depressing the brake pedal.' });
+                                  hasError = true;
+                                } else {
+                                  gear = 'P';
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to P (Park) (currentGear = P).' });
                                 }
                               } else if (cmd.id === 'release_handbrake') {
                                 handbrakeReleased = true;
@@ -2366,21 +2380,16 @@ export default function App() {
                                 } else if (brakePressed) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Accelerator pressed while footbrake is fully depressed! Transmission overheated and stalled.' });
                                   hasError = true;
-                                } else if (s1ActiveExercise === 2 || s1ActiveExercise === 4) {
-                                  if (speedLimit === null) {
-                                    logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target speed limit variable (speedLimit) is empty (null). Autopilot cannot calculate throttle output!' });
-                                    hasError = true;
-                                  } else if (speedLimit === 50) {
-                                    logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Autopilot speed limit variable is 50 mph, but Zone A speed limit is 15 mph! Car crashed for speed violation.' });
-                                    hasError = true;
-                                  } else {
-                                    speed = speedLimit;
-                                    logsToAppend.push({ type: 'info', text: `🚀 Gas pedal pressed. Autopilot reads speedLimit variable... Found ${speed} mph. Accelerating to ${speed} mph.` });
-                                  }
                                 } else if (gear === 'D') {
                                   speed = 25;
                                   logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = 25 mph (Driving forward in D).' });
+                                } else if (gear === 'R') {
+                                  speed = -10;
+                                  logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = -10 mph (Moving backward in R).' });
                                 }
+                              } else if (cmd.id === 'engage_handbrake') {
+                                handbrakeReleased = false;
+                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Parking handbrake engaged (handbrakeState = ON).' });
                               }
                               
                               setS1Logs(prev => [...prev, logsToAppend[logsToAppend.length - 1]]);
