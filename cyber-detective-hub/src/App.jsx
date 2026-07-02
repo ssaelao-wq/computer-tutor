@@ -1173,7 +1173,7 @@ export default function App() {
     tick();
   };
 
-  const selectedJournal = journalEntries.find(j => j.id === selectedJournalId);
+  const selectedJournal = journalEntries.find(j => j.id === selectedJournalId) || journalEntries[0];
   const activeJournalHistory = selectedJournal ? selectedJournal.history.find(h => h.version === activeJournalVersion) : null;
 
   // Sync editing journal text with database value
@@ -2884,24 +2884,7 @@ export default function App() {
           {/* Prompt Journal View */}
           {activeTab === 'journal' && (
             <div className="tab-journal journal-layout animate-in">
-              <div className="journal-sidebar-list">
-                {journalEntries.map(entry => (
-                  <div 
-                    key={entry.id} 
-                    className={`glass-panel journal-card ${selectedJournalId === entry.id ? 'selected' : ''}`}
-                    onClick={() => { setSelectedJournalId(entry.id); setActiveJournalVersion(entry.version); }}
-                  >
-                    <div className="journal-card-header">
-                      <span>{entry.date}</span>
-                      <span>v{entry.version}</span>
-                    </div>
-                    <div className="journal-card-title">{entry.title}</div>
-                    <div className="journal-card-meta">Prompt Specs: {entry.history.length} Versions</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="glass-panel journal-detail-view">
+              <div className="glass-panel journal-detail-view" style={{ width: '100%' }}>
                 {selectedJournal ? (
                   <>
                     <div className="journal-detail-header" style={{ marginBottom: '16px' }}>
