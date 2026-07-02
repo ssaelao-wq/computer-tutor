@@ -2164,7 +2164,11 @@ export default function App() {
                             { id: 'shift_p', label: 'Shift Gear Selector to P (Park)', icon: '⚙️' },
                             { id: 'engage_handbrake', label: 'Engage Handbrake', icon: '🛑' }
                           ];
-                          const availableCommands = allCommands.filter(cmd => !s1Sequence.some(s => s.id === cmd.id));
+                          const availableCommands = allCommands.filter(cmd => {
+                            const maxAllowed = (s1ActiveExercise === 5 && cmd.id === 'press_brake') ? 2 : 1;
+                            const currentCount = s1Sequence.filter(s => s.id === cmd.id).length;
+                            return currentCount < maxAllowed;
+                          });
                           return (
                             <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                               {availableCommands.map((cmd) => (
