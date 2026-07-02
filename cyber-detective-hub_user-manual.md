@@ -198,9 +198,9 @@ The Prompt Sandbox is the core compiler workspace where you build and test your 
 ```
 +------------------------------------+----------------------------------+
 | CASE SPECIFICATION & BRIEF         | CODE EDITOR WORKSPACE            |
-| - Assigned Role: Robot Controller  |                                  |
-| - Task: Create sandwich maker      | [Code Area]                      |
-| - Inputs: bread, butter, knife     |                                  |
+| - Assigned Role: Drone Operator    | [Code Area]                      |
+| - Task: Configure drone autopilot  |                                  |
+| - Inputs: powerState, targetCoords |                                  |
 |                                    |                                  |
 +------------------------------------+----------------------------------+
 | TELEMETRY MONITOR                  | COMPILER CONTROLS                |

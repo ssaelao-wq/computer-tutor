@@ -223,10 +223,11 @@ body {
 }
 
 .btn-small {
-  padding: 4px 14px !important;
+  padding: 4px 12px !important;
   font-size: 0.72rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.02em !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
   display: inline-flex !important;

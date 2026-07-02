@@ -14,12 +14,50 @@ const INITIAL_JOURNAL = [
       {
         version: 1,
         prompt: "Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Write down a step-by-step sequential algorithm for its operation.",
-        code: `// Version 1: Simple Microwave Blueprint\n// Inputs: Start button clicked\n// Process: Cook food for 1 minute\n// Output: Beep when finished\n// (Ambiguity: Does not define variables, check if door is open, or count down time!)`
+        code: `Household IPO Blueprint: Microwave (Draft v1)
+
+Inputs:
+- Start button pressed
+
+Processing steps:
+- Turn on the microwave heating wave generator
+- Heat the food for 60 seconds
+- Beep when finished
+
+Outputs:
+- Hot food and alarm sound
+
+(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn't verify if the door is closed first, and doesn't define variables!)`
       },
       {
         version: 2,
         prompt: "Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.",
-        code: `// Version 2: Precise Microwave IPO Blueprint\n// Precondition: powerState === "ON"\n// Inputs:\n//   - keypadInput (String, e.g. "01:30")\n//   - doorClosed (Boolean)\n//   - startPressed (Boolean)\n//\n// Process:\n//   1. Wait until startPressed is true\n//   2. Check if doorClosed is true. If false, sound error_beep and halt\n//   3. Parse keypadInput time into secondsLeft variable\n//   4. Loop while secondsLeft > 0:\n//      a. If doorClosed becomes false, pause cooking and halt loop\n//      b. Emit magnetron waves (Output)\n//      c. Decrement secondsLeft by 1\n//      d. Wait 1 second\n//   5. Trigger beep_alarm (Output)\n//\n// Output:\n//   - magnetron_radiation (active wave emission)\n//   - timerDisplay (number of seconds remaining)\n//   - alarmSound (end-of-cycle beep)`
+        code: `Household IPO Blueprint: Microwave (Detailed Spec v2)
+
+System Precondition:
+- powerState must be "ON" (active electrical current)
+
+Inputs:
+- keypadInput: Text / String value (e.g. "01:30")
+- doorClosed: Switch / Boolean value (Yes/No)
+- startPressed: Switch / Boolean value (Yes/No)
+
+Processing Logic Steps:
+1. Wait until startPressed becomes Yes.
+2. Check doorClosed state. If doorClosed is No, beep 3 times and halt operation.
+3. Parse the keypadInput to extract the total seconds (secondsRemaining).
+4. Loop while secondsRemaining is greater than 0:
+   a. Check doorClosed state. If door is opened (No), pause cooking and halt loop.
+   b. Turn on the microwave heating wave generator.
+   c. Subtract 1 second from secondsRemaining.
+   d. Wait exactly 1 second.
+5. Turn off the heating wave generator.
+6. Trigger the end-of-cycle alarm beep.
+
+Outputs:
+- magnetronWaves: Active radiation waves
+- countdownDisplay: Number representing seconds remaining
+- alarmSpeaker: End-of-cycle audio beep`
       }
     ]
   }
@@ -473,11 +511,11 @@ export default function App() {
   };
   
   // Sandbox states
-  const [sandboxRole, setSandboxRole] = useState('Junior Robot Chef Controller');
-  const [sandboxTask, setSandboxTask] = useState('Create a sandwich maker function');
-  const [sandboxConstraints, setSandboxConstraints] = useState('Must open sealed packages. Zero manual code edits.');
-  const [sandboxInput, setSandboxInput] = useState('bread (sealed package), butter (sealed tub), knife');
-  const [sandboxEdgeCases, setSandboxEdgeCases] = useState('Null/missing inputs, unopened packets');
+  const [sandboxRole, setSandboxRole] = useState('Junior Security Drone Operator');
+  const [sandboxTask, setSandboxTask] = useState('Configure drone autopilot sequential route instructions');
+  const [sandboxConstraints, setSandboxConstraints] = useState('Initialize system power state first. Verify target coordinates variables.');
+  const [sandboxInput, setSandboxInput] = useState('powerState, targetCoords, flySequence');
+  const [sandboxEdgeCases, setSandboxEdgeCases] = useState('Null/undefined targetCoords, unpowered operations');
   const [sandboxCodeOutput, setSandboxCodeOutput] = useState(null);
   
   // Chaos Monkey console states
@@ -743,17 +781,17 @@ export default function App() {
   const handleGenerate = () => {
     if (!sandboxTask.trim()) return;
 
-    let mockCode = `// Generated Spell/Code block based on prompt spec\n`;
+    let mockCode = `// Generated Code block based on prompt spec\n`;
     mockCode += `// Campaign Theme: ${currentCampaign.name}\n`;
     mockCode += `// Role: ${sandboxRole}\n`;
     mockCode += `// Task: ${sandboxTask}\n\n`;
 
-    if (sandboxTask.toLowerCase().includes('sandwich') || sandboxTask.toLowerCase().includes('chef') || sandboxTask.toLowerCase().includes('cauldron')) {
-      const handlesSealed = sandboxConstraints.toLowerCase().includes('open') || sandboxConstraints.toLowerCase().includes('sealed') || sandboxConstraints.toLowerCase().includes('cauldron');
-      if (handlesSealed) {
-        mockCode += `function makeSandwich(bread, butter, knife) {\n  if (!bread || !butter || !knife) return null;\n  \n  // Good: opens packets first!\n  const b = bread.open().getSlices(2);\n  const bt = butter.open();\n  const spread = knife.scoop(bt, '15g');\n  b[0].apply(spread);\n  return b.combine();\n}`;
+    if (sandboxTask.toLowerCase().includes('drone') || sandboxTask.toLowerCase().includes('autopilot') || sandboxTask.toLowerCase().includes('navigation') || sandboxTask.toLowerCase().includes('infiltration') || sandboxTask.toLowerCase().includes('oxygen') || sandboxTask.toLowerCase().includes('regulator')) {
+      const handlesPower = sandboxConstraints.toLowerCase().includes('power') || sandboxConstraints.toLowerCase().includes('initialize') || sandboxConstraints.toLowerCase().includes('state') || sandboxConstraints.toLowerCase().includes('powerstate');
+      if (handlesPower) {
+        mockCode += `// Secure autopilot sequential controller\nfunction verifyAutopilot(powerState, targetCoords) {\n  if (powerState !== "ON") {\n    throw new Error("💥 CRITICAL ERROR: Attempted to scan or fly while drone is unpowered!");\n  }\n  if (!targetCoords) {\n    throw new Error("💥 CRITICAL ERROR: Target coordinates are undefined!");\n  }\n  console.log("Preconditions passed. Navigating to coords: " + targetCoords);\n  return "SUCCESS: Target reached";\n}`;
       } else {
-        mockCode += `function makeSandwich(bread, butter) {\n  // Bug: assumes packets are open!\n  console.log("Spreading " + butter + " on " + bread);\n  return "Sandwich Ready";\n}`;
+        mockCode += `// Buggy autopilot sequence (Missing power preconditions check)\nfunction verifyAutopilot(powerState, targetCoords) {\n  // Bug: Attempting flight without power check!\n  console.log("Navigating to coords: " + targetCoords);\n  return "SUCCESS: Drone launched";\n}`;
       }
     } else if (sandboxTask.toLowerCase().includes('feeder') || sandboxTask.toLowerCase().includes('cat') || sandboxTask.toLowerCase().includes('water')) {
       const handlesCat = sandboxConstraints.toLowerCase().includes('sneaky') || sandboxConstraints.toLowerCase().includes('cat') || sandboxConstraints.toLowerCase().includes('stir');
@@ -803,7 +841,7 @@ export default function App() {
     ]);
 
     let step = 0;
-    const isSandwich = sandboxTask.toLowerCase().includes('sandwich') || sandboxTask.toLowerCase().includes('chef') || sandboxTask.toLowerCase().includes('cauldron');
+    const isDrone = sandboxTask.toLowerCase().includes('drone') || sandboxTask.toLowerCase().includes('autopilot') || sandboxTask.toLowerCase().includes('navigation') || sandboxTask.toLowerCase().includes('infiltration') || sandboxTask.toLowerCase().includes('oxygen') || sandboxTask.toLowerCase().includes('regulator');
     const isFeeder = sandboxTask.toLowerCase().includes('feeder') || sandboxTask.toLowerCase().includes('cat') || sandboxTask.toLowerCase().includes('water');
     const isDatabase = sandboxTask.toLowerCase().includes('database') || sandboxTask.toLowerCase().includes('connect') || sandboxTask.toLowerCase().includes('crud');
     const isEnvKeys = sandboxTask.toLowerCase().includes('env') || sandboxTask.toLowerCase().includes('environment') || sandboxTask.toLowerCase().includes('gitignore') || sandboxTask.toLowerCase().includes('variables');
@@ -818,12 +856,12 @@ export default function App() {
       } else if (step === 3) {
         setChaosLogs(prev => [...prev, { type: 'info', text: 'Running Test Scenario 2: Boundary / empty conditions...' }]);
       } else if (step === 4) {
-        if (isSandwich) {
-          const handlesEmpty = sandboxEdgeCases.toLowerCase().includes('null') || sandboxEdgeCases.toLowerCase().includes('empty') || sandboxEdgeCases.toLowerCase().includes('cauldron');
+        if (isDrone) {
+          const handlesEmpty = sandboxEdgeCases.toLowerCase().includes('null') || sandboxEdgeCases.toLowerCase().includes('empty') || sandboxEdgeCases.toLowerCase().includes('undefined');
           if (handlesEmpty) {
-            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 2: PASSED. Script throws error on null inputs.' }]);
+            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 2: PASSED. Script throws error on null target coordinates.' }]);
           } else {
-            setChaosLogs(prev => [...prev, { type: 'error', text: 'Test 2: FAILED! Null input caused Uncaught TypeError: Cannot read properties of null.' }]);
+            setChaosLogs(prev => [...prev, { type: 'error', text: 'Test 2: FAILED! Null coordinate values caused drone navigation system crash.' }]);
           }
         } else if (isFeeder) {
           setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 2: PASSED. System limits inputs correctly.' }]);
@@ -854,15 +892,15 @@ export default function App() {
       } else if (step === 5) {
         setChaosLogs(prev => [...prev, { type: 'info', text: 'Running Test Scenario 3: Malicious exploits / constraints...' }]);
       } else if (step === 6) {
-        if (isSandwich) {
-          const opensPackets = sandboxConstraints.toLowerCase().includes('open') || sandboxConstraints.toLowerCase().includes('sealed') || sandboxConstraints.toLowerCase().includes('cauldron');
-          if (opensPackets) {
-            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 3: PASSED. Robot successfully opened sealed packets before spreading.' }]);
+        if (isDrone) {
+          const handlesPower = sandboxConstraints.toLowerCase().includes('power') || sandboxConstraints.toLowerCase().includes('initialize') || sandboxConstraints.toLowerCase().includes('state') || sandboxConstraints.toLowerCase().includes('powerstate');
+          if (handlesPower) {
+            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 3: PASSED. Autopilot successfully verified system power and target coordinates before navigation.' }]);
             setSandboxSuccess(true);
           } else {
             setChaosLogs(prev => [...prev, {
               type: 'error',
-              text: 'Test 3: FAILED! Malicious Assistant injected "sealed bread". Robot tried to spread butter on the wrapper!'
+              text: 'Test 3: FAILED! Unpowered autopilot command injected. Drone attempted flight without power checks and crashed.'
             }]);
             setSandboxSuccess(false);
           }
@@ -1012,11 +1050,11 @@ export default function App() {
   const loadTemplate = (session) => {
     setSandboxSessionId(session.id);
     if (session.id === 'l1-s1') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Junior Robot Chef Controller' : campaignId === 'mars' ? 'Airlock Operations Specialist' : 'Junior Apprentice Spellcaster');
-      setSandboxTask(campaignId === 'cyberpunk' ? 'Create a sandwich maker function' : campaignId === 'mars' ? 'Write oxygen regulation logic' : 'Write cauldron cauldron sequence');
-      setSandboxConstraints(campaignId === 'cyberpunk' ? 'Must open sealed packages. Zero manual code edits.' : campaignId === 'mars' ? 'Open regulator valves, bypass solar loop anomalies.' : 'Goblin proof shields. Cauldron heat monitoring.');
-      setSandboxInput(campaignId === 'cyberpunk' ? 'bread (sealed package), butter (sealed tub), knife' : campaignId === 'mars' ? 'oxygenLevel, SolarRadiationInput' : 'cauldronTemp, goblinBait');
-      setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Null/missing inputs, unopened packets' : campaignId === 'mars' ? 'Radiation spikes, low levels' : 'Mana spikes, double cast');
+      setSandboxRole(campaignId === 'cyberpunk' ? 'Junior Security Drone Operator' : campaignId === 'mars' ? 'Atmospheric Telemetry Systems Operator' : 'Junior Apprentice Spellcaster');
+      setSandboxTask(campaignId === 'cyberpunk' ? 'Configure drone autopilot sequential route instructions' : campaignId === 'mars' ? 'Configure oxygen regulator sequential boot instructions' : 'Write cauldron cauldron sequence');
+      setSandboxConstraints(campaignId === 'cyberpunk' ? 'Initialize system power state first. Verify target coordinates variables.' : campaignId === 'mars' ? 'Power regulator boot sequence, verify oxygen levels.' : 'Goblin proof shields. Cauldron heat monitoring.');
+      setSandboxInput(campaignId === 'cyberpunk' ? 'powerState, targetCoords, flySequence' : campaignId === 'mars' ? 'powerState, oxygenSensorValue, regulatorValveState' : 'cauldronTemp, goblinBait');
+      setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Null/undefined targetCoords, unpowered operations' : campaignId === 'mars' ? 'Unpowered boot checks, sensor failure' : 'Mana spikes, double cast');
     } else if (session.id === 'l1-s4') {
       setSandboxRole(campaignId === 'cyberpunk' ? 'Climate Control Security Architect' : campaignId === 'mars' ? 'Habitat Operations Supervisor' : 'Arch-Mage Climate Ward Warden');
       setSandboxTask(campaignId === 'cyberpunk' ? 'Implement smart climate control conditional logic function' : campaignId === 'mars' ? 'Configure habitat atmospheric safety overrides' : 'Configure castle atmospheric shielding runes');
@@ -1479,7 +1517,7 @@ export default function App() {
                       <div className="feed-item">
                         <span className="feed-time">19:42</span>
                         <div className="feed-message">
-                          Prompt spec revised: <strong>Sandwich Chef Instructions</strong> (v2 created)
+                          Prompt spec revised: <strong>Household IPO Blueprint</strong> (v2 created)
                         </div>
                       </div>
                       <div className="feed-item">
