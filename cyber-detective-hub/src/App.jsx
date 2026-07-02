@@ -442,6 +442,7 @@ export default function App() {
   const [newStudentName, setNewStudentName] = useState('');
   const [newStudentLevel, setNewStudentLevel] = useState('L1');
   const [adminStatusMsg, setAdminStatusMsg] = useState('');
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [points, setPoints] = useState(0);
@@ -621,11 +622,31 @@ export default function App() {
       .catch(err => console.warn("Failed to load students list:", err.message));
   };
 
+  const fetchLeaderboard = () => {
+    if (!token) return;
+    fetch('/api/leaderboard', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setLeaderboardData(data);
+        }
+      })
+      .catch(err => console.warn("Failed to load leaderboard:", err.message));
+  };
+
   useEffect(() => {
     if (token && currentUser && currentUser.role === 'teacher') {
       fetchStudentsList();
     }
   }, [token, currentUser]);
+
+  useEffect(() => {
+    if (activeTab === 'leaderboard') {
+      fetchLeaderboard();
+    }
+  }, [activeTab, token]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -728,6 +749,29 @@ export default function App() {
       .catch(err => {
         console.error("Failed to update student level:", err.message);
         alert("Failed to update student level: " + err.message);
+      });
+  };
+
+  const handleUpdateStudentPoints = (studentId, newPoints) => {
+    if (!token) return;
+    fetch('/api/admin/students/points', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ studentId, points: newPoints })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to update points"); });
+        return res.json();
+      })
+      .then(() => {
+        fetchStudentsList();
+      })
+      .catch(err => {
+        console.error("Failed to update student points:", err.message);
+        alert("Failed to update student points: " + err.message);
       });
   };
 
@@ -2987,26 +3031,34 @@ export default function App() {
                       </tr>
                     </thead>
                     <tbody>
-                      {LEADERBOARD_INITIAL.map(agent => {
-                        const isUser = agent.isCurrentUser;
-                        const scorePoints = isUser ? points : agent.points;
-                        return (
-                          <tr key={agent.name} className={`leaderboard-row ${isUser ? 'current-user' : ''}`}>
-                            <td className={`leaderboard-rank top-${agent.rank}`}>{agent.rank}</td>
-                            <td className="leaderboard-username">
-                              {agent.name}
-                              {isUser && <span className="badge-cyber badge-cyan leaderboard-badge-me">YOU</span>}
-                            </td>
-                            <td>
-                              <span className={`badge-cyber ${scorePoints > 1000 ? 'badge-purple' : scorePoints > 500 ? 'badge-cyan' : 'badge-green'}`}>
-                                {scorePoints >= 1200 ? 'Master' : scorePoints >= 800 ? 'Senior' : 'Junior'}
-                              </span>
-                            </td>
-                            <td>{agent.active}</td>
-                            <td style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>{scorePoints} XP</td>
-                          </tr>
-                        );
-                      })}
+                      {leaderboardData.length === 0 ? (
+                        <tr>
+                          <td colSpan="5" style={{ textAlign: 'center', padding: 24, color: 'var(--text-muted)' }}>
+                            No student profiles registered in classroom tournament.
+                          </td>
+                        </tr>
+                      ) : (
+                        leaderboardData.map(agent => {
+                          const isUser = agent.username === currentUser?.username;
+                          const scorePoints = agent.points;
+                          return (
+                            <tr key={agent.username} className={`leaderboard-row ${isUser ? 'current-user' : ''}`}>
+                              <td className={`leaderboard-rank top-${agent.rank}`}>{agent.rank}</td>
+                              <td className="leaderboard-username">
+                                {agent.name}
+                                {isUser && <span className="badge-cyber badge-cyan leaderboard-badge-me">YOU</span>}
+                              </td>
+                              <td>
+                                <span className={`badge-cyber ${scorePoints > 1000 ? 'badge-purple' : scorePoints > 500 ? 'badge-cyan' : 'badge-green'}`}>
+                                  {scorePoints >= 1200 ? 'Master' : scorePoints >= 800 ? 'Senior' : 'Junior'}
+                                </span>
+                              </td>
+                              <td>{agent.level}</td>
+                              <td style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>{scorePoints} XP</td>
+                            </tr>
+                          );
+                        })
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -3173,7 +3225,27 @@ export default function App() {
                                     <option value="L4">L4: Engineer</option>
                                   </select>
                                 </td>
-                                <td style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)', fontWeight: 600 }}>{student.points} XP</td>
+                                <td style={{ padding: 10, textAlign: 'right' }}>
+                                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
+                                    <button 
+                                      className="btn-cyber btn-cyber-secondary btn-small"
+                                      onClick={() => handleUpdateStudentPoints(student.id, Math.max(0, student.points - 50))}
+                                      style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
+                                    >
+                                      -
+                                    </button>
+                                    <span style={{ fontWeight: 600, color: 'var(--accent-cyan)', minWidth: '55px', display: 'inline-block', textAlign: 'center' }}>
+                                      {student.points} XP
+                                    </span>
+                                    <button 
+                                      className="btn-cyber btn-cyber-green btn-small"
+                                      onClick={() => handleUpdateStudentPoints(student.id, student.points + 50)}
+                                      style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                </td>
                               </tr>
                             ))}
                           </tbody>

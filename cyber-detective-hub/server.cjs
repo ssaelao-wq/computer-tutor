@@ -522,6 +522,44 @@ app.post('/api/admin/students/level', authenticateToken, requireTeacher, async (
   }
 });
 
+// Admin Route: Update student points
+app.post('/api/admin/students/points', authenticateToken, requireTeacher, async (req, res) => {
+  const { studentId, points } = req.body;
+  if (!studentId || points === undefined) {
+    return res.status(400).json({ error: 'studentId and points are required' });
+  }
+  try {
+    await db.query("UPDATE user_profile SET points = $1 WHERE id = $2 AND role = 'student'", [points, studentId]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Dynamic Leaderboard Route
+app.get('/api/leaderboard', authenticateToken, async (req, res) => {
+  try {
+    const leaderboardRes = await db.query(`
+      SELECT name, username, student_level, points 
+      FROM user_profile 
+      WHERE role = 'student' 
+      ORDER BY points DESC
+    `);
+    
+    const list = leaderboardRes.rows.map((row, index) => ({
+      rank: index + 1,
+      name: row.name,
+      username: row.username,
+      level: 'Level ' + (row.student_level ? row.student_level.replace('L', '') : '1'),
+      points: row.points
+    }));
+    
+    res.json(list);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Export Express app for serverless function deployments
 module.exports = app;
 
