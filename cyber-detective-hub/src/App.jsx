@@ -13,7 +13,7 @@ const INITIAL_JOURNAL = [
     history: [
       {
         version: 1,
-        prompt: "Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Write down a step-by-step sequential algorithm for its operation.",
+        prompt: "Write a process to warm up food from a plate.",
         code: `Household IPO Blueprint: Microwave (Draft v1)
 
 Inputs:
@@ -31,7 +31,7 @@ Outputs:
       },
       {
         version: 2,
-        prompt: "Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.",
+        prompt: "Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.",
         code: `Household IPO Blueprint: Microwave (Detailed Spec v2)
 
 System Precondition:
@@ -1268,6 +1268,19 @@ export default function App() {
         console.error("Failed to create version:", err.message);
         alert("Failed to create version: " + err.message);
       });
+  };
+
+  const handleResetJournalCode = () => {
+    if (!selectedJournalId) return;
+    if (selectedJournalId.endsWith('_j1') || selectedJournalId === 'j1') {
+      if (activeJournalVersion === 1) {
+        setEditingJournalCode(`Household IPO Blueprint: Microwave (Draft v1)\n\nInputs:\n- Start button pressed\n\nProcessing steps:\n- Turn on the microwave heating wave generator\n- Heat the food for 60 seconds\n- Beep when finished\n\nOutputs:\n- Hot food and alarm sound\n\n(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn't verify if the door is closed first, and doesn't define variables!)`);
+      } else {
+        setEditingJournalCode(`Household IPO Blueprint: Microwave (Detailed Spec v2)\n\nSystem Precondition:\n- powerState must be "ON" (active electrical current)\n\nInputs:\n- keypadInput: Text / String value (e.g. "01:30")\n- doorClosed: Switch / Boolean value (Yes/No)\n- startPressed: Switch / Boolean value (Yes/No)\n\nProcessing Logic Steps:\n1. Wait until startPressed becomes Yes.\n2. Check doorClosed state. If doorClosed is No, beep 3 times and halt operation.\n3. Parse the keypadInput to extract the total seconds (secondsRemaining).\n4. Loop while secondsRemaining is greater than 0:\n   a. Check doorClosed state. If door is opened (No), pause cooking and halt loop.\n   b. Turn on the microwave heating wave generator.\n   c. Subtract 1 second from secondsRemaining.\n   d. Wait exactly 1 second.\n5. Turn off the heating wave generator.\n6. Trigger the end-of-cycle alarm beep.\n\nOutputs:\n- magnetronWaves: Active radiation waves\n- countdownDisplay: Number representing seconds remaining\n- alarmSpeaker: End-of-cycle audio beep`);
+      }
+    } else {
+      setEditingJournalCode(activeJournalHistory?.code || '');
+    }
   };
 
   if (!token) {
@@ -2970,6 +2983,13 @@ export default function App() {
                         style={{ padding: '8px 16px', fontSize: '0.85rem' }}
                       >
                         Save as New Version
+                      </button>
+                      <button 
+                        className="btn-cyber btn-cyber-red" 
+                        onClick={handleResetJournalCode}
+                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                      >
+                        Reset Answer
                       </button>
                     </div>
                   </>

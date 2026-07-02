@@ -157,16 +157,35 @@ async function createTables() {
       INSERT INTO journal_versions (entry_id, version, prompt, code)
       VALUES 
       ('j1', 1, 
-      'Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Write down a step-by-step sequential algorithm for its operation.', 
-      '// Version 1: Simple Microwave Blueprint\\n// Inputs: Start button clicked\\n// Process: Cook food for 1 minute\\n// Output: Beep when finished\\n// (Ambiguity: Does not define variables, check if door is open, or count down time!)'
+      'Write a process to warm up food from a plate.', 
+      'Household IPO Blueprint: Microwave (Draft v1)\n\nInputs:\n- Start button pressed\n\nProcessing steps:\n- Turn on the microwave heating wave generator\n- Heat the food for 60 seconds\n- Beep when finished\n\nOutputs:\n- Hot food and alarm sound\n\n(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn''t verify if the door is closed first, and doesn''t define variables!)'
       ),
       ('j1', 2, 
-      'Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.', 
-      '// Version 2: Precise Microwave IPO Blueprint\\n// Precondition: powerState === "ON"\\n// Inputs:\\n//   - keypadInput (String, e.g. "01:30")\\n//   - doorClosed (Boolean)\\n//   - startPressed (Boolean)\\n//\\n// Process:\\n//   1. Wait until startPressed is true\\n//   2. Check if doorClosed is true. If false, sound error_beep and halt\\n//   3. Parse keypadInput time into secondsLeft variable\\n//   4. Loop while secondsLeft > 0:\\n//      a. If doorClosed becomes false, pause cooking and halt loop\\n//      b. Emit magnetron waves (Output)\\n//      c. Decrement secondsLeft by 1\\n//      d. Wait 1 second\\n//   5. Trigger beep_alarm (Output)\\n//\\n// Output:\\n//   - magnetron_radiation (active wave emission)\\n//   - timerDisplay (number of seconds remaining)\\n//   - alarmSound (end-of-cycle beep)'
+      'Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.', 
+      'Household IPO Blueprint: Microwave (Detailed Spec v2)\n\nSystem Precondition:\n- powerState must be "ON" (active electrical current)\n\nInputs:\n- keypadInput: Text / String value (e.g. "01:30")\n- doorClosed: Switch / Boolean value (Yes/No)\n- startPressed: Switch / Boolean value (Yes/No)\n\nProcessing Logic Steps:\n1. Wait until startPressed becomes Yes.\n2. Check doorClosed state. If doorClosed is No, beep 3 times and halt operation.\n3. Parse the keypadInput to extract the total seconds (secondsRemaining).\n4. Loop while secondsRemaining is greater than 0:\n   a. Check doorClosed state. If door is opened (No), pause cooking and halt loop.\n   b. Turn on the microwave heating wave generator.\n   c. Subtract 1 second from secondsRemaining.\n   d. Wait exactly 1 second.\n5. Turn off the heating wave generator.\n6. Trigger the end-of-cycle alarm beep.\n\nOutputs:\n- magnetronWaves: Active radiation waves\n- countdownDisplay: Number representing seconds remaining\n- alarmSpeaker: End-of-cycle audio beep'
       )
     `).catch(() => {});
     console.log('Seeding completed.');
   }
+
+  // Always run migrations to fix/update old titles or prompts in existing user databases
+  await db.query(`
+    UPDATE journal_entries 
+    SET title = 'L1 S1: Household IPO Blueprint' 
+    WHERE id = 'j1' OR id LIKE '%_j1' OR title LIKE '%Cauldron%'
+  `).catch(err => console.warn(err));
+
+  await db.query(`
+    UPDATE journal_versions 
+    SET prompt = 'Write a process to warm up food from a plate.' 
+    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 1
+  `).catch(err => console.warn(err));
+
+  await db.query(`
+    UPDATE journal_versions 
+    SET prompt = 'Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.' 
+    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2
+  `).catch(err => console.warn(err));
 }
 
 // Authentication Middleware
@@ -465,7 +484,7 @@ app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, r
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
       VALUES ($1, 1, $2, $3)
-    `, [studentId + '_j1', 'Document a household appliance (e.g., Microwave) using the Input-Process-Output (IPO) model. Write down a step-by-step sequential algorithm for its operation.', '// Version 1: Simple Microwave Blueprint\n// Inputs: Start button clicked\n// Process: Cook food for 1 minute\n// Output: Beep when finished\n// (Ambiguity: Does not define variables, check if door is open, or count down time!)']);
+    `, [studentId + '_j1', 'Write a process to warm up food from a plate.', 'Household IPO Blueprint: Microwave (Draft v1)\n\nInputs:\n- Start button pressed\n\nProcessing steps:\n- Turn on the microwave heating wave generator\n- Heat the food for 60 seconds\n- Beep when finished\n\nOutputs:\n- Hot food and alarm sound\n\n(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn\'t verify if the door is closed first, and doesn\'t define variables!)']);
 
     res.json({ success: true, student: { id: studentId, username, name, role: 'student', points: 0, student_level: studentLevel } });
   } catch (error) {
