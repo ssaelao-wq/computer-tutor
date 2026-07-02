@@ -127,15 +127,16 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
-- **Exercise 1.1 (Basic Route) Solution**: Sequence: `power_on` ➔ `fly_door` ➔ `unlock_door` (Go directly to hardcoded destination: Warehouse 01).
-  - *Tutor Guide*: Show how sequential flow runs from top to bottom. If they omit `power_on`, it triggers a system offline crash.
-- **Exercise 1.2 (Variable Coordinates) Solution**: Sequence: `power_on` ➔ `scan_door` (locks Warehouse 03 target coordinates into variable `targetCoords`) ➔ `fly_door` (reads dynamic coordinates variable `targetCoords`) ➔ `unlock_door`.
-  - *Tutor Guide*: Teach data dependency. If they fly before scanning, `targetCoords` is empty (`null`), triggering a flight crash.
-- **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: `fly_door` occurs before `power_on` and `scan_door`. The student must drag the blocks to sort them into: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`.
-- **Exercise 1.4 (Variable Overwrite) Solution**: Sequence: `power_on` ➔ `scan_door_A` ➔ `scan_door_B` ➔ `fly_door` ➔ `unlock_door` (drone will fly to B).
-  - *Tutor Guide*: Show how `targetCoords` is overwritten by the latest scan, teaching variable assignment principles.
-- **Exercise 1.5 (Power Check Logic) Solution**: Run a sequence and remove the middle `power_off` step: `power_on` ➔ `scan_door` ➔ `fly_door` ➔ (remove `power_off`) ➔ `unlock_door`.
-  - *Tutor Guide*: Point out that switching off power blocks the final lock mechanism, showing states must persist.
+- **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas`.
+  - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the clutch first, it stalls or grinds, showing mechanical preconditions.
+- **Exercise 1.2 (Shifting Gears) Solution**: Sequence: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `shift_gear_2` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `shift_gear_3` ➔ `release_clutch_gas`.
+  - *Tutor Guide*: Show how speed builds in each gear sequentially. If they shift straight to 3rd gear, it stalls.
+- **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `shift_gear_2` ➔ `release_clutch_gas`.
+  - *Tutor Guide*: Students learn to debug chronological ordering using terminal logs.
+- **Exercise 1.4 (Gear Overwrite) Solution**: Correct sequence requires building speed in 1st gear before overwriting the `targetGear` variable to 2nd. The student must insert a `release_clutch_gas` after `shift_gear_1` before selecting `shift_gear_2`.
+  - *Tutor Guide*: Explains how variables store only one active state at a time.
+- **Exercise 1.5 (Emergency Brakes) Solution**: Sequence: `unlock_car` ➔ `press_clutch` ➔ `start_engine` ➔ `shift_gear_1` ➔ `release_handbrake` ➔ `release_clutch_gas` ➔ `press_clutch` ➔ `apply_brakes` ➔ `engage_handbrake`.
+  - *Tutor Guide*: Highlight safety logic checks—applying brakes without clutch disconnects engine, stalling the car.
 - **Homework Evaluation**: Ensure the student's submitted text lists:
   - *Preconditions*: powerState is "ON".
   - *Input*: Keypad inputs (time duration string), door sensor state (Boolean), start button.

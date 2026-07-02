@@ -775,6 +775,22 @@ export default function App() {
       });
   };
 
+  const handleMoveS1Step = (idx, direction) => {
+    setS1Sequence(prev => {
+      const next = [...prev];
+      if (direction === 'up' && idx > 0) {
+        const temp = next[idx];
+        next[idx] = next[idx - 1];
+        next[idx - 1] = temp;
+      } else if (direction === 'down' && idx < next.length - 1) {
+        const temp = next[idx];
+        next[idx] = next[idx + 1];
+        next[idx + 1] = temp;
+      }
+      return next;
+    });
+  };
+
   const updatePointsDB = (newVal) => {
     setPoints(newVal);
     if (!token) return;
@@ -2008,7 +2024,7 @@ export default function App() {
               
               {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
               {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
-              {sandboxSessionId === 'l1-s1' && (
+               {sandboxSessionId === 'l1-s1' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   {/* Exercise selector tabs */}
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
@@ -2024,16 +2040,15 @@ export default function App() {
                           
                           // Pre-setup presets for specific exercises
                           if (num === 3) {
-                            // Exercise 1.3 Pre-setup (Scrambled sequence)
+                            // Exercise 1.3 Pre-setup (Scrambled car sequence)
                             setS1Sequence([
-                              { id: 'fly_door', label: 'Fly drone to the door' },
-                              { id: 'power_on', label: 'Turn on drone power' },
-                              { id: 'scan_door', label: 'Scan for target warehouse door' },
-                              { id: 'unlock_door', label: 'Use digital keycard to unlock' }
+                              { id: 'release_handbrake', label: 'Release Handbrake' },
+                              { id: 'unlock_car', label: 'Unlock & Enter Vehicle' },
+                              { id: 'shift_gear_1', label: 'Shift to 1st Gear' },
+                              { id: 'start_engine', label: 'Turn Ignition Key to Start Engine' },
+                              { id: 'press_clutch', label: 'Depress Clutch Pedal' },
+                              { id: 'release_clutch_gas', label: 'Release Clutch & Press Gas' }
                             ]);
-                          } else if (num === 4) {
-                            // Exercise 1.4 Pre-setup (Requires scanning Gate A then Gate B to demonstrate variable overwrite)
-                            // We can let the user sequence it, or preload a demo sequence
                           }
                         }}
                       >
@@ -2046,71 +2061,71 @@ export default function App() {
                   <div className="glass-panel" style={{ padding: '15px', background: 'rgba(0, 242, 254, 0.02)', border: '1px solid rgba(0, 242, 254, 0.1)' }}>
                     {s1ActiveExercise === 1 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.1: Basic Route (Power Precondition)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.1: Basic Start & Move (Logical Sequencing)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The security drone needs to fly to a fixed destination: <strong>Warehouse 01</strong> and unlock it.
+                          <strong>Problem:</strong> The security vehicle needs to start its engine and move off in 1st gear.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the commands so that the drone powers up, flies to Warehouse 01, and unlocks it.
+                          <strong>Instruction:</strong> Sequence the commands to safely enter, start, and move: Unlock Car ➔ Depress Clutch ➔ Start Engine ➔ Shift to 1st Gear ➔ Release Handbrake ➔ Release Clutch & Gas.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Computers execute instructions literally from top to bottom. You must switch on the drone's power state before commencing flight.
+                          <strong>Explanation:</strong> Mechanical systems have strict preconditions. You cannot start the engine or shift gears without disengaging the clutch (clutchState = DOWN).
                         </p>
                       </div>
                     )}
                     {s1ActiveExercise === 2 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Variable Coordinates (Data Dependency)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Shifting Gears (Logical Progression)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The controller scans the sector and wants to navigate dynamically to <strong>Warehouse 03</strong> by storing its destination coordinates in the variable <code>targetCoords</code>.
+                          <strong>Problem:</strong> The vehicle needs to accelerate up to 3rd gear. Shifting requires clutch inputs and matching speed variable bounds (1st: 0-10 mph, 2nd: 10-25 mph, 3rd: 25+ mph).
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Power on the drone, scan the sector to save the selected target (Warehouse 03) into the variable <code>targetCoords</code>, fly to the target using the variable, and unlock it.
+                          <strong>Instruction:</strong> Start the engine and move in 1st gear, then shift to 2nd, press gas to build speed, and finally shift to 3rd gear and accelerate.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> A variable must be loaded with values (scanned) before it can be read by other actions (flying). Out-of-order execution reads an empty (<code>null</code>) variable and crashes.
+                          <strong>Explanation:</strong> You must build speed in each gear sequentially. Attempting to skip gears (1st ➔ 3rd) stalls the vehicle because your speed variable is out of bounds for 3rd gear.
                         </p>
                       </div>
                     )}
                     {s1ActiveExercise === 3 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.3: Sequence Correction (Debugging)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.3: Autopilot Sequence Correction (Debugging)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The preloaded autopilot script is scrambled, causes critical logs, and crashes on flight.
+                          <strong>Problem:</strong> The preloaded autopilot driving script is scrambled and stalls on execution.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Review the scrambled sequence below. Rearrange or rebuild the sequence so that power initializes first, followed by scanning, flying, and unlocking.
+                          <strong>Instruction:</strong> Reorder the scrambled cards in the workspace so the vehicle unlocks, starts, shifts to 1st, releases handbrake, moves off, and up-shifts to 2nd gear.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Errors and trace logs indicate exactly where a program fails. Rearrange blocks to fix chronological violations.
+                          <strong>Explanation:</strong> Watch the terminal output logs to trace where the sequence violates preconditions (e.g. releasing handbrake before starting). Rearrange to fix!
                         </p>
                       </div>
                     )}
                     {s1ActiveExercise === 4 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Variable Overwrite</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Gear Variable Overwrite</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> Security locks require scanning both Gate A and Gate B. But variables can only store one value at a time.
+                          <strong>Problem:</strong> The gear stick is managed by the <code>targetGear</code> variable. Writing to it too early overwrites the value before the car builds speed.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the script: Power on ➔ Scan Gate A ➔ Scan Gate B ➔ Fly to door ➔ Unlock. Observe where the drone navigates.
+                          <strong>Instruction:</strong> Sequence: Unlock ➔ Clutch ➔ Start ➔ Shift 1st ➔ Shift 2nd (no gas first) ➔ Release Handbrake ➔ Release Clutch & Gas. Observe the stall, then correct it by building speed in 1st first.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> When you write a new value into an existing variable slot, the older value gets overwritten. Gate B's scan overwrote Gate A's coordinates.
+                          <strong>Explanation:</strong> Variables store only one value. Shifting to 2nd immediately overwrote `targetGear` to 2. Releasing the clutch at 0 mph in 2nd gear stalls the car!
                         </p>
                       </div>
                     )}
                     {s1ActiveExercise === 5 && (
                       <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.5: Power Check Logic (State Persistence)</h4>
+                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.5: Emergency Brakes (State Checks)</h4>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> Autopilot rules check state conditions before executing every task.
+                          <strong>Problem:</strong> Safety overrides evaluate system states continuously. An obstacle is detected ahead.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Try running a script that shuts down power mid-way: Power on ➔ Scan ➔ Fly ➔ Power off ➔ Unlock. See what happens, then fix it by removing the shutdown step.
+                          <strong>Instruction:</strong> Start the car, accelerate in 1st gear, and execute a secure emergency stop. Remember: braking without depressing the clutch stalls the engine!
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Computer systems check conditions during each action execution. Hardware needs active power throughout the entire cycle.
+                          <strong>Explanation:</strong> Real-world algorithms must verify that mechanical safety variables are set (clutch pedal must be down during stops to disconnect transmission).
                         </p>
                       </div>
                     )}
@@ -2119,45 +2134,40 @@ export default function App() {
                   <div className="simulator-grid">
                     <div className="glass-panel sim-left">
                       <div className="panel-header">
-                        <h3>Available Navigation Commands</h3>
+                        <h3>Available Driving Commands</h3>
                       </div>
                       <div className="sim-panel-body drone-commands">
-                        <p className="sim-instructions">Click commands to add them to your sequence workspace:</p>
-                        
-                        <div className="drone-actions-list">
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'power_on', label: 'Turn on drone power' }])}>
-                            <span className="sim-action-icon">🔌</span> Turn on drone power
+                        <p className="sim-instructions" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Click commands to add to sequence workspace:</p>
+                        <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'unlock_car', label: 'Unlock & Enter Vehicle' }])}>
+                            <span className="sim-action-icon">🔌</span> Unlock & Enter Vehicle
                           </button>
-                          
-                          {s1ActiveExercise !== 1 && (
-                            s1ActiveExercise === 4 ? (
-                              <>
-                                <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_a', label: 'Scan coordinates for Gate A' }])}>
-                                  <span className="sim-action-icon">🔍</span> Scan coordinates for Gate A
-                                </button>
-                                <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_gate_b', label: 'Scan coordinates for Gate B' }])}>
-                                  <span className="sim-action-icon">🔍</span> Scan coordinates for Gate B
-                                </button>
-                              </>
-                            ) : (
-                              <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'scan_door', label: (s1ActiveExercise === 2 || s1ActiveExercise === 3 || s1ActiveExercise === 5) ? 'Scan sector (save target "Warehouse 03" to targetCoords)' : 'Scan target and save to variable targetCoords' }])}>
-                                <span className="sim-action-icon">🔍</span> {(s1ActiveExercise === 2 || s1ActiveExercise === 3 || s1ActiveExercise === 5) ? 'Scan sector (save "Warehouse 03" to targetCoords)' : 'Scan target and save to targetCoords'}
-                              </button>
-                            )
-                          )}
-                          
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'fly_door', label: s1ActiveExercise === 1 ? 'Fly drone to hardcoded destination: Warehouse 01' : 'Fly drone reading variable targetCoords' }])}>
-                            <span className="sim-action-icon">🚀</span> {s1ActiveExercise === 1 ? 'Fly drone to Warehouse 01 (Hardcoded)' : 'Fly drone reading targetCoords'}
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_clutch', label: 'Depress Clutch Pedal' }])}>
+                            <span className="sim-action-icon">🦶</span> Depress Clutch Pedal
                           </button>
-
-                          {s1ActiveExercise === 5 && (
-                            <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'power_off', label: 'Turn off drone power' }])}>
-                              <span className="sim-action-icon">⏹️</span> Turn off drone power
-                            </button>
-                          )}
-
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'unlock_door', label: 'Use digital keycard to unlock' }])}>
-                            <span className="sim-action-icon">🔑</span> Use digital keycard to unlock
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'start_engine', label: 'Turn Ignition Key to Start Engine' }])}>
+                            <span className="sim-action-icon">🔑</span> Turn Ignition Key to Start
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_gear_1', label: 'Shift to 1st Gear' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift to 1st Gear
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_gear_2', label: 'Shift to 2nd Gear' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift to 2nd Gear
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_gear_3', label: 'Shift to 3rd Gear' }])}>
+                            <span className="sim-action-icon">⚙️</span> Shift to 3rd Gear
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_handbrake', label: 'Release Handbrake' }])}>
+                            <span className="sim-action-icon">🛑</span> Release Handbrake
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_clutch_gas', label: 'Release Clutch & Press Gas' }])}>
+                            <span className="sim-action-icon">🚀</span> Release Clutch & Press Gas
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'apply_brakes', label: 'Press Footbrake' }])}>
+                            <span className="sim-action-icon">🛑</span> Press Footbrake
+                          </button>
+                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'engage_handbrake', label: 'Engage Handbrake' }])}>
+                            <span className="sim-action-icon">🛑</span> Engage Handbrake
                           </button>
                         </div>
                       </div>
@@ -2176,10 +2186,28 @@ export default function App() {
                         ) : (
                           <div className="sequence-cards-list">
                             {s1Sequence.map((cmd, idx) => (
-                              <div key={idx} className="sequence-card animate-in">
+                              <div key={idx} className="sequence-card animate-in" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span className="sequence-number">Step {idx + 1}</span>
                                 <span className="sequence-label">{cmd.label}</span>
-                                <button className="btn-card-remove" onClick={() => setS1Sequence(prev => prev.filter((_, i) => i !== idx))}>×</button>
+                                <div style={{ display: 'flex', gap: '4px', marginLeft: 'auto', alignItems: 'center' }}>
+                                  <button 
+                                    className="btn-card-move-arrow" 
+                                    onClick={() => handleMoveS1Step(idx, 'up')}
+                                    disabled={idx === 0}
+                                    style={{ background: 'transparent', border: 'none', color: idx === 0 ? 'rgba(255,255,255,0.1)' : 'var(--accent-cyan)', cursor: 'pointer', padding: '0 4px', fontSize: '0.9rem' }}
+                                  >
+                                    ▲
+                                  </button>
+                                  <button 
+                                    className="btn-card-move-arrow" 
+                                    onClick={() => handleMoveS1Step(idx, 'down')}
+                                    disabled={idx === s1Sequence.length - 1}
+                                    style={{ background: 'transparent', border: 'none', color: idx === s1Sequence.length - 1 ? 'rgba(255,255,255,0.1)' : 'var(--accent-cyan)', cursor: 'pointer', padding: '0 4px', fontSize: '0.9rem' }}
+                                  >
+                                    ▼
+                                  </button>
+                                  <button className="btn-card-remove" onClick={() => setS1Sequence(prev => prev.filter((_, i) => i !== idx))}>×</button>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -2191,124 +2219,183 @@ export default function App() {
                           onClick={() => {
                             if (s1Executing) return;
                             setS1Executing(true);
-                            setS1Logs([{ type: 'info', text: '🤖 Booting navigation system...' }]);
+                            setS1Logs([{ type: 'info', text: '🤖 Autopilot: Initializing manual transmission vehicle diagnostics...' }]);
                             
                             let currentStep = 0;
                             let hasError = false;
                             const logsToAppend = [];
-                            let powerIsActive = false;
-                            let scannedCoords = null; // Stores target coordinates
+                            
+                            // Car State Variables
+                            let unlocked = false;
+                            let clutchDown = false;
+                            let engineStarted = false;
+                            let gear = 0; // 0 = Neutral, 1, 2, 3
+                            let handbrakeReleased = false;
+                            let speed = 0;
+                            let hasBraked = false;
                             
                             const runNext = () => {
                               if (s1Sequence.length === 0) {
-                                setS1Logs(prev => [...prev, { type: 'error', text: 'Error: No instructions in workspace. Drone stayed idle.' }]);
+                                setS1Logs(prev => [...prev, { type: 'error', text: 'Error: Autopilot workspace is empty. Car remained parked.' }]);
                                 setS1Executing(false);
                                 return;
                               }
-
+ 
                               if (currentStep >= s1Sequence.length) {
                                 if (!hasError) {
                                   const ids = s1Sequence.map(c => c.id).join(',');
                                   
                                   if (s1ActiveExercise === 1) {
-                                    const isCorrect = ids === 'power_on,fly_door,unlock_door';
+                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Basic route navigated successfully! Target reached.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving in 1st gear. Autopilot basic setup complete!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic navigation sequence.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect start & move off sequence. Preconditions violated.' }]);
                                     }
-                                  } else if (s1ActiveExercise === 2 || s1ActiveExercise === 3) {
-                                    const isCorrect = ids === 'power_on,scan_door,fly_door,unlock_door';
+                                  } else if (s1ActiveExercise === 2) {
+                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,shift_gear_2,release_clutch_gas,press_clutch,shift_gear_3,release_clutch_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Variable-dependent route bypassed successfully! Telemetry extraction complete.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Gearbox shifted to 3rd gear. Cruising speed achieved!' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Target reached but incorrect order. Security lockdown triggered!' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Cruising target sequence is incomplete or incorrect.' }]);
+                                    }
+                                  } else if (s1ActiveExercise === 3) {
+                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,shift_gear_2,release_clutch_gas';
+                                    if (isCorrect) {
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Autopilot sequence rearranged correctly. Cruising in 2nd!' }]);
+                                      setS1Success(true);
+                                      claimCaseEvidence('l1-s1', 100);
+                                    } else {
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Scrambled script sequence is still incorrect.' }]);
                                     }
                                   } else if (s1ActiveExercise === 4) {
-                                    // Requires power_on, scan_gate_a, scan_gate_b, fly_door, unlock_door
-                                    const isCorrect = ids === 'power_on,scan_gate_a,scan_gate_b,fly_door,unlock_door';
+                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,shift_gear_2,release_clutch_gas';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Overwrite verified! Drone flew to Gate B and unlocked it.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Overwrite prevented! Gear shifted after speed built.' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect sequence. Target coordinates not set to Gate B.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Target gear variable overwritten too early.' }]);
                                     }
                                   } else if (s1ActiveExercise === 5) {
-                                    // Requires power_on, scan_door, fly_door, unlock_door (no power_off mid-way)
-                                    const isCorrect = ids === 'power_on,scan_door,fly_door,unlock_door';
+                                    const isCorrect = ids === 'unlock_car,press_clutch,start_engine,shift_gear_1,release_handbrake,release_clutch_gas,press_clutch,apply_brakes,engage_handbrake';
                                     if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Persistent power verified! Access unlocked.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Emergency stop executed safely! Vehicle parked.' }]);
                                       setS1Success(true);
                                       claimCaseEvidence('l1-s1', 100);
                                     } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Check state variables and try again.' }]);
+                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Emergency stop failed or stalled.' }]);
                                     }
                                   }
                                 }
                                 setS1Executing(false);
                                 return;
                               }
-
+ 
                               const cmd = s1Sequence[currentStep];
-
-                              if (cmd.id === 'power_on') {
-                                powerIsActive = true;
-                                logsToAppend.push({ type: 'info', text: 'System power initialized. Drone rotors active.' });
-                              } else if (cmd.id === 'power_off') {
-                                powerIsActive = false;
-                                logsToAppend.push({ type: 'info', text: '⚡ Power state changed to OFF. Systems shutting down.' });
-                              } else if (cmd.id === 'scan_door') {
-                                if (!powerIsActive) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to scan while drone is unpowered! System offline.' });
+ 
+                              if (cmd.id === 'unlock_car') {
+                                unlocked = true;
+                                logsToAppend.push({ type: 'info', text: '🔑 [Ignition Core] Doors unlocked. Security agent inside cabin.' });
+                              } else if (cmd.id === 'press_clutch') {
+                                clutchDown = true;
+                                logsToAppend.push({ type: 'info', text: '🦶 [Pedal state] Clutch pedal depressed (clutchState = DOWN).' });
+                              } else if (cmd.id === 'start_engine') {
+                                if (!unlocked) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted ignition while locked outside!' });
+                                  hasError = true;
+                                } else if (!clutchDown) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Ignition active without depressing clutch! Transmission jerked, engine stalled.' });
                                   hasError = true;
                                 } else {
-                                  scannedCoords = 'Warehouse_03_Coords';
-                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: targetCoords = "Warehouse 03" [X: 104, Y: 890]' });
+                                  engineStarted = true;
+                                  logsToAppend.push({ type: 'info', text: '🔑 [Ignition Core] Starter motor running. Engine active (engineState = RUNNING).' });
                                 }
-                              } else if (cmd.id === 'scan_gate_a') {
-                                if (!powerIsActive) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Scan failed. Drone is unpowered!' });
+                              } else if (cmd.id === 'shift_gear_1') {
+                                if (!engineStarted) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
+                                  hasError = true;
+                                } else if (!clutchDown) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 1st gear without depressing clutch! Gearbox grinded horribly.' });
                                   hasError = true;
                                 } else {
-                                  scannedCoords = 'Gate_A_Coordinates';
-                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved: targetCoords = Gate_A [X: 42, Y: 11]' });
+                                  gear = 1;
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Gearbox State] Gearbox shifted to 1st Gear (targetGear = 1).' });
                                 }
-                              } else if (cmd.id === 'scan_gate_b') {
-                                if (!powerIsActive) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Scan failed. Drone is unpowered!' });
+                              } else if (cmd.id === 'shift_gear_2') {
+                                if (!engineStarted) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
+                                  hasError = true;
+                                } else if (!clutchDown) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 2nd gear without depressing clutch! Gearbox grinded.' });
                                   hasError = true;
                                 } else {
-                                  scannedCoords = 'Gate_B_Coordinates';
-                                  logsToAppend.push({ type: 'info', text: 'Target coordinates resolved (OVERWRITTEN): targetCoords = Gate_B [X: 99, Y: 72]' });
+                                  gear = 2;
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Gearbox State] Gearbox shifted to 2nd Gear (targetGear = 2).' });
                                 }
-                              } else if (cmd.id === 'fly_door') {
-                                if (!powerIsActive) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted flight with unpowered systems! Drone crashed.' });
+                              } else if (cmd.id === 'shift_gear_3') {
+                                if (!engineStarted) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
                                   hasError = true;
-                                } else if (!scannedCoords && s1ActiveExercise !== 1) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Target coordinates variable (targetCoords) is empty (null). Drone crashed into the ground!' });
+                                } else if (!clutchDown) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 3rd gear without depressing clutch! Gearbox grinded.' });
                                   hasError = true;
                                 } else {
-                                  const dest = s1ActiveExercise === 1 ? 'Warehouse_01_Coords' : scannedCoords;
-                                  logsToAppend.push({ type: 'info', text: `Rotor speed increased. Drone navigating to: ${dest === 'Warehouse_01_Coords' ? 'Warehouse 01 (Hardcoded Destination)' : 'Warehouse 03 (Coordinates read from variable targetCoords)'}` });
+                                  gear = 3;
+                                  logsToAppend.push({ type: 'info', text: '⚙️ [Gearbox State] Gearbox shifted to 3rd Gear (targetGear = 3).' });
                                 }
-                              } else if (cmd.id === 'unlock_door') {
-                                if (!powerIsActive) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Power offline. Keycard bypass module inactive.' });
+                              } else if (cmd.id === 'release_handbrake') {
+                                handbrakeReleased = true;
+                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes State] Parking handbrake released (handbrakeState = OFF).' });
+                              } else if (cmd.id === 'release_clutch_gas') {
+                                if (!engineStarted) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Released clutch with engine offline. Car rolled backward.' });
                                   hasError = true;
-                                } else if (!scannedCoords && s1ActiveExercise !== 1) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Bypass failed. Drone did not reach target card reader.' });
+                                } else if (gear === 0) {
+                                  logsToAppend.push({ type: 'info', text: '🚀 Engine revved in neutral. Speed = 0 mph.' });
+                                } else if (!handbrakeReleased) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Released clutch with handbrake engaged! Friction smoked the pads, engine stalled.' });
+                                  hasError = true;
+                                } else if (gear === 1) {
+                                  speed = 12;
+                                  clutchDown = false;
+                                  logsToAppend.push({ type: 'info', text: '🚀 Clutch released. Speed building... speed = 12 mph (Cruising in 1st).' });
+                                } else if (gear === 2) {
+                                  if (speed < 8) {
+                                    logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 2nd at too low speed (under 8 mph). Engine bogged down and stalled!' });
+                                    hasError = true;
+                                  } else {
+                                    speed = 28;
+                                    clutchDown = false;
+                                    logsToAppend.push({ type: 'info', text: '🚀 Clutch released. Accelerator pressed. Speed building... speed = 28 mph (Cruising in 2nd).' });
+                                  }
+                                } else if (gear === 3) {
+                                  if (speed < 20) {
+                                    logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted to 3rd at too low speed (under 20 mph). Engine bogged down and stalled!' });
+                                    hasError = true;
+                                  } else {
+                                    speed = 45;
+                                    clutchDown = false;
+                                    logsToAppend.push({ type: 'info', text: '🚀 Clutch released. Accelerator pressed. Speed building... speed = 45 mph (Cruising in 3rd).' });
+                                  }
+                                }
+                              } else if (cmd.id === 'apply_brakes') {
+                                if (!clutchDown && speed > 0) {
+                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Brakes applied to full halt without depressing clutch! Engine locked with drive wheels and stalled.' });
                                   hasError = true;
                                 } else {
-                                  logsToAppend.push({ type: 'success', text: 'Keycard access code transmitted. Security lock offline.' });
+                                  speed = 0;
+                                  hasBraked = true;
+                                  logsToAppend.push({ type: 'info', text: '🛑 [Brakes State] Footbrake applied. Vehicle brought to a secure halt.' });
                                 }
+                              } else if (cmd.id === 'engage_handbrake') {
+                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes State] Parking handbrake engaged (handbrakeState = ON).' });
                               }
-
+                              
                               setS1Logs(prev => [...prev, logsToAppend[logsToAppend.length - 1]]);
                               
                               if (hasError) {
@@ -2324,19 +2411,19 @@ export default function App() {
                           }} 
                           disabled={s1Executing}
                         >
-                          {s1Executing ? 'Executing Sequence...' : 'Run Navigation Script'}
+                          {s1Executing ? 'Executing Sequence...' : 'Run Autopilot Script'}
                         </button>
                       </div>
                     </div>
 
                     <div className="glass-panel sim-right">
                       <div className="panel-header">
-                        <h3>Drone Telemetry Terminal</h3>
+                        <h3>Autopilot Telemetry Terminal</h3>
                         {s1Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
                       </div>
                       <div className="sim-panel-body drone-terminal">
                         {s1Logs.length === 0 ? (
-                          <div className="terminal-empty">Terminal offline. Run the navigation script to observe signals.</div>
+                          <div className="terminal-empty">Terminal offline. Run the autopilot script to observe telemetry.</div>
                         ) : (
                           <div className="terminal-log-flow">
                             {s1Logs.map((log, index) => (

@@ -66,111 +66,105 @@ Before running classes, tutors must familiarize themselves with the administrati
   - *"If we tell the drone to fly to the warehouse door before we scan it, what does the drone's target coordinates variable contain? Why does it crash?"*
   - *"How does data (like the door's coordinates) get saved in one step and used in a later step?"*
 
-#### 🕹️ Phase B | Sandbox Lab: Drone Infiltration Simulator (01:00 - 01:30)
-* **What the Tutor Explains**:
-  - Introduce the Sandbox environment. Explain that the visual drone is controlled strictly by the list of sequenced action commands compiled by the student.
-  - Explain the concepts of **preconditions** (states that must be true before an action can run) and **state variables** (variables representing active system status, e.g. `powerState = "ON"` or `"OFF"`).
+#### 🕹️ Phase B | Sandbox Lab: Drone Infiltration Simu* **What the Tutor Explains**:
+  - Introduce the Sandbox environment. Explain that the manual car autopilot is controlled strictly by the list of sequenced action commands compiled by the student.
+  - Explain the concepts of **preconditions** (states that must be true before an action can run, e.g. clutch down to start/shift) and **state variables** (variables representing active system status, e.g. `speed = 12` or `clutchState = DOWN`).
 * **Step-by-Step Exercise Facilitation Guide**:
-  ##### **Exercise 1.1: Basic Route**
+  ##### **Exercise 1.1: Basic Start & Move**
   * **How to do it**:
-    1. Drag and drop the `Turn on drone power` block to position 1 in the script timeline.
-    2. Add the `Fly drone to Warehouse 01 (Hardcoded)` block to position 2.
-    3. Add the `Use digital keycard to unlock` block to position 3.
-    4. Click the **Run Sequence** button. The drone will boot, fly directly to Warehouse 01, unlock it, and display a "Success" message.
+    1. Click the command buttons to add cards to the workspace in the following order: `Unlock & Enter Vehicle` ➔ `Depress Clutch Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift to 1st Gear` ➔ `Release Handbrake` ➔ `Release Clutch & Press Gas`.
+    2. Click the **Run Autopilot Script** button. The vehicle will execute the steps sequentially and move off in first gear.
   * **Purpose of the Exercise**:
-    - To introduce the student to the concept of **sequential processing** (how computers execute lines of code chronologically from top to bottom) and **hardware preconditions** (the drone cannot move without the power source being booted first).
+    - To introduce the student to the concept of **sequential processing** (how computers execute lines of code chronologically from top to bottom) and **hardware preconditions** (the car cannot start the engine or shift gears without disengaging the clutch pedal first).
   * **What the Student Learns**:
     - Computers are literal and do not assume steps.
-    - An action block has zero effect if its hardware prerequisites (e.g. system power) are not initialized in a prior step.
-    - Direct paths do not require reading variables but only work for fixed, hardcoded locations.
-  * **Tutor Check Question**: *"Why did we need to turn the power on first? What happens if you try to fly the drone with the power offline?"*
+    - An action block has zero effect or crashes if its prerequisites (e.g. clutchState = DOWN) are not initialized in a prior step.
+  * **Tutor Check Question**: *"Why did we need to depress the clutch first? What happens if you try to start the ignition key without pressing the clutch?"*
  
-  ##### **Exercise 1.2: Variable Coordinates**
+  ##### **Exercise 1.2: Shifting Gears**
   * **How to do it**:
-    1. Sequence the blocks in the logical order: `Turn on drone power` ➔ `Scan sector (save "Warehouse 03" to targetCoords)` ➔ `Fly drone reading targetCoords` ➔ `Use digital keycard to unlock`.
-    2. Explain that in this exercise, the destination is not fixed. The `Scan` block specifically reads the sector and stores the selected target **Warehouse 03** coordinates inside a variable named `targetCoords`.
-    3. When the `Fly` block runs, it dynamically references the value stored inside `targetCoords` to navigate the drone to Warehouse 03.
-    4. Click **Run Sequence** to execute.
+    1. Sequence the blocks in the logical order to reach 3rd gear: `Unlock & Enter Vehicle` ➔ `Depress Clutch Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift to 1st Gear` ➔ `Release Handbrake` ➔ `Release Clutch & Press Gas` ➔ `Depress Clutch Pedal` ➔ `Shift to 2nd Gear` ➔ `Release Clutch & Press Gas` ➔ `Depress Clutch Pedal` ➔ `Shift to 3rd Gear` ➔ `Release Clutch & Press Gas`.
+    2. Click **Run Autopilot Script** to execute.
   * **Purpose of the Exercise**:
-    - To demonstrate **variables as data storage containers** and explain **data dependency** (Step $B$ cannot run if it relies on data stored in variable `targetCoords` by Step $A$).
+    - To demonstrate **variables as data storage containers** and explain **data dependency** (shifting gears depends on matching the speed variable limits: 1st for 0-10 mph, 2nd for 10-25 mph, 3rd for 25+ mph).
   * **What the Student Learns**:
-    - A variable is a temporary memory slot that must be loaded/defined before it can be read.
-    - If the drone tries to fly using the variable before scanning, `targetCoords` is `null` (empty), leading to an immediate navigation crash.
-  * **Tutor Check Question**: *"How does scanning the sector help the flying step? What target name did we save inside our variable?"*in memory during the scan?"*
-
-  ##### **Exercise 1.3: Sequence Correction**
+    - A variable is a temporary memory slot that must be built up sequentially.
+    - If the student tries to shift straight from 1st to 3rd gear, the vehicle speed variable is too low, leading to an engine stall.
+  * **Tutor Check Question**: *"Why does the vehicle speed variable matter when shifting up? What happens if we skip 2nd gear and try to shift straight to 3rd?"*
+ 
+  ##### **Exercise 1.3: Autopilot Sequence Correction**
   * **How to do it**:
-    1. The student is presented with a preloaded, scrambled script that crashes on execution: `Fly drone to the door` ➔ `Turn on drone power` ➔ `Scan for target warehouse door` ➔ `Use digital keycard to unlock`.
-    2. Click **Run Sequence** to observe the crash.
-    3. Direct the student's eyes to the terminal outputs: `CRITICAL ERROR: Power offline. Drone crashed!`.
-    4. Reorder the blocks: drag the `Turn on drone power` block to the top of the timeline, followed by `Scan for target warehouse door`, then `Fly drone to the door`, leaving `Use digital keycard to unlock` at the bottom.
-    5. Click **Run Sequence** to verify the fix.
+    1. The student is presented with a preloaded, scrambled script that stalls on execution.
+    2. Click **Run Autopilot Script** to observe the crash.
+    3. Direct the student's eyes to the terminal outputs: `CRITICAL ERROR: Released clutch with handbrake engaged!` or `Ignition active without depressing clutch!`.
+    4. Reorder the blocks: use the **▲** and **▼** arrow buttons next to the cards to arrange them in order: `Unlock` ➔ `Clutch` ➔ `Start` ➔ `Shift 1st` ➔ `Release Handbrake` ➔ `Release Clutch & Gas` ➔ `Clutch` ➔ `Shift 2nd` ➔ `Release Clutch & Gas`.
+    5. Click **Run Autopilot Script** to verify.
   * **Purpose of the Exercise**:
-    - To introduce the student to the core programming workflow of **debugging** (running code, analyzing failure logs, tracing back to the incorrect logic block, and rearranging instructions).
+    - To introduce the core programming workflow of **debugging** (running code, analyzing failure logs, tracing back to the incorrect logic block, and rearranging instructions).
   * **What the Student Learns**:
-    - Errors are not random; they are literal reports indicating exactly where the logic broke down.
-    - Debugging is the process of comparing what the computer did (actual outcome) with what we wanted it to do (expected outcome) and matching the steps chronologically.
-  * **Tutor Check Question**: *"Look at step 1 in the buggy code. Why is the drone flying before power is turned on? How did the log alert help us locate the wrong block?"*
-
-  ##### **Exercise 1.4: Variable Overwrite**
+    - Errors are literal reports indicating exactly where the logic broke down.
+    - Use the new **▲** and **▼** arrow buttons to quickly shift blocks up or down.
+  * **Tutor Check Question**: *"Look at step 1 in the buggy code. Why is the handbrake released before starting the engine? How did the log alert help us locate the wrong block?"*
+ 
+  ##### **Exercise 1.4: Gear Variable Overwrite**
   * **How to do it**:
-    1. Sequence the blocks in the following order: `Turn on drone power` ➔ `Scan Gate A` ➔ `Scan Gate B` ➔ `Fly drone to the door` ➔ `Use digital keycard to unlock`.
-    2. Click **Run Sequence**.
-    3. Observe that the drone flies directly to Gate B instead of Gate A. The simulator will confirm target access success for Gate B.
+    1. Sequence the blocks in the following order: `Unlock` ➔ `Clutch` ➔ `Start` ➔ `Shift 1st` ➔ `Shift 2nd` (without moving off first to build speed) ➔ `Release Handbrake` ➔ `Release Clutch & Gas`.
+    2. Click **Run Autopilot Script**.
+    3. Observe that the car stalls immediately. The terminal logs state that the target gear variable was overwritten to `2` before the car could move, making it stall since speed was still 0 mph.
+    4. Correct it by inserting a `Release Clutch & Press Gas` block immediately after `Shift to 1st Gear` to build speed before the gear variable is overwritten.
   * **Purpose of the Exercise**:
-    - To introduce the concept of **variable re-assignment (overwriting)**. A variable is a single memory slot; writing new data into it wipes out the previous value.
+    - To introduce the concept of **variable overwriting**. A variable is a single memory slot; shifting gears immediately overwrites the previous value before the vehicle can make use of it.
   * **What the Student Learns**:
     - Variables can only hold one value at a time.
-    - If we need to preserve multiple target positions, we must use separate variables (like `targetCoordsA` and `targetCoordsB`).
-  * **Tutor Check Question**: *"Why did the drone fly to Gate B instead of Gate A? What happened to the Gate A coordinates when we executed the second scan?"*
-
-  ##### **Exercise 1.5: Power Check Logic**
+    - Overwriting a state variable too early causes dependency errors down the line.
+  * **Tutor Check Question**: *"Why did the vehicle stall when shifting 1st and 2nd in a row? What happened to our active gear variable?"*
+ 
+  ##### **Exercise 1.5: Emergency Brakes**
   * **How to do it**:
-    1. The student is challenged to test a sequence: `Turn on drone power` ➔ `Scan for target warehouse door` ➔ `Fly drone to the door` ➔ `Turn off drone power` ➔ `Use digital keycard to unlock`.
-    2. Run the sequence and observe the crash during the unlock phase: `💥 CRITICAL ERROR: Door reader offline. Power state must be active to scan keycards.`
-    3. Delete the `Turn off drone power` block from the sequence.
-    4. Run the sequence to unlock the door successfully.
+    1. The student is challenged to test a sequence: Start the car, move in 1st gear, and execute an emergency brake.
+    2. Sequence: `Unlock` ➔ `Clutch` ➔ `Start` ➔ `Shift 1st` ➔ `Release Handbrake` ➔ `Release Clutch & Gas` ➔ `Depress Clutch Pedal` ➔ `Press Footbrake` ➔ `Engage Handbrake`.
+    3. Point out that if they press the footbrake without depressing the clutch first, it fails because the drive wheels lock while the engine is still connected, causing a stall.
   * **Purpose of the Exercise**:
-    - To understand that **states are persistent and checked at each execution step**. Power is a prerequisite for all actions, not just the initial boot.
+    - To understand that **states are persistent and safety checks are run for every step**.
   * **What the Student Learns**:
-    - A computer check is run for *every* step. You cannot assume a system remains online if you explicitly trigger a shutdown state mid-stream.
-  * **Tutor Check Question**: *"We already flew to the door safely, so why did the unlock step fail when the power was turned off?"*
-
+    - Safety checks are continuous. You must depress the clutch to disconnect transmission before locking the wheels.
+  * **Tutor Check Question**: *"Why does the engine stall if we hit the brakes without depressing the clutch pedal?"*
+ 
 #### 🔍 Phase C | Assessment & Debugging: Auditing Logs (01:30 - 01:50)
 * **What the Tutor Explains**:
   - When systems fail, they output debug logs (text messages that record every action and error code). Learning to read logs is 90% of a developer's day.
   - Introduce **Error Propagation**: When one early step fails, all subsequent steps fail too, often hiding the real root cause under a pile of secondary errors.
 * **Diagnostic Walkthroughs**:
-  - **Log Case A**: `💥 CRITICAL ERROR: Attempted to scan while drone is unpowered! System offline.`
-    - *Tutor Ask*: *"What is the root cause? How do we fix it?"* (Root cause is missing or late `power_on` step).
-  - **Log Case B**: `💥 CRITICAL ERROR: Target coordinates undefined. Drone collided with a concrete pillar!`
-    - *Tutor Ask*: *"Why are target coordinates undefined? What step did we forget to run before flying?"* (Forgot `scan_door` which populates the coordinates variable).
-  - **Log Case C**: `💥 CRITICAL ERROR: Bypass failed. Drone is too far from the door card reader. Keycard data lost!`
-    - *Tutor Ask*: *"The keycard reader is functional, so why did the bypass fail?"* (Attempted `unlock_door` before executing `fly_door`).
-
+  - **Log Case A**: `💥 CRITICAL ERROR: Ignition active without depressing clutch! Transmission jerked, engine stalled.`
+    - *Tutor Ask*: *"What is the root cause? How do we fix it?"* (Depress clutch pedal before starting ignition).
+  - **Log Case B**: `💥 CRITICAL ERROR: Shifted to 1st gear without depressing clutch! Gearbox grinded horribly.`
+    - *Tutor Ask*: *"Why did the gearbox grind? What step did we forget to run before shifting?"* (Forgot `press_clutch` which is a precondition for shifting).
+  - **Log Case C**: `💥 CRITICAL ERROR: Released clutch with handbrake engaged! Friction smoked the pads, engine stalled.`
+    - *Tutor Ask*: *"Why did the engine stall? How do we release the brakes?"* (Release handbrake before releasing clutch).
+ 
 ---
-
+ 
 ### 3. Socratic Prompting
-* **Mapping to Exercise 1.1 (Basic Route)**:
-  * *Tutor Prompt*: *"What is the absolute first thing you must do before a device can perform any electronic commands?"* (Turn on power).
-  * *Explanation*: Absolute beginners might attempt to execute actions like `fly_door` or `scan_door` directly. Use this prompt to direct them to the dependency of electrical systems requiring boot/power states before processing commands.
-
-* **Mapping to Exercise 1.2 (Variable Coordinates)**:
-  * *Tutor Prompt*: *"How can the drone know where the door is before it performs a scan?"*
-  * *Explanation*: If the student sequences `fly_door` before `scan_door`, the drone will fail because its coordinate destination memory is `null` or undefined. Use this question to guide the student to discover the logical **data dependency**—the drone must scan to populate the target variables *before* it can read those variables for navigation.
+* **Mapping to Exercise 1.1 (Basic Start & Move)**:
+  * *Tutor Prompt*: *"What is the absolute first thing you must do before a device can perform any mechanical driving commands?"* (Unlock the vehicle).
+  * *Explanation*: Absolute beginners might attempt to execute actions like shifting gears or pressing gas directly. Use this prompt to direct them to the dependency of entry.
+ 
+* **Mapping to Exercise 1.2 (Shifting Gears)**:
+  * *Tutor Prompt*: *"Can you shift to 3rd gear when the car is stationary?"*
+  * *Explanation*: If the student sequences shifting up without building speed, the engine stalls. Use this question to guide the student to discover the logical **data dependency**—the car speed variable must be within range before shifting up.
   
 * **Mapping to Exercise 1.3 (Sequence Correction & Debugging)**:
-  * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the drone crash on step 3?"* (or whichever step is executing).
-  * *Explanation*: In the preloaded scrambled sequence, instructions are out of order (e.g. attempting to fly before powering on). The terminal outputs specific error messages. Use this prompt to direct the student's eyes to the terminal log messages instead of letting them guess the solution, helping them connect log readings to step re-ordering.
-
-* **Mapping to Exercise 1.4 (Variable Overwrite)**:
-  * *Tutor Prompt*: *"We scanned Gate A and then scanned Gate B. Why did the drone end up flying to Gate B instead of Gate A?"*
-  * *Explanation*: Students might think scanning multiple things stores all of them in a list or remembers the first scan. Use this prompt to guide them to discover **variable re-assignment (overwriting)**—each write/scan to a variable replaces whatever value was previously held.
-
-* **Mapping to Exercise 1.5 (Power Check Logic)**:
-  * *Tutor Prompt*: *"We successfully flew to the door, so why did the unlock step fail when the drone's power was switched off?"*
-  * *Explanation*: Students might think once the drone arrives, power is no longer needed. Use this question to illustrate that hardware preconditions are evaluated for *every* step, and state variables (like power state) must remain active throughout the device's entire operational pipeline.
-
+  * *Tutor Prompt*: *"Look at the terminal logs on the right. Why did the engine stall on step 3?"*
+  * *Explanation*: Use this prompt to direct the student's eyes to the terminal log messages, helping them connect log readings to step re-ordering with the arrow buttons.
+ 
+* **Mapping to Exercise 1.4 (Gear Variable Overwrite)**:
+  * *Tutor Prompt*: *"Why did the vehicle stall when shifting 1st and 2nd in a row? What happened to our active gear variable?"*
+  * *Explanation*: Students learn variable overwrite—shifting to 2nd immediately replaced the gear stick variable with 2.
+ 
+* **Mapping to Exercise 1.5 (Emergency Brakes)**:
+  * *Tutor Prompt*: *"Why did the engine stall when we hit the brakes without depressing the clutch pedal?"*
+  * *Explanation*: Emphasize mechanical state check dependencies during emergency actions.
+ 
 ### 4. Homework Evaluation Checklist (Grants +50 XP)
 * The student must document a microwave warming process in the Prompt Journal:
   * **System Preconditions**: powerState must be "ON" (active electrical current).
