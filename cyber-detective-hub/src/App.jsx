@@ -55,13 +55,13 @@ const CAMPAIGN_THEMES = {
     description: 'Solve logical systemic bugs in a neon-lit, highly automated city. Track hackers and secure grid lines.',
     levels: {
       1: {
-        mainQuest: 'Operation: Safe City Grid — Design the logical blueprints for the city\'s automated infrastructure (drones, public transport, smart vending).',
+        mainQuest: 'Operation: Safe City Grid — Design the logical blueprints for the city\'s automated infrastructure (autonomous vehicles, public transport, smart vending).',
         sessions: [
           {
             id: 'l1-s1',
             title: 'Session 1: "Literal Logic & Digital Infiltration"',
             objective: 'Design a precise sequential command blueprint to navigate systems.',
-            activity: 'Drone Operator Roleplay: Student gives step-by-step instructions to tutor to move and retrieve an object. Tutor follows them strictly literally, demonstrating computer logical processing.',
+            activity: 'Car Autopilot Roleplay: Student gives step-by-step instructions to tutor to drive and park an vehicle. Tutor follows them strictly literally, demonstrating computer logical processing.',
             homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab: Write a process to warm up food from a plate using a microwave. Identify preconditions, inputs, processing logic, and outputs (+50 XP).',
             xp: 100
           },
@@ -497,11 +497,11 @@ export default function App() {
   };
   
   // Sandbox states
-  const [sandboxRole, setSandboxRole] = useState('Junior Security Drone Operator');
-  const [sandboxTask, setSandboxTask] = useState('Configure drone autopilot sequential route instructions');
-  const [sandboxConstraints, setSandboxConstraints] = useState('Initialize system power state first. Verify target coordinates variables.');
-  const [sandboxInput, setSandboxInput] = useState('powerState, targetCoords, flySequence');
-  const [sandboxEdgeCases, setSandboxEdgeCases] = useState('Null/undefined targetCoords, unpowered operations');
+  const [sandboxRole, setSandboxRole] = useState('Junior Autopilot Car Controller');
+  const [sandboxTask, setSandboxTask] = useState('Configure autopilot car sequential driving instructions');
+  const [sandboxConstraints, setSandboxConstraints] = useState('Verify P/N gear and depress brake pedal before starting ignition.');
+  const [sandboxInput, setSandboxInput] = useState('gearState, brakeState, engineIgnition');
+  const [sandboxEdgeCases, setSandboxEdgeCases] = useState('Incorrect ignition sequence, gear shifting lockouts');
   const [sandboxCodeOutput, setSandboxCodeOutput] = useState(null);
   
   // Chaos Monkey console states
@@ -1095,11 +1095,11 @@ export default function App() {
   const loadTemplate = (session) => {
     setSandboxSessionId(session.id);
     if (session.id === 'l1-s1') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Junior Security Drone Operator' : campaignId === 'mars' ? 'Atmospheric Telemetry Systems Operator' : 'Junior Apprentice Spellcaster');
-      setSandboxTask(campaignId === 'cyberpunk' ? 'Configure drone autopilot sequential route instructions' : campaignId === 'mars' ? 'Configure oxygen regulator sequential boot instructions' : 'Write cauldron cauldron sequence');
-      setSandboxConstraints(campaignId === 'cyberpunk' ? 'Initialize system power state first. Verify target coordinates variables.' : campaignId === 'mars' ? 'Power regulator boot sequence, verify oxygen levels.' : 'Goblin proof shields. Cauldron heat monitoring.');
-      setSandboxInput(campaignId === 'cyberpunk' ? 'powerState, targetCoords, flySequence' : campaignId === 'mars' ? 'powerState, oxygenSensorValue, regulatorValveState' : 'cauldronTemp, goblinBait');
-      setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Null/undefined targetCoords, unpowered operations' : campaignId === 'mars' ? 'Unpowered boot checks, sensor failure' : 'Mana spikes, double cast');
+      setSandboxRole(campaignId === 'cyberpunk' ? 'Junior Autopilot Car Controller' : campaignId === 'mars' ? 'Atmospheric Telemetry Systems Operator' : 'Junior Apprentice Spellcaster');
+      setSandboxTask(campaignId === 'cyberpunk' ? 'Configure autopilot car sequential driving instructions' : campaignId === 'mars' ? 'Configure oxygen regulator sequential boot instructions' : 'Write cauldron cauldron sequence');
+      setSandboxConstraints(campaignId === 'cyberpunk' ? 'Verify P/N gear and depress brake pedal before starting ignition.' : campaignId === 'mars' ? 'Power regulator boot sequence, verify oxygen levels.' : 'Goblin proof shields. Cauldron heat monitoring.');
+      setSandboxInput(campaignId === 'cyberpunk' ? 'gearState, brakeState, engineIgnition' : campaignId === 'mars' ? 'powerState, oxygenSensorValue, regulatorValveState' : 'cauldronTemp, goblinBait');
+      setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Incorrect ignition sequence, gear shifting lockouts' : campaignId === 'mars' ? 'Unpowered boot checks, sensor failure' : 'Mana spikes, double cast');
     } else if (session.id === 'l1-s4') {
       setSandboxRole(campaignId === 'cyberpunk' ? 'Climate Control Security Architect' : campaignId === 'mars' ? 'Habitat Operations Supervisor' : 'Arch-Mage Climate Ward Warden');
       setSandboxTask(campaignId === 'cyberpunk' ? 'Implement smart climate control conditional logic function' : campaignId === 'mars' ? 'Configure habitat atmospheric safety overrides' : 'Configure castle atmospheric shielding runes');
@@ -2151,38 +2151,46 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body drone-commands">
                         <p className="sim-instructions" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 10px 0' }}>Click commands to add to sequence workspace:</p>
-                        <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'start_engine', label: 'Turn Ignition Key to Start' }])}>
-                            <span className="sim-action-icon">🔑</span> Turn Ignition Key to Start
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_handbrake', label: 'Release Handbrake' }])}>
-                            <span className="sim-action-icon">🛑</span> Release Handbrake
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' }])}>
-                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to D (Drive)
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_gas', label: 'Press Gas Pedal' }])}>
-                            <span className="sim-action-icon">🚀</span> Press Gas Pedal
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'check_gear_pn', label: 'Check P/N Gear State' }])}>
-                            <span className="sim-action-icon">🔍</span> Check P/N Gear State
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)' }])}>
-                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to R (Reverse)
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'press_brake', label: 'Depress Brake Pedal' }])}>
-                            <span className="sim-action-icon">🦶</span> Depress Brake Pedal
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'release_brake', label: 'Release Brake Pedal' }])}>
-                            <span className="sim-action-icon">🦶</span> Release Brake Pedal
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'shift_p', label: 'Shift Gear Selector to P (Park)' }])}>
-                            <span className="sim-action-icon">⚙️</span> Shift Gear Selector to P (Park)
-                          </button>
-                          <button className="btn-sim-action" onClick={() => setS1Sequence(prev => [...prev, { id: 'engage_handbrake', label: 'Engage Handbrake' }])}>
-                            <span className="sim-action-icon">🛑</span> Engage Handbrake
-                          </button>
-                        </div>
+                        {(() => {
+                          const allCommands = [
+                            { id: 'start_engine', label: 'Turn Ignition Key to Start', icon: '🔑' },
+                            { id: 'release_handbrake', label: 'Release Handbrake', icon: '🛑' },
+                            { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)', icon: '⚙️' },
+                            { id: 'press_gas', label: 'Press Gas Pedal', icon: '🚀' },
+                            { id: 'check_gear_pn', label: 'Check P/N Gear State', icon: '🔍' },
+                            { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)', icon: '⚙️' },
+                            { id: 'press_brake', label: 'Depress Brake Pedal', icon: '🦶' },
+                            { id: 'release_brake', label: 'Release Brake Pedal', icon: '🦶' },
+                            { id: 'shift_p', label: 'Shift Gear Selector to P (Park)', icon: '⚙️' },
+                            { id: 'engage_handbrake', label: 'Engage Handbrake', icon: '🛑' }
+                          ];
+                          if (s1ActiveExercise === 2) {
+                            allCommands.push(
+                              { id: 'press_brake_stop', label: 'Depress Brake Pedal to Stop', icon: '🦶' },
+                              { id: 'release_brake_drive', label: 'Release Brake Pedal to Drive', icon: '🦶' },
+                              { id: 'press_gas_cruise', label: 'Press Gas Pedal to Cruise', icon: '🚀' }
+                            );
+                          }
+                          const availableCommands = allCommands.filter(cmd => !s1Sequence.some(s => s.id === cmd.id));
+                          return (
+                            <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {availableCommands.map((cmd) => (
+                                <button 
+                                  key={cmd.id} 
+                                  className="btn-sim-action" 
+                                  onClick={() => setS1Sequence(prev => [...prev, { id: cmd.id, label: cmd.label }])}
+                                >
+                                  <span className="sim-action-icon">{cmd.icon}</span> {cmd.label}
+                                </button>
+                              ))}
+                              {availableCommands.length === 0 && (
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic', textAlign: 'center', padding: '10px' }}>
+                                  All commands moved to workspace.
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -2309,11 +2317,15 @@ export default function App() {
                               }
  
                               const cmd = s1Sequence[currentStep];
+                              let actionId = cmd.id;
+                              if (actionId === 'press_brake_stop') actionId = 'press_brake';
+                              if (actionId === 'release_brake_drive') actionId = 'release_brake';
+                              if (actionId === 'press_gas_cruise') actionId = 'press_gas';
  
-                              if (cmd.id === 'check_gear_pn') {
+                              if (actionId === 'check_gear_pn') {
                                 checkedPN = true;
                                 logsToAppend.push({ type: 'info', text: '🔍 [Transmission Log] Gear checked. Gear selector is currently in P (Park) (P/N Check = TRUE).' });
-                              } else if (cmd.id === 'press_brake') {
+                              } else if (actionId === 'press_brake') {
                                 brakePressed = true;
                                 if (speed !== 0) {
                                   speed = 0;
@@ -2321,7 +2333,7 @@ export default function App() {
                                 } else {
                                   logsToAppend.push({ type: 'info', text: '🦶 [Pedal Log] Footbrake pedal depressed (footbrakeState = DEPRESSED).' });
                                 }
-                              } else if (cmd.id === 'start_engine') {
+                              } else if (actionId === 'start_engine') {
                                 if (!checkedPN) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to start engine without verifying gear is in P or N! Safety lockout active.' });
                                   hasError = true;
@@ -2332,7 +2344,7 @@ export default function App() {
                                   engineStarted = true;
                                   logsToAppend.push({ type: 'info', text: '🔑 [Ignition Log] Starter motor running. Engine active (engineState = RUNNING).' });
                                 }
-                              } else if (cmd.id === 'shift_d') {
+                              } else if (actionId === 'shift_d') {
                                 if (!engineStarted) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
                                   hasError = true;
@@ -2343,7 +2355,7 @@ export default function App() {
                                   gear = 'D';
                                   logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to D (Drive) (currentGear = D).' });
                                 }
-                              } else if (cmd.id === 'shift_r') {
+                              } else if (actionId === 'shift_r') {
                                 if (!engineStarted) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
                                   hasError = true;
@@ -2354,7 +2366,7 @@ export default function App() {
                                   gear = 'R';
                                   logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to R (Reverse) (currentGear = R).' });
                                 }
-                              } else if (cmd.id === 'shift_p') {
+                              } else if (actionId === 'shift_p') {
                                 if (!brakePressed) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to P (Park) without depressing the brake pedal.' });
                                   hasError = true;
@@ -2362,13 +2374,13 @@ export default function App() {
                                   gear = 'P';
                                   logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to P (Park) (currentGear = P).' });
                                 }
-                              } else if (cmd.id === 'release_handbrake') {
+                              } else if (actionId === 'release_handbrake') {
                                 handbrakeReleased = true;
                                 logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Mechanical handbrake released (handbrakeState = OFF).' });
-                              } else if (cmd.id === 'release_brake') {
+                              } else if (actionId === 'release_brake') {
                                 brakePressed = false;
                                 logsToAppend.push({ type: 'info', text: '🦶 [Pedal Log] Footbrake pedal released (footbrakeState = RELEASED).' });
-                              } else if (cmd.id === 'press_gas') {
+                              } else if (actionId === 'press_gas') {
                                 if (!engineStarted) {
                                   logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Pressed gas pedal with engine offline. Car stayed idle.' });
                                   hasError = true;
@@ -2387,7 +2399,7 @@ export default function App() {
                                   speed = -10;
                                   logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = -10 mph (Moving backward in R).' });
                                 }
-                              } else if (cmd.id === 'engage_handbrake') {
+                              } else if (actionId === 'engage_handbrake') {
                                 handbrakeReleased = false;
                                 logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Parking handbrake engaged (handbrakeState = ON).' });
                               }

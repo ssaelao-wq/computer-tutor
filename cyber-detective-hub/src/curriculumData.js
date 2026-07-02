@@ -14,12 +14,12 @@ export const CURRICULUM_DATA = [
       "Identify the Input → Process → Output pattern in everyday digital systems",
       "Create sequential instruction lists in Sandbox simulation"
     ],
-    warmUp: "Drone Operator Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to move and retrieve an object. Tutor follows them strictly literally, demonstrating computer logical processing.",
+    warmUp: "Car Autopilot Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to drive and park an vehicle. Tutor follows them strictly literally, demonstrating computer logical processing.",
     miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
-    coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Power On, Scan, Tunnel, Bypass, Exfiltrate) in correct logical order.",
-    handsOn: "Complete 5 sandbox tasks: (1) Basic Infiltration sequence, (2) Variable coordinate scans, (3) Sequence Debugging, (4) Variable Overwrite, (5) Power Check Logic.",
+    coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Check P/N, Press Brake, Start Engine, Shift D, Release Handbrake, release brake, press gas) in correct logical order.",
+    handsOn: "Complete 5 sandbox tasks: (1) Basic Start & Move, (2) Reversing & Parking, (3) Sequence Correction, (4) Code Cleanup, (5) Emergency Halt.",
     homework: "Complete the \"Household IPO Blueprint\" in the app's Journal tab: Write a process to warm up food from a plate using a microwave. Identify preconditions, inputs, processing logic, and outputs (+50 XP).",
-    ethics: "Drone Crash Responsibility: If a drone crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
+    ethics: "Autonomous Car Crash Responsibility: If an autonomous car crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
     adaptations: "Age 13-16: Use digital sandbox modules and audit terminal outputs. Discuss real IPO algorithms."
   },
   {
@@ -86,7 +86,7 @@ export const CURRICULUM_DATA = [
       "Distinguish between loop bounds: counting vs. conditions",
       "Detect and trace infinite loop traps"
     ],
-    warmUp: "Drone Fuel Loop: Trace how many loops a drone can complete based on a set variable decrement rate.",
+    warmUp: "Vehicle Fuel Loop: Trace how many loops a vehicle can complete based on a set variable decrement rate.",
     miniLesson: "Loop structures: For (counting bounds) vs. While (conditional state bounds). Infinite loop crash triggers.",
     coreActivity: "Feeder sequence blueprinting: Write loops that run while bounds are satisfied and terminate when variables transition.",
     handsOn: "Complete 5 sandbox tasks: (1) Simple counter loops, (2) Loop break conditions, (3) Smart refill check loops, (4) Cat double-feed checks, (5) Infinite loop protection code.",

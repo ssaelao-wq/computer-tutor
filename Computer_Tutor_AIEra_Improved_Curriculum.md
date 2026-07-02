@@ -90,10 +90,10 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 
 **Lesson Timeline & Content Breakdown (2 hours):**
 
-1. **Warm-Up: The Tutor Drone Simulation (15 mins)**
-   - *Activity*: One-on-one interactive roleplay. The student plays the "Drone Operator" (coder) and the tutor plays the "Tactical Infiltration Drone" (computer).
-   - *Action*: The student gives step-by-step navigation instructions to the tutor to retrieve an object.
-   - *Constraint*: The tutor follows commands **strictly literally** (e.g., if told to "walk forward" without specifying steps, they keep walking until blocked. If told to "grab object" before reaching it, they grab thin air).
+1. **Warm-Up: The Tutor Car Autopilot Simulation (15 mins)**
+   - *Activity*: One-on-one interactive roleplay. The student plays the "Autopilot Controller" (coder) and the tutor plays the "Autonomous Vehicle" (computer).
+   - *Action*: The student gives step-by-step driving and parking instructions to the tutor to park a vehicle.
+   - *Constraint*: The tutor follows commands **strictly literally** (e.g., if told to "accelerate" without shifting gears first, they rev the engine in Neutral. If told to "turn right" while standing still, they turn the steering wheel but stay parked).
    - *Debrief*: Highlight that computers do not assume intent. If instructions are out of order, the program crashes or triggers a logic error.
 
 2. **Core Concept Board Lesson: The IPO Model & Sequential Control (20 mins)**
@@ -106,22 +106,22 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
    - *Action*: The student arranges digital command blocks (`Power On`, `Scan Subnet`, `Establish SSH Tunnel`, `Bypass Firewall`, `Exfiltrate Logs`) in the exact logical order to reach a target.
    - *Self-Audit*: The student runs a simulator to see if the sequence triggers alarms or completes the security bypass.
 
-4. **Digital Sandbox Lab: Cyber Security-Drone Simulator (30 mins)**
+4. **Digital Sandbox Lab: Cyber Security-Autonomous Vehicle Simulator (30 mins)**
    - *Activity*: Student launches Level 1 Session 1 Sandbox.
    - *Action*: Complete five progressive exercises:
-     - **Exercise 1.1 (Basic Route)**: Click commands in the correct sequence (`power_on` ➔ `scan_door` ➔ `fly_door` ➔ `unlock_door`) to bypass the warehouse outer door.
-     - **Exercise 1.2 (Variable Coordinates)**: Sequence the drone to boot, scan to load the coordinates variable, fly to the coordinates, and bypass the door.
-     - **Exercise 1.3 (Sequence Correction)**: Debug an incorrect, preloaded sequence that crashes the drone by rearranging the sequence order.
-     - **Exercise 1.4 (Variable Overwrite)**: Sequence scanning Gate A and Gate B in order to verify that target variable values overwrite.
-     - **Exercise 1.5 (Power Check Logic)**: Sequence drone actions to verify power states must remain active for subsequent operations.
+     - **Exercise 1.1 (Basic Start & Move)**: Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`) to safely start and drive forward.
+     - **Exercise 1.2 (Reversing & Parking)**: Sequence the vehicle to back out of a parking bay using Reverse (R), stop, shift to Drive (D), and drive off.
+     - **Exercise 1.3 (Sequence Correction)**: Debug an incorrect, preloaded sequence that fails safety switches by rearranging the sequence order.
+     - **Exercise 1.4 (Code Cleanup)**: Identify and delete an incorrect, extra command (`shift_r` in the middle of driving forward) to prevent a collision.
+     - **Exercise 1.5 (Emergency Halt)**: Sequence driving actions and verify that depressing the footbrake pedal instantly stops the moving vehicle.
      - Earning $+100$ XP on completion.
 
 5. **Assessment & Debrief: Log Auditing (20 mins)**
-   - *Activity*: The tutor displays three different failed execution logs from the Drone Navigator.
+   - *Activity*: The tutor displays three different failed execution logs from the Car Autopilot.
    - *Challenge*: The student inspects the output messages, identifies the logical step that failed, and explains *why* the order was illegal.
 
 6. **Ethics & Automation Discussion (10 mins)**
-   - *Topic*: If a self-driving delivery drone crashes because of a logic error in its code, who is responsible? The coder who wrote the sequence, the company that deployed it, or the operator who clicked "Run"?
+   - *Topic*: If a self-driving delivery car crashes because of a logic error in its code, who is responsible? The coder who wrote the sequence, the company that deployed it, or the driver who clicked "Run"?
 
 **📝 Homework (Practice at Home):**
 - **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.

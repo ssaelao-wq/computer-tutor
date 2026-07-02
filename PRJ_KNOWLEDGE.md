@@ -26,7 +26,7 @@ graph TD
 ```
 
 ### Level 1: Foundations of Logic (Beginner)
-* **Theme**: **Security-Drone Mission** (Remote infiltration drone navigation).
+* **Theme**: **Autonomous Vehicle Mission** (Self-driving car navigation & autopilot).
 * **Focus**: Logic blocks, sequence order, data classification, and state machines.
 * **Target**: Build critical thinking and literal execution skills without code syntax barrier.
 
@@ -49,7 +49,7 @@ graph TD
 
 ## 3. Thematic Consistency Rules
 
-* **Single Theme per Level**: To keep students immersed and focused, all sessions within the same level must share the exact same thematic setting (e.g. all Level 1 challenges operate on the Drone Infiltration story, while Level 2 is space-themed).
+* **Single Theme per Level**: To keep students immersed and focused, all sessions within the same level must share the exact same thematic setting (e.g. all Level 1 challenges operate on the Autonomous Vehicle story, while Level 2 is space-themed).
 * **Age-Appropriate Narrative**: Themes must feel adventurous, gamified, and exciting for teenagers (avoiding domestic, baby-ish concepts like baking cakes or washing dishes).
 * **Interactive Sandbox Simulations**: Level 1 exercises inside the Sandbox tab must feature interactive, visual, code-free simulators corresponding directly to that level's theme.
 

@@ -38,17 +38,17 @@ Before running classes, tutors must familiarize themselves with the administrati
 ## Session 1: "Literal Logic & Digital Infiltration"
 
 ### Minute-by-Minute Timeline
-* **00:00 - 00:15 | Warm-Up**: Tutor-Student Drone Infiltration Game
+* **00:00 - 00:15 | Warm-Up**: Tutor-Student Car Autopilot Game
 * **00:15 - 00:35 | Board Lesson**: The IPO Model & Sequential Control
 * **00:35 - 01:00 | Digital Practice**: In-App Flowchart Sequencer
-* **01:00 - 01:30 | Sandbox Lab**: Drone Infiltration Simulator
+* **01:00 - 01:30 | Sandbox Lab**: Autonomous Vehicle Driving Simulator
 * **01:30 - 01:50 | Assessment & Debugging**: Auditing execution logs
 * **01:50 - 02:00 | Ethics Discussion**: Autonomous systems liability
 
 ### 1. Board Lesson Talking Points
 * Draw the **IPO Diagram** on the board: `[Input] ➔ [Processing] ➔ [Output]`.
-* **The Concept of Variables**: Explain variables as "labeled lockboxes" in the computer's memory. A box labeled `targetCoords` holds a coordinate value. The computer cannot read the value until it is scanned and placed inside that specific box.
-* **Sequential Control**: Explain that a computer has zero common sense. If step 2 requires data from step 1, running step 2 first triggers an error or system crash.
+* **The Concept of Variables**: Explain variables as "labeled lockboxes" in the computer's memory. A box labeled `currentGear` holds a gear state value. The computer cannot change speed until it reads the gear value.
+* **Sequential Control**: Explain that a computer has zero common sense. If step 2 requires data or states from step 1 (like having footbrake depressed before starting ignition), running step 2 first triggers a safety switch lockout.
 
 ---
 
@@ -60,13 +60,14 @@ Before running classes, tutors must familiarize themselves with the administrati
   - Explain that flowcharts have a strict start and end point, and follow a single "flow of control" line.
 * **Conceptual Knowledge & Focus**:
   - **Logical Continuity**: The system cannot skip steps. A gap in the flowchart (like a missing connection arrow) is equivalent to a compilation error.
-  - **Implicit vs. Explicit Instructions**: Humans assume implicit instructions (e.g. "go inside" implies opening the door first). Computers require every single action to be explicitly stated.
+  - **Implicit vs. Explicit Instructions**: Humans assume implicit instructions (e.g. "drive off" implies starting the engine first). Computers require every single action to be explicitly stated.
 * **Tutor-Student Discussion Prompts**:
-  - *"Why is a flowchart a visual representation of chronological logic? How does the path line guide the drone's brain step-by-step?"*
-  - *"If we tell the drone to fly to the warehouse door before we scan it, what does the drone's target coordinates variable contain? Why does it crash?"*
-  - *"How does data (like the door's coordinates) get saved in one step and used in a later step?"*
+  - *"Why is a flowchart a visual representation of chronological logic? How does the path line guide the autopilot's brain step-by-step?"*
+  - *"If we tell the vehicle to shift to Drive before we start the engine, what happens? Why does the safety system lock us out?"*
+  - *"How does the footbrake state get saved in one step and verified in a later step?"*
 
-#### 🕹️ Phase B | Sandbox Lab: Drone Infiltration Simu* **What the Tutor Explains**:
+#### 🕹️ Phase B | Sandbox Lab: Autonomous Vehicle Simulator
+* **What the Tutor Explains**:
   - Introduce the Sandbox environment. Explain that the automatic car autopilot is controlled strictly by the list of sequenced action commands compiled by the student.
   - Explain the concepts of **preconditions** (states that must be true before an action can run, e.g. footbrake down to shift/start) and **state variables** (variables representing active system status, e.g. `speed = 25` or `currentGear = "D"`).
 * **Step-by-Step Exercise Facilitation Guide**:
