@@ -109,8 +109,8 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 4. **Digital Sandbox Lab: Cyber Security-Autonomous Vehicle Simulator (30 mins)**
    - *Activity*: Student launches Level 1 Session 1 Sandbox.
    - *Action*: Complete five progressive exercises:
-     - **Exercise 1.1 (Basic Start & Move)**: Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`) to safely start and drive forward.
-     - **Exercise 1.2 (Reversing & Parking)**: Sequence the vehicle to back out of a parking bay using Reverse (R), stop, shift to Drive (D), and drive off.
+     - **Exercise 1.1 (Basic Start & Move)**: Observe the handbrake starting condition (already released). Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_brake` ➔ `press_gas`) to safely start and drive forward, skipping handbrake release.
+     - **Exercise 1.2 (Basic Start & Reverse)**: Observe the handbrake starting condition (engaged). Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`) to safely start and reverse.
      - **Exercise 1.3 (Sequence Correction)**: Debug an incorrect, preloaded sequence that fails safety switches by rearranging the sequence order.
      - **Exercise 1.4 (Code Cleanup)**: Identify and delete an incorrect, extra command (`shift_r` in the middle of driving forward) to prevent a collision.
      - **Exercise 1.5 (Emergency Halt)**: Sequence driving actions and verify that depressing the footbrake pedal instantly stops the moving vehicle.
@@ -127,10 +127,10 @@ Every design decision has consequences. Students learn to ask: *"Who could this 
 - **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
-- **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
-  - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the footbrake pedal or checking P/N gear first, it fails safety lockout switches.
+- **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_brake` ➔ `press_gas`.
+  - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the footbrake pedal or checking P/N gear first, it fails safety lockout switches. Note: `release_handbrake` is skipped since it starts as released.
 - **Exercise 1.2 (Basic Start & Reverse) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
-  - *Tutor Guide*: Show how chronological sequencing works with different target states. This matches Exercise 1.1's logical start sequence but uses Reverse (R) instead of Drive (D).
+  - *Tutor Guide*: Show how chronological sequencing works with different target states and environment conditions (handbrake is engaged at start). This matches Exercise 1.1's logical start sequence but uses Reverse (R) instead of Drive (D).
 - **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
   - *Tutor Guide*: Students debug sequence ordering using safety switch reports in terminal logs.
 - **Exercise 1.4 (Code Cleanup / Debugging Extra Steps) Solution**: Preloaded steps include an extra `shift_r` card in the middle of driving forward. Click the `×` button to delete it, reducing the sequence to Exercise 1.1's basic start & move.

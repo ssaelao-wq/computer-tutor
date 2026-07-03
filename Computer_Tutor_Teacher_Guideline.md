@@ -73,13 +73,14 @@ Before running classes, tutors must familiarize themselves with the administrati
 * **Step-by-Step Exercise Facilitation Guide**:
   ##### **Exercise 1.1: Basic Start & Move**
   * **How to do it**:
-    1. Click the command buttons to add cards to the workspace in the following order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`.
+    1. Click the command buttons to add cards to the workspace in the following order: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to D (Drive)` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal`. (Note: `Release Handbrake` is skipped since it starts as released).
     2. Click the **Run Autopilot Script** button. The vehicle will execute the steps sequentially and drive off in Drive gear.
   * **Purpose of the Exercise**:
     - To introduce the student to the concept of **sequential processing** (how computers execute lines of code chronologically from top to bottom) and **hardware preconditions** (the car cannot start the engine or shift gears without disengaging shift locks using the brake pedal and checking P/N gear).
   * **What the Student Learns**:
     - Computers are literal and do not assume steps.
     - An action block has zero effect or crashes if its safety prerequisites (e.g. brake pedal depressed) are not initialized in a prior step.
+    - Env status conditions change correct sequence paths (if handbrake is already off, skip release handbrake step).
   * **Tutor Check Question**: *"Why did we need to depress the brake pedal first? What happens if you try to start the engine without pressing the brake?"*
  
   ##### **Exercise 1.2: Basic Start & Reverse**
@@ -87,10 +88,11 @@ Before running classes, tutors must familiarize themselves with the administrati
     1. Click the command buttons in shuffled order to add cards: `Check P/N Gear State` ➔ `Depress Brake Pedal` ➔ `Turn Ignition Key to Start` ➔ `Shift Gear Selector to R (Reverse)` ➔ `Release Handbrake` ➔ `Release Brake Pedal` ➔ `Press Gas Pedal` (backing out).
     2. Click **Run Autopilot Script** to execute.
   * **Purpose of the Exercise**:
-    - To demonstrate that different configurations (shifting to Reverse instead of Drive) follow identical safety checklist preconditions.
+    - To demonstrate that different configurations (shifting to Reverse instead of Drive) follow identical safety checklist preconditions, and conditional environment states (here, handbrake is engaged, so releasing it is mandatory).
   * **What the Student Learns**:
     - Logic flows are reusable and scalable with minor modifications.
-  * **Tutor Check Question**: *"How does this sequence compare to Exercise 1.1? What single step did we change to move backwards instead of forward?"*
+    - Environmental conditions determine if specific blocks like `Release Handbrake` are needed.
+  * **Tutor Check Question**: *"Why did we have to include the Release Handbrake step in this exercise, but not in Exercise 1.1? Look at the dashboard status!"*
  
   ##### **Exercise 1.3: Autopilot Sequence Correction**
   * **How to do it**:

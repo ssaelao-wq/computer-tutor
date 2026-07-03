@@ -2079,11 +2079,14 @@ export default function App() {
                           <strong>Problem:</strong> The automatic security vehicle needs to start its engine and drive forward.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the commands to safely start and move: Check P/N gear ➔ Press the brake ➔ Start engine ➔ Shift to D gear ➔ Release the handbrake ➔ Release the brake ➔ Press the gas.
+                          <strong>Instruction:</strong> Observe the dashboard handbrake condition. If the Handbrake is already released, sequence: Check P/N gear ➔ Press brake ➔ Start engine ➔ Shift D ➔ Release brake ➔ Press gas (skip release handbrake!).
                         </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                        <p style={{ fontSize: '0.75rem', margin: '0 0 8px 0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> Computers execute steps literally. Automatic gearboxes have safety switches. The starter motor will not turn unless you depress the brake and ensure gear selector is in P or N.
                         </p>
+                        <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(0, 255, 204, 0.05)', borderRadius: '4px', borderLeft: '3px solid #00ffcc', fontSize: '0.8rem' }}>
+                          🚦 <strong>Dashboard Condition Status:</strong> Handbrake is <span style={{ color: '#00ffcc', fontWeight: 'bold' }}>RELEASED (OFF)</span>.
+                        </div>
                       </div>
                     )}
                     {s1ActiveExercise === 2 && (
@@ -2093,11 +2096,14 @@ export default function App() {
                           <strong>Problem:</strong> The vehicle needs to start its engine and reverse out of a parking space.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence the commands to safely start and reverse: Check P/N gear ➔ Press the brake ➔ Start engine ➔ Shift to R gear ➔ Release the handbrake ➔ Release the brake ➔ Press the gas.
+                          <strong>Instruction:</strong> Observe the dashboard handbrake condition. Since the Handbrake is engaged, sequence: Check P/N gear ➔ Press brake ➔ Start engine ➔ Shift R ➔ Release handbrake ➔ Release brake ➔ Press gas.
                         </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> This follows the exact same logical security checklist as starting and driving forward (Exercise 1.1), but using the Reverse (R) gear to move backwards.
+                        <p style={{ fontSize: '0.75rem', margin: '0 0 8px 0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          <strong>Explanation:</strong> This follows the exact same logical security checklist as starting and driving forward, but you must release the handbrake manually since it is engaged.
                         </p>
+                        <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(255, 77, 77, 0.05)', borderRadius: '4px', borderLeft: '3px solid #ff4d4d', fontSize: '0.8rem' }}>
+                          🚦 <strong>Dashboard Condition Status:</strong> Handbrake is <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>ENGAGED (ON)</span>.
+                        </div>
                       </div>
                     )}
                     {s1ActiveExercise === 3 && (
@@ -2248,7 +2254,7 @@ export default function App() {
                             let brakePressed = false;
                             let engineStarted = false;
                             let gear = 'P'; // P, D, R
-                            let handbrakeReleased = false;
+                            let handbrakeReleased = s1ActiveExercise === 1;
                             let speed = 0;
                             
                             const runNext = () => {
@@ -2263,7 +2269,7 @@ export default function App() {
                                   const ids = s1Sequence.map(c => c.id).join(',');
                                   
                                   if (s1ActiveExercise === 1) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
+                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_brake,press_gas';
                                     if (isCorrect) {
                                       setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving forward in Drive. Autopilot basic setup complete!' }]);
                                       setS1Success(true);
