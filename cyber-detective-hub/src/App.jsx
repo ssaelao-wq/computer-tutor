@@ -2079,7 +2079,7 @@ export default function App() {
                           <strong>Problem:</strong> The automatic security vehicle needs to start its engine and drive forward.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Observe the dashboard handbrake condition. If the Handbrake is already released, sequence: Check P/N gear ➔ Press brake ➔ Start engine ➔ Shift D ➔ Release brake ➔ Press gas (skip release handbrake!).
+                          <strong>Instruction:</strong> Before a vehicle can drive off, you must safely start the engine and place it in Drive. Observe the dashboard handbrake condition first to see if you can skip releasing it. Remember, the starter motor will not run and gear locks will not disengage unless safety checks (checking P/N gear and holding the footbrake) are done first.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0 0 8px 0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> Computers execute steps literally. Automatic gearboxes have safety switches. The starter motor will not turn unless you depress the brake and ensure gear selector is in P or N.
@@ -2096,7 +2096,7 @@ export default function App() {
                           <strong>Problem:</strong> The vehicle needs to start its engine and reverse out of a parking space.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Observe the dashboard handbrake condition. Since the Handbrake is engaged, sequence: Check P/N gear ➔ Press brake ➔ Start engine ➔ Shift R ➔ Release handbrake ➔ Release brake ➔ Press gas.
+                          <strong>Instruction:</strong> To back out of a space, start the engine and select Reverse gear. Pay close attention to the dashboard condition status: if the handbrake is engaged, you must release it in your sequence before disengaging the footbrake and accelerating, otherwise the engine will stall.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0 0 8px 0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> This follows the exact same logical security checklist as starting and driving forward, but you must release the handbrake manually since it is engaged.
@@ -2113,7 +2113,7 @@ export default function App() {
                           <strong>Problem:</strong> The preloaded autopilot driving script is scrambled and fails safety checks.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Reorder the scrambled cards in the workspace so the vehicle runs its P/N checks, starts, shifts to D, releases the brakes, and drives off.
+                          <strong>Instruction:</strong> The script sequence has execution logic errors. Click "Run Autopilot Script", look at the terminal logs on the right to diagnose exactly which safety switch locked (e.g. starter lockout), and rearrange the cards in correct chronological order.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> Watch the terminal output logs to trace where the sequence violates safety checks (e.g. attempting to start ignition in Drive gear).
@@ -2127,7 +2127,7 @@ export default function App() {
                           <strong>Problem:</strong> The preloaded script has an extra, incorrect step that causes a safety violation.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Examine the preloaded steps. Identify the extra card that does not belong in the sequence and delete it by clicking the `×` button.
+                          <strong>Instruction:</strong> Inspect the preloaded commands in the workspace. Find the single card that is redundant or out of place (hint: shifting to Reverse in the middle of driving forward) and click its "×" button to remove it.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> Unused or invalid logic blocks in a sequence can trigger safety lockouts or errors. Code cleanup is a key part of debugging.
@@ -2141,7 +2141,7 @@ export default function App() {
                           <strong>Problem:</strong> An obstacle is detected on the road ahead. The vehicle must be brought to a halt.
                         </p>
                         <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Start the car, drive off in D, and then depress the footbrake pedal at the end to halt securely.
+                          <strong>Instruction:</strong> Sequence commands to safely boot the system, shift to Drive, and accelerate forward. However, you must add the final control command at the very end to depress the footbrake pedal and stop before hit.
                         </p>
                         <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                           <strong>Explanation:</strong> Safety rules check conditions continuously. Depressing the footbrake pedal instantly changes speed to 0 mph, stopping the car safely.
