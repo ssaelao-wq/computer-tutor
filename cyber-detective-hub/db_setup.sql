@@ -1,12 +1,20 @@
--- SQL Setup Script for Detective Hub Database persistence
+-- MySQL reference schema for the student-facing L3 curriculum (see PRJ_KNOWLEDGE.md §2/§8).
+-- This platform's OWN database is PostgreSQL/Supabase and is created automatically by
+-- server.cjs's createTables() on first run (see .env DATABASE_URL) — do NOT run this file
+-- to set up the Cyber Detective Hub app's own local database; it will not match server.cjs
+-- and login will fail. Use this file only as a reference schema for your own L3 project.
 CREATE DATABASE IF NOT EXISTS vite_db;
 USE vite_db;
 
 -- 1. User Profile Table
 CREATE TABLE IF NOT EXISTS user_profile (
   id VARCHAR(50) PRIMARY KEY,
+  username VARCHAR(50) UNIQUE,
+  password VARCHAR(100),
+  role VARCHAR(20) DEFAULT 'student',
   name VARCHAR(100) NOT NULL,
   points INT DEFAULT 0,
+  student_level VARCHAR(10) DEFAULT 'L1',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -42,8 +50,8 @@ CREATE TABLE IF NOT EXISTS journal_versions (
 );
 
 -- Seed Default Detective Profile if empty
-INSERT IGNORE INTO user_profile (id, name, points) 
-VALUES ('current_user', 'You (Detective-in-Training)', 450);
+INSERT IGNORE INTO user_profile (id, username, password, role, name, points, student_level)
+VALUES ('current_user', 'student_demo', 'student123', 'student', 'You (Detective-in-Training)', 450, 'L1');
 
 -- Seed Completed Quests matching initial app state
 INSERT IGNORE INTO completed_quests (user_id, quest_id)

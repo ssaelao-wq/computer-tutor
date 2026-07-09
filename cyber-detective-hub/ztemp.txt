@@ -1,3 +1,18 @@
+
+The audit report is ready for your review. Here are the top 3 takeaways:
+
+🔴 The Project Journal is the biggest gap — it has no session-specific Racing Car project tasks, milestones, or guidance. Students see a generic form instead of knowing they need to build #game-track, #player-car, etc. for Session 2.
+
+🟡 Exercise completion isn't tracked — students can jump to Exercise 10, skip 1–9, and still earn full XP. There's also no visual indicator of which exercises they've already completed.
+
+✅ The Exercise content itself is excellent — all 20 exercises (10 per session) perfectly follow the 5-step AI-Era framework with two complete Plan→Prompt→Review→Test→Iterate loops per session.
+
+Please review the full report and let me know which findings you'd like me to address first, or if you have questions about any specific issue.
+
+-------------
+I already implemented the platform as the PRJ_KNOWLEDGE.md. I want you to be an Auditor to review the platform I just implemented. Please look into the datails of Curriculum Guide menu, Exercise Journal, Project Journal. Review the workflow, UI/UX, exercise of each session, tasks of the Racing Car Project of each session. By the way, I just start focus on session 2 and session 3 first. Another thing, you can access from http://localhost:5180/, with login as student-a/student-a123.
+
+----------
 I already run the MySQL service (MySQLSSL). You can store these configure in .env, and we can use vite_db as database name. Please fill-in the port number.
 
 # Database Configuration

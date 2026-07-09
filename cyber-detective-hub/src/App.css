@@ -498,9 +498,9 @@
 /* Prompt Sandbox View styling */
 .sandbox-layout {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 0.8fr 2fr;
   gap: 24px;
-  height: 72vh;
+  height: calc(100vh - 180px);
 }
 
 @media (max-width: 1024px) {
@@ -738,17 +738,18 @@
   font-size: 0.8rem;
 }
 
-/* Prompt Journal Tab View styling */
+/* Project Journal Tab View styling */
 .journal-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 0.8fr 2fr;
+  gap: 24px;
+  height: calc(100vh - 180px);
 }
 
 @media (max-width: 900px) {
   .journal-layout {
     grid-template-columns: 1fr;
+    height: auto;
   }
 }
 
@@ -1331,7 +1332,7 @@
 
 .simulator-grid {
   display: grid;
-  grid-template-columns: 1fr 1.6fr 1.2fr;
+  grid-template-columns: 0.7fr 2.5fr 1.1fr;
   gap: 20px;
   width: 100%;
   align-items: stretch;

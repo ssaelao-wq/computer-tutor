@@ -1,52 +1,114 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { CURRICULUM_DATA } from './curriculumData';
+import { PROJECT_TASKS } from './projectTasksData';
 
-// Seed initial journal entries
-const INITIAL_JOURNAL = [
-  {
-    id: 'j1',
-    date: '2026-06-24 14:32',
-    title: 'L1 S1: Household IPO Blueprint',
-    version: 2,
-    activeVersion: 2,
-    history: [
-      {
-        version: 1,
-        prompt: "Write a process to warm up food from a plate.",
-        code: `Household IPO Blueprint: [Enter Device Name] (Draft v1)
 
-Inputs:
-- [Write your inputs here, e.g. start button clicked]
+// Curriculum Guide Concept Reference Database (reference lookup for students)
+const CONCEPT_REFERENCES = {
+  'l1-s1': [
+    { 
+      name: "Input-Process-Output (IPO) Model", 
+      desc: "Core Definition:\n  The fundamental framework showing how computers handle data. All applications take inputs, transform them, and present outputs.\n\nDetailed Mechanics:\n  1. Input: Incoming triggers or sensor records (clicks, key presses, API streams).\n  2. Process: The logic controller executing sequence calculations and evaluations.\n  3. Output: Visual draws, updates to states, sound indicators, physical moves.\n\nClassroom Autopilot Project Example:\n  - Input: User presses the 'Up Arrow' key.\n  - Process: The engine computes state updates: newY = currentY - speed.\n  - Output: The HTML view changes the top/bottom coordinates of the car element.", 
+      keywords: "IPO model diagram, computing inputs processing outputs" 
+    },
+    { 
+      name: "Sequential Execution", 
+      desc: "Core Definition:\n  Instructions run step-by-step from top to bottom. Order is absolute.\n\nCommon Student Mistake:\n  Coding operations out of chronological order. For example, trying to drive forward before shifting the car out of park:\n\n  // ❌ INVALID SEQUENCE (Crashes/Fails Preconditions):\n  1. press_gas(); // Fails: Engine is not started yet!\n  2. start_engine();\n  3. shift_to_drive();\n\n  //  VALID SEQUENCE:\n  1. start_engine();\n  2. press_footbrake();\n  3. shift_to_drive();\n  4. release_handbrake();\n  5. press_gas();", 
+      keywords: "order of execution code step by step, sequential control flow" 
+    },
+    { 
+      name: "System Preconditions", 
+      desc: "Core Definition:\n  Mandatory starting states that must be true before a specific instruction is allowed to run. Preconditions act as gatekeepers to protect systems from crashes.\n\nCode Validation Logic:\n  Before starting autopilot sequence, systems check state values:\n  if (gearState !== \"PARK\") {\n    throw Error(\"Lockout Triggered: Shift to Park first!\");\n  }\n  if (!footBrakeDepressed) {\n    throw Error(\"Lockout Triggered: Brake pedal must be pressed!\");\n  }", 
+      keywords: "preconditions assertions contract validation code" 
+    },
+    { 
+      name: "Variables as Storage Registers", 
+      desc: "Core Definition:\n  Named slots in memory that hold exactly one value. Assigning a value overrides whatever was there before.\n\nJavaScript Syntax Cheat Sheet:\n  let speed = 0;        // Declares a number variable\n  let isRunning = true; // Declares a boolean (true/false) variable\n  let driver = \"Agent\"; // Declares a string (text) variable\n\nHow Variables Change:\n  speed = 10;           // Overwrites old value. speed is now 10.\n  speed = speed + 5;    // Evaluates right side (10 + 5) first, then saves 15.", 
+      keywords: "declaring variables javascript let const data types" 
+    }
+  ],
+  'l1-s2': [
+    { 
+      name: "Document Object Model (DOM)", 
+      desc: "Core Definition:\n  The nested hierarchy representation of a web page. The browser translates your HTML code into a tree structure of visual boxes.\n\nVisual DOM Hierarchy:\n  - document (Root)\n    └─ <html>\n       └─ <body>\n          └─ <div id=\"track\"> (Parent container)\n             ├─ <div id=\"player-car\"></div> (Child container)\n             └─ <div class=\"lane-line\"></div> (Child container)", 
+      keywords: "browser DOM tree node hierarchy representation" 
+    },
+    { 
+      name: "HTML Tags and Element Syntax", 
+      desc: "Core Definition:\n  Tags define the type and boundaries of visual components.\n\nCheat Sheet Elements:\n  - <div>: A structural container box used to partition lanes, tracks, or dashboards.\n  - <span>: An inline text wrapper used to highlight individual words or scores.\n  - <h2>: A header title.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - ✅ Correct: <div><span>Hello</span></div>\n  - ❌ Incorrect: <div><span>Hello</div></span> (causes render errors)", 
+      keywords: "HTML element tags opening closing rules cheat sheet" 
+    },
+    { 
+      name: "Parent-Child Nesting Structure", 
+      desc: "Core Definition:\n  Nesting an element inside another makes it a child. The child exists relative to the boundaries of the parent.\n\nSyntax Blueprint:\n  <div id=\"highway-track\"> <!-- Parent Container -->\n    <div id=\"player-car\"></div> <!-- Child Element 1 -->\n    <div id=\"obstacle-car\"></div> <!-- Child Element 2 -->\n  </div>\n\nRule of Thumb:\n  If you hide, delete, or move a parent element, all of its children will hide, delete, or move with it.", 
+      keywords: "nesting HTML tags structure parent child DOM" 
+    },
+    { 
+      name: "HTML Attributes (ID vs Class)", 
+      desc: "Core Definition:\n  Attributes provide identifiers and metadata to HTML elements.\n\nWhen to use which:\n  - ID (Unique): Must only be used ONCE per page. Identifies specific targets.\n    Example: <div id=\"player-car\"></div>\n  - Class (Reusable): Used to group multiple elements that share styles or behaviors.\n    Example: <div class=\"obstacle-car\"></div>\n             <div class=\"obstacle-car\"></div>", 
+      keywords: "HTML attributes difference id vs class selector" 
+    }
+  ],
+  'l1-s3': [
+    { 
+      name: "CSS Selectors and Specificity Rules", 
+      desc: "Core Definition:\n  Selectors tell the browser which HTML elements to apply styles to. Specificity decides which styling rule wins if there is a conflict.\n\nSyntax Cheat Sheet:\n  - Target by Tag (low priority): div { background: grey; }\n  - Target by Class (med priority): .obstacle { background: red; }\n  - Target by ID (high priority): #player-car { background: blue; }\n\nRule:\n  If a class selector says a car is red, but its ID selector says it is blue, it will render blue because ID selectors override classes.", 
+      keywords: "CSS selectors specificity hierarchy overrides" 
+    },
+    { 
+      name: "CSS Box Model", 
+      desc: "Core Definition:\n  Every element on a web page is treated as a rectangular box consisting of four layers.\n\nVisual Layout Blueprint:\n  ┌──────────────────────────────────────────────┐\n  │ MARGIN (Outer space around the element)      │\n  │  ┌────────────────────────────────────────┐  │\n  │  │ BORDER (The element outline line)      │  │\n  │  │  ┌──────────────────────────────────┐  │  │\n  │  │  │ PADDING (Inner clear space)      │  │  │\n  │  │  │  ┌────────────────────────────┐  │  │  │\n  │  │  │  │ CONTENT (Text/Car image)   │  │  │  │\n  │  │  │  └────────────────────────────┘  │  │  │\n  │  │  └──────────────────────────────────┘  │  │\n  │  └────────────────────────────────────────┘  │\n  └──────────────────────────────────────────────┘\n\nBest Practice:\n  Always set box-sizing: border-box; so that padding doesn't swell the final width.", 
+      keywords: "CSS box model margins borders padding box sizing" 
+    },
+    { 
+      name: "Absolute vs. Relative Positioning", 
+      desc: "Core Definition:\n  Controls coordinate-based layouts so we can position elements freely (like overlaying obstacles onto a racetrack grid).\n\nLayout Blueprint:\n  - Parent element must be relative: anchors coordinates.\n  - Child element must be absolute: moves coordinates relative to parent.\n\nCSS Syntax:\n  #game-arena { \n    position: relative; \n    width: 300px; height: 500px; \n  }\n  #player-car { \n    position: absolute; \n    left: 120px;   /* X-coordinate from left edge */\n    bottom: 10px;  /* Y-coordinate from bottom edge */\n    width: 60px; height: 100px; \n  }", 
+      keywords: "absolute coordinates layout CSS position absolute" 
+    },
+    { 
+      name: "CSS Flexbox Layouts", 
+      desc: "Core Definition:\n  A layout engine to align lists of elements in a row or column automatically.\n\nSyntax Blueprint:\n  .dashboard-hud {\n    display: flex;\n    flex-direction: row;        /* Align horizontal list */\n    justify-content: space-around; /* Distribute elements evenly */\n    align-items: center;        /* Vertically center elements */\n  }", 
+      keywords: "CSS flexbox cheat sheet justify content align items" 
+    }
+  ],
+  'l1-s4': [
+    { 
+      name: "Conditional Statements (If-Else branching)", 
+      desc: "Core Definition:\n  Allows the computer to run different blocks of code based on whether a condition is true or false.\n\nJavaScript Syntax Blueprint:\n  if (speed > 100) {\n    alert(\"Danger: Speed threshold exceeded!\");\n  } else if (speed > 60) {\n    alert(\"Cruising speed reached.\");\n  } else {\n    alert(\"Vehicle slow or stopped.\");\n  }\n\nKey Rule:\n  The computer checks these conditions from top-to-bottom. The first one that evaluates to true is run, and the rest are ignored.", 
+      keywords: "javascript if else if syntax conditional code blocks" 
+    },
+    { 
+      name: "Logical Operators (AND, OR, NOT)", 
+      desc: "Core Definition:\n  Operators used to link multiple checks inside conditional statements.\n\nOperators Cheat Sheet:\n  - AND (&&): Both sides must be true.\n    if (gearState === \"DRIVE\" && footbrakeReleased === true) { ... }\n  - OR (||): At least one side must be true.\n    if (sensorAlertActive || manualEmergencyPressed) { ... }\n  - NOT (!): Inverts true to false, or false to true.\n    if (!engineRunning) { startEngine(); }", 
+      keywords: "javascript logical operators AND OR NOT syntax boolean" 
+    },
+    { 
+      name: "Logical Priority and Overrides", 
+      desc: "Core Definition:\n  Designing condition hierarchies so that safety triggers are evaluated before routine operations.\n\nOrder Priority Pitfall:\n  If you check normal inputs before emergency triggers, the emergency triggers will be ignored!\n\n  // ❌ INCORRECT (Car accelerates even if emergency brake is pressed):\n  if (gasPedalPressed) { speed += 5; }\n  else if (emergencyHaltActive) { speed = 0; }\n\n  // ✅ CORRECT (Emergency override evaluated first):\n  if (emergencyHaltActive) { speed = 0; }\n  else if (gasPedalPressed) { speed += 5; }", 
+      keywords: "condition overrides precedence safety priority programming" 
+    }
+  ],
+  'l1-s5': [
+    { 
+      name: "Loop Structures (For vs. While)", 
+      desc: "Core Definition:\n  Loops repeat a block of code multiple times without rewriting it manually.\n\nWhen to use which:\n  - For Loop (Counting): Use when you know exactly how many times to repeat.\n    for (let i = 0; i < 5; i++) {\n      // Runs 5 times (i starts at 0, goes up to 4)\n      spawnObstacle();\n    }\n  - While Loop (Condition-bound): Use when repeating based on a status condition.\n    while (fuelGallons > 0) {\n      consumeFuel();\n      fuelGallons--; // Ensure condition changes!\n    }", 
+      keywords: "for loop syntax javascript, while loop code templates" 
+    },
+    { 
+      name: "Infinite Loop Traps & CPU Lockouts", 
+      desc: "Core Definition:\n  A severe logic error where a loop's condition never becomes false. The computer runs the loop infinitely, freezing the browser.\n\nCommon Loop Bug:\n  let counter = 0;\n  while (counter < 5) {\n    console.log(\"Executing...\");\n    // ❌ Error: forgot 'counter++;'. counter is always 0. Loop never exits!\n  }\n\nRules to Prevent CPU Lockouts:\n  1. Double check that your check variable updates inside the loop body.\n  2. Ensure the check moves closer to the loop exit threshold on each run.", 
+      keywords: "browser tab freezes loop error, infinite loop exit conditions" 
+    },
+    { 
+      name: "Loop Controls (Break and Increments)", 
+      desc: "Core Definition:\n  Controls that let you change loop behaviors mid-flight.\n\nKeywords Cheat Sheet:\n  - Increment (e.g. i++): Shorthand for i = i + 1. Shifts the loop state forward.\n  - Break: Instantly exits the loop, skipping any remaining cycles.\n\nJavaScript Syntax:\n  for (let i = 0; i < 10; i++) {\n    if (collisionDetected) {\n      break; // Stop running immediately\n    }\n    moveObstacles();\n  }", 
+      keywords: "break statement javascript loop, loop counter increment syntax" 
+    }
+  ]
+};
 
-Processing Steps:
-- [Write your step-by-step process steps here]
 
-Outputs:
-- [Write your expected outputs here]`
-      },
-      {
-        version: 2,
-        prompt: "Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.",
-        code: `Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)
-
-System Preconditions:
-- [Write preconditions, e.g. powerState is "ON"]
-
-Inputs (Identify variables and types):
-- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)
-
-Processing Logic Steps (Step-by-step algorithm and loops):
-1. [First Step]
-2. [Second Step]
-3. [Repeat/Loop Check Step]
-
-Outputs (Identify expected actions/results):
-- [Output Variable Name]: [Expected Action/Value]`
-      }
-    ]
-  }
-];
 
 const CAMPAIGN_THEMES = {
   cyberpunk: {
@@ -55,7 +117,7 @@ const CAMPAIGN_THEMES = {
     description: 'Solve logical systemic bugs in a neon-lit, highly automated city. Track hackers and secure grid lines.',
     levels: {
       1: {
-        mainQuest: 'Operation: Safe City Grid — Design the logical blueprints for the city\'s automated infrastructure (autonomous vehicles, public transport, smart vending).',
+        mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
         sessions: [
           {
             id: 'l1-s1',
@@ -67,18 +129,18 @@ const CAMPAIGN_THEMES = {
           },
           {
             id: 'l1-s2',
-            title: 'Session 2: "Grid Variable Classification"',
-            objective: 'Classify urban grid data variables and explore inputs/ranges.',
-            activity: 'Design a character creation form with strict rules (e.g., age must be a number 5-100; name cannot be blank). Try to break a partner\'s form using invalid inputs.',
-            homework: 'Find 3 real-world forms. For each, identify the data types expected and list what happens if you input the wrong data type (+50 XP).',
+            title: 'Session 2: "Starting the Game: HTML Structure & Basic Elements"',
+            objective: 'Understand how browsers structure documents using HTML tags and nest containers for a racing game.',
+            activity: 'Create the HTML structure for the game including track container, player car container, and dashboard HUD.',
+            homework: 'Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework" (+50 XP).',
             xp: 100
           },
           {
             id: 'l1-s3',
-            title: 'Session 3: "Airlock Security State Machines"',
-            objective: 'Model system behaviors using State, Transitions, and Commands.',
-            activity: 'Design an Airlock Security State Machine. Map transitions from CLOSED to OPEN using cycle commands and secure alarm overrides.',
-            homework: 'Design a state transition table for a smart device (like a smart lock or alarm clock) and log it in your Prompt Journal (+50 XP).',
+            title: 'Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"',
+            objective: 'Write CSS rules using selectors (ID, Class, Element) to layout the road lanes and position the player car.',
+            activity: 'Apply styles to set dimensions for the road lanes, draw dashed markers, and absolute position player and obstacle cars inside parent relative bounds.',
+            homework: 'In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line (+50 XP).',
             xp: 100
           },
           {
@@ -178,7 +240,7 @@ const CAMPAIGN_THEMES = {
     description: 'Establish and defend a human colony on Mars. Optimize life support systems and control rover logic.',
     levels: {
       1: {
-        mainQuest: 'Operation: Colony Life Support — Design the logic diagrams for atmospheric regulators, water filtration, and solar tracking loops.',
+        mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
         sessions: [
           {
             id: 'l1-s1',
@@ -190,18 +252,18 @@ const CAMPAIGN_THEMES = {
           },
           {
             id: 'l1-s2',
-            title: 'Session 2: "Martian Soil Variables"',
-            objective: 'Classify mineral and soil composition variables.',
-            activity: 'Design a rover soil report form with strict boundaries (e.g., pH must be 0-14, radiation level must be numeric).',
-            homework: 'Identify forms or datalogs used in space missions. List their variable constraints.',
+            title: 'Session 2: "Starting the Game: HTML Structure & Basic Elements"',
+            objective: 'Understand how browsers structure documents using HTML tags and nest containers for a racing game.',
+            activity: 'Create the HTML structure for the game including track container, player car container, and dashboard HUD.',
+            homework: 'Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework" (+50 XP).',
             xp: 100
           },
           {
             id: 'l1-s3',
-            title: 'Session 3: "Habitat Airlock Pressurization"',
-            objective: 'Configure state transitions for safe depressurization sequences.',
-            activity: 'Airlock Controller Configuration: Write state transitions between DEPRESSURIZED, PRESSURIZING, and PRESSURIZED states to prevent toxic leaks.',
-            homework: 'Draw a state machine transition diagram for a space capsule airlock and list its error states.',
+            title: 'Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"',
+            objective: 'Write CSS rules using selectors (ID, Class, Element) to layout the road lanes and position the player car.',
+            activity: 'Apply styles to set dimensions for the road lanes, draw dashed markers, and absolute position player and obstacle cars inside parent relative bounds.',
+            homework: 'In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line (+50 XP).',
             xp: 100
           },
           {
@@ -301,7 +363,7 @@ const CAMPAIGN_THEMES = {
     description: 'Master logical spell-crafting in a school of wizardry. Enchant magical items and secure cauldrons.',
     levels: {
       1: {
-        mainQuest: 'Operation: Alchemy Automation — Map out the recipes (logic flowcharts) for automated potion mixers and magical doors.',
+        mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
         sessions: [
           {
             id: 'l1-s1',
@@ -313,18 +375,18 @@ const CAMPAIGN_THEMES = {
           },
           {
             id: 'l1-s2',
-            title: 'Session 2: "Scroll Registry Variables"',
-            objective: 'Classify magical scroll records and potion ingredient ranges.',
-            activity: 'Design a spell registration form (e.g., mana cost must be a number 0-100, element choice restricted).',
-            homework: 'Look up common stats in games. Classify elements as variables.',
+            title: 'Session 2: "Starting the Game: HTML Structure & Basic Elements"',
+            objective: 'Understand how browsers structure documents using HTML tags and nest containers for a racing game.',
+            activity: 'Create the HTML structure for the game including track container, player car container, and dashboard HUD.',
+            homework: 'Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework" (+50 XP).',
             xp: 100
           },
           {
             id: 'l1-s3',
-            title: 'Session 3: "Magical Barrier Wards"',
-            objective: 'Enchant barrier gates using strict transition states (Locked, Sealed, Breach).',
-            activity: 'Wizarding Gates Spell: Program a state machine that transits gates between LOCKED and OPEN. Manage intruder alert triggers.',
-            homework: 'Map out the states of a wizarding dungeon vault door. Write the spell keywords that trigger each transition.',
+            title: 'Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"',
+            objective: 'Write CSS rules using selectors (ID, Class, Element) to layout the road lanes and position the player car.',
+            activity: 'Apply styles to set dimensions for the road lanes, draw dashed markers, and absolute position player and obstacle cars inside parent relative bounds.',
+            homework: 'In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line (+50 XP).',
             xp: 100
           },
           {
@@ -428,6 +490,1454 @@ const LEADERBOARD_INITIAL = [
   { rank: 5, name: 'Ethan "BugHunter" Miller', level: 'Level 1', points: 380, active: 'Session 5: Loops' }
 ];
 
+const S2_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 2.1: [Plan & Design] Game Arena Skeleton",
+    problem: "Before writing HTML, you must plan the container hierarchy. The main game arena needs a parent 'game-track' and a child 'player-car'.",
+    instruction: "Write a design blueprint path indicating that player-car is inside game-track. Use the format: game-track > player-car",
+    preloaded: "/* Write your structural plan here: e.g. parent > child */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('game-track>player-car') || (clean.includes('game-track') && clean.includes('player-car') && clean.includes('>'));
+    },
+    hint: "Write 'game-track > player-car' inside the workspace."
+  },
+  {
+    num: 2,
+    title: "Exercise 2.2: [Write AI Prompt] Requesting the Track",
+    problem: "Now you must instruct the AI to generate the track container exactly as planned.",
+    instruction: "Write an AI prompt asking to create a div element with an ID of 'game-track'. Your prompt must contain the words: 'create', 'div', 'id', and 'game-track'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('create') && clean.includes('div') && clean.includes('id') && clean.includes('game-track');
+    },
+    hint: "Make sure you ask to 'create' a 'div' with the 'id' set to 'game-track'."
+  },
+  {
+    num: 3,
+    title: "Exercise 2.3: [Review & Explain] Selector Audits",
+    problem: "The AI generated: `<section class='game-container' id='game-track'></section>`. Review this generated code.",
+    instruction: "Explain which attribute (class or id) uniquely identifies this track element. Type the exact value of that unique identifier in plain text.",
+    preloaded: "/* Enter the unique identifier value: */",
+    validate: (code) => {
+      const clean = code.replace(/['"\s]+/g, '').toLowerCase();
+      return clean.includes('game-track');
+    },
+    hint: "The unique identifier is the ID. Enter its value: 'game-track'."
+  },
+  {
+    num: 4,
+    title: "Exercise 2.4: [Test & Break] Spotting Rendering Leaks",
+    problem: "You tested the code, but the browser layout is broken because of an unclosed tag in the AI code: `<div id=\"game-track\"><div id=\"player-car\"></div>`.",
+    instruction: "Correct this broken HTML block by adding the missing closing </div> tag to clamp the track boundaries.",
+    preloaded: "<div id=\"game-track\"><div id=\"player-car\"></div>",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean === '<divid="game-track"><divid="player-car"></div></div>' || clean === '<divid=\'game-track\'><divid=\'player-car\'></divid></divid>';
+    },
+    hint: "Add an extra '</div>' to close the game-track div."
+  },
+  {
+    num: 5,
+    title: "Exercise 2.5: [Iterate & Improve] Spawning Dividers",
+    problem: "Iterate on the track design to support lanes. You need to add a divider inside the track.",
+    instruction: "Nest a div element with a class of 'lane-divider' inside the '#game-track' container, directly below the player car.",
+    preloaded: "<div id=\"game-track\">\n  <div id=\"player-car\"></div>\n</div>",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('<divid="game-track">') && clean.includes('<divclass="lane-divider"></div>') && clean.includes('</div></div>');
+    },
+    hint: "Insert '<div class=\"lane-divider\"></div>' inside the track container."
+  },
+  {
+    num: 6,
+    title: "Exercise 2.6: [Plan & Design] Dashboard HUD",
+    problem: "We need a dashboard panel to render scores. Plan a 3-level deep tag structure: a dashboard parent holding an h2 header, which holds a span for score values.",
+    instruction: "Write the planned nested tag structure using arrows. Example: div > h2 > span",
+    preloaded: "/* Enter your nested tag plan: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('div>h2>span') || (clean.includes('div') && clean.includes('h2') && clean.includes('span') && clean.includes('>'));
+    },
+    hint: "Type 'div > h2 > span' to map out the dashboard nesting."
+  },
+  {
+    num: 7,
+    title: "Exercise 2.7: [Write AI Prompt] Score HUD Prompting",
+    problem: "Write a prompt to direct the AI to generate the scoreboard HUD block.",
+    instruction: "Draft a prompt. It must contain the words 'dashboard', 'h2', 'span', and 'score-val'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('dashboard') && clean.includes('h2') && clean.includes('span') && clean.includes('score-val');
+    },
+    hint: "Write a prompt mentioning 'dashboard', 'h2', 'span', and the ID 'score-val'."
+  },
+  {
+    num: 8,
+    title: "Exercise 2.8: [Review & Explain] HTML Structure Audit",
+    problem: "The AI generated: `<div id=\"dashboard\"><h2>Score: <span id=\"score-val\">0</span></h2></div>`. Review this code.",
+    instruction: "Is the span element nested inside the h2 element? Answer with YES or NO.",
+    preloaded: "/* Type YES or NO: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'YES';
+    },
+    hint: "Since the <span> tag is opened and closed inside the <h2> bounds, the answer is 'YES'."
+  },
+  {
+    num: 9,
+    title: "Exercise 2.9: [Test & Break] Spotting Selector Failures",
+    problem: "You test the game, but the scoreboard value never changes. The JS selector expects 'score-val', but the AI generated: `<span id=\"scoreval\">0</span>`.",
+    instruction: "Fix this selector failure by correcting the ID attribute in the code editor to match 'score-val'.",
+    preloaded: "<div id=\"dashboard\">\n  <h2>Score: <span id=\"scoreval\">0</span></h2>\n</div>",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('id="score-val"') || clean.includes("id='score-val'");
+    },
+    hint: "Rename 'scoreval' to 'score-val' inside the span ID."
+  },
+  {
+    num: 10,
+    title: "Exercise 2.10: [Iterate & Improve] Merging the Document",
+    problem: "Iterate to create the complete game structure. You must combine the dashboard and track arena blocks into a single valid file.",
+    instruction: "Combine your scoreboard dashboard and game-track HTML blocks. Ensure all containers (dashboard, track, player car, divider) are present and closed.",
+    preloaded: "<!-- Combine elements here: -->",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('id="dashboard"') && clean.includes('id="score-val"') && clean.includes('id="game-track"') && clean.includes('id="player-car"') && clean.includes('class="lane-divider"') && (code.match(/<\/div>/g) || []).length >= 4;
+    },
+    hint: "Make sure all div and span tags are closed. You should have 4 or more closing </div> tags in total."
+  }
+];
+
+const S3_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 3.1: [Plan & Design] Dark Arena Specs",
+    problem: "You are planning layout styles for the track. Identify the target values needed.",
+    instruction: "List the planned track arena styling specs. Your answer must contain the values: '390px' (width), '500px' (height), and '#333' (color).",
+    preloaded: "/* Planned Width:\n   Planned Height:\n   Planned Color: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('390px') && clean.includes('500px') && clean.includes('#333');
+    },
+    hint: "List the properties containing '390px', '500px', and '#333'."
+  },
+  {
+    num: 2,
+    title: "Exercise 3.2: [Write AI Prompt] Styling the Track",
+    problem: "Write a prompt instructing the AI to generate track styling specifications.",
+    instruction: "Draft a prompt. It must contain the words 'game-track', 'width', 'height', and 'background-color'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('game-track') && clean.includes('width') && clean.includes('height') && clean.includes('background-color');
+    },
+    hint: "Ask the AI to target '#game-track' with 'width', 'height', and 'background-color' properties."
+  },
+  {
+    num: 3,
+    title: "Exercise 3.3: [Review & Explain] Selectors Review",
+    problem: "Review the CSS selectors rules. We target classes with dot (.) and IDs with hash (#).",
+    instruction: "Type the selector symbol used to target an ID, and the symbol used for a Class. (e.g. '#' and '.').",
+    preloaded: "/* ID selector: \n   Class selector: */",
+    validate: (code) => {
+      return code.includes('#') && code.includes('.');
+    },
+    hint: "Type the '#' symbol and the '.' symbol in the editor."
+  },
+  {
+    num: 4,
+    title: "Exercise 3.4: [Test & Break] Drifting Cars Debugger",
+    problem: "You run the page, but the absolute-positioned car drifts to the top of the browser screen because the parent '#game-track' lacks a positioning anchor.",
+    instruction: "Fix this coordinate anchor bug by adding 'position: relative;' to the #game-track CSS block.",
+    preloaded: "#game-track {\n  width: 390px;\n  height: 500px;\n  background-color: #333;\n}",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('#game-track{') && clean.includes('position:relative');
+    },
+    hint: "Add position: relative; inside #game-track rules."
+  },
+  {
+    num: 5,
+    title: "Exercise 3.5: [Iterate & Improve] Dashed Lanes",
+    problem: "Iterate on the highway layout to define visual lanes for steering.",
+    instruction: "Style the '.lane-divider' class with: position absolute, height 100%, width 2px, and border-left '2px dashed white'.",
+    preloaded: ".lane-divider {\n  \n}",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('.lane-divider{') && clean.includes('position:absolute') && (clean.includes('border-left:2pxdashedwhite') || clean.includes('border-left:2pxdashed#fff'));
+    },
+    hint: "Declare position: absolute; height: 100%; border-left: 2px dashed white; inside the selector."
+  },
+  {
+    num: 6,
+    title: "Exercise 3.6: [Plan & Design] Car Offsets",
+    problem: "Plan the player car alignment offsets inside a 390px wide track container. The car needs to sit centered in the middle lane.",
+    instruction: "List the targeted bottom offset (20px) and center-left offset (165px).",
+    preloaded: "/* Bottom offset: \n   Left offset: */",
+    validate: (code) => {
+      return code.includes('20px') && code.includes('165px');
+    },
+    hint: "Specify bottom 20px and left 165px in the comments."
+  },
+  {
+    num: 7,
+    title: "Exercise 3.7: [Write AI Prompt] Positioning the Car",
+    problem: "Write a prompt to instruct the AI to position the player car at bottom 20px and left 165px.",
+    instruction: "Draft a prompt. It must contain the words 'player-car', 'absolute', 'bottom', and 'left'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('player-car') && clean.includes('absolute') && clean.includes('bottom') && clean.includes('left');
+    },
+    hint: "Ask the AI to style '#player-car' using 'absolute' position with 'bottom' and 'left' offsets."
+  },
+  {
+    num: 8,
+    title: "Exercise 3.8: [Review & Explain] Bounding Boxes",
+    problem: "The AI placed an obstacle car at coordinates: `top: 50px; left: 40px;`.",
+    instruction: "Is this obstacle positioned near the LEFT or RIGHT side of the track lanes? Answer with LEFT or RIGHT.",
+    preloaded: "/* Answer LEFT or RIGHT: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'LEFT';
+    },
+    hint: "A left offset of 40px is near the left edge. Answer 'LEFT'."
+  },
+  {
+    num: 9,
+    title: "Exercise 3.9: [Test & Break] Invisible Elements",
+    problem: "You tested the code, but the restart panel is hidden by default. The AI code has: `.hidden { display: none; }`.",
+    instruction: "Fix this issue for layout testing. Temporarily override display to flex in the editor to make it visible.",
+    preloaded: ".hidden {\n  display: none;\n}",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('.hidden{') && clean.includes('display:flex');
+    },
+    hint: "Change 'display: none;' to 'display: flex;' inside the .hidden rule."
+  },
+  {
+    num: 10,
+    title: "Exercise 3.10: [Iterate & Improve] HUD Flex Alignment",
+    problem: "Iterate on the scoreboard dashboard styles to align scores horizontally.",
+    instruction: "Select '#dashboard' and style it using flexbox layout: display flex, justify-content space-between, and padding 10px.",
+    preloaded: "#dashboard {\n  \n}",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('#dashboard{') && clean.includes('display:flex') && clean.includes('justify-content:space-between');
+    },
+    hint: "Add display: flex; justify-content: space-between; and padding: 10px; to the dashboard rules."
+  }
+];
+
+const S4_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 4.1: [Plan & Design] The Variable Registry",
+    problem: "Before writing any code, plan which game values need to change during play and which stay fixed forever.",
+    instruction: "Write the plan using the format: let carX, speed, score, gameActive | const LANE_WIDTH",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('speed');
+    },
+    hint: "Type 'let carX, speed, score, gameActive | const LANE_WIDTH'."
+  },
+  {
+    num: 2,
+    title: "Exercise 4.2: [Write AI Prompt] Requesting the Declarations",
+    problem: "Now instruct the AI to write the actual variable declaration block.",
+    instruction: "Write a prompt asking to declare mutable variables carX (initial 165), speed (initial 0), score (initial 0), and gameActive (initial false), plus a constant LANE_WIDTH. Your prompt must contain 'let', 'const', 'carX', and '165'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('165');
+    },
+    hint: "Mention 'let', 'const', 'carX', and '165' in your prompt."
+  },
+  {
+    num: 3,
+    title: "Exercise 4.3: [Review & Explain] Reading Data Types",
+    problem: `The AI generated: let score = 0;. Review this declaration.`,
+    instruction: "What data type is the value 0? Type Number, String, or Boolean.",
+    preloaded: "/* Type the data type: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'NUMBER';
+    },
+    hint: "0 with no quotes around it is a 'Number'."
+  },
+  {
+    num: 4,
+    title: "Exercise 4.4: [Test & Break] The Quoted Number Bug",
+    problem: `Bug: the AI generated let speed = "0"; — the quotes make speed a String, not a Number.`,
+    instruction: "Fix the declaration so speed is a real Number, not a quoted string.",
+    preloaded: 'let speed = "0";',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return (clean.includes('letspeed=0;') || clean.includes('letspeed=0')) && !clean.includes('"0"') && !clean.includes("'0'");
+    },
+    hint: `Remove the quotes: let speed = 0;`
+  },
+  {
+    num: 5,
+    title: "Exercise 4.5: [Iterate & Improve] Adding the Game State Flag",
+    problem: "Iterate on your fixed declarations to add the missing game-state flag.",
+    instruction: "Add a boolean variable gameActive initialized to false.",
+    preloaded: 'let speed = 0;\nlet score = 0;',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('gameactive=false');
+    },
+    hint: "Add: let gameActive = false;"
+  },
+  {
+    num: 6,
+    title: "Exercise 4.6: [Plan & Design] Planning the Math Updates",
+    problem: "Plan how score and speed will change during gameplay.",
+    instruction: "Write the plan using the format: score++ | speed += 10",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return (clean.includes('score++') || clean.includes('score+=1')) && clean.includes('speed+=10');
+    },
+    hint: "Type 'score++ | speed += 10'."
+  },
+  {
+    num: 7,
+    title: "Exercise 4.7: [Write AI Prompt] Requesting the Math Statements",
+    problem: "Instruct the AI to write the increment statements.",
+    instruction: "Write a prompt asking for statements that increment score by 1 and speed by 10, then log both values to the console. Your prompt must contain 'score', 'speed', and 'console.log'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('score') && clean.includes('speed') && clean.includes('console.log');
+    },
+    hint: "Mention 'score', 'speed', and 'console.log' in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 4.8: [Review & Explain] Predicting the Output",
+    problem: `The AI generated: let speed = 0; speed += 10;. Review this code.`,
+    instruction: "After this code runs, what is the value of speed? Type a number.",
+    preloaded: "/* Type a number: */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '10';
+    },
+    hint: "0 + 10 = 10 — type '10'."
+  },
+  {
+    num: 9,
+    title: "Exercise 4.9: [Test & Break] The String Concatenation Trap",
+    problem: `Bug: speed was declared as let speed = "10"; (a string). Running speed += 5; produces "105" instead of 15.`,
+    instruction: "Fix the original declaration so speed is a Number, making speed += 5 produce 15 as expected.",
+    preloaded: 'let speed = "10";\nspeed += 5;',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('letspeed=10;') && !clean.includes('"10"') && !clean.includes("'10'");
+    },
+    hint: `Remove the quotes from the original declaration: let speed = 10;`
+  },
+  {
+    num: 10,
+    title: "Exercise 4.10: [Iterate & Improve] The Complete Variable Registry",
+    problem: "Combine every piece from this session into the final variable registry and math block.",
+    instruction: "Write the complete code: declare carX, speed, score, gameActive (all correct Number/Boolean types, no quoted numbers), plus a LANE_WIDTH constant, then increment score by 1 and speed by 10.",
+    preloaded: "/* Write the complete variable registry here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('gameactive') && (clean.includes('score++') || clean.includes('score+=1')) && clean.includes('speed+=10');
+    },
+    hint: "Your code needs: let/const declarations for carX/speed/score/gameActive/LANE_WIDTH, plus score++ and speed += 10."
+  }
+];
+
+// Shared live-execution iframe for the Level 1 JS Sandboxes (Sessions 4-8+).
+// Unlike the S2/S3 HTML/CSS previews (which just re-render static markup), this
+// actually runs the student's typed JavaScript against the racing game DOM inside
+// the iframe, and forwards console.log()/runtime errors back to the parent via
+// postMessage so they can be shown in the terminal log panel.
+function buildJsSandboxPreview(studentCode) {
+  return `
+    <html>
+      <head>
+        <style>
+          body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
+          #dashboard { padding: 8px; background-color: #1a1a2e; border-radius: 6px; text-align: center; border: 1px solid #333; margin-bottom: 10px; }
+          h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
+          #game-track { position: relative; width: 100%; height: 260px; background-color: #222; border: 3px solid #ffcc00; overflow: hidden; }
+          .lane-divider { position: absolute; top: 0; height: 100%; width: 2px; border-left: 2px dashed #ffffff; }
+          #player-car { position: absolute; bottom: 20px; width: 30px; height: 50px; background-color: #ff4d4d; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: left 0.15s ease; z-index: 2; }
+          #obstacle { position: absolute; top: -100px; width: 25px; height: 40px; background-color: #ff9f43; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 1; }
+          #restart-panel { position: absolute; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; color: #ff4d4d; font-weight: bold; text-align: center; z-index: 3; }
+          .hidden { display: none !important; }
+          #console-hint { padding: 6px 2px 0 2px; font-size: 0.65rem; color: #666; }
+        </style>
+      </head>
+      <body tabindex="0">
+        <div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div>
+        <div id="game-track">
+          <div class="lane-divider" style="left: 130px;"></div>
+          <div class="lane-divider" style="left: 260px;"></div>
+          <div id="player-car" style="left: 165px;">🏎️</div>
+          <div id="obstacle" style="left: 165px;">🚧</div>
+          <div id="restart-panel" class="hidden">GAME OVER<br/>Press Space to Restart</div>
+        </div>
+        <div id="console-hint">Click inside this preview, then press ArrowLeft / ArrowRight to test your code live.</div>
+        <script>
+          window.onerror = function(msg) {
+            parent.postMessage({ __sim: true, type: 'error', text: String(msg) }, '*');
+            return true;
+          };
+          var _origLog = console.log;
+          console.log = function() {
+            var args = Array.prototype.slice.call(arguments);
+            parent.postMessage({ __sim: true, type: 'log', text: args.map(String).join(' ') }, '*');
+            _origLog.apply(console, args);
+          };
+          var carX = 165;
+          try {
+            ${studentCode}
+          } catch (e) {
+            parent.postMessage({ __sim: true, type: 'error', text: e.message }, '*');
+          }
+        </script>
+      </body>
+    </html>
+  `;
+}
+
+const S5_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 5.1: [Plan & Design] Reading the Key Pressed",
+    problem: "Before writing any JavaScript, plan how the browser will tell you which key the player pressed.",
+    instruction: "Write your plan using the format: eventType > property. The browser fires a 'keydown' event, and the specific key is reported on the event object's 'key' property.",
+    preloaded: "/* Write your plan here: eventType > property */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('keydown') && (clean.includes('event.key') || clean.includes('e.key') || clean.includes('>key'));
+    },
+    hint: "Type 'keydown > event.key' to describe the plan."
+  },
+  {
+    num: 2,
+    title: "Exercise 5.2: [Write AI Prompt] Requesting the Listener",
+    problem: "Now instruct the AI to generate the keydown listener.",
+    instruction: "Write a prompt asking to bind a keydown event listener to the window that logs the pressed key to the console. Your prompt must contain the words 'addEventListener', 'keydown', and 'console.log'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('addeventlistener') && clean.includes('keydown') && clean.includes('console.log');
+    },
+    hint: "Ask for 'addEventListener', a 'keydown' event, and a 'console.log' of the key."
+  },
+  {
+    num: 3,
+    title: "Exercise 5.3: [Review & Explain] The Event Parameter",
+    problem: `The AI generated: window.addEventListener("keydown", function(event) { console.log(event.key); });. Review this code.`,
+    instruction: "Which parameter of the callback function carries information about which key was pressed? Type the parameter name.",
+    preloaded: "/* Type the parameter name: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toLowerCase();
+      return clean === 'event' || clean === 'e';
+    },
+    hint: "The callback's parameter is named 'event' — type 'event'."
+  },
+  {
+    num: 4,
+    title: "Exercise 5.4: [Test & Break] The Silent Input Fail",
+    runnable: true,
+    problem: `The listener checks if (event.key === "left") but nothing happens when ArrowLeft is pressed.`,
+    instruction: "Fix the broken key-string comparison so it correctly checks for the exact key name the browser actually reports.",
+    preloaded: 'if (event.key === "left") {\n  carX -= 130;\n}',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('event.key==="ArrowLeft"') && clean.includes('carX-=130');
+    },
+    hint: `Browsers report the left arrow key as the exact string "ArrowLeft", not "left".`
+  },
+  {
+    num: 5,
+    title: "Exercise 5.5: [Iterate & Improve] Logging the Other Direction",
+    runnable: true,
+    problem: "Extend your fixed listener to also acknowledge ArrowRight presses.",
+    instruction: `Add an else-if branch checking for "ArrowRight" that logs "Steering right" to the console.`,
+    preloaded: 'if (event.key === "ArrowLeft") {\n  carX -= 130;\n}',
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('arrowright') && clean.includes('console.log');
+    },
+    hint: `Add: else if (event.key === "ArrowRight") { console.log("Steering right"); }`
+  },
+  {
+    num: 6,
+    title: "Exercise 5.6: [Plan & Design] Steering Deltas",
+    problem: "Plan the exact coordinate deltas for steering the car between lanes.",
+    instruction: "Write the plan using the format: ArrowLeft: carX -= 130 | ArrowRight: carX += 130",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('carx-=130') && clean.includes('carx+=130');
+    },
+    hint: "Type 'ArrowLeft: carX -= 130 | ArrowRight: carX += 130'."
+  },
+  {
+    num: 7,
+    title: "Exercise 5.7: [Write AI Prompt] Wiring Movement to the DOM",
+    problem: "Instruct the AI to connect the steering logic to the visible player car element.",
+    instruction: "Write a prompt asking to update '#player-car' style.left to match carX whenever ArrowLeft or ArrowRight is pressed. Your prompt must contain 'carX', 'style.left', 'ArrowLeft', and 'ArrowRight'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('carx') && clean.includes('style.left') && clean.includes('arrowleft') && clean.includes('arrowright');
+    },
+    hint: "Mention carX, style.left, ArrowLeft, and ArrowRight in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 5.8: [Review & Explain] Why 'px'?",
+    problem: `The AI generated: carElement.style.left = carX + "px";. Review this line.`,
+    instruction: "Why does the code concatenate the string \"px\" onto the carX number? Type the one-word CSS unit being appended.",
+    preloaded: "/* Type the unit: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toLowerCase();
+      return clean === 'px';
+    },
+    hint: `CSS position values require a unit — type 'px'.`
+  },
+  {
+    num: 9,
+    title: "Exercise 5.9: [Test & Break] The Missing Unit",
+    runnable: true,
+    problem: `Bug: carElement.style.left = carX; (missing the "px" unit) makes the car vanish from the game track.`,
+    instruction: "Fix the assignment so it appends the required unit string to carX.",
+    preloaded: 'let carElement = document.getElementById("player-car");\ncarElement.style.left = carX;',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('style.left=carx+"px"') || clean.includes("style.left=carx+'px'");
+    },
+    hint: `Change it to: carElement.style.left = carX + "px";`
+  },
+  {
+    num: 10,
+    title: "Exercise 5.10: [Iterate & Improve] The Complete Steering Handler",
+    runnable: true,
+    problem: "Combine every piece from this session into one working keydown handler.",
+    instruction: "Write the complete handler: bind the keydown listener, branch on ArrowLeft/ArrowRight, update carX, and write the new position to '#player-car' style.left.",
+    preloaded: "/* Write the complete handler here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('addeventlistener') && clean.includes('keydown') && clean.includes('arrowleft') && clean.includes('arrowright') && clean.includes('carx') && clean.includes('style.left');
+    },
+    hint: "Your handler needs: addEventListener, 'keydown', ArrowLeft/ArrowRight checks, carX updates, and a style.left write."
+  }
+];
+
+const S6_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 6.1: [Plan & Design] Track Boundary Coordinates",
+    problem: "Plan the left and right lane coordinates the car must never cross. The three lane positions are 35px, 165px, and 295px (car starts centered at 165).",
+    instruction: "Write the plan using the format: left boundary = 35 | right boundary = 295",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('35') && clean.includes('295');
+    },
+    hint: "Type 'left boundary = 35 | right boundary = 295'."
+  },
+  {
+    num: 2,
+    title: "Exercise 6.2: [Write AI Prompt] Requesting the Left Guard",
+    problem: "Instruct the AI to add a safety guard preventing the car from steering off the left edge.",
+    instruction: "Write a prompt asking to wrap the ArrowLeft movement in a conditional that only allows carX to decrease if carX is greater than 35 (the leftmost lane). Your prompt must contain 'carX', 'ArrowLeft', and '> 35'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('carx') && clean.includes('arrowleft') && clean.includes('>35');
+    },
+    hint: "Mention carX, ArrowLeft, and the condition '> 35'."
+  },
+  {
+    num: 3,
+    title: "Exercise 6.3: [Review & Explain] Reading the Guard Condition",
+    problem: `The AI generated: if (event.key === "ArrowLeft") { if (carX > 35) { carX -= 130; } }. Review this code.`,
+    instruction: "What happens to the movement if carX is already 35 (leftmost lane) and ArrowLeft is pressed again? Type MOVES or BLOCKED.",
+    preloaded: "/* Type MOVES or BLOCKED: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'BLOCKED';
+    },
+    hint: "Since 'carX > 35' is false when carX is 35, the inner block never runs — type 'BLOCKED'."
+  },
+  {
+    num: 4,
+    title: "Exercise 6.4: [Test & Break] The Infinite Teleporting Bug",
+    runnable: true,
+    problem: `The tutor changed the boundary check from carX > 35 to carX >= -130, and the car teleports off-screen when ArrowLeft is held. Try it live: click the preview and hold ArrowLeft.`,
+    instruction: "Fix the comparison operator and value so the car cannot move past the leftmost lane (35).",
+    preloaded: 'window.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX >= -130) {\n      carX -= 130;\n      document.getElementById("player-car").style.left = carX + "px";\n    }\n  }\n});',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('carX>35') && !clean.includes('carX>=-130');
+    },
+    hint: "Change the guard back to 'carX > 35'."
+  },
+  {
+    num: 5,
+    title: "Exercise 6.5: [Iterate & Improve] Adding the Right Guard",
+    runnable: true,
+    problem: "Iterate to also guard the right boundary, mirroring the left-side logic.",
+    instruction: "Add an else-if branch for ArrowRight that only allows carX to increase if carX is less than 295 (the rightmost lane).",
+    preloaded: 'window.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX > 35) {\n      carX -= 130;\n      document.getElementById("player-car").style.left = carX + "px";\n    }\n  }\n});',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('ArrowRight') && clean.includes('carX<295') && clean.includes('carX+=130');
+    },
+    hint: `Add: else if (event.key === "ArrowRight") { if (carX < 295) { carX += 130; document.getElementById("player-car").style.left = carX + "px"; } }`
+  },
+  {
+    num: 6,
+    title: "Exercise 6.6: [Plan & Design] Overheat Threshold Rule",
+    problem: "Plan a second safety rule: the car's speed must never exceed a safe overheat threshold.",
+    instruction: "Write the plan using the format: IF speed > 120 THEN speed = 100",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('speed>120') && clean.includes('speed=100');
+    },
+    hint: "Type 'IF speed > 120 THEN speed = 100'."
+  },
+  {
+    num: 7,
+    title: "Exercise 6.7: [Write AI Prompt] Requesting the Overheat Guard",
+    problem: "Instruct the AI to implement the overheat clamp.",
+    instruction: "Write a prompt asking for a conditional check: if speed is greater than 120, reset it to 100 and log a warning. Your prompt must contain 'speed', '120', and '100'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('speed') && clean.includes('120') && clean.includes('100');
+    },
+    hint: "Mention speed, 120, and 100 in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 6.8: [Review & Explain] Boundary-Value Precision",
+    problem: `The AI generated: if (speed > 120) { speed = 100; }. Review this rule.`,
+    instruction: "If speed is exactly 120, does this rule trigger? Type YES or NO.",
+    preloaded: "/* Type YES or NO: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'NO';
+    },
+    hint: "'>' is a strict greater-than check, so exactly 120 does NOT trigger it — type 'NO'."
+  },
+  {
+    num: 9,
+    title: "Exercise 6.9: [Test & Break] The Mars Climate Mismatch",
+    runnable: true,
+    problem: `Bug: the guard was written as if (speed > 120) { speed = "100"; } — the reset value is a string, not a number.`,
+    instruction: "Fix the reset assignment so speed becomes the Number 100, not the String \"100\".",
+    preloaded: 'if (speed > 120) {\n  speed = "100";\n}',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('speed=100') && !clean.includes('speed="100"') && !clean.includes("speed='100'");
+    },
+    hint: `Remove the quotes: speed = 100;`
+  },
+  {
+    num: 10,
+    title: "Exercise 6.10: [Iterate & Improve] The Complete Boundary System",
+    runnable: true,
+    problem: "Combine every guard from this session into one complete safety system.",
+    instruction: "Write the complete conditional block: left/right lane guards on carX (35/295) plus the overheat guard on speed (120 -> 100).",
+    preloaded: "/* Write the complete safety system here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('carX>35') && clean.includes('carX<295') && clean.includes('speed>120') && clean.includes('speed=100');
+    },
+    hint: "Your code needs all four checks: carX > 35, carX < 295, speed > 120, and speed = 100."
+  }
+];
+
+const S7_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 7.1: [Plan & Design] Marker Spacing Plan",
+    problem: "Plan how 5 highway lane markers should be spaced vertically down the track.",
+    instruction: "Write the plan using the format: count = 5 | spacing = 120",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('5') && clean.includes('120');
+    },
+    hint: "Type 'count = 5 | spacing = 120'."
+  },
+  {
+    num: 2,
+    title: "Exercise 7.2: [Write AI Prompt] Requesting the Loop",
+    problem: "Instruct the AI to generate the marker-spawning loop.",
+    instruction: "Write a prompt asking for a 'for' loop that runs 5 times, calculating markerY as i * 120 on each iteration. Your prompt must contain 'for loop', 'i * 120', and '5'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('forloop') && clean.includes('i*120') && clean.includes('5');
+    },
+    hint: "Mention a 'for loop', the formula 'i * 120', and running it '5' times."
+  },
+  {
+    num: 3,
+    title: "Exercise 7.3: [Review & Explain] Loop Anatomy",
+    problem: `The AI generated: for (let i = 0; i < 5; i++) { let markerY = i * 120; }. Review this loop header.`,
+    instruction: "Which part of the loop header increases 'i' after each pass? Type the exact expression (e.g. i++).",
+    preloaded: "/* Type the update expression: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('i++');
+    },
+    hint: "The update expression is 'i++'."
+  },
+  {
+    num: 4,
+    title: "Exercise 7.4: [Test & Break] Browser Freezes",
+    // Deliberately NOT runnable: the seeded bug is a missing loop increment (infinite loop),
+    // and actually executing it live in the iframe would hang the preview instead of teaching.
+    problem: `Bug: the tutor removed the increment, leaving for (let i = 0; i < 5; ) { let markerY = i * 120; } — the browser freezes.`,
+    instruction: "Restore the missing increment so the loop actually terminates after 5 passes.",
+    preloaded: "for (let i = 0; i < 5; ) {\n  let markerY = i * 120;\n}",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('i<5;i++') || clean.includes('i<5;i+=1');
+    },
+    hint: "Add 'i++' as the third part of the for-loop header."
+  },
+  {
+    num: 5,
+    title: "Exercise 7.5: [Iterate & Improve] Logging Each Marker",
+    problem: "Iterate on the fixed loop to also log each marker's computed position.",
+    instruction: `Inside the loop body, add a console.log that prints "Highway Marker position: " followed by markerY.`,
+    preloaded: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('console.log') && clean.includes('markery');
+    },
+    hint: `Add: console.log("Highway Marker position: " + markerY);`
+  },
+  {
+    num: 6,
+    title: "Exercise 7.6: [Plan & Design] Rendering the Markers",
+    problem: "Plan how each computed marker position becomes a visible element on the track.",
+    instruction: "Write the plan using the format: create div > class marker-dash > style.top = markerY",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('div') && clean.includes('marker-dash') && clean.includes('markery');
+    },
+    hint: "Type 'create div > class marker-dash > style.top = markerY'."
+  },
+  {
+    num: 7,
+    title: "Exercise 7.7: [Write AI Prompt] Requesting the DOM Append",
+    problem: "Instruct the AI to append a marker element to the game track on every loop iteration.",
+    instruction: "Write a prompt asking to create a div with class 'marker-dash', set its top style to markerY, and append it to '#game-track' inside the loop. Your prompt must contain 'marker-dash', 'appendChild', and '#game-track'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('marker-dash') && clean.includes('appendchild') && clean.includes('game-track');
+    },
+    hint: "Mention 'marker-dash', 'appendChild', and '#game-track'."
+  },
+  {
+    num: 8,
+    title: "Exercise 7.8: [Review & Explain] Why Not Hardcode 5 Divs?",
+    problem: "Compare writing a loop against manually copy-pasting 5 separate div elements by hand.",
+    instruction: "If the track needed 20 markers instead of 5 with hand-written divs, how many lines would you need to change? Type a number.",
+    preloaded: "/* Type a number: */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean.length > 0 && parseInt(clean, 10) >= 15;
+    },
+    hint: "Without a loop, you'd need to write out all 20 — type '20' (or any number 15+) to show you understand the scale of the manual approach."
+  },
+  {
+    num: 9,
+    title: "Exercise 7.9: [Test & Break] The Off-Track Marker",
+    problem: `Bug: a marker's spacing formula was written as markerY = i * 12 (missing a zero), bunching all 5 markers near the top of the track.`,
+    instruction: "Fix the spacing formula so markers are spread out correctly across the track (120px apart, not 12px).",
+    preloaded: "let markerY = i * 12;",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('markerY=i*120');
+    },
+    hint: "Change '* 12' to '* 120'."
+  },
+  {
+    num: 10,
+    title: "Exercise 7.10: [Iterate & Improve] The Complete Marker Loop",
+    problem: "Combine every piece from this session into one complete marker-generation loop.",
+    instruction: "Write the complete loop: iterate 5 times, compute markerY as i * 120, create a 'marker-dash' div positioned at markerY, and append it to '#game-track'.",
+    preloaded: "/* Write the complete loop here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('for(') && clean.includes('i<5') && clean.includes('i++') && clean.includes('i*120') && clean.includes('marker-dash') && clean.includes('appendchild');
+    },
+    hint: "Your loop needs: for(...i<5...i++), markerY = i * 120, a 'marker-dash' div, and appendChild onto #game-track."
+  }
+];
+
+const S8_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 8.1: [Plan & Design] Decomposing the Steering Script",
+    problem: "Plan how to break the monolithic steering script into single-purpose functions.",
+    instruction: "Write the plan using the format: updatePlayerPosition() | moveLeft() | moveRight()",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('updateplayerposition') && clean.includes('moveleft') && clean.includes('moveright');
+    },
+    hint: "Type 'updatePlayerPosition() | moveLeft() | moveRight()'."
+  },
+  {
+    num: 2,
+    title: "Exercise 8.2: [Write AI Prompt] Requesting the Render Function",
+    problem: "Instruct the AI to write the shared rendering function first.",
+    instruction: "Write a prompt asking for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px'. Your prompt must contain 'function', 'updatePlayerPosition', and 'style.left'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('function') && clean.includes('updateplayerposition') && clean.includes('style.left');
+    },
+    hint: "Mention 'function', 'updatePlayerPosition', and 'style.left'."
+  },
+  {
+    num: 3,
+    title: "Exercise 8.3: [Review & Explain] Function Signatures",
+    problem: `The AI generated: function updatePlayerPosition() { let carElement = document.getElementById("player-car"); carElement.style.left = carX + "px"; }. Review this function.`,
+    instruction: "How many parameters does updatePlayerPosition() take? Type a number.",
+    preloaded: "/* Type a number: */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '0';
+    },
+    hint: "The parentheses are empty, so the answer is '0'."
+  },
+  {
+    num: 4,
+    title: "Exercise 8.4: [Test & Break] Scope Access Violation",
+    problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'.`,
+    instruction: "Move the carX declaration out of moveLeft() so it becomes a variable both functions can share.",
+    preloaded: 'function moveLeft() {\n  let carX = 165;\n  if (carX > 35) {\n    carX -= 130;\n  }\n}\nfunction updatePlayerPosition() {\n  console.log(carX);\n}',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return /letcarX=165;.*functionmoveleft\(\)\{/i.test(clean) && !/functionmoveleft\(\)\{letcarx/i.test(clean);
+    },
+    hint: "Declare 'let carX = 165;' before (outside) both function declarations, not inside moveLeft()."
+  },
+  {
+    num: 5,
+    title: "Exercise 8.5: [Iterate & Improve] Wiring moveLeft() to the Handler",
+    problem: "Iterate on the keydown handler to call the new modular function instead of updating carX inline.",
+    instruction: "Rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() instead of repeating the boundary-check logic inline.",
+    preloaded: 'if (event.key === "ArrowLeft") {\n  if (carX > 35) {\n    carX -= 130;\n  }\n}',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('ArrowLeft') && clean.includes('moveLeft()');
+    },
+    hint: `Replace the inline logic with: if (event.key === "ArrowLeft") { moveLeft(); }`
+  },
+  {
+    num: 6,
+    title: "Exercise 8.6: [Plan & Design] The moveRight() Signature",
+    problem: "Plan the mirror function for the right lane.",
+    instruction: "Write the plan using the format: moveRight() -> IF carX < 295 THEN carX += 130, then call updatePlayerPosition()",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('moveright') && clean.includes('carx<295') && clean.includes('updateplayerposition');
+    },
+    hint: "Type 'moveRight() -> IF carX < 295 THEN carX += 130, then call updatePlayerPosition()'."
+  },
+  {
+    num: 7,
+    title: "Exercise 8.7: [Write AI Prompt] Requesting moveLeft() and moveRight()",
+    problem: "Instruct the AI to write both modular movement functions.",
+    instruction: "Write a prompt asking for two functions: moveLeft() and moveRight(), each clamping carX to its boundary and calling updatePlayerPosition(). Your prompt must contain 'moveLeft', 'moveRight', and 'updatePlayerPosition'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('moveleft') && clean.includes('moveright') && clean.includes('updateplayerposition');
+    },
+    hint: "Mention 'moveLeft', 'moveRight', and 'updatePlayerPosition' in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 8.8: [Review & Explain] Why Modularize?",
+    problem: "Compare the modular version against the original inline version from Session 6.",
+    instruction: "If a bug is found in the boundary-clamp logic, in a modular version how many function bodies need fixing (assuming both moveLeft/moveRight call a shared clamp helper)? Type a number.",
+    preloaded: "/* Type a number: */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '1';
+    },
+    hint: "With a shared helper, only 1 function body needs the fix — type '1'."
+  },
+  {
+    num: 9,
+    title: "Exercise 8.9: [Test & Break] The Duplicate Render Call",
+    problem: `Bug: moveLeft() calls updatePlayerPosition() twice by accident, wasting a render cycle every keypress.`,
+    instruction: "Remove the duplicate call so updatePlayerPosition() runs exactly once per moveLeft() call.",
+    preloaded: 'function moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n  updatePlayerPosition();\n}',
+    validate: (code) => {
+      const matches = code.match(/updatePlayerPosition\(\)/g) || [];
+      return matches.length === 1;
+    },
+    hint: "Delete one of the two 'updatePlayerPosition();' lines."
+  },
+  {
+    num: 10,
+    title: "Exercise 8.10: [Iterate & Improve] The Complete Modular Controller",
+    problem: "Combine every piece from this session into the final modular movement controller.",
+    instruction: "Write the complete code: updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler that calls moveLeft()/moveRight() based on the key pressed.",
+    preloaded: "/* Write the complete modular controller here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('function') && clean.includes('updateplayerposition') && clean.includes('moveleft') && clean.includes('moveright') && clean.includes('addeventlistener') && clean.includes('keydown');
+    },
+    hint: "Your code needs all four pieces: updatePlayerPosition(), moveLeft(), moveRight(), and a keydown listener calling them."
+  }
+];
+
+const S9_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 9.1: [Plan & Design] The Game Loop Lifecycle",
+    problem: "Before animating anything, plan how the game should redraw itself every single frame.",
+    instruction: "Write the plan using the format: gameLoop() -> update state -> render -> requestAnimationFrame(gameLoop)",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('gameloop') && clean.includes('requestanimationframe');
+    },
+    hint: "Type 'gameLoop() -> update state -> render -> requestAnimationFrame(gameLoop)'."
+  },
+  {
+    num: 2,
+    title: "Exercise 9.2: [Write AI Prompt] Requesting the Recursive Loop",
+    problem: "Instruct the AI to write the core recursive animation function.",
+    instruction: "Write a prompt asking for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame. Your prompt must contain 'function', 'gameLoop', and 'requestAnimationFrame'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('function') && clean.includes('gameloop') && clean.includes('requestanimationframe');
+    },
+    hint: "Mention 'function', 'gameLoop', and 'requestAnimationFrame' in your prompt."
+  },
+  {
+    num: 3,
+    title: "Exercise 9.3: [Review & Explain] Why Call It Again?",
+    problem: `The AI generated: function gameLoop() { moveObstacles(); requestAnimationFrame(gameLoop); }. Review this code.`,
+    instruction: "What does calling requestAnimationFrame(gameLoop) at the end of the function do? Type SCHEDULES_NEXT_FRAME or STOPS_THE_LOOP.",
+    preloaded: "/* Type your answer: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'SCHEDULESNEXTFRAME';
+    },
+    hint: "It reschedules gameLoop to run again on the next screen repaint — type 'SCHEDULES_NEXT_FRAME'."
+  },
+  {
+    num: 4,
+    title: "Exercise 9.4: [Test & Break] The Unstoppable Speed Bug",
+    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends.",
+    instruction: "Add a guard at the very top of gameLoop() that returns immediately if gameActive is false.",
+    preloaded: 'function gameLoop() {\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('if(!gameActive)') && clean.includes('return') && clean.includes('requestAnimationFrame(gameLoop)');
+    },
+    hint: "Add: if (!gameActive) { return; } as the first line inside gameLoop()."
+  },
+  {
+    num: 5,
+    title: "Exercise 9.5: [Iterate & Improve] Confirming the Gate Works",
+    problem: "Iterate on your fixed loop to make the halt visible in the console.",
+    instruction: `Add a console.log("Loop halted") line right before the return statement in your gameActive guard.`,
+    preloaded: 'function gameLoop() {\n  if (!gameActive) {\n    return;\n  }\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('console.log') && clean.includes('halted');
+    },
+    hint: `Add console.log("Loop halted"); before the return statement.`
+  },
+  {
+    num: 6,
+    title: "Exercise 9.6: [Plan & Design] Obstacle Movement & Reset",
+    problem: "Plan how the obstacle moves down the track and resets once it passes the bottom.",
+    instruction: "Write the plan using the format: obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('obstacley') && clean.includes('500') && clean.includes('-100') && clean.includes('score');
+    },
+    hint: "Type 'obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10'."
+  },
+  {
+    num: 7,
+    title: "Exercise 9.7: [Write AI Prompt] Requesting moveObstacles()",
+    problem: "Instruct the AI to write the obstacle movement and reset function.",
+    instruction: "Write a prompt asking for a function moveObstacles() that adds speed to obstacleY, and once obstacleY exceeds 500, resets it to -100 and adds 10 to score. Your prompt must contain 'moveObstacles', 'obstacleY', '500', and 'score'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('moveobstacles') && clean.includes('obstacley') && clean.includes('500') && clean.includes('score');
+    },
+    hint: "Mention 'moveObstacles', 'obstacleY', '500', and 'score' in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 9.8: [Review & Explain] Tracing the Update Math",
+    problem: `The AI generated: obstacleY += speed;. Review this line.`,
+    instruction: "If obstacleY is 490 and speed is 5, what is obstacleY immediately after this line runs (before any reset check)? Type a number.",
+    preloaded: "/* Type a number: */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '495';
+    },
+    hint: "490 + 5 = 495."
+  },
+  {
+    num: 9,
+    title: "Exercise 9.9: [Test & Break] The Frozen Scoreboard",
+    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen.`,
+    instruction: "Add the missing score increment inside the reset block.",
+    preloaded: 'if (obstacleY > 500) {\n  obstacleY = -100;\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('obstacleY>500') && (clean.includes('score+=10') || clean.includes('score+=1'));
+    },
+    hint: "Add 'score += 10;' inside the if-block, alongside resetting obstacleY."
+  },
+  {
+    num: 10,
+    title: "Exercise 9.10: [Iterate & Improve] The Complete Animation Engine",
+    problem: "Combine every piece from this session into the complete animation engine.",
+    instruction: "Write the complete code: gameLoop() with the gameActive gate calling moveObstacles() and requestAnimationFrame(gameLoop), plus moveObstacles() updating and resetting obstacleY with the score increment.",
+    preloaded: "/* Write the complete animation engine here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('gameloop') && clean.includes('gameactive') && clean.includes('requestanimationframe') && clean.includes('moveobstacles') && clean.includes('obstacley') && clean.includes('score');
+    },
+    hint: "Your code needs: gameLoop() with a gameActive gate, requestAnimationFrame(gameLoop), and moveObstacles() updating/resetting obstacleY plus score."
+  }
+];
+
+const S10_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 10.1: [Plan & Design] The Overlap Condition",
+    problem: "Before coding collision detection, plan the mathematical condition for two boxes overlapping.",
+    instruction: "Write the plan using the format: player.right > obstacle.left AND player.left < obstacle.right AND player.bottom > obstacle.top AND player.top < obstacle.bottom",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('right') && clean.includes('left') && clean.includes('top') && clean.includes('bottom');
+    },
+    hint: "Your plan needs all four bounds: right, left, top, and bottom."
+  },
+  {
+    num: 2,
+    title: "Exercise 10.2: [Write AI Prompt] Requesting checkCollision()",
+    problem: "Instruct the AI to write the collision-detection function.",
+    instruction: "Write a prompt asking for a function checkCollision(rect1, rect2) that returns true if the two rectangles' x/y/width/height bounds overlap. Your prompt must contain 'checkCollision', 'width', and 'height'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('checkcollision') && clean.includes('width') && clean.includes('height');
+    },
+    hint: "Mention 'checkCollision', 'width', and 'height' in your prompt."
+  },
+  {
+    num: 3,
+    title: "Exercise 10.3: [Review & Explain] Why Dimensions Matter",
+    problem: "Compare checking only center coordinates (player.x === obstacle.x) against a full AABB check using width/height.",
+    instruction: "If we only checked player.x === obstacle.x (ignoring width/height), would two overlapping-but-not-perfectly-aligned cars ever register a collision? Type YES or NO.",
+    preloaded: "/* Type YES or NO: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'NO';
+    },
+    hint: "Exact equality almost never happens by coincidence — type 'NO'."
+  },
+  {
+    num: 4,
+    title: "Exercise 10.4: [Test & Break] The Ghost Car Bug",
+    problem: `Bug: the tutor flipped one comparison operator, so the obstacle drives right through the player car with no crash registered.`,
+    instruction: "Fix the flipped comparison so the second condition correctly checks rect1.x + rect1.width > rect2.x (not <).",
+    preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.x < rect2.x + rect2.width &&\n    rect1.x + rect1.width < rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('rect1.x+rect1.width>rect2.x');
+    },
+    hint: "Change 'rect1.x + rect1.width < rect2.x' to use '>' instead of '<'."
+  },
+  {
+    num: 5,
+    title: "Exercise 10.5: [Iterate & Improve] Wiring Collision into the Loop",
+    problem: "Iterate to actually stop the game when a collision is detected.",
+    instruction: "Inside gameLoop(), add a call to checkCollision(player, obstacle) that sets gameActive to false and logs 'Collision detected!' when it returns true.",
+    preloaded: 'function gameLoop() {\n  if (!gameActive) { return; }\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('checkcollision') && clean.includes('gameactive=false') && clean.includes('console.log');
+    },
+    hint: `Add: if (checkCollision(player, obstacle)) { gameActive = false; console.log("Collision detected!"); }`
+  },
+  {
+    num: 6,
+    title: "Exercise 10.6: [Plan & Design] Bounding Box Dimensions",
+    problem: "Plan the exact pixel dimensions for the player car and the obstacle.",
+    instruction: "Write the plan using the format: player width=30 height=50 | obstacle width=25 height=40",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('30') && clean.includes('50') && clean.includes('25') && clean.includes('40');
+    },
+    hint: "Type 'player width=30 height=50 | obstacle width=25 height=40'."
+  },
+  {
+    num: 7,
+    title: "Exercise 10.7: [Write AI Prompt] Building the Rect Objects",
+    problem: "Instruct the AI to build the two rectangle objects that checkCollision() will compare.",
+    instruction: "Write a prompt asking to build a playerRect object using carX and a fixed y, and an obsRect object using obstacleY, each with the correct width/height. Your prompt must contain 'carX', 'obstacleY', 'width', and 'height'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('carx') && clean.includes('obstacley') && clean.includes('width') && clean.includes('height');
+    },
+    hint: "Mention 'carX', 'obstacleY', 'width', and 'height' in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 10.8: [Review & Explain] The Exact-Touch Edge Case",
+    problem: "Consider two boxes whose edges touch exactly, with no actual overlap.",
+    instruction: "If rect1.x + rect1.width is exactly equal to rect2.x (edges touching, not overlapping), does a strict '>' comparison register a collision? Type YES or NO.",
+    preloaded: "/* Type YES or NO: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'NO';
+    },
+    hint: "A strict '>' requires the value to be greater, not equal — type 'NO'."
+  },
+  {
+    num: 9,
+    title: "Exercise 10.9: [Test & Break] The Axis Swap Bug",
+    problem: `Bug: the first condition accidentally compares rect1.y (not rect1.x) against rect2's horizontal bound, swapping the X and Y axes.`,
+    instruction: "Fix the axis-swap bug in the first condition so it correctly compares rect1.x, not rect1.y.",
+    preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.y < rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('rect1.x<rect2.x+rect2.width');
+    },
+    hint: "Change the first condition's 'rect1.y' to 'rect1.x'."
+  },
+  {
+    num: 10,
+    title: "Exercise 10.10: [Iterate & Improve] The Complete Collision System",
+    problem: "Combine every piece from this session into the complete collision-detection system.",
+    instruction: "Write the complete checkCollision(rect1, rect2) function using all 4 AABB conditions, plus a snippet showing gameLoop() calling it and setting gameActive to false on a hit.",
+    preloaded: "/* Write the complete collision system here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('checkcollision') && clean.includes('gameactive=false') && clean.includes('width') && clean.includes('height');
+    },
+    hint: "Your code needs: a full 4-condition checkCollision(), and gameActive = false wired up on a hit."
+  }
+];
+
+const S11_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 11.1: [Plan & Design] The DOM Update Pipeline",
+    problem: "Before writing any code, plan how state changes become visible on screen.",
+    instruction: "Write the plan using the format: score changes -> #score-val.textContent = score | collision -> remove hidden from #restart-panel",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('score-val') && clean.includes('textcontent') && clean.includes('restart-panel');
+    },
+    hint: "Type 'score changes -> #score-val.textContent = score | collision -> remove hidden from #restart-panel'."
+  },
+  {
+    num: 2,
+    title: "Exercise 11.2: [Write AI Prompt] Requesting the Scoreboard Updater",
+    problem: "Instruct the AI to write the function that keeps the scoreboard in sync with the score variable.",
+    instruction: "Write a prompt asking for a function updateScoreboard() that sets the textContent of '#score-val' to match the score variable. Your prompt must contain 'function', 'textContent', and 'score-val'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('function') && clean.includes('textcontent') && clean.includes('score-val');
+    },
+    hint: "Mention 'function', 'textContent', and 'score-val' in your prompt."
+  },
+  {
+    num: 3,
+    title: "Exercise 11.3: [Review & Explain] textContent vs. innerHTML",
+    problem: "Compare using .textContent against .innerHTML for writing the score value into the DOM.",
+    instruction: "Why is 'textContent' safer than 'innerHTML' for updating a score display? Type the risk innerHTML introduces: SCRIPT_INJECTION or SLOWER_RENDERING.",
+    preloaded: "/* Type your answer: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'SCRIPTINJECTION';
+    },
+    hint: "innerHTML parses its input as HTML/scripts — type 'SCRIPT_INJECTION'."
+  },
+  {
+    num: 4,
+    title: "Exercise 11.4: [Test & Break] The Negative Score Leak",
+    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5".`,
+    instruction: "Add a defensive check that clamps score to 0 if it's ever negative, before writing it to the DOM.",
+    preloaded: 'function updateScoreboard() {\n  document.getElementById("score-val").textContent = score;\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('score<0') && clean.includes('score=0');
+    },
+    hint: "Add: if (score < 0) { score = 0; } before setting textContent."
+  },
+  {
+    num: 5,
+    title: "Exercise 11.5: [Iterate & Improve] Revealing the Restart Panel",
+    problem: "Iterate to show the game-over overlay when a collision happens.",
+    instruction: "Add a function triggerGameOverScreen() that removes the 'hidden' class from '#restart-panel'.",
+    preloaded: "/* Add your function here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('restart-panel') && clean.includes('remove') && clean.includes('hidden');
+    },
+    hint: `function triggerGameOverScreen() { document.getElementById("restart-panel").classList.remove("hidden"); }`
+  },
+  {
+    num: 6,
+    title: "Exercise 11.6: [Plan & Design] The Restart Flow",
+    problem: "Plan what should happen when the player presses Space after a game over.",
+    instruction: "Write the plan using the format: press Space -> reset score to 0 -> reset carX -> hide restart-panel -> gameActive = true",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('space') && clean.includes('score') && clean.includes('gameactive');
+    },
+    hint: "Type 'press Space -> reset score to 0 -> reset carX -> hide restart-panel -> gameActive = true'."
+  },
+  {
+    num: 7,
+    title: "Exercise 11.7: [Write AI Prompt] Requesting the Restart Handler",
+    problem: "Instruct the AI to write the keydown handler that restarts the game.",
+    instruction: "Write a prompt asking for a keydown listener that, when Space is pressed, resets score to 0 and sets gameActive to true. Your prompt must contain 'Space', 'gameActive', and 'addEventListener'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('space') && clean.includes('gameactive') && clean.includes('addeventlistener');
+    },
+    hint: "Mention 'Space', 'gameActive', and 'addEventListener' in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 11.8: [Review & Explain] What the Hidden Class Does",
+    problem: `The CSS rule .hidden { display: none !important; } is applied to #restart-panel.`,
+    instruction: "What happens if you forget to remove this class after a restart handler runs? Type STAYS_HIDDEN or BECOMES_VISIBLE.",
+    preloaded: "/* Type your answer: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'STAYSHIDDEN';
+    },
+    hint: "Without removing the class, display: none keeps applying — type 'STAYS_HIDDEN'."
+  },
+  {
+    num: 9,
+    title: "Exercise 11.9: [Test & Break] The Frozen Restart",
+    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true — the game stays frozen.`,
+    instruction: "Add the missing line that sets gameActive back to true inside the restart handler.",
+    preloaded: 'window.addEventListener("keydown", function(event) {\n  if (event.key === " ") {\n    score = 0;\n    document.getElementById("restart-panel").classList.add("hidden");\n  }\n});',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('gameactive=true');
+    },
+    hint: "Add: gameActive = true; inside the Space-key branch."
+  },
+  {
+    num: 10,
+    title: "Exercise 11.10: [Iterate & Improve] The Complete HUD & Restart System",
+    problem: "Combine every piece from this session into the complete HUD and restart system.",
+    instruction: "Write the complete code: updateScoreboard() (with the negative-score guard), triggerGameOverScreen(), and a keydown handler restarting the game on Space.",
+    preloaded: "/* Write the complete HUD and restart system here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      // Note: the real DOM value for the spacebar key is a single space character (" "),
+      // not the word "Space" — after whitespace-stripping, a correct `key === " "` check
+      // collapses to `.key===""`, so check for that pattern instead of the literal word.
+      return clean.includes('score-val') && clean.includes('restart-panel') && clean.includes('gameactive') && clean.includes('addeventlistener') && clean.includes('.key===""');
+    },
+    hint: `Your code needs: updateScoreboard(), triggerGameOverScreen(), and a keydown handler checking event.key === " " that sets gameActive = true.`
+  }
+];
+
+const S12_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 12.1: [Plan & Design] The Configuration Object",
+    problem: "Before polishing the final game, plan a single config object holding every tunable value.",
+    instruction: "Write the plan using the format: const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed }",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('config') && clean.includes('startspeed') && clean.includes('maxspeed');
+    },
+    hint: "Type 'const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed }'."
+  },
+  {
+    num: 2,
+    title: "Exercise 12.2: [Write AI Prompt] Requesting Difficulty Scaling",
+    problem: "Instruct the AI to write the difficulty-scaling function using your CONFIG object.",
+    instruction: "Write a prompt asking for a function that increases speed based on score, using CONFIG.difficultyMultiplier, and clamps the result to CONFIG.maxSpeed. Your prompt must contain 'CONFIG', 'speed', and 'clamp' (or 'max').",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('config') && clean.includes('speed') && (clean.includes('clamp') || clean.includes('max'));
+    },
+    hint: "Mention 'CONFIG', 'speed', and 'clamp' or 'max' in your prompt."
+  },
+  {
+    num: 3,
+    title: "Exercise 12.3: [Review & Explain] Tracing the Difficulty Formula",
+    problem: `Given const CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 }; and score = 50, review the formula startSpeed + score * difficultyMultiplier.`,
+    instruction: "What does the formula equal when score is 50? Type a number.",
+    preloaded: "/* Type a number: */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '10';
+    },
+    hint: "5 + (50 * 0.1) = 5 + 5 = 10."
+  },
+  {
+    num: 4,
+    title: "Exercise 12.4: [Test & Break] The Unbounded Speed Bug",
+    problem: "Bug: at very high scores, the computed speed exceeds CONFIG.maxSpeed, making the game unplayably fast.",
+    instruction: "Add a clamp so speed never exceeds CONFIG.maxSpeed.",
+    preloaded: 'let speed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('math.min') && clean.includes('config.maxspeed');
+    },
+    hint: "Use: speed = Math.min(speed, CONFIG.maxSpeed);"
+  },
+  {
+    num: 5,
+    title: "Exercise 12.5: [Iterate & Improve] Refactoring Magic Numbers",
+    problem: "Iterate on your boundary guards from Session 6 to remove hardcoded values.",
+    instruction: "Rewrite the boundary values (35 and 295) as CONFIG.leftBound and CONFIG.rightBound instead of hardcoded numbers.",
+    preloaded: 'if (carX > 35) { carX -= 130; }\nif (carX < 295) { carX += 130; }',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('config.leftbound') && clean.includes('config.rightbound');
+    },
+    hint: "Replace '35' with 'CONFIG.leftBound' and '295' with 'CONFIG.rightBound'."
+  },
+  {
+    num: 6,
+    title: "Exercise 12.6: [Plan & Design] The Final QA Matrix",
+    problem: "Plan the full verification sweep across every system you built this level.",
+    instruction: "List the 4 core systems to verify, separated by |: variables, boundaries, collision, restart.",
+    preloaded: "/* Write your plan here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('variable') && clean.includes('boundar') && clean.includes('collision') && clean.includes('restart');
+    },
+    hint: "Type 'variables | boundaries | collision | restart'."
+  },
+  {
+    num: 7,
+    title: "Exercise 12.7: [Write AI Prompt] Requesting the Smoke-Test Script",
+    problem: "Instruct the AI to generate a checklist script that verifies every system logs pass or fail.",
+    instruction: "Write a prompt asking for a diagnostic script that logs PASS or FAIL for each core system using console.log. Your prompt must contain 'test', 'console.log', and 'pass'.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('test') && clean.includes('console.log') && clean.includes('pass');
+    },
+    hint: "Mention 'test', 'console.log', and 'pass' in your prompt."
+  },
+  {
+    num: 8,
+    title: "Exercise 12.8: [Review & Explain] The Malicious QA Officer's Question",
+    problem: "The tutor, playing a 'Malicious QA Officer', asks about boundary-check consistency.",
+    instruction: "If your left-boundary guard used '> 35' in one place but '>= 35' in another, could that inconsistency let the car overlap the track edge in rare cases? Type YES or NO.",
+    preloaded: "/* Type YES or NO: */",
+    validate: (code) => {
+      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
+      return clean === 'YES';
+    },
+    hint: "Inconsistent boundary operators create exactly this kind of edge-case gap — type 'YES'."
+  },
+  {
+    num: 9,
+    title: "Exercise 12.9: [Test & Break] The Final Diagnostic",
+    problem: "The tutor seeds one last collision logic error into your capstone build before certification.",
+    instruction: "Diagnose and fix the seeded collision logic error (hint: one comparison operator is flipped).",
+    preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.x > rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('rect1.x<rect2.x+rect2.width');
+    },
+    hint: "The first condition should use '<', not '>': rect1.x < rect2.x + rect2.width."
+  },
+  {
+    num: 10,
+    title: "Exercise 12.10: [Iterate & Improve] Capstone Reflection",
+    problem: "Reflect on the entire Racing Car Game project, from Session 1's IPO blueprint to today's certified build.",
+    instruction: "Write a one-sentence reflection: what was the trickiest bug you fixed across this entire project, and how did tracing variable values help you find it?",
+    preloaded: "/* Write your reflection here */",
+    validate: (code) => {
+      const clean = code.replace(/\/\*|\*\//g, '').trim();
+      return clean.length >= 20;
+    },
+    hint: "Write at least a full sentence describing a specific bug and how you traced it."
+  }
+];
+
+// How many sandbox exercises each Level 1 session has. A session's XP is only
+// claimable once every one of its exercises has been passed (no jumping straight
+// to the final exercise), preserving the curriculum's "cognitive resistance" design.
+const EXERCISE_COUNTS = {
+  'l1-s1': 5, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 10, 'l1-s5': 10, 'l1-s6': 10,
+  'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10
+};
+
+// Full ordered Level 1 session sequence for quest gating. Level 1 is the only level
+// where every session has an in-app claimable sandbox, so it gates against the full
+// curriculum order; L2-L4 sessions are only claimable from the Quest Board's campaign
+// list, so their gating stays within that list (gating them against the full list
+// would demand sessions that have no in-app completion path).
+const L1_SESSION_SEQUENCE = CURRICULUM_DATA.filter(s => s.level === 1);
+
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('detective_token') || null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -442,6 +1952,13 @@ export default function App() {
   const [newStudentName, setNewStudentName] = useState('');
   const [newStudentLevel, setNewStudentLevel] = useState('L1');
   const [adminStatusMsg, setAdminStatusMsg] = useState('');
+
+  // Admin: read-only student journal viewer
+  const [viewingStudent, setViewingStudent] = useState(null);
+  const [viewingJournalData, setViewingJournalData] = useState([]);
+  const [viewingJournalLoading, setViewingJournalLoading] = useState(false);
+  const [viewingJournalEntryId, setViewingJournalEntryId] = useState(null);
+  const [viewingJournalVersion, setViewingJournalVersion] = useState(null);
   const [leaderboardData, setLeaderboardData] = useState([]);
 
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -519,52 +2036,214 @@ export default function App() {
   const [s1Success, setS1Success] = useState(false);
   const [s1ActiveExercise, setS1ActiveExercise] = useState(1); // Exercises 1 to 5
 
-  // Level 1 Session 2 (Backpack Sorter) Simulator States
-  const [s2Items, setS2Items] = useState([
-    { id: 'item1', value: '"ByteSlayer"', type: 'string' },
-    { id: 'item2', value: '450', type: 'number' },
-    { id: 'item3', value: 'true', type: 'boolean' },
-    { id: 'item4', value: '"vault_gate_A"', type: 'string' },
-    { id: 'item5', value: '1200', type: 'number' },
-    { id: 'item6', value: 'false', type: 'boolean' },
-    { id: 'item7', value: '22', type: 'number' }
-  ]);
-  const [s2Bins, setS2Bins] = useState({ string: [], number: [], boolean: [] });
-  const [s2UsernameRule, setS2UsernameRule] = useState('string');
-  const [s2PasscodeRule, setS2PasscodeRule] = useState('number');
-  const [s2IsAdminRule, setS2IsAdminRule] = useState('boolean');
+  // Level 1 Session 2 (HTML Sandbox) States
+  const [s2ActiveExercise, setS2ActiveExercise] = useState(1);
+  const [s2CodeInput, setS2CodeInput] = useState('');
   const [s2Logs, setS2Logs] = useState([]);
   const [s2Success, setS2Success] = useState(false);
 
-  // Level 1 Session 3 (State Vault Controller) Simulator States
-  const [s3State, setS3State] = useState('CLOSED'); // CLOSED, OPEN, ALARM_LOCKED
-  const [s3Rule1, setS3Rule1] = useState('OPEN');        // CLOSED + Insert Keycard -> OPEN
-  const [s3Rule2, setS3Rule2] = useState('CLOSED');      // OPEN + Push Door -> CLOSED
-  const [s3Rule3, setS3Rule3] = useState('ALARM_LOCKED'); // CLOSED + Push Door -> ALARM_LOCKED
-  const [s3Rule4, setS3Rule4] = useState('CLOSED');      // ALARM_LOCKED + Reset -> CLOSED
+  // Level 1 Session 3 (CSS Sandbox) States
+  const [s3ActiveExercise, setS3ActiveExercise] = useState(1);
+  const [s3CodeInput, setS3CodeInput] = useState('');
   const [s3Logs, setS3Logs] = useState([]);
   const [s3Success, setS3Success] = useState(false);
-  const [s3VisitedStates, setS3VisitedStates] = useState({ CLOSED: true, OPEN: false, ALARM_LOCKED: false });
 
   // Level 1 Session 4 (Climate Controller) Simulator States
-  const [s4RuleFire, setS4RuleFire] = useState('EMERGENCY_SHUTDOWN');
-  const [s4RuleLockout, setS4RuleLockout] = useState('OFF');
-  const [s4RuleWindow, setS4RuleWindow] = useState('VENT');
-  const [s4RuleLowTemp, setS4RuleLowTemp] = useState('HEAT');
-  const [s4RuleHighTemp, setS4RuleHighTemp] = useState('AC');
-  const [s4RuleDefault, setS4RuleDefault] = useState('OFF');
+  const [s4ActiveExercise, setS4ActiveExercise] = useState(1);
+  const [s4CodeInput, setS4CodeInput] = useState('');
   const [s4Logs, setS4Logs] = useState([]);
   const [s4Success, setS4Success] = useState(false);
-  const [s4CurrentTemp, setS4CurrentTemp] = useState(22);
-  const [s4CurrentAlarm, setS4CurrentAlarm] = useState(false);
-  const [s4CurrentLockout, setS4CurrentLockout] = useState(false);
-  const [s4CurrentWindow, setS4CurrentWindow] = useState(false);
-  const [s4CurrentOutput, setS4CurrentOutput] = useState('OFF');
 
   // Journal selection states
   const [selectedJournalId, setSelectedJournalId] = useState('j1');
   const [activeJournalVersion, setActiveJournalVersion] = useState(2);
-  const [editingJournalCode, setEditingJournalCode] = useState('');
+  const [activeJournalTab, setActiveJournalTab] = useState('plan');
+  const [showProjectTasks, setShowProjectTasks] = useState(true);
+  const [showCurriculumSidebar, setShowCurriculumSidebar] = useState(true);
+  const [showExercisesSidebar, setShowExercisesSidebar] = useState(true);
+  const [curriculumDetailTab, setCurriculumDetailTab] = useState('plan');
+  
+  // Tab fields state
+  const [editingPlanSpecs, setEditingPlanSpecs] = useState('');
+  const [editingPlanData, setEditingPlanData] = useState('');
+  const [editingPlanFlow, setEditingPlanFlow] = useState('');
+  const [editingCodePrompt, setEditingCodePrompt] = useState('');
+  const [editingCodeOutput, setEditingCodeOutput] = useState('');
+  const [editingCodeReview, setEditingCodeReview] = useState('');
+  const [editingTestCases, setEditingTestCases] = useState('');
+  const [editingTestResults, setEditingTestResults] = useState('');
+  const [editingIterationChanges, setEditingIterationChanges] = useState('');
+  const [editingIterationLessons, setEditingIterationLessons] = useState('');
+
+  // Level 1 Sessions 5-8: JS Sandbox exercise states (Keyboard Control, Boundary Guards, Loops, Modular Functions)
+  const [s5ActiveExercise, setS5ActiveExercise] = useState(1);
+  const [s5CodeInput, setS5CodeInput] = useState('');
+  const [s5Logs, setS5Logs] = useState([]);
+  const [s5Success, setS5Success] = useState(false);
+
+  const [s6ActiveExercise, setS6ActiveExercise] = useState(1);
+  const [s6CodeInput, setS6CodeInput] = useState('');
+  const [s6Logs, setS6Logs] = useState([]);
+  const [s6Success, setS6Success] = useState(false);
+
+  const [s7ActiveExercise, setS7ActiveExercise] = useState(1);
+  const [s7CodeInput, setS7CodeInput] = useState('');
+  const [s7Logs, setS7Logs] = useState([]);
+  const [s7Success, setS7Success] = useState(false);
+
+  const [s8ActiveExercise, setS8ActiveExercise] = useState(1);
+  const [s8CodeInput, setS8CodeInput] = useState('');
+  const [s8Logs, setS8Logs] = useState([]);
+  const [s8Success, setS8Success] = useState(false);
+
+  // Level 1 Sessions 9-12: JS Sandbox exercise states (Animations, Collision, DOM HUD, Capstone Assessment)
+  const [s9ActiveExercise, setS9ActiveExercise] = useState(1);
+  const [s9CodeInput, setS9CodeInput] = useState('');
+  const [s9Logs, setS9Logs] = useState([]);
+  const [s9Success, setS9Success] = useState(false);
+
+  const [s10ActiveExercise, setS10ActiveExercise] = useState(1);
+  const [s10CodeInput, setS10CodeInput] = useState('');
+  const [s10Logs, setS10Logs] = useState([]);
+  const [s10Success, setS10Success] = useState(false);
+
+  const [s11ActiveExercise, setS11ActiveExercise] = useState(1);
+  const [s11CodeInput, setS11CodeInput] = useState('');
+  const [s11Logs, setS11Logs] = useState([]);
+  const [s11Success, setS11Success] = useState(false);
+
+  const [s12ActiveExercise, setS12ActiveExercise] = useState(1);
+  const [s12CodeInput, setS12CodeInput] = useState('');
+  const [s12Logs, setS12Logs] = useState([]);
+  const [s12Success, setS12Success] = useState(false);
+
+  // Live console.log()/error output forwarded from the JS Sandbox preview iframes (Sessions 4-12)
+  const [simConsoleLogs, setSimConsoleLogs] = useState([]);
+
+  // Per-exercise completion map: sessionId -> array of passed exercise numbers.
+  // Server-backed (exercise_progress table), so progress follows the student
+  // across devices. Individual passes are POSTed as they happen.
+  const [exerciseProgress, setExerciseProgress] = useState({});
+
+  // Load per-user exercise progress from the server once the user is known.
+  // Any progress left in localStorage by the earlier device-local implementation
+  // is migrated to the server on first load, then the legacy key is removed.
+  useEffect(() => {
+    if (!currentUser?.id) {
+      setExerciseProgress({});
+      return;
+    }
+
+    const legacyKey = `detective_exercise_progress_${currentUser.id}`;
+    let legacyMap = {};
+    try {
+      const stored = localStorage.getItem(legacyKey);
+      if (stored) legacyMap = JSON.parse(stored) || {};
+    } catch { legacyMap = {}; }
+
+    fetch('/api/user/exercise-progress', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load exercise progress');
+        return res.json();
+      })
+      .then(serverMap => {
+        // Collect legacy entries the server doesn't know about yet
+        const missing = [];
+        Object.entries(legacyMap).forEach(([sessionId, nums]) => {
+          (Array.isArray(nums) ? nums : []).forEach(exerciseNum => {
+            if (!(serverMap[sessionId] || []).includes(exerciseNum)) {
+              missing.push({ sessionId, exerciseNum });
+            }
+          });
+        });
+
+        if (missing.length === 0) {
+          setExerciseProgress(serverMap);
+          localStorage.removeItem(legacyKey);
+          return;
+        }
+
+        // One-time migration: push legacy progress up, then adopt the merged map
+        fetch('/api/user/exercise-progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ entries: missing })
+        })
+          .then(res => res.json())
+          .then(data => {
+            setExerciseProgress(data.progress || serverMap);
+            localStorage.removeItem(legacyKey);
+          })
+          .catch(err => {
+            console.warn('Legacy progress migration failed, keeping local copy:', err.message);
+            // Merge locally so the student still sees their checkmarks; retry next login
+            const merged = { ...serverMap };
+            missing.forEach(({ sessionId, exerciseNum }) => {
+              merged[sessionId] = [...(merged[sessionId] || []), exerciseNum];
+            });
+            setExerciseProgress(merged);
+          });
+      })
+      .catch(err => {
+        console.warn('Failed to load exercise progress from server, using local fallback:', err.message);
+        setExerciseProgress(legacyMap);
+      });
+  }, [currentUser?.id, token]);
+
+  useEffect(() => {
+    const handleSimMessage = (event) => {
+      if (!event.data || !event.data.__sim) return;
+      setSimConsoleLogs(prev => [...prev.slice(-19), { type: event.data.type === 'error' ? 'error' : 'info', text: event.data.text }]);
+    };
+    window.addEventListener('message', handleSimMessage);
+    return () => window.removeEventListener('message', handleSimMessage);
+  }, []);
+
+  // JSON Serialization logic
+  const serializeJournalData = (planSpecs, planData, planFlow, codeOutput, codeReview, testCases, testResults, iterationChanges, iterationLessons) => {
+    return JSON.stringify({
+      planSpecs,
+      planData,
+      planFlow,
+      codeOutput,
+      codeReview,
+      testCases,
+      testResults,
+      iterationChanges,
+      iterationLessons
+    });
+  };
+
+  const deserializeJournalData = (rawText) => {
+    try {
+      const data = JSON.parse(rawText);
+      return {
+        planSpecs: data.planSpecs || '',
+        planData: data.planData || '',
+        planFlow: data.planFlow || '',
+        codeOutput: data.codeOutput || '',
+        codeReview: data.codeReview || '',
+        testCases: data.testCases || '',
+        testResults: data.testResults || '',
+        iterationChanges: data.iterationChanges || '',
+        iterationLessons: data.iterationLessons || ''
+      };
+    } catch (e) {
+      return {
+        planSpecs: '',
+        planData: '',
+        planFlow: '',
+        codeOutput: rawText || '',
+        codeReview: '',
+        testCases: '',
+        testResults: '',
+        iterationChanges: '',
+        iterationLessons: ''
+      };
+    }
+  };
 
   // Handle user authentication load
   useEffect(() => {
@@ -775,6 +2454,41 @@ export default function App() {
       });
   };
 
+  const handleViewStudentJournal = (student) => {
+    if (!token) return;
+    setViewingStudent(student);
+    setViewingJournalData([]);
+    setViewingJournalEntryId(null);
+    setViewingJournalVersion(null);
+    setViewingJournalLoading(true);
+    fetch(`/api/admin/students/${student.id}/journal`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to load student journal"); });
+        return res.json();
+      })
+      .then(data => {
+        setViewingJournalData(data);
+        if (data[0]) {
+          setViewingJournalEntryId(data[0].id);
+          setViewingJournalVersion(data[0].activeVersion);
+        }
+      })
+      .catch(err => {
+        console.error("Failed to load student journal:", err.message);
+        alert("Failed to load student journal: " + err.message);
+      })
+      .finally(() => setViewingJournalLoading(false));
+  };
+
+  const handleCloseStudentJournal = () => {
+    setViewingStudent(null);
+    setViewingJournalData([]);
+    setViewingJournalEntryId(null);
+    setViewingJournalVersion(null);
+  };
+
   const handleMoveS1Step = (idx, direction) => {
     setS1Sequence(prev => {
       const next = [...prev];
@@ -821,6 +2535,42 @@ export default function App() {
 
   const rank = getRank(points);
   const xpPercent = Math.min(100, Math.max(0, ((points - rank.xpMin) / (rank.xpMax - rank.xpMin)) * 100));
+
+  // Sequential quest gating: a quest can only be claimed once every earlier quest
+  // in its level's sequence has already been solved. Teachers bypass this check.
+  // Level 1 gates against the full 12-session curriculum order (every L1 session has
+  // a claimable sandbox); other levels gate within the Quest Board's campaign list,
+  // since their remaining sessions have no in-app completion path yet.
+  const isQuestLocked = (sessionId) => {
+    if (currentUser?.role === 'teacher') return false;
+    const sequence = sessionId?.startsWith('l1-') ? L1_SESSION_SEQUENCE : activeLevelSessions;
+    const idx = sequence.findIndex(s => s.id === sessionId);
+    if (idx <= 0) return false;
+    return sequence.slice(0, idx).some(s => !solvedCases[s.id]);
+  };
+
+  // Per-exercise completion tracking for the Level 1 sandbox sessions. A session's
+  // XP is claimed only when ALL of its exercises have been passed. Each pass is
+  // persisted server-side (exercise_progress table) so progress follows the student
+  // across devices; the local state update is optimistic for instant UI feedback.
+  const markExerciseComplete = (sessionId, exNum) => {
+    const total = EXERCISE_COUNTS[sessionId] || 10;
+    const done = exerciseProgress[sessionId] || [];
+    const nextDone = done.includes(exNum) ? done : [...done, exNum];
+    if (!done.includes(exNum)) {
+      setExerciseProgress(prev => {
+        const prevDone = prev[sessionId] || [];
+        return prevDone.includes(exNum) ? prev : { ...prev, [sessionId]: [...prevDone, exNum] };
+      });
+      fetch('/api/user/exercise-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ entries: [{ sessionId, exerciseNum: exNum }] })
+      }).catch(err => console.warn('Failed to save exercise progress to server:', err.message));
+    }
+    const allDone = nextDone.length >= total;
+    return { allDone, doneCount: nextDone.length, total, locked: allDone && !solvedCases[sessionId] && isQuestLocked(sessionId) };
+  };
 
   // Trigger simulated AI generation
   const handleGenerate = () => {
@@ -1017,6 +2767,7 @@ export default function App() {
   // Claim points for cases/sessions
   const claimCaseEvidence = (sessionId, xpValue) => {
     if (solvedCases[sessionId]) return;
+    if (isQuestLocked(sessionId)) return;
 
     // Persist completed quest and reward to local MySQL DB
     fetch('/api/user/quests', {
@@ -1091,6 +2842,21 @@ export default function App() {
     });
   };
 
+  // Single claim authority for exercise-driven XP: whenever exercise progress or the
+  // solved map changes, award any session whose exercises are ALL complete, isn't
+  // already solved, and isn't blocked by sequential gating. This also retro-claims a
+  // session a student finished while it was still locked, once its predecessors are done.
+  useEffect(() => {
+    if (!currentUser) return;
+    for (const [sessionId, done] of Object.entries(exerciseProgress)) {
+      const total = EXERCISE_COUNTS[sessionId];
+      if (total && done.length >= total && !solvedCases[sessionId] && !isQuestLocked(sessionId)) {
+        claimCaseEvidence(sessionId, 100);
+        break; // claim one at a time; solvedCases update re-runs this effect for the next
+      }
+    }
+  }, [exerciseProgress, solvedCases, currentUser]);
+
   // Helper to load templates into the sandbox
   const loadTemplate = (session) => {
     setSandboxSessionId(session.id);
@@ -1100,18 +2866,125 @@ export default function App() {
       setSandboxConstraints(campaignId === 'cyberpunk' ? 'Verify P/N gear and depress brake pedal before starting ignition.' : campaignId === 'mars' ? 'Power regulator boot sequence, verify oxygen levels.' : 'Goblin proof shields. Cauldron heat monitoring.');
       setSandboxInput(campaignId === 'cyberpunk' ? 'gearState, brakeState, engineIgnition' : campaignId === 'mars' ? 'powerState, oxygenSensorValue, regulatorValveState' : 'cauldronTemp, goblinBait');
       setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Incorrect ignition sequence, gear shifting lockouts' : campaignId === 'mars' ? 'Unpowered boot checks, sensor failure' : 'Mana spikes, double cast');
+    } else if (session.id === 'l1-s2') {
+      setSandboxRole('Junior HTML Developer');
+      setSandboxTask('Assemble HTML elements for the Racing Car Game track and dashboard');
+      setSandboxConstraints('Use correct tag elements (div, h2, span) with matching open/close tags and specific id/class attributes.');
+      setSandboxInput('HTML source code');
+      setSandboxEdgeCases('Unclosed elements, incorrect tag nesting, spelling mistakes in ids');
+      setS2ActiveExercise(1);
+      setS2CodeInput(S2_EXERCISES[0].preloaded);
+      setS2Logs([]);
+      setS2Success(false);
+    } else if (session.id === 'l1-s3') {
+      setSandboxRole('Junior UI/UX Designer');
+      setSandboxTask('Style the Racing Car track lanes and coordinate systems');
+      setSandboxConstraints('Apply absolute positioning and layout rules (width, height, background-color, borders) in styles.css.');
+      setSandboxInput('CSS styling definitions');
+      setSandboxEdgeCases('Missing relative anchor positioning, coordinate boundaries overflow, missing display rules');
+      setS3ActiveExercise(1);
+      setS3CodeInput(S3_EXERCISES[0].preloaded);
+      setS3Logs([]);
+      setS3Success(false);
     } else if (session.id === 'l1-s4') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Climate Control Security Architect' : campaignId === 'mars' ? 'Habitat Operations Supervisor' : 'Arch-Mage Climate Ward Warden');
-      setSandboxTask(campaignId === 'cyberpunk' ? 'Implement smart climate control conditional logic function' : campaignId === 'mars' ? 'Configure habitat atmospheric safety overrides' : 'Configure castle atmospheric shielding runes');
-      setSandboxConstraints('Use nested conditional statements to handle high priority override safety controls.');
-      setSandboxInput('temperature, windowOpen, fireAlarm, securityLockout');
-      setSandboxEdgeCases('Fire alarm must take priority over lockout. Active window open must prevent system heating/cooling.');
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Declare and update the Racing Car Game state variables');
+      setSandboxConstraints('Use let for mutable state, const for fixed limits, and never quote numeric values.');
+      setSandboxInput('carX, speed, score, gameActive');
+      setSandboxEdgeCases('Quoted numbers causing string concatenation instead of math, wrong initial values');
+      setS4ActiveExercise(1);
+      setS4CodeInput(S4_EXERCISES[0].preloaded);
+      setS4Logs([]);
+      setS4Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l1-s5') {
-      setSandboxRole('IoT Embedded System Architect');
-      setSandboxTask(campaignId === 'cyberpunk' ? 'Implement SmartPetFeeder feeding logic loops' : campaignId === 'mars' ? 'Hydro Recycling Pump Loops' : 'Mana Stirling cauldron loops');
-      setSandboxConstraints('Check limits, prevent infinite loops.');
-      setSandboxInput('weightSensor, buttonClicks, elapsedSeconds');
-      setSandboxEdgeCases('System malfunctions, overflows');
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Bind keyboard steering controls to the Racing Car Game');
+      setSandboxConstraints('Use window.addEventListener("keydown") and check event.key against exact ArrowLeft/ArrowRight strings.');
+      setSandboxInput('event.key, carX');
+      setSandboxEdgeCases('Wrong key-string comparisons, missing style unit suffixes');
+      setS5ActiveExercise(1);
+      setS5CodeInput(S5_EXERCISES[0].preloaded);
+      setS5Logs([]);
+      setS5Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s6') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Implement track boundary safety guards for the Racing Car Game');
+      setSandboxConstraints('Clamp carX between 35 and 295 (the outer lane positions). Clamp speed above 120 back to 100.');
+      setSandboxInput('carX, speed');
+      setSandboxEdgeCases('Off-by-one boundary errors, string vs. number type mismatches');
+      setS6ActiveExercise(1);
+      setS6CodeInput(S6_EXERCISES[0].preloaded);
+      setS6Logs([]);
+      setS6Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s7') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Generate highway lane markers using a for loop');
+      setSandboxConstraints('Loop exactly 5 times, computing markerY = i * 120, and append a marker-dash div per iteration.');
+      setSandboxInput('i, markerY');
+      setSandboxEdgeCases('Missing loop increment (infinite loop), incorrect spacing formula');
+      setS7ActiveExercise(1);
+      setS7CodeInput(S7_EXERCISES[0].preloaded);
+      setS7Logs([]);
+      setS7Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s8') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Refactor steering logic into modular functions');
+      setSandboxConstraints('Declare updatePlayerPosition(), moveLeft(), and moveRight() as single-purpose functions sharing global carX.');
+      setSandboxInput('carX');
+      setSandboxEdgeCases('Variable scope leaks, duplicate render calls');
+      setS8ActiveExercise(1);
+      setS8CodeInput(S8_EXERCISES[0].preloaded);
+      setS8Logs([]);
+      setS8Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s9') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Build the recursive animation loop for obstacles');
+      setSandboxConstraints('Use requestAnimationFrame recursion, gated by a gameActive check, to move and reset the obstacle.');
+      setSandboxInput('obstacleY, speed, gameActive');
+      setSandboxEdgeCases('Missing gameActive gate causing runaway recursion, missing reset check');
+      setS9ActiveExercise(1);
+      setS9CodeInput(S9_EXERCISES[0].preloaded);
+      setS9Logs([]);
+      setS9Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s10') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Implement AABB collision detection between the car and obstacles');
+      setSandboxConstraints('Compare left/right/top/bottom bounds using all 4 AABB conditions.');
+      setSandboxInput('rect1, rect2 (x, y, width, height)');
+      setSandboxEdgeCases('Flipped comparison operators, swapped X/Y axes, exact-edge touches');
+      setS10ActiveExercise(1);
+      setS10CodeInput(S10_EXERCISES[0].preloaded);
+      setS10Logs([]);
+      setS10Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s11') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Wire game state to the visible HUD and restart flow');
+      setSandboxConstraints('Use textContent (not innerHTML) for score updates, and toggle the "hidden" class for the restart panel.');
+      setSandboxInput('score, gameActive');
+      setSandboxEdgeCases('Negative score values, restart handler forgetting to reset gameActive');
+      setS11ActiveExercise(1);
+      setS11CodeInput(S11_EXERCISES[0].preloaded);
+      setS11Logs([]);
+      setS11Success(false);
+      setSimConsoleLogs([]);
+    } else if (session.id === 'l1-s12') {
+      setSandboxRole('Junior JavaScript Engineer');
+      setSandboxTask('Certify the complete Racing Car Game for the Level 1 capstone');
+      setSandboxConstraints('Refactor magic numbers into a CONFIG object and pass the final diagnostic sweep.');
+      setSandboxInput('CONFIG, carX, speed, score, gameActive');
+      setSandboxEdgeCases('Unbounded speed scaling, inconsistent boundary operators, seeded collision bug');
+      setS12ActiveExercise(1);
+      setS12CodeInput(S12_EXERCISES[0].preloaded);
+      setS12Logs([]);
+      setS12Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l4-s1') {
       setSandboxRole(campaignId === 'cyberpunk' ? 'Cloud Integration Architect' : campaignId === 'mars' ? 'Mars Network DB Developer' : 'Wizard Core Database Conjurer');
       setSandboxTask(campaignId === 'cyberpunk' ? 'Connect to remote database and execute CRUD' : campaignId === 'mars' ? 'Connect to telemetry database and execute CRUD' : 'Connect spell book to Magic Core Database and execute CRUD');
@@ -1143,110 +3016,50 @@ export default function App() {
     setSandboxSuccess(false);
   };
 
-  const handleRunS4Simulation = () => {
-    setS4Logs([{ type: 'info', text: 'Initializing climate controller conditional audit...' }]);
-    
-    // Define the test scenarios
-    const scenarios = [
-      { temp: 15, alarm: true, lockout: false, window: false, expected: s4RuleFire, name: 'Fire Alarm Priority Override' },
-      { temp: 15, alarm: false, lockout: true, window: false, expected: s4RuleLockout, name: 'Security Lockout Override' },
-      { temp: 15, alarm: false, lockout: false, window: true, expected: s4RuleWindow, name: 'Window Open Ventilation' },
-      { temp: 12, alarm: false, lockout: false, window: false, expected: s4RuleLowTemp, name: 'Cold Temperature Heating' },
-      { temp: 32, alarm: false, lockout: false, window: false, expected: s4RuleHighTemp, name: 'Hot Temperature Cooling' },
-      { temp: 22, alarm: false, lockout: false, window: false, expected: s4RuleDefault, name: 'Normal Idle Zone' }
-    ];
-
-    let passedAll = true;
-
-    // Helper to evaluate student's rules in order of priority:
-    // 1. fireAlarm
-    // 2. securityLockout
-    // 3. windowOpen
-    // 4. temperature < 18
-    // 5. temperature > 26
-    // 6. else
-    const evaluateStudentLogic = (temp, alarm, lockout, window) => {
-      if (alarm) return s4RuleFire;
-      if (lockout) return s4RuleLockout;
-      if (window) return s4RuleWindow;
-      if (temp < 18) return s4RuleLowTemp;
-      if (temp > 26) return s4RuleHighTemp;
-      return s4RuleDefault;
-    };
-
-    let idx = 0;
-    const tick = () => {
-      if (idx >= scenarios.length) {
-        if (passedAll) {
-          // Double check if rules are logically correct to match the curriculum spec:
-          const isCorrectConfiguration = 
-            s4RuleFire === 'EMERGENCY_SHUTDOWN' &&
-            s4RuleLockout === 'OFF' &&
-            s4RuleWindow === 'VENT' &&
-            s4RuleLowTemp === 'HEAT' &&
-            s4RuleHighTemp === 'AC' &&
-            s4RuleDefault === 'OFF';
-
-          if (isCorrectConfiguration) {
-            setS4Logs(prev => [...prev, { type: 'success', text: '✓ ALL TESTS PASSED: Climate controller firmware certified!' }]);
-            setS4Success(true);
-            claimCaseEvidence('l1-s4', 100);
-          } else {
-            setS4Logs(prev => [...prev, { type: 'error', text: '✗ AUDIT FAILED: The output results matched your matrix, but your rules do not satisfy the environmental safety constraints!' }]);
-            setS4Success(false);
-          }
-        } else {
-          setS4Logs(prev => [...prev, { type: 'error', text: '✗ AUDIT FAILED: Some scenarios returned incorrect outputs.' }]);
-          setS4Success(false);
-        }
-        return;
-      }
-
-      const sc = scenarios[idx];
-      setS4CurrentTemp(sc.temp);
-      setS4CurrentAlarm(sc.alarm);
-      setS4CurrentLockout(sc.lockout);
-      setS4CurrentWindow(sc.window);
-      
-      const actualOutput = evaluateStudentLogic(sc.temp, sc.alarm, sc.lockout, sc.window);
-      setS4CurrentOutput(actualOutput);
-
-      let referenceOutput = 'OFF';
-      if (sc.alarm) referenceOutput = 'EMERGENCY_SHUTDOWN';
-      else if (sc.lockout) referenceOutput = 'OFF';
-      else if (sc.window) referenceOutput = 'VENT';
-      else if (sc.temp < 18) referenceOutput = 'HEAT';
-      else if (sc.temp > 26) referenceOutput = 'AC';
-
-      const success = (actualOutput === referenceOutput);
-      if (!success) {
-        passedAll = false;
-      }
-
-      const logText = `Scenario ${idx + 1} (${sc.name}): Inputs [Temp=${sc.temp}°C, Alarm=${sc.alarm}, Lockout=${sc.lockout}, Window=${sc.window}] => Mapped Action: ${actualOutput}. Result: ${success ? 'PASSED ✓' : 'FAILED ✗ (Expected ' + referenceOutput + ')'}`;
-      setS4Logs(prev => [...prev, { type: success ? 'success' : 'error', text: logText }]);
-
-      idx++;
-      setTimeout(tick, 400);
-    };
-
-    tick();
-  };
-
   const selectedJournal = journalEntries.find(j => j.id === selectedJournalId) || journalEntries[0];
   const activeJournalHistory = selectedJournal ? selectedJournal.history.find(h => h.version === activeJournalVersion) : null;
 
   // Sync editing journal text with database value
   useEffect(() => {
     if (activeJournalHistory) {
-      setEditingJournalCode(activeJournalHistory.code || '');
+      const data = deserializeJournalData(activeJournalHistory.code);
+      setEditingPlanSpecs(data.planSpecs);
+      setEditingPlanData(data.planData);
+      setEditingPlanFlow(data.planFlow);
+      setEditingCodePrompt(activeJournalHistory.prompt || '');
+      setEditingCodeOutput(data.codeOutput);
+      setEditingCodeReview(data.codeReview);
+      setEditingTestCases(data.testCases);
+      setEditingTestResults(data.testResults);
+      setEditingIterationChanges(data.iterationChanges || '');
+      setEditingIterationLessons(data.iterationLessons || '');
     } else {
-      setEditingJournalCode('');
+      setEditingPlanSpecs('');
+      setEditingPlanData('');
+      setEditingPlanFlow('');
+      setEditingCodePrompt('');
+      setEditingCodeOutput('');
+      setEditingCodeReview('');
+      setEditingTestCases('');
+      setEditingTestResults('');
+      setEditingIterationChanges('');
+      setEditingIterationLessons('');
     }
   }, [selectedJournalId, activeJournalVersion, activeJournalHistory]);
 
   const handleSaveJournalCode = () => {
     if (!selectedJournalId || !activeJournalVersion || !activeJournalHistory) return;
+    const serializedCode = serializeJournalData(
+      editingPlanSpecs,
+      editingPlanData,
+      editingPlanFlow,
+      editingCodeOutput,
+      editingCodeReview,
+      editingTestCases,
+      editingTestResults,
+      editingIterationChanges,
+      editingIterationLessons
+    );
     fetch('/api/journal/version', {
       method: 'PUT',
       headers: {
@@ -1256,8 +3069,8 @@ export default function App() {
       body: JSON.stringify({
         entryId: selectedJournalId,
         version: activeJournalVersion,
-        prompt: activeJournalHistory.prompt,
-        code: editingJournalCode
+        prompt: editingCodePrompt,
+        code: serializedCode
       })
     })
       .then(res => {
@@ -1282,6 +3095,17 @@ export default function App() {
 
   const handleAddNewJournalVersion = () => {
     if (!selectedJournalId || !activeJournalHistory) return;
+    const serializedCode = serializeJournalData(
+      editingPlanSpecs,
+      editingPlanData,
+      editingPlanFlow,
+      editingCodeOutput,
+      editingCodeReview,
+      editingTestCases,
+      editingTestResults,
+      editingIterationChanges,
+      editingIterationLessons
+    );
     fetch('/api/journal/version', {
       method: 'POST',
       headers: {
@@ -1290,8 +3114,8 @@ export default function App() {
       },
       body: JSON.stringify({
         entryId: selectedJournalId,
-        prompt: activeJournalHistory.prompt,
-        code: editingJournalCode
+        prompt: editingCodePrompt,
+        code: serializedCode
       })
     })
       .then(res => {
@@ -1313,19 +3137,6 @@ export default function App() {
         console.error("Failed to create version:", err.message);
         alert("Failed to create version: " + err.message);
       });
-  };
-
-  const handleResetJournalCode = () => {
-    if (!selectedJournalId) return;
-    if (selectedJournalId.endsWith('_j1') || selectedJournalId === 'j1') {
-      if (activeJournalVersion === 1) {
-        setEditingJournalCode(`Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]`);
-      } else {
-        setEditingJournalCode(`Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)\n\nSystem Preconditions:\n- [Write preconditions, e.g. powerState is "ON"]\n\nInputs (Identify variables and types):\n- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)\n\nProcessing Logic Steps (Step-by-step algorithm and loops):\n1. [First Step]\n2. [Second Step]\n3. [Repeat/Loop Check Step]\n\nOutputs (Identify expected actions/results):\n- [Output Variable Name]: [Expected Action/Value]`);
-      }
-    } else {
-      setEditingJournalCode(activeJournalHistory?.code || '');
-    }
   };
 
   if (!token) {
@@ -1404,28 +3215,28 @@ export default function App() {
             <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            Quest Files
+            Quest Board
           </button>
-          
+
           <button className={`nav-item ${activeTab === 'curriculum' ? 'active' : ''}`} onClick={() => setActiveTab('curriculum')}>
             <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
-            Curriculum Guide
+            Curriculum Syllabus Catalog
           </button>
           
           <button className={`nav-item ${activeTab === 'sandbox' ? 'active' : ''}`} onClick={() => setActiveTab('sandbox')}>
             <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
             </svg>
-            Prompt Sandbox
+            Exercises Journal
           </button>
           
           <button className={`nav-item ${activeTab === 'journal' ? 'active' : ''}`} onClick={() => setActiveTab('journal')}>
             <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
-            Prompt Journal
+            Project Journal
           </button>
           
           <button className={`nav-item ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>
@@ -1470,8 +3281,8 @@ export default function App() {
               {activeTab === 'dashboard' && 'Operations Dashboard'}
               {activeTab === 'cases' && 'Quest Board'}
               {activeTab === 'curriculum' && 'Curriculum Syllabus Catalog'}
-              {activeTab === 'sandbox' && 'Prompt Sandbox (Strict Mode)'}
-              {activeTab === 'journal' && 'Prompt Specification Journal'}
+              {activeTab === 'sandbox' && 'Exercises Journal'}
+              {activeTab === 'journal' && 'Project Journal'}
               {activeTab === 'leaderboard' && 'Active Decoders'}
               {activeTab === 'admin' && 'Admin Settings Console'}
             </h1>
@@ -1494,7 +3305,7 @@ export default function App() {
           </div>
         </header>
 
-        <div className="content-body">
+        <div className="content-body" style={{ padding: ['sandbox', 'journal'].includes(activeTab) ? '12px' : '32px' }}>
           {/* Dashboard View */}
           {activeTab === 'dashboard' && (
             <div className="tab-dashboard animate-in">
@@ -1554,7 +3365,7 @@ export default function App() {
                       <div className="active-case-name" style={{ color: 'var(--accent-purple)' }}>Level {selectedLevel} Overarching Target:</div>
                       <div className="active-case-name">{activeMainQuest}</div>
                       <div className="active-case-desc" style={{ marginTop: 12 }}>
-                        Current active operation: <strong>{selectedSession.title}</strong>. Launch the sandbox code compiler to start building logic structures for this quest!
+                        Current active operation: <strong>{selectedSession.title}</strong>. Launch the exercise code compiler to start building logic structures for this quest!
                       </div>
                     </div>
                   </div>
@@ -1636,11 +3447,11 @@ export default function App() {
                 <div className="sessions-sidebar-list">
                   <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
                     <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Active Coding Missions</div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Playable Sandbox Quests Only</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Playable Exercise Quests Only</div>
                   </div>
                   {activeLevelSessions.map(session => (
-                    <div 
-                      key={session.id} 
+                    <div
+                      key={session.id}
                       className={`glass-panel session-card ${selectedSessionId === session.id ? 'selected' : ''}`}
                       onClick={() => setSelectedSessionId(session.id)}
                     >
@@ -1648,6 +3459,8 @@ export default function App() {
                         <span className="session-num">QUEST</span>
                         {solvedCases[session.id] ? (
                           <span className="badge-cyber badge-green">COMPLETED</span>
+                        ) : isQuestLocked(session.id) ? (
+                          <span className="badge-cyber badge-red">🔒 LOCKED</span>
                         ) : (
                           <span className="badge-cyber badge-cyan">ACTIVE</span>
                         )}
@@ -1666,7 +3479,7 @@ export default function App() {
                     </div>
                     <div className="detail-header-right">
                       <button className="btn-cyber btn-cyber-primary" onClick={() => { loadTemplate(selectedSession); setActiveTab('sandbox'); }}>
-                        Open in Sandbox
+                        Open Exercise
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 14, height: 14}}>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
@@ -1715,10 +3528,14 @@ export default function App() {
                     </div>
                   </div>
                   {!solvedCases[selectedSession.id] && (
-                    <div style={{ marginTop: 32, borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'flex', justifyContent: 'flex-end' }}>
-                      <button className="btn-cyber btn-cyber-green" onClick={() => claimCaseEvidence(selectedSession.id, selectedSession.xp)}>
-                        Deliver Quest Evidence (+{selectedSession.xp} XP)
-                      </button>
+                    <div style={{ marginTop: 32, borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
+                      {isQuestLocked(selectedSession.id) ? (
+                        <span style={{ color: 'var(--accent-red)', fontSize: '0.85rem' }}>🔒 Complete the earlier quests in this level first to unlock this one.</span>
+                      ) : (
+                        <button className="btn-cyber btn-cyber-green" onClick={() => claimCaseEvidence(selectedSession.id, selectedSession.xp)}>
+                          Deliver Quest Evidence (+{selectedSession.xp} XP)
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1788,100 +3605,130 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="curriculum-layout">
+              <div className="curriculum-layout" style={{ display: 'grid', gridTemplateColumns: showCurriculumSidebar ? '0.8fr 2fr' : '1fr', gap: '20px', height: 'calc(100vh - 200px)' }}>
                 {/* Left panel: List of sessions */}
-                <div className="curriculum-sidebar-list">
-                  <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Curriculum Syllabus</div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Full 12-Lesson Course Catalog</div>
-                  </div>
-                  {(() => {
-                    const filteredData = CURRICULUM_DATA.filter(s => {
-                      const levelMatches = s.level === curriculumLevel || curriculumSearchQuery.trim() !== '';
-                      if (!levelMatches) return false;
-                      
-                      if (curriculumSearchQuery.trim() !== '') {
-                        const q = curriculumSearchQuery.toLowerCase();
+                {showCurriculumSidebar && (
+                  <div className="curriculum-sidebar-list" style={{ width: '100%', overflowY: 'auto' }}>
+                    <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Curriculum Syllabus</div>
+                      <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Full 12-Lesson Course Catalog</div>
+                    </div>
+                    {(() => {
+                      const filteredData = CURRICULUM_DATA.filter(s => {
+                        const levelMatches = s.level === curriculumLevel || curriculumSearchQuery.trim() !== '';
+                        if (!levelMatches) return false;
+                        
+                        if (curriculumSearchQuery.trim() !== '') {
+                          const q = curriculumSearchQuery.toLowerCase();
+                          return (
+                            s.title.toLowerCase().includes(q) ||
+                            s.module.toLowerCase().includes(q) ||
+                            s.warmUp.toLowerCase().includes(q) ||
+                            s.miniLesson.toLowerCase().includes(q) ||
+                            s.coreActivity.toLowerCase().includes(q) ||
+                            s.handsOn.toLowerCase().includes(q) ||
+                            s.homework.toLowerCase().includes(q) ||
+                            s.objectives.some(o => o.toLowerCase().includes(q))
+                          );
+                        }
+                        return true;
+                      });
+
+                      // Group by module
+                      const modulesMap = {};
+                      filteredData.forEach(s => {
+                        if (!modulesMap[s.module]) {
+                          modulesMap[s.module] = [];
+                        }
+                        modulesMap[s.module].push(s);
+                      });
+
+                      if (Object.keys(modulesMap).length === 0) {
                         return (
-                          s.title.toLowerCase().includes(q) ||
-                          s.module.toLowerCase().includes(q) ||
-                          s.warmUp.toLowerCase().includes(q) ||
-                          s.miniLesson.toLowerCase().includes(q) ||
-                          s.coreActivity.toLowerCase().includes(q) ||
-                          s.handsOn.toLowerCase().includes(q) ||
-                          s.homework.toLowerCase().includes(q) ||
-                          s.objectives.some(o => o.toLowerCase().includes(q))
+                          <div style={{ padding: 16, color: 'var(--text-muted)', textAlign: 'center' }}>
+                            No sessions found matching "{curriculumSearchQuery}"
+                          </div>
                         );
                       }
-                      return true;
-                    });
 
-                    // Group by module
-                    const modulesMap = {};
-                    filteredData.forEach(s => {
-                      if (!modulesMap[s.module]) {
-                        modulesMap[s.module] = [];
-                      }
-                      modulesMap[s.module].push(s);
-                    });
-
-                    if (Object.keys(modulesMap).length === 0) {
-                      return (
-                        <div style={{ padding: 16, color: 'var(--text-muted)', textAlign: 'center' }}>
-                          No sessions found matching "{curriculumSearchQuery}"
-                        </div>
-                      );
-                    }
-
-                    return Object.entries(modulesMap).map(([moduleName, sessions]) => (
-                      <div key={moduleName} className="curriculum-module-group">
-                        <div className="curriculum-module-header">{moduleName}</div>
-                        {sessions.map(s => {
-                          const isSelected = curriculumSessionId === s.id;
-                          // Check if it's a milestone session with a sandbox template hook
-                          const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(s.id);
-                          return (
-                            <div 
-                              key={s.id}
-                              className={`glass-panel curriculum-session-card ${isSelected ? 'selected' : ''}`}
-                              onClick={() => setCurriculumSessionId(s.id)}
-                            >
-                              <div className="session-card-header">
-                                <span className="session-id-badge">L{s.level} S{s.id.split('-s')[1]}</span>
-                                {isSandboxHooked && (
-                                  <span className="badge-cyber badge-purple">SANDBOX MATCH</span>
-                                )}
+                      return Object.entries(modulesMap).map(([moduleName, sessions]) => (
+                        <div key={moduleName} className="curriculum-module-group">
+                          <div className="curriculum-module-header">{moduleName}</div>
+                          {sessions.map(s => {
+                            const isSelected = curriculumSessionId === s.id;
+                            return (
+                              <div 
+                                key={s.id}
+                                className={`glass-panel curriculum-session-card ${isSelected ? 'selected' : ''}`}
+                                onClick={() => setCurriculumSessionId(s.id)}
+                              >
+                                <div className="session-card-header">
+                                  <span className="session-id-badge">L{s.level} S{s.id.split('-s')[1]}</span>
+                                </div>
+                                <div className="session-card-title">{s.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}</div>
                               </div>
-                              <div className="session-card-title">{s.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}</div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ));
-                  })()}
-                </div>
+                            );
+                          })}
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                )}
 
                 {/* Right panel: Details view */}
                 {(() => {
                   const currentSession = CURRICULUM_DATA.find(s => s.id === curriculumSessionId);
                   if (!currentSession) {
                     return (
-                      <div className="glass-panel curriculum-detail-view empty">
-                        Select a session from the list to view teaching topics and content.
+                      <div className="glass-panel curriculum-detail-view empty" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <div style={{ alignSelf: 'flex-start', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', width: '100%' }}>
+                          <button 
+                            className="btn-cyber btn-cyber-secondary btn-small"
+                            onClick={() => setShowCurriculumSidebar(prev => !prev)}
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >
+                            {showCurriculumSidebar ? 'Hide Syllabus Sidebar' : 'Show Syllabus Sidebar'}
+                          </button>
+                        </div>
+                        <div style={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          Select a session from the list to view teaching topics and content.
+                        </div>
                       </div>
                     );
                   }
                   
-                  const isSandboxHooked = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l2-s5', 'l2-s6', 'l3-s1', 'l3-s9', 'l4-s1', 'l4-s2', 'l4-s5'].includes(currentSession.id);
-
                   const activeCampaignSessions = CAMPAIGN_THEMES[campaignId].levels[curriculumLevel]?.sessions || [];
                   const campaignSessionMatch = activeCampaignSessions.find(s => s.id === currentSession.id);
                   const displayHomework = campaignSessionMatch ? campaignSessionMatch.homework : currentSession.homework;
                   const displayActivity = campaignSessionMatch ? campaignSessionMatch.activity : currentSession.coreActivity;
                   const displayTitle = campaignSessionMatch ? campaignSessionMatch.title : currentSession.title;
-
                   return (
                     <div className="glass-panel curriculum-detail-view animate-in">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+                        <button 
+                          className="btn-cyber btn-cyber-secondary btn-small"
+                          onClick={() => setShowCurriculumSidebar(prev => !prev)}
+                          style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                        >
+                          {showCurriculumSidebar ? 'Hide Syllabus Sidebar' : 'Show Syllabus Sidebar'}
+                        </button>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button 
+                            className={`btn-cyber btn-small ${curriculumDetailTab === 'plan' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                            onClick={() => setCurriculumDetailTab('plan')}
+                            style={{ padding: '4px 12px', fontSize: '0.75rem' }}
+                          >
+                            Session Plan
+                          </button>
+                          <button 
+                            className={`btn-cyber btn-small ${curriculumDetailTab === 'reference' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                            onClick={() => setCurriculumDetailTab('reference')}
+                            style={{ padding: '4px 12px', fontSize: '0.75rem' }}
+                          >
+                            Concept Reference
+                          </button>
+                        </div>
+                      </div>
                       <div className="detail-header">
                         <div className="detail-header-left">
                           <span className="detail-module-path">{currentSession.module}</span>
@@ -1895,13 +3742,11 @@ export default function App() {
                           <button 
                             className="btn-cyber btn-cyber-primary" 
                             onClick={() => {
-                              // If sandbox hooked, load the specific session
-                              // If not sandbox hooked, load dynamic preset template
                               loadTemplate(currentSession);
                               setActiveTab('sandbox');
                             }}
                           >
-                            {isSandboxHooked ? 'Open Sandbox Workspace' : 'Open Custom Sandbox'}
+                            Exercise
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 14, height: 14, marginLeft: 6}}>
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                             </svg>
@@ -1909,8 +3754,9 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="curriculum-body-grid">
-                        <div className="curriculum-main-col">
+                      {/* Tab 1: Session Plan */}
+                      {curriculumDetailTab === 'plan' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '15px' }}>
                           {/* Learning Objectives */}
                           <div className="detail-section">
                             <h4>Target Learning Objectives</h4>
@@ -1931,7 +3777,7 @@ export default function App() {
                             /* STUDENT VIEW CONTENT */
                             <>
                               <div className="detail-section student-box">
-                                <h4>👨‍💻 Hands-On Sandbox Challenge</h4>
+                                <h4>👨‍💻 Hands-On Exercise Challenge</h4>
                                 <div className="detail-section-body content-emphasis">
                                   {currentSession.handsOn}
                                 </div>
@@ -1981,12 +3827,11 @@ export default function App() {
                               </h5>
                               <p>{displayHomework}</p>
                             </div>
-                          </div>                        </div>
+                          </div>
 
-                        <div className="curriculum-side-col">
                           {/* Ethics Moment Card */}
                           {currentSession.ethics && (
-                            <div className="glass-panel ethics-callout">
+                            <div className="glass-panel ethics-callout" style={{ margin: 0 }}>
                               <div className="callout-header">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 18, height: 18}}>
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
@@ -1999,7 +3844,7 @@ export default function App() {
 
                           {/* Age Adaptation Card */}
                           {currentSession.adaptations && (
-                            <div className="glass-panel adaptation-callout">
+                            <div className="glass-panel adaptation-callout" style={{ margin: 0 }}>
                               <div className="callout-header">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 18, height: 18}}>
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -2010,7 +3855,36 @@ export default function App() {
                             </div>
                           )}
                         </div>
-                      </div>
+                      )}
+
+                      {/* Tab 2: Concept Reference */}
+                      {curriculumDetailTab === 'reference' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '15px' }}>
+                          <h4 style={{ color: 'var(--accent-cyan)' }}>📚 Session Concepts Reference Details</h4>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            Review key concepts taught in this session. You can copy these terms to search on Google or review for your project code design.
+                          </p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {(() => {
+                              const concepts = CONCEPT_REFERENCES[currentSession.id] || [
+                                { name: "Interactive Hands-on Application", desc: "Building core computing models and algorithms described in target learning objectives." },
+                                { name: "System Architecture & Logic", desc: "Understanding execution cycles, data input channels, and target system outputs." }
+                              ];
+                              return concepts.map((c, i) => (
+                                <div key={i} className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                  <h5 style={{ margin: 0, color: 'var(--accent-purple)', fontSize: '0.95rem' }}>{c.name}</h5>
+                                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-primary)', whiteSpace: 'pre-wrap', fontFamily: 'var(--font-mono)', background: 'rgba(0,0,0,0.25)', padding: '12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>{c.desc}</p>
+                                  {c.keywords && (
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                                      🔍 GOOGLE SEARCH TERMS: <span style={{ color: 'var(--accent-cyan)' }}>{c.keywords}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
@@ -2020,7 +3894,62 @@ export default function App() {
 
           {/* Sandbox Tab View */}
           {activeTab === 'sandbox' && (
-            <div className="tab-sandbox sandbox-layout animate-in">
+            <div className="tab-sandbox animate-in" style={{ display: 'grid', gridTemplateColumns: showExercisesSidebar ? '0.8fr 2fr' : '1fr', gap: '24px', height: 'calc(100vh - 140px)', width: '100%' }}>
+              
+              {/* Left sidebar: Syllabus List */}
+              {showExercisesSidebar && (
+                <div className="glass-panel journal-sidebar-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflowY: 'auto', padding: '16px' }}>
+                  <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Curriculum Syllabus</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Select a Session to Load Exercise</div>
+                  </div>
+                  {CURRICULUM_DATA.filter(s => s.level === curriculumLevel).map(session => {
+                    const isSelected = sandboxSessionId === session.id;
+                    return (
+                      <div 
+                        key={session.id} 
+                        className={`glass-panel journal-card ${isSelected ? 'selected' : ''}`}
+                        onClick={() => {
+                          setSandboxSessionId(session.id);
+                          setS1ActiveExercise(1);
+                          setS2ActiveExercise(1);
+                          setS3ActiveExercise(1);
+                          setS4ActiveExercise(1);
+                        }}
+                        style={{ padding: '12px', cursor: 'pointer', border: isSelected ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)', background: isSelected ? 'rgba(0, 242, 254, 0.05)' : 'none', borderRadius: '6px' }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
+                          <span>SESSION {session.id.split('-s')[1]}</span>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-cyan)' }}>
+                          {session.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Right main panel: Workspace Details */}
+              <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '12px', width: '100%', minWidth: 0 }}>
+                {/* Top toolbar */}
+                <div className="glass-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
+                  <button 
+                    className="btn-cyber btn-cyber-secondary btn-small" 
+                    onClick={() => setShowExercisesSidebar(prev => !prev)}
+                    style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                  >
+                    {showExercisesSidebar ? 'Hide Syllabus Sidebar' : 'Show Syllabus Sidebar'}
+                  </button>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                      ACTIVE SESSION: {sandboxSessionId.toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Main Content Area */}
+                <div style={{ flexGrow: 1, height: 'calc(100% - 60px)', minHeight: 0, overflowY: 'auto' }}>
               
               {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
               {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
@@ -2065,7 +3994,7 @@ export default function App() {
                           }
                         }}
                       >
-                        Exercise 1.{num}
+                        Exercise 1.{num}{(exerciseProgress['l1-s1'] || []).includes(num) ? ' ✓' : ''}
                       </button>
                     ))}
                   </div>
@@ -2273,7 +4202,10 @@ export default function App() {
                                     if (isCorrect) {
                                       setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving forward in Drive. Autopilot basic setup complete!' }]);
                                       setS1Success(true);
-                                      claimCaseEvidence('l1-s1', 100);
+                                      {
+                                        const prog = markExerciseComplete('l1-s1', 1);
+                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
+                                      }
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & drive off sequence.' }]);
                                     }
@@ -2282,7 +4214,10 @@ export default function App() {
                                     if (isCorrect) {
                                       setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving backward in Reverse. Autopilot reversing setup complete!' }]);
                                       setS1Success(true);
-                                      claimCaseEvidence('l1-s1', 100);
+                                      {
+                                        const prog = markExerciseComplete('l1-s1', 2);
+                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
+                                      }
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & reverse off sequence.' }]);
                                     }
@@ -2291,7 +4226,10 @@ export default function App() {
                                     if (isCorrect) {
                                       setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Autopilot sequence rearranged correctly. Cruising in Drive!' }]);
                                       setS1Success(true);
-                                      claimCaseEvidence('l1-s1', 100);
+                                      {
+                                        const prog = markExerciseComplete('l1-s1', 3);
+                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
+                                      }
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Scrambled script sequence is still incorrect.' }]);
                                     }
@@ -2300,7 +4238,10 @@ export default function App() {
                                     if (isCorrect) {
                                       setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Debugging successful! Incorrect R-gear shift step removed.' }]);
                                       setS1Success(true);
-                                      claimCaseEvidence('l1-s1', 100);
+                                      {
+                                        const prog = markExerciseComplete('l1-s1', 4);
+                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
+                                      }
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Extra incorrect step is still in the workspace!' }]);
                                     }
@@ -2309,7 +4250,10 @@ export default function App() {
                                     if (isCorrect) {
                                       setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Emergency stop executed safely! Vehicle brought to a secure halt.' }]);
                                       setS1Success(true);
-                                      claimCaseEvidence('l1-s1', 100);
+                                      {
+                                        const prog = markExerciseComplete('l1-s1', 5);
+                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
+                                      }
                                     } else {
                                       setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Emergency stop failed or stalled.' }]);
                                     }
@@ -2451,314 +4395,354 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 2: DETECTIVE BACKPACK SORTER */}
+              {/* LEVEL 1 SESSION 2: DETECTIVE HTML SANDBOX */}
               {sandboxSessionId === 'l1-s2' && (
-                <div className="simulator-grid sorter-grid">
-                  <div className="glass-panel sim-left">
-                    <div className="panel-header">
-                      <h3>Backpack Sorting Bay</h3>
-                    </div>
-                    <div className="sim-panel-body">
-                      <p className="sim-instructions">Futuristic locks only accept specific type categories. Sort each backpack data item into its correct data compartment:</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  {/* Exercise selector tabs */}
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S2_EXERCISES.map((ex) => (
+                      <button 
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s2ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS2ActiveExercise(ex.num);
+                          setS2CodeInput(ex.preloaded);
+                          setS2Logs([]);
+                          setS2Success(false);
+                        }}
+                      >
+                        Ex 2.{ex.num}{(exerciseProgress['l1-s2'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S2_EXERCISES[s2ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S2_EXERCISES[s2ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S2_EXERCISES[s2ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
                       
-                      <div className="backpack-items-list">
-                        {s2Items.map(item => {
-                          const isInBin = s2Bins.string.find(x => x.id === item.id) || 
-                                           s2Bins.number.find(x => x.id === item.id) || 
-                                           s2Bins.boolean.find(x => x.id === item.id);
-                          if (isInBin) return null;
-                          return (
-                            <div key={item.id} className="backpack-item-card animate-in">
-                              <span className="backpack-item-val">{item.value}</span>
-                              <div className="backpack-item-buttons">
-                                <button className="btn-sim-sort" onClick={() => setS2Bins(prev => ({ ...prev, string: [...prev.string, item] }))}>Text (String)</button>
-                                <button className="btn-sim-sort" onClick={() => setS2Bins(prev => ({ ...prev, number: [...prev.number, item] }))}>Number</button>
-                                <button className="btn-sim-sort" onClick={() => setS2Bins(prev => ({ ...prev, boolean: [...prev.boolean, item] }))}>Switch (Bool)</button>
-                              </div>
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button 
+                          className={`btn-cyber ${s2Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`} 
+                          onClick={() => {
+                            const ex = S2_EXERCISES[s2ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing HTML structure for Exercise 2.${s2ActiveExercise}...` }];
+                            const pass = ex.validate(s2CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} verification passed.` });
+                              setS2Success(true);
+                              const prog = markExerciseComplete('l1-s2', s2ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 2 CHALLENGES COMPLETE! You have built the HTML skeleton for the Racing Car Game!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Preconditions or tag nesting rules violated.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS2Success(false);
+                            }
+                            setS2Logs(logs);
+                          }}
+                        >
+                          {s2Success ? '✓ Exercise Complete' : 'Verify HTML Code'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => setS2CodeInput(S2_EXERCISES[s2ActiveExercise - 1].preloaded)}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (index.html)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s2CodeInput}
+                          onChange={(e) => setS2CodeInput(e.target.value)}
+                          style={{
+                            width: '100%',
+                            height: '500px',
+                            background: 'rgba(6, 8, 20, 0.7)',
+                            color: '#00ffcc',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '4px',
+                            padding: '12px',
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.85rem',
+                            lineHeight: 1.5,
+                            resize: 'none'
+                          }}
+                          placeholder="Write HTML here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Interactive Live Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={`
+                            <html>
+                              <head>
+                                <style>
+                                  body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
+                                  #game-track {
+                                    position: relative;
+                                    width: 100%;
+                                    height: 140px;
+                                    background-color: #222;
+                                    border: 3px solid #ffcc00;
+                                    margin: 10px 0;
+                                    overflow: hidden;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                  }
+                                  #player-car {
+                                    position: absolute;
+                                    bottom: 10px;
+                                    left: 45%;
+                                    width: 30px;
+                                    height: 50px;
+                                    background-color: #ff4d4d;
+                                    border-radius: 4px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-size: 1.2rem;
+                                  }
+                                  .obstacle {
+                                    position: absolute;
+                                    top: 20px;
+                                    left: 20px;
+                                    width: 25px;
+                                    height: 40px;
+                                    background-color: #00e5ff;
+                                    border-radius: 4px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-size: 1rem;
+                                  }
+                                  #obstacle-2 {
+                                    left: 140px;
+                                    background-color: #ff9f43;
+                                  }
+                                  #dashboard {
+                                    padding: 8px;
+                                    background-color: #1a1a2e;
+                                    border-radius: 6px;
+                                    text-align: center;
+                                    border: 1px solid #333;
+                                  }
+                                  h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
+                                  .lane-divider {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 50%;
+                                    width: 2px;
+                                    height: 100%;
+                                    border-left: 2px dashed #ffffff;
+                                  }
+                                  .hidden { display: none !important; }
+                                </style>
+                              </head>
+                              <body>
+                                ${s2CodeInput}
+                              </body>
+                            </html>
+                          `}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="HTML Sandbox Live Preview"
+                        />
+                        
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {s2Logs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Input code and click Verify to validate.</div>
+                          ) : s2Logs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
                             </div>
-                          );
-                        })}
-                        {s2Items.every(item => 
-                          s2Bins.string.find(x => x.id === item.id) || 
-                          s2Bins.number.find(x => x.id === item.id) || 
-                          s2Bins.boolean.find(x => x.id === item.id)
-                        ) && (
-                          <div className="backpack-sort-complete">
-                            Compartments loaded. Complete the Lock Verification settings below!
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="glass-panel sim-middle">
-                    <div className="panel-header">
-                      <h3>Backpack Compartments</h3>
-                      <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS2Bins({ string: [], number: [], boolean: [] }); setS2Logs([]); setS2Success(false); }}>Clear Bins</button>
-                    </div>
-                    <div className="sim-panel-body compartments-body">
-                      <div className="compartment-bin">
-                        <h4>Strings (Text Values)</h4>
-                        <div className="bin-slots">
-                          {s2Bins.string.length === 0 ? <span className="bin-empty">Empty</span> : s2Bins.string.map(x => <span key={x.id} className="bin-item">{x.value}</span>)}
+                          ))}
                         </div>
-                      </div>
-                      <div className="compartment-bin">
-                        <h4>Numbers</h4>
-                        <div className="bin-slots">
-                          {s2Bins.number.length === 0 ? <span className="bin-empty">Empty</span> : s2Bins.number.map(x => <span key={x.id} className="bin-item">{x.value}</span>)}
-                        </div>
-                      </div>
-                      <div className="compartment-bin">
-                        <h4>Booleans (Switches)</h4>
-                        <div className="bin-slots">
-                          {s2Bins.boolean.length === 0 ? <span className="bin-empty">Empty</span> : s2Bins.boolean.map(x => <span key={x.id} className="bin-item">{x.value}</span>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="glass-panel sim-right">
-                    <div className="panel-header">
-                      <h3>Lockbox Verification Rules</h3>
-                      {s2Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
-                    </div>
-                    <div className="sim-panel-body lockbox-body">
-                      <p className="sim-instructions">Configure the validation rules for the vault lock checking mechanism:</p>
-                      
-                      <div className="lockbox-rules-form">
-                        <div className="lockbox-rule-row">
-                          <label>username</label>
-                          <select value={s2UsernameRule} onChange={(e) => setS2UsernameRule(e.target.value)}>
-                            <option value="string">Must be String (Text)</option>
-                            <option value="number">Must be Number</option>
-                            <option value="boolean">Must be Boolean</option>
-                          </select>
-                        </div>
-                        <div className="lockbox-rule-row">
-                          <label>passcode</label>
-                          <select value={s2PasscodeRule} onChange={(e) => setS2PasscodeRule(e.target.value)}>
-                            <option value="string">Must be String (Text)</option>
-                            <option value="number">Must be Number</option>
-                            <option value="boolean">Must be Boolean</option>
-                          </select>
-                        </div>
-                        <div className="lockbox-rule-row">
-                          <label>isAdmin</label>
-                          <select value={s2IsAdminRule} onChange={(e) => setS2IsAdminRule(e.target.value)}>
-                            <option value="string">Must be String (Text)</option>
-                            <option value="number">Must be Number</option>
-                            <option value="boolean">Must be Boolean</option>
-                          </select>
-                        </div>
-
-                        <button className="btn-cyber btn-cyber-primary" style={{ marginTop: 12 }} onClick={() => {
-                          const logs = [];
-                          
-                          // Check if sorting is done and correct
-                          const allSorted = s2Items.length === (s2Bins.string.length + s2Bins.number.length + s2Bins.boolean.length);
-                          if (!allSorted) {
-                            setS2Logs([{ type: 'error', text: 'Access Denied: Backpack items must be completely sorted into compartments first.' }]);
-                            return;
-                          }
-
-                          const stringError = s2Bins.string.some(x => x.type !== 'string');
-                          const numberError = s2Bins.number.some(x => x.type !== 'number');
-                          const booleanError = s2Bins.boolean.some(x => x.type !== 'boolean');
-
-                          if (stringError || numberError || booleanError) {
-                            setS2Logs([{ type: 'error', text: 'Access Denied: Classification error! Some items are sorted into wrong compartments.' }]);
-                            return;
-                          }
-
-                          logs.push({ type: 'info', text: 'Initializing security classification audit...' });
-                          logs.push({ type: 'success', text: 'Backpack compartments verified: Correct.' });
-                          logs.push({ type: 'info', text: 'Running test validation credentials on rules...' });
-
-                          // Test scenario 1
-                          if (s2UsernameRule === 'string' && s2PasscodeRule === 'number' && s2IsAdminRule === 'boolean') {
-                            logs.push({ type: 'success', text: 'Test 1: PASSED. Valid input { username: "ByteSlayer", passcode: 1200, isAdmin: true } approved.' });
-                            logs.push({ type: 'success', text: 'Test 2: PASSED. Invalid input { username: 999, passcode: "apple" } blocked successfully.' });
-                            logs.push({ type: 'success', text: '✓ LOCKBOX UNLOCKED: System vault opened!' });
-                            setS2Success(true);
-                            claimCaseEvidence('l1-s2', 100);
-                          } else {
-                            logs.push({ type: 'error', text: 'Test 1: FAILED. Rules configured incorrectly. Lockbox rejected valid student credentials.' });
-                            setS2Success(false);
-                          }
-                          setS2Logs(logs);
-                        }}>Test lockbox rules</button>
-                      </div>
-
-                      <div className="lockbox-terminal-logs">
-                        {s2Logs.map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '🔒 '}
-                            {log.text}
-                          </div>
-                        ))}
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 3: SECURITY VAULT STATE MACHINE */}
+              {/* LEVEL 1 SESSION 3: DETECTIVE CSS SANDBOX */}
               {sandboxSessionId === 'l1-s3' && (
-                <div className="simulator-grid state-grid">
-                  <div className="glass-panel sim-left">
-                    <div className="panel-header">
-                      <h3>Transition Rules Map</h3>
-                    </div>
-                    <div className="sim-panel-body state-rules">
-                      <p className="sim-instructions">State machines model physical machine state behaviors. Configure transition rules for the Vault Door:</p>
-                      
-                      <div className="rules-matrix">
-                        <div className="matrix-row">
-                          <span className="matrix-label">Current: <strong>CLOSED</strong> + insert keycard</span>
-                          <select value={s3Rule1} onChange={(e) => setS3Rule1(e.target.value)}>
-                            <option value="CLOSED">Stay CLOSED</option>
-                            <option value="OPEN">Transition to OPEN</option>
-                            <option value="ALARM_LOCKED">Transition to ALARM_LOCKED</option>
-                          </select>
-                        </div>
-                        <div className="matrix-row">
-                          <span className="matrix-label">Current: <strong>OPEN</strong> + push door</span>
-                          <select value={s3Rule2} onChange={(e) => setS3Rule2(e.target.value)}>
-                            <option value="CLOSED">Transition to CLOSED</option>
-                            <option value="OPEN">Stay OPEN</option>
-                            <option value="ALARM_LOCKED">Transition to ALARM_LOCKED</option>
-                          </select>
-                        </div>
-                        <div className="matrix-row">
-                          <span className="matrix-label">Current: <strong>CLOSED</strong> + push door</span>
-                          <select value={s3Rule3} onChange={(e) => setS3Rule3(e.target.value)}>
-                            <option value="CLOSED">Stay CLOSED</option>
-                            <option value="OPEN">Transition to OPEN</option>
-                            <option value="ALARM_LOCKED">Transition to ALARM_LOCKED</option>
-                          </select>
-                        </div>
-                        <div className="matrix-row">
-                          <span className="matrix-label">Current: <strong>ALARM_LOCKED</strong> + reset alarm</span>
-                          <select value={s3Rule4} onChange={(e) => setS3Rule4(e.target.value)}>
-                            <option value="CLOSED">Transition to CLOSED</option>
-                            <option value="OPEN">Transition to OPEN</option>
-                            <option value="ALARM_LOCKED">Stay ALARM_LOCKED</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  {/* Exercise selector tabs */}
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S3_EXERCISES.map((ex) => (
+                      <button 
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s3ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS3ActiveExercise(ex.num);
+                          setS3CodeInput(ex.preloaded);
+                          setS3Logs([]);
+                          setS3Success(false);
+                        }}
+                      >
+                        Ex 3.{ex.num}{(exerciseProgress['l1-s3'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
                   </div>
 
-                  <div className="glass-panel sim-middle">
-                    <div className="panel-header">
-                      <h3>Vault Door Hardware View</h3>
-                      <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS3State('CLOSED'); setS3VisitedStates({ CLOSED: true, OPEN: false, ALARM_LOCKED: false }); setS3Logs([]); setS3Success(false); }}>Reset States</button>
-                    </div>
-                    <div className="sim-panel-body visual-state-panel">
-                      <div className={`vault-graphic-container state-${s3State}`}>
-                        <div className="vault-indicator-light"></div>
-                        <div className="vault-door-graphic">
-                          {s3State === 'CLOSED' && '🔒 CLOSED'}
-                          {s3State === 'OPEN' && '🔓 OPEN'}
-                          {s3State === 'ALARM_LOCKED' && '🚨 ALARM LOCKED'}
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S3_EXERCISES[s3ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S3_EXERCISES[s3ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S3_EXERCISES[s3ActiveExercise - 1].instruction}
+                          </p>
                         </div>
                       </div>
-
-                      <div className="state-checklist">
-                        <span className="checklist-title">Mission Requirements (Visit all states and safely reset):</span>
-                        <div className="checklist-item">
-                          <input type="checkbox" checked={s3VisitedStates.CLOSED} readOnly /> Closed State Verified
-                        </div>
-                        <div className="checklist-item">
-                          <input type="checkbox" checked={s3VisitedStates.OPEN} readOnly /> Open State Verified
-                        </div>
-                        <div className="checklist-item">
-                          <input type="checkbox" checked={s3VisitedStates.ALARM_LOCKED} readOnly /> Alarm State Verified
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="glass-panel sim-right">
-                    <div className="panel-header">
-                      <h3>Hacking Console Buttons</h3>
-                      {s3Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
-                    </div>
-                    <div className="sim-panel-body state-console-body">
-                      <p className="sim-instructions">Interact with the vault interface to test your transitions:</p>
                       
-                      <div className="state-triggers">
-                        <button className="btn-cyber" onClick={() => {
-                          let nextState = s3State;
-                          const log = { type: 'info', text: '' };
-                          
-                          if (s3State === 'CLOSED') {
-                            nextState = s3Rule1;
-                            log.text = `Event: Inserted Keycard. Mapped transition to: ${nextState}`;
-                          } else {
-                            log.text = `Event: Inserted Keycard. No rule for state ${s3State} + Insert Keycard. Door ignored event.`;
-                          }
-                          
-                          setS3State(nextState);
-                          setS3VisitedStates(prev => {
-                            const updated = { ...prev, [nextState]: true };
-                            checkCompletion(nextState, updated);
-                            return updated;
-                          });
-                          setS3Logs(prev => [...prev, log]);
-                        }}>Insert Keycard</button>
-
-                        <button className="btn-cyber" onClick={() => {
-                          let nextState = s3State;
-                          const log = { type: 'info', text: '' };
-                          
-                          if (s3State === 'OPEN') {
-                            nextState = s3Rule2;
-                            log.text = `Event: Pushed door. Mapped transition to: ${nextState}`;
-                          } else if (s3State === 'CLOSED') {
-                            nextState = s3Rule3;
-                            log.text = `Event: Pushed door. Mapped transition to: ${nextState}`;
-                          } else {
-                            log.text = `Event: Pushed door. State is ${s3State}, event ignored.`;
-                          }
-                          
-                          setS3State(nextState);
-                          setS3VisitedStates(prev => {
-                            const updated = { ...prev, [nextState]: true };
-                            checkCompletion(nextState, updated);
-                            return updated;
-                          });
-                          setS3Logs(prev => [...prev, log]);
-                        }}>Push Door</button>
-
-                        <button className="btn-cyber btn-cyber-red" onClick={() => {
-                          let nextState = s3State;
-                          const log = { type: 'info', text: '' };
-                          
-                          if (s3State === 'ALARM_LOCKED') {
-                            nextState = s3Rule4;
-                            log.text = `Event: Reset alarm button pressed. Mapped transition to: ${nextState}`;
-                          } else {
-                            log.text = `Event: Reset alarm button pressed. Alarm is offline, event ignored.`;
-                          }
-                          
-                          setS3State(nextState);
-                          setS3VisitedStates(prev => {
-                            const updated = { ...prev, [nextState]: true };
-                            checkCompletion(nextState, updated);
-                            return updated;
-                          });
-                          setS3Logs(prev => [...prev, log]);
-                        }}>Press Reset Alarm</button>
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button 
+                          className={`btn-cyber ${s3Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`} 
+                          onClick={() => {
+                            const ex = S3_EXERCISES[s3ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing stylesheet definitions for Exercise 3.${s3ActiveExercise}...` }];
+                            const pass = ex.validate(s3CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS3Success(true);
+                              const prog = markExerciseComplete('l1-s3', s3ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 3 CHALLENGES COMPLETE! You have styled the Racing Car highway track!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Stylesheet validation failed. CSS property or selector target missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS3Success(false);
+                            }
+                            setS3Logs(logs);
+                          }}
+                        >
+                          {s3Success ? '✓ Exercise Complete' : 'Verify CSS Styles'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => setS3CodeInput(S3_EXERCISES[s3ActiveExercise - 1].preloaded)}>
+                          Reset Styles
+                        </button>
                       </div>
+                    </div>
 
-                      <div className="state-terminal-logs">
-                        {s3Logs.map((log, idx) => (
-                          <div key={idx} className="terminal-log-item">
-                            ⚡ {log.text}
-                          </div>
-                        ))}
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (styles.css)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s3CodeInput}
+                          onChange={(e) => setS3CodeInput(e.target.value)}
+                          style={{
+                            width: '100%',
+                            height: '500px',
+                            background: 'rgba(6, 8, 20, 0.7)',
+                            color: '#00ffcc',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '4px',
+                            padding: '12px',
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.85rem',
+                            lineHeight: 1.5,
+                            resize: 'none'
+                          }}
+                          placeholder="Write CSS here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Interactive Live Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={`
+                            <html>
+                              <head>
+                                <style>
+                                  body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
+                                  #game-track {
+                                    border: 2px dashed #444;
+                                    min-height: 130px;
+                                  }
+                                  #player-car {
+                                    background-color: blue;
+                                    color: white;
+                                    text-align: center;
+                                  }
+                                  .obstacle {
+                                    background-color: red;
+                                    color: white;
+                                    text-align: center;
+                                  }
+                                  .lane-divider {
+                                    border-left: 1px dashed white;
+                                  }
+                                  ${s3CodeInput}
+                                </style>
+                              </head>
+                              <body>
+                                <div id="dashboard">
+                                  <h2>Score: <span id="score-val">0</span></h2>
+                                </div>
+                                <div id="game-track">
+                                  <div class="lane-divider" style="left: 130px; height: 100%;"></div>
+                                  <div class="lane-divider" style="left: 260px; height: 100%;"></div>
+                                  <div id="player-car">🏎️</div>
+                                  <div id="obstacle-1" class="obstacle">🚗</div>
+                                  <div id="obstacle-2" class="obstacle">🚘</div>
+                                </div>
+                              </body>
+                            </html>
+                          `}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="CSS Sandbox Live Preview"
+                        />
+                        
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {s3Logs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Input styles and click Verify to validate.</div>
+                          ) : s3Logs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2767,168 +4751,997 @@ export default function App() {
 
               {/* LEVEL 1 SESSION 4: CLIMATE CONTROLLER CONDITIONALS */}
               {sandboxSessionId === 'l1-s4' && (
-                <div className="simulator-grid state-grid">
-                  <div className="glass-panel sim-left">
-                    <div className="panel-header">
-                      <h3>Thermostat Rules Configurator</h3>
-                    </div>
-                    <div className="sim-panel-body state-rules">
-                      <p className="sim-instructions">
-                        Configure conditional decision rules for the climate control gateway in order of safety priority:
-                      </p>
-                      
-                      <div className="rules-matrix">
-                        <div className="matrix-row">
-                          <span className="matrix-label">1. If <strong>Fire Alarm</strong> is active ➔</span>
-                          <select value={s4RuleFire} onChange={(e) => setS4RuleFire(e.target.value)}>
-                            <option value="OFF">OFF</option>
-                            <option value="VENT">VENT</option>
-                            <option value="HEAT">HEAT</option>
-                            <option value="AC">AC</option>
-                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
-                          </select>
-                        </div>
-                        
-                        <div className="matrix-row">
-                          <span className="matrix-label">2. If <strong>Security Lockout</strong> is active ➔</span>
-                          <select value={s4RuleLockout} onChange={(e) => setS4RuleLockout(e.target.value)}>
-                            <option value="OFF">OFF</option>
-                            <option value="VENT">VENT</option>
-                            <option value="HEAT">HEAT</option>
-                            <option value="AC">AC</option>
-                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
-                          </select>
-                        </div>
-
-                        <div className="matrix-row">
-                          <span className="matrix-label">3. If <strong>Window Open</strong> is active ➔</span>
-                          <select value={s4RuleWindow} onChange={(e) => setS4RuleWindow(e.target.value)}>
-                            <option value="OFF">OFF</option>
-                            <option value="VENT">VENT</option>
-                            <option value="HEAT">HEAT</option>
-                            <option value="AC">AC</option>
-                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
-                          </select>
-                        </div>
-
-                        <div className="matrix-row">
-                          <span className="matrix-label">4. If <strong>Temperature &lt; 18°C</strong> ➔</span>
-                          <select value={s4RuleLowTemp} onChange={(e) => setS4RuleLowTemp(e.target.value)}>
-                            <option value="OFF">OFF</option>
-                            <option value="VENT">VENT</option>
-                            <option value="HEAT">HEAT</option>
-                            <option value="AC">AC</option>
-                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
-                          </select>
-                        </div>
-
-                        <div className="matrix-row">
-                          <span className="matrix-label">5. If <strong>Temperature &gt; 26°C</strong> ➔</span>
-                          <select value={s4RuleHighTemp} onChange={(e) => setS4RuleHighTemp(e.target.value)}>
-                            <option value="OFF">OFF</option>
-                            <option value="VENT">VENT</option>
-                            <option value="HEAT">HEAT</option>
-                            <option value="AC">AC</option>
-                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
-                          </select>
-                        </div>
-
-                        <div className="matrix-row">
-                          <span className="matrix-label">6. Else (Default state) ➔</span>
-                          <select value={s4RuleDefault} onChange={(e) => setS4RuleDefault(e.target.value)}>
-                            <option value="OFF">OFF</option>
-                            <option value="VENT">VENT</option>
-                            <option value="HEAT">HEAT</option>
-                            <option value="AC">AC</option>
-                            <option value="EMERGENCY_SHUTDOWN">EMERGENCY_SHUTDOWN</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S4_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s4ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS4ActiveExercise(ex.num);
+                          setS4CodeInput(ex.preloaded);
+                          setS4Logs([]);
+                          setS4Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 4.{ex.num}{(exerciseProgress['l1-s4'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
                   </div>
 
-                  <div className="glass-panel sim-middle">
-                    <div className="panel-header">
-                      <h3>Climate Telemetry & Output</h3>
-                      <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS4Logs([]); setS4Success(false); setS4CurrentTemp(22); setS4CurrentAlarm(false); setS4CurrentLockout(false); setS4CurrentWindow(false); setS4CurrentOutput('OFF'); }}>Reset</button>
-                    </div>
-                    
-                    <div className="sim-panel-body visual-state-panel">
-                      <div className="telemetry-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '15px' }}>
-                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>TEMP SENSOR</div>
-                          <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: s4CurrentTemp < 18 ? 'var(--accent-cyan)' : s4CurrentTemp > 26 ? 'var(--accent-orange)' : 'var(--text-primary)' }}>
-                            {s4CurrentTemp}°C
-                          </div>
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S4_EXERCISES[s4ActiveExercise - 1].title}</h4>
                         </div>
-                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SYSTEM STATUS</div>
-                          <div style={{ fontSize: '1.1rem', fontWeight: 'bold', textTransform: 'uppercase', color: s4CurrentOutput === 'EMERGENCY_SHUTDOWN' ? 'var(--accent-red)' : s4CurrentOutput === 'HEAT' ? 'var(--accent-cyan)' : s4CurrentOutput === 'AC' ? 'var(--accent-orange)' : s4CurrentOutput === 'VENT' ? 'var(--accent-purple)' : 'var(--text-muted)' }}>
-                            {s4CurrentOutput}
-                          </div>
-                        </div>
-                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ALARM STATE</div>
-                          <div style={{ fontSize: '0.9rem', color: s4CurrentAlarm ? 'var(--accent-red)' : 'var(--text-muted)' }}>
-                            {s4CurrentAlarm ? '🚨 ALARM ACTIVE' : '🟢 SECURE'}
-                          </div>
-                        </div>
-                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>LOCKOUT STATE</div>
-                          <div style={{ fontSize: '0.9rem', color: s4CurrentLockout ? 'var(--accent-orange)' : 'var(--text-muted)' }}>
-                            {s4CurrentLockout ? '🔒 LOCKOUT ACTIVE' : '🔓 OPERATIONAL'}
-                          </div>
-                        </div>
-                        <div className="telemetry-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', textAlign: 'center', gridColumn: 'span 2' }}>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>WINDOW MONITOR</div>
-                          <div style={{ fontSize: '0.9rem', color: s4CurrentWindow ? 'var(--accent-purple)' : 'var(--text-muted)' }}>
-                            {s4CurrentWindow ? '🪟 WINDOW OPEN (VENT ON)' : '🚪 WINDOWS CLOSED'}
-                          </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S4_EXERCISES[s4ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S4_EXERCISES[s4ActiveExercise - 1].instruction}
+                          </p>
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                        <button 
-                          className={`btn-cyber ${s4Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`} 
-                          onClick={handleRunS4Simulation}
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s4Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S4_EXERCISES[s4ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing variable registry logic for Exercise 4.${s4ActiveExercise}...` }];
+                            const pass = ex.validate(s4CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS4Success(true);
+                              const prog = markExerciseComplete('l1-s4', s4ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 4 CHALLENGES COMPLETE! Your game state variables are ready to drive!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Variable declaration or type requirement missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS4Success(false);
+                            }
+                            setS4Logs(logs);
+                          }}
                         >
-                          {s4Success ? '✓ Simulation Certified' : 'Run Climate Simulation Tests'}
+                          {s4Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS4CodeInput(S4_EXERCISES[s4ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
                         </button>
                       </div>
+                    </div>
 
-                      <div className="state-terminal-logs" style={{ height: '140px', overflowY: 'auto' }}>
-                        {s4Logs.map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
-                          </div>
-                        ))}
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s4CodeInput}
+                          onChange={(e) => setS4CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S4_EXERCISES[s4ActiveExercise - 1].runnable ? s4CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s4Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...s4Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* FUNCTION TO CHECK COMPILATION FOR SESSION 3 STATE MACHINE */}
-              {(() => {
-                window.checkCompletion = (activeSt, visitedSt) => {
-                  if (s3Success) return;
-                  const allVisited = visitedSt.CLOSED && visitedSt.OPEN && visitedSt.ALARM_LOCKED;
-                  const isSafeClosed = activeSt === 'CLOSED';
-                  // Verification rules check
-                  const correctRules = s3Rule1 === 'OPEN' && s3Rule2 === 'CLOSED' && s3Rule3 === 'ALARM_LOCKED' && s3Rule4 === 'CLOSED';
-                  
-                  if (allVisited && isSafeClosed && correctRules) {
-                    setS3Success(true);
-                    setS3Logs(prev => [...prev, { type: 'success', text: '✓ SYSTEM VALIDATION PASSED: Vault state transitions work correctly!' }]);
-                    claimCaseEvidence('l1-s3', 100);
-                  }
-                };
-              })()}
+              {/* LEVEL 1 SESSION 5: KEYBOARD CONTROL INTERFACES (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s5' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S5_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s5ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS5ActiveExercise(ex.num);
+                          setS5CodeInput(ex.preloaded);
+                          setS5Logs([]);
+                          setS5Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 5.{ex.num}{(exerciseProgress['l1-s5'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S5_EXERCISES[s5ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S5_EXERCISES[s5ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S5_EXERCISES[s5ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s5Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S5_EXERCISES[s5ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing keyboard control logic for Exercise 5.${s5ActiveExercise}...` }];
+                            const pass = ex.validate(s5CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS5Success(true);
+                              const prog = markExerciseComplete('l1-s5', s5ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 5 CHALLENGES COMPLETE! Your car now steers with the keyboard!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Logic requirements not met.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS5Success(false);
+                            }
+                            setS5Logs(logs);
+                          }}
+                        >
+                          {s5Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS5CodeInput(S5_EXERCISES[s5ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s5CodeInput}
+                          onChange={(e) => setS5CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S5_EXERCISES[s5ActiveExercise - 1].runnable ? s5CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s5Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code, click inside the preview, press arrow keys, and click Verify.</div>
+                          ) : [...s5Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 6: TRACK BOUNDARIES & SAFETY GUARDS (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s6' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S6_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s6ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS6ActiveExercise(ex.num);
+                          setS6CodeInput(ex.preloaded);
+                          setS6Logs([]);
+                          setS6Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 6.{ex.num}{(exerciseProgress['l1-s6'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S6_EXERCISES[s6ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S6_EXERCISES[s6ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S6_EXERCISES[s6ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s6Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S6_EXERCISES[s6ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing boundary guard logic for Exercise 6.${s6ActiveExercise}...` }];
+                            const pass = ex.validate(s6CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS6Success(true);
+                              const prog = markExerciseComplete('l1-s6', s6ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 6 CHALLENGES COMPLETE! Your car now stays safely on the track!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Boundary or safety rule missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS6Success(false);
+                            }
+                            setS6Logs(logs);
+                          }}
+                        >
+                          {s6Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS6CodeInput(S6_EXERCISES[s6ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s6CodeInput}
+                          onChange={(e) => setS6CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S6_EXERCISES[s6ActiveExercise - 1].runnable ? s6CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s6Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code, click inside the preview, press arrow keys, and click Verify.</div>
+                          ) : [...s6Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 7: OBSTACLE LOOP GENERATION (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s7' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S7_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s7ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS7ActiveExercise(ex.num);
+                          setS7CodeInput(ex.preloaded);
+                          setS7Logs([]);
+                          setS7Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 7.{ex.num}{(exerciseProgress['l1-s7'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S7_EXERCISES[s7ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S7_EXERCISES[s7ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S7_EXERCISES[s7ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s7Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S7_EXERCISES[s7ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing loop logic for Exercise 7.${s7ActiveExercise}...` }];
+                            const pass = ex.validate(s7CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS7Success(true);
+                              const prog = markExerciseComplete('l1-s7', s7ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 7 CHALLENGES COMPLETE! Highway markers now spawn automatically!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Loop bounds or formula incorrect.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS7Success(false);
+                            }
+                            setS7Logs(logs);
+                          }}
+                        >
+                          {s7Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS7CodeInput(S7_EXERCISES[s7ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s7CodeInput}
+                          onChange={(e) => setS7CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to the "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s7Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify. This session's code runs once when the preview loads.</div>
+                          ) : [...s7Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 8: MODULAR CONTROL FUNCTIONS (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s8' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S8_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s8ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS8ActiveExercise(ex.num);
+                          setS8CodeInput(ex.preloaded);
+                          setS8Logs([]);
+                          setS8Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 8.{ex.num}{(exerciseProgress['l1-s8'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S8_EXERCISES[s8ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S8_EXERCISES[s8ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S8_EXERCISES[s8ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s8Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S8_EXERCISES[s8ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing modular function design for Exercise 8.${s8ActiveExercise}...` }];
+                            const pass = ex.validate(s8CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS8Success(true);
+                              const prog = markExerciseComplete('l1-s8', s8ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 8 CHALLENGES COMPLETE! Your steering logic is now fully modular!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Function structure or scope requirement missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS8Success(false);
+                            }
+                            setS8Logs(logs);
+                          }}
+                        >
+                          {s8Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS8CodeInput(S8_EXERCISES[s8ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s8CodeInput}
+                          onChange={(e) => setS8CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s8Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code, click inside the preview, press arrow keys, and click Verify.</div>
+                          ) : [...s8Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 9: THE RACING GAME LOOP - TIMERS & ANIMATIONS (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s9' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S9_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s9ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS9ActiveExercise(ex.num);
+                          setS9CodeInput(ex.preloaded);
+                          setS9Logs([]);
+                          setS9Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 9.{ex.num}{(exerciseProgress['l1-s9'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S9_EXERCISES[s9ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S9_EXERCISES[s9ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S9_EXERCISES[s9ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s9Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S9_EXERCISES[s9ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing animation loop logic for Exercise 9.${s9ActiveExercise}...` }];
+                            const pass = ex.validate(s9CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS9Success(true);
+                              const prog = markExerciseComplete('l1-s9', s9ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 9 CHALLENGES COMPLETE! Your obstacles now animate down the track!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Loop or recursion requirement missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS9Success(false);
+                            }
+                            setS9Logs(logs);
+                          }}
+                        >
+                          {s9Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS9CodeInput(S9_EXERCISES[s9ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s9CodeInput}
+                          onChange={(e) => setS9CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s9Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...s9Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 10: COLLISION DETECTION - AUDITING AI OVERLAP MATH (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s10' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S10_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s10ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS10ActiveExercise(ex.num);
+                          setS10CodeInput(ex.preloaded);
+                          setS10Logs([]);
+                          setS10Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 10.{ex.num}{(exerciseProgress['l1-s10'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S10_EXERCISES[s10ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S10_EXERCISES[s10ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S10_EXERCISES[s10ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s10Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S10_EXERCISES[s10ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing collision math for Exercise 10.${s10ActiveExercise}...` }];
+                            const pass = ex.validate(s10CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS10Success(true);
+                              const prog = markExerciseComplete('l1-s10', s10ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 10 CHALLENGES COMPLETE! Collisions are now detected correctly!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Bounding box math incorrect.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS10Success(false);
+                            }
+                            setS10Logs(logs);
+                          }}
+                        >
+                          {s10Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS10CodeInput(S10_EXERCISES[s10ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s10CodeInput}
+                          onChange={(e) => setS10CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s10Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...s10Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 11: THE DASHBOARD & HIGH-SCORE COUNTER - DOM OPERATIONS (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s11' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S11_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s11ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS11ActiveExercise(ex.num);
+                          setS11CodeInput(ex.preloaded);
+                          setS11Logs([]);
+                          setS11Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 11.{ex.num}{(exerciseProgress['l1-s11'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S11_EXERCISES[s11ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S11_EXERCISES[s11ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S11_EXERCISES[s11ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s11Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S11_EXERCISES[s11ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing DOM update logic for Exercise 11.${s11ActiveExercise}...` }];
+                            const pass = ex.validate(s11CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS11Success(true);
+                              const prog = markExerciseComplete('l1-s11', s11ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 11 CHALLENGES COMPLETE! The HUD and restart flow are fully wired up!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. DOM selector or update logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS11Success(false);
+                            }
+                            setS11Logs(logs);
+                          }}
+                        >
+                          {s11Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS11CodeInput(S11_EXERCISES[s11ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s11CodeInput}
+                          onChange={(e) => setS11CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S11_EXERCISES[s11ActiveExercise - 1].runnable ? s11CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s11Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...s11Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 1 SESSION 12: RACING CAR GAME ASSESSMENT (JS Sandbox) */}
+              {sandboxSessionId === 'l1-s12' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S12_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s12ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setS12ActiveExercise(ex.num);
+                          setS12CodeInput(ex.preloaded);
+                          setS12Logs([]);
+                          setS12Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 12.{ex.num}{(exerciseProgress['l1-s12'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S12_EXERCISES[s12ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S12_EXERCISES[s12ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S12_EXERCISES[s12ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s12Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S12_EXERCISES[s12ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Running capstone diagnostic for Exercise 12.${s12ActiveExercise}...` }];
+                            const pass = ex.validate(s12CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setS12Success(true);
+                              const prog = markExerciseComplete('l1-s12', s12ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ LEVEL 1 CAPSTONE COMPLETE! The Racing Car Game is fully certified. Onward to Level 2!' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Capstone requirement not met.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS12Success(false);
+                            }
+                            setS12Logs(logs);
+                          }}
+                        >
+                          {s12Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS12CodeInput(S12_EXERCISES[s12ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (game.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s12CodeInput}
+                          onChange={(e) => setS12CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Racing Game Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...s12Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...s12Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* STANDARD PROMPT SANDBOX FOR LEVEL 2-4 */}
-              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4'].includes(sandboxSessionId) && (
-                <>
+              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(sandboxSessionId) && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '20px', height: '100%', width: '100%' }}>
                   <div className="glass-panel sandbox-left">
                     <div className="panel-header">
                       <h3>Prompt Specification Panel</h3>
@@ -2993,7 +5806,7 @@ export default function App() {
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 48, height: 48, stroke: 'var(--text-muted)'}}>
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            <span>Prompt Sandbox Empty.<br/>Fill out the prompt details on the left and click "Run AI Generator" to begin.</span>
+                            <span>Exercise Workspace Empty.<br/>Fill out the prompt details on the left and click "Run AI Generator" to begin.</span>
                           </div>
                         )}
                       </div>
@@ -3029,95 +5842,427 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               )}
 
+                </div>
+              </div>
             </div>
           )}
 
-          {/* Prompt Journal View */}
+          {/* Project Journal View */}
           {activeTab === 'journal' && (
-            <div className="tab-journal journal-layout animate-in">
-              <div className="glass-panel journal-detail-view" style={{ width: '100%' }}>
-                {selectedJournal ? (
-                  <>
-                    <div className="journal-detail-header" style={{ marginBottom: '16px' }}>
-                      <h2 className="journal-detail-title">{selectedJournal.title}</h2>
-                      <span className="journal-detail-date">LOGGED AT {selectedJournal.date}</span>
-                      <div className="journal-detail-prompt-desc" style={{ marginTop: '10px', background: 'rgba(0, 0, 0, 0.15)', padding: '12px', borderRadius: '6px', borderLeft: '3px solid var(--accent-cyan)' }}>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '4px' }}>Homework Task / Prompt Specification:</span>
-                        <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)', lineHeight: 1.4 }}>{activeJournalHistory?.prompt}</span>
-                      </div>
-                    </div>
-
-                    <div className="journal-history-nav" style={{ marginBottom: '16px' }}>
-                      {selectedJournal.history.map(hist => (
-                        <button 
-                          key={hist.version}
-                          className={`version-nav-btn ${activeJournalVersion === hist.version ? 'active' : ''}`}
-                          onClick={() => setActiveJournalVersion(hist.version)}
-                        >
-                          Version {hist.version}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="diff-box-container">
-                      <div className="diff-box-header">Your Homework Solution (Editable)</div>
-                      <textarea
-                        value={editingJournalCode}
-                        onChange={e => setEditingJournalCode(e.target.value)}
-                        className="diff-lines-code"
-                        style={{
-                          width: '100%',
-                          minHeight: '450px',
-                          background: 'rgba(6, 8, 20, 0.7)',
-                          color: 'var(--text-primary)',
-                          border: '1px solid var(--border-color)',
-                          borderRadius: '4px',
-                          padding: '12px',
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.85rem',
-                          lineHeight: 1.5,
-                          resize: 'vertical',
-                          whiteSpace: 'pre-wrap',
-                          wordWrap: 'break-word',
-                          overflowWrap: 'break-word'
-                        }}
-                        placeholder="Write your journal notes or script here..."
-                      />
-                    </div>
-
-                    <div style={{ display: 'flex', gap: 12, marginTop: 12, marginBottom: 16 }}>
-                      <button 
-                        className="btn-cyber btn-cyber-primary" 
-                        onClick={handleSaveJournalCode}
-                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
-                      >
-                        Save Changes
-                      </button>
-                      <button 
-                        className="btn-cyber btn-cyber-green" 
-                        onClick={handleAddNewJournalVersion}
-                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
-                      >
-                        Save as New Version
-                      </button>
-                      <button 
-                        className="btn-cyber btn-cyber-red" 
-                        onClick={handleResetJournalCode}
-                        style={{ padding: '8px 16px', fontSize: '0.85rem' }}
-                      >
-                        Reset Answer
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 48 }}>
-                    Select a Journal Entry on the left to review prompt specs and history.
+            <div className="tab-journal journal-layout animate-in" style={{ display: 'grid', gridTemplateColumns: showProjectTasks ? '0.8fr 2fr' : '1fr', gap: '24px', height: 'calc(100vh - 140px)' }}>
+              
+              {/* Left sidebar: Sessions List */}
+              {showProjectTasks && (
+                <div className="glass-panel journal-sidebar-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflowY: 'auto', padding: '16px' }}>
+                  <div style={{ padding: '4px 8px 12px 8px', borderBottom: '1px solid var(--border-color)', marginBottom: 12 }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Project Tasks</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Select a Session to Work On</div>
                   </div>
-                )}
+                  
+                  {CURRICULUM_DATA.filter(s => s.level === curriculumLevel).map(session => {
+                    const matchingJournal = journalEntries.find(j => 
+                      j.id.endsWith('_' + session.id) || 
+                      j.id === session.id || 
+                      j.title.toLowerCase().includes(session.title.toLowerCase())
+                    );
+                    const isSelected = selectedJournal && (selectedJournal.id === matchingJournal?.id || (matchingJournal === undefined && selectedJournalId === `${currentUser?.id}_${session.id}`));
+                    
+                    return (
+                      <div 
+                        key={session.id} 
+                        className={`glass-panel journal-card ${isSelected ? 'selected' : ''}`}
+                        onClick={() => {
+                          if (matchingJournal) {
+                            setSelectedJournalId(matchingJournal.id);
+                            setActiveJournalVersion(matchingJournal.active_version || 1);
+                          } else {
+                            setSelectedJournalId(`${currentUser?.id}_${session.id}`);
+                            setActiveJournalVersion(1);
+                          }
+                        }}
+                        style={{ padding: '12px', cursor: 'pointer', border: isSelected ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)', background: isSelected ? 'rgba(0, 242, 254, 0.05)' : 'none', borderRadius: '6px' }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
+                          <span>SESSION {session.id.split('-s')[1]}</span>
+                          {matchingJournal ? (
+                            <span className="badge-cyber badge-green">LOGGED</span>
+                          ) : (
+                            <span className="badge-cyber badge-red" style={{ background: 'rgba(255, 77, 77, 0.1)', color: '#ff4d4d' }}>UNSTARTED</span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-cyan)' }}>
+                          {session.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              
+              {/* Right main panel: Tabbed Journal Details */}
+<div className="glass-panel journal-detail-view" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', padding: '20px' }}>
+                {(() => {
+                  const currentSession = CURRICULUM_DATA.find(s => 
+                    selectedJournalId.endsWith('_' + s.id) || selectedJournalId === s.id
+                  );
+                  
+                  if (!currentSession) {
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '16px' }}>
+                          <button 
+                            className="btn-cyber btn-cyber-secondary btn-small" 
+                            onClick={() => setShowProjectTasks(prev => !prev)}
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >
+                            {showProjectTasks ? 'Hide Tasks Sidebar' : 'Show Tasks Sidebar'}
+                          </button>
+                        </div>
+                        <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 48, flexGrow: 1 }}>
+                          Select a Session on the left to review your Project Journal.
+                        </div>
+                      </div>
+                    );
+                  }
+                  
+                  const isInitialized = selectedJournal && selectedJournal.id.endsWith('_' + currentSession.id);
+
+                  if (!isInitialized) {
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '16px' }}>
+                          <button 
+                            className="btn-cyber btn-cyber-secondary btn-small" 
+                            onClick={() => setShowProjectTasks(prev => !prev)}
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >
+                            {showProjectTasks ? 'Hide Tasks Sidebar' : 'Show Tasks Sidebar'}
+                          </button>
+                        </div>
+                        <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', justifyContent: 'center', flexGrow: 1 }}>
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ width: 48, height: 48, stroke: 'var(--text-muted)' }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                          </svg>
+                          <div>
+                            <h3 style={{ color: 'var(--text-primary)', marginBottom: '8px' }}>Project Journal Offline</h3>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '360px', margin: '0 auto' }}>
+                              You have not started your Project Journal homework for this session yet. Initialize the journal log template to begin.
+                            </p>
+                          </div>
+                          <button 
+                            className="btn-cyber btn-cyber-primary" 
+                            onClick={() => {
+                              const newId = `${currentUser.id}_${currentSession.id}`;
+                              const newTitle = `L${currentSession.level} S${currentSession.id.split('-s')[1]}: ${currentSession.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}`;
+                              const initialSerialized = serializeJournalData('', '', '', '', '', '', '', '', '');
+                              const initialPrompt = PROJECT_TASKS[currentSession.id] 
+                                ? PROJECT_TASKS[currentSession.id].promptGuide 
+                                : (currentSession.homework || 'Complete the session project task.');
+                              fetch('/api/journal', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                  'Authorization': `Bearer ${token}`
+                                },
+                                body: JSON.stringify({
+                                  id: newId,
+                                  title: newTitle,
+                                  prompt: initialPrompt,
+                                  code: initialSerialized
+                                })
+                              })
+                              .then(res => res.json())
+                              .then(() => {
+                                fetch('/api/journal', {
+                                  headers: { 'Authorization': `Bearer ${token}` }
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                  setJournalEntries(data);
+                                  setSelectedJournalId(newId);
+                                  setActiveJournalVersion(1);
+                                });
+                              });
+                            }}
+                          >
+                            Initialize Project Journal
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  }
+                  
+
+                  
+                  return (
+                    <>
+                      <div className="journal-detail-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
+                        <div>
+                          <button 
+                            className="btn-cyber btn-cyber-secondary btn-small" 
+                            onClick={() => setShowProjectTasks(prev => !prev)}
+                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                          >
+                            {showProjectTasks ? 'Hide Tasks Sidebar' : 'Show Tasks Sidebar'}
+                          </button>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <h2 className="journal-detail-title" style={{ margin: 0, fontSize: '1.2rem', color: 'var(--accent-cyan)' }}>{selectedJournal.title}</h2>
+                          <span className="journal-detail-date" style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>LOGGED AT {selectedJournal.date}</span>
+                        </div>
+                      </div>
+
+                      {/* Project Task Guide Header Card */}
+                      {PROJECT_TASKS[currentSession.id] && (
+                        <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px', borderLeft: '4px solid var(--accent-purple)', background: 'rgba(138, 43, 226, 0.03)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
+                              🏎️ Racing Car Project — {PROJECT_TASKS[currentSession.id].partNum}
+                            </span>
+                            <span className="badge-cyber badge-purple" style={{ fontSize: '0.65rem', background: 'rgba(138, 43, 226, 0.2)', color: 'rgb(180, 100, 255)' }}>Active Milestone</span>
+                          </div>
+                          <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-primary)' }}>
+                            {PROJECT_TASKS[currentSession.id].partTitle}
+                          </h3>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            <strong>Milestone Objectives:</strong>
+                            <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px', listStyleType: 'disc' }}>
+                              {PROJECT_TASKS[currentSession.id].objectives.map((obj, i) => (
+                                <li key={i} style={{ marginBottom: '2px' }}>{obj}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 5 sub-tabs selection */}
+                      <div className="journal-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', marginBottom: '16px' }}>
+                        <button 
+                          className={`btn-cyber btn-small ${activeJournalTab === 'plan' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                          onClick={() => setActiveJournalTab('plan')}
+                        >
+                          1. Plan & Design
+                        </button>
+                        <button 
+                          className={`btn-cyber btn-small ${activeJournalTab === 'prompt' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                          onClick={() => setActiveJournalTab('prompt')}
+                        >
+                          2. Write AI Prompt
+                        </button>
+                        <button 
+                          className={`btn-cyber btn-small ${activeJournalTab === 'review' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                          onClick={() => setActiveJournalTab('review')}
+                        >
+                          3. Review & Explain
+                        </button>
+                        <button 
+                          className={`btn-cyber btn-small ${activeJournalTab === 'test' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                          onClick={() => setActiveJournalTab('test')}
+                        >
+                          4. Test & Break
+                        </button>
+                        <button 
+                          className={`btn-cyber btn-small ${activeJournalTab === 'iterate' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                          onClick={() => setActiveJournalTab('iterate')}
+                        >
+                          5. Iterate & Improve
+                        </button>
+                      </div>
+
+
+                      {/* Tab Content Panels */}
+                      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        
+                        {/* Tab 1: Plan & Design */}
+                        {activeJournalTab === 'plan' && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Component Hierarchy & Specs</label>
+                              <textarea 
+                                value={editingPlanSpecs}
+                                onChange={e => setEditingPlanSpecs(e.target.value)}
+                                style={{ width: '100%', height: '100px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned structure guidelines:\n" + PROJECT_TASKS[currentSession.id].planSpecs.hierarchy : "Describe the layout elements and nesting structure (e.g. game-track > player-car, scoreboard-panel > score-val)"}
+                              />
+                            </div>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Data & State Variables</label>
+                              <textarea 
+                                value={editingPlanData}
+                                onChange={e => setEditingPlanData(e.target.value)}
+                                style={{ width: '100%', height: '100px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned state registers:\n" + PROJECT_TASKS[currentSession.id].planSpecs.variables : "List variables, their initial values, types, and constraints (e.g. carX: Number = 165, score: Number = 0)"}
+                              />
+                            </div>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Logic Flow Diagram / Pseudocode</label>
+                              <textarea 
+                                value={editingPlanFlow}
+                                onChange={e => setEditingPlanFlow(e.target.value)}
+                                style={{ width: '100%', height: '150px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned control algorithm:\n" + PROJECT_TASKS[currentSession.id].planSpecs.flow : "Outline step-by-step logic in plain English or flowchart syntax (e.g. IF ArrowLeft pressed AND carX > leftBoundary THEN decrease carX)"}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Tab 2: Write AI Prompt */}
+                        {activeJournalTab === 'prompt' && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Iterate your prompt versions to improve the generated code output.</span>
+                              <div className="journal-history-nav" style={{ display: 'flex', gap: '6px' }}>
+                                {selectedJournal.history.map(hist => (
+                                  <button 
+                                    key={hist.version}
+                                    className={`version-nav-btn ${activeJournalVersion === hist.version ? 'active' : ''}`}
+                                    onClick={() => setActiveJournalVersion(hist.version)}
+                                    style={{ padding: '2px 8px', fontSize: '0.75rem' }}
+                                  >
+                                    v{hist.version}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI Prompt Specification (Active Version)</label>
+                              <textarea 
+                                value={editingCodePrompt}
+                                onChange={e => setEditingCodePrompt(e.target.value)}
+                                style={{ width: '100%', height: '280px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.4 }}
+                                placeholder="Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Tab 3: Review & Explain */}
+                        {activeJournalTab === 'review' && (
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI-Generated Code</label>
+                              <textarea 
+                                value={editingCodeOutput}
+                                onChange={e => setEditingCodeOutput(e.target.value)}
+                                style={{ width: '100%', height: '350px', background: '#030409', color: '#c5cdd8', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}
+                                placeholder="Paste the code generated by the AI here..."
+                              />
+                            </div>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Code Defense & Explanations</label>
+                              <textarea 
+                                value={editingCodeReview}
+                                onChange={e => setEditingCodeReview(e.target.value)}
+                                style={{ width: '100%', height: '350px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Review guidelines:\n" + PROJECT_TASKS[currentSession.id].codeReviewGuide.map((g, i) => (i + 1) + '. ' + g).join('\n') : "Review the code. Explain key blocks or audit for issues (e.g. 'The AI used var. I changed it to let. It missed checking boundary clamping...')"}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Tab 4: Test & Break */}
+                        {activeJournalTab === 'test' && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Test Cases Checklist</label>
+                              <textarea 
+                                value={editingTestCases}
+                                onChange={e => setEditingTestCases(e.target.value)}
+                                style={{ width: '100%', height: '120px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Test checklist guidelines:\n" + PROJECT_TASKS[currentSession.id].testCasesGuide : "Define your tests: e.g.\n- Happy Path: Steering moves X left/right.\n- Left boundary limit checks.\n- Right boundary limit checks."}
+                              />
+                            </div>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Test Failure Results & Logs</label>
+                              <textarea 
+                                value={editingTestResults}
+                                onChange={e => setEditingTestResults(e.target.value)}
+                                style={{ width: '100%', height: '180px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder="Write down what happened when you tested and deliberately broke the code. What edge cases did you find?"
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Tab 5: Iterate & Improve */}
+                        {activeJournalTab === 'iterate' && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {PROJECT_TASKS[currentSession.id] && (
+                              <div style={{ padding: '10px 12px', background: 'rgba(0, 242, 254, 0.04)', borderLeft: '3px solid var(--accent-cyan)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                                💡 <strong>Iteration Guideline:</strong> {PROJECT_TASKS[currentSession.id].iterationGuide}
+                              </div>
+                            )}
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Prompt Iteration Changes</label>
+                              <textarea 
+                                value={editingIterationChanges}
+                                onChange={e => setEditingIterationChanges(e.target.value)}
+                                style={{ width: '100%', height: '120px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder="Describe what adjustments you made to your prompt (e.g. 'Added boundary validation logic checking if carX > 0...')"
+                              />
+                            </div>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Reflective Lessons Learned</label>
+                              <textarea 
+                                value={editingIterationLessons}
+                                onChange={e => setEditingIterationLessons(e.target.value)}
+                                style={{ width: '100%', height: '180px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder="What did you learn from this prompting cycle? What surprised you about how the AI interpreted your instructions?"
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                      </div>
+
+                      {/* Action buttons footer */}
+                      <div style={{ display: 'flex', gap: 12, marginTop: 24, borderTop: '1px solid var(--border-color)', paddingTop: 16 }}>
+                        <button 
+                          className="btn-cyber btn-cyber-primary" 
+                          onClick={handleSaveJournalCode}
+                          style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                        >
+                          Save Changes
+                        </button>
+                        {activeJournalTab === 'prompt' && (
+                          <button 
+                            className="btn-cyber btn-cyber-green" 
+                            onClick={handleAddNewJournalVersion}
+                            style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                          >
+                            Save as New Version
+                          </button>
+                        )}
+                        <button 
+                          className="btn-cyber btn-cyber-red" 
+                          onClick={() => {
+                            if (window.confirm("Reset this version to defaults?")) {
+                              setEditingPlanSpecs('');
+                              setEditingPlanData('');
+                              setEditingPlanFlow('');
+                              setEditingCodePrompt(selectedJournal.history[0]?.prompt || '');
+                              setEditingCodeOutput('');
+                              setEditingCodeReview('');
+                              setEditingTestCases('');
+                              setEditingTestResults('');
+                              setEditingIterationChanges('');
+                              setEditingIterationLessons('');
+                            }
+                          }}
+                          style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                        >
+                          Reset Fields
+                        </button>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
+
             </div>
           )}
 
@@ -3151,6 +6296,11 @@ export default function App() {
                         leaderboardData.map(agent => {
                           const isUser = agent.username === currentUser?.username;
                           const scorePoints = agent.points;
+                          const agentRank = getRank(scorePoints);
+                          const rankBadgeColor = agentRank.title === 'Master Architect' ? 'badge-purple'
+                            : agentRank.title === 'Senior Auditor' ? 'badge-cyan'
+                            : agentRank.title === 'Junior Investigator' ? 'badge-green'
+                            : 'badge-yellow';
                           return (
                             <tr key={agent.username} className={`leaderboard-row ${isUser ? 'current-user' : ''}`}>
                               <td className={`leaderboard-rank top-${agent.rank}`}>{agent.rank}</td>
@@ -3159,8 +6309,8 @@ export default function App() {
                                 {isUser && <span className="badge-cyber badge-cyan leaderboard-badge-me">YOU</span>}
                               </td>
                               <td>
-                                <span className={`badge-cyber ${scorePoints > 1000 ? 'badge-purple' : scorePoints > 500 ? 'badge-cyan' : 'badge-green'}`}>
-                                  {scorePoints >= 1200 ? 'Master' : scorePoints >= 800 ? 'Senior' : 'Junior'}
+                                <span className={`badge-cyber ${rankBadgeColor}`}>
+                                  {agentRank.title}
                                 </span>
                               </td>
                               <td>{agent.level}</td>
@@ -3337,7 +6487,14 @@ export default function App() {
                                 </td>
                                 <td style={{ padding: 10, textAlign: 'right' }}>
                                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
-                                    <button 
+                                    <button
+                                      className="btn-cyber btn-cyber-primary btn-small"
+                                      onClick={() => handleViewStudentJournal(student)}
+                                      style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                                    >
+                                      View Journal
+                                    </button>
+                                    <button
                                       className="btn-cyber btn-cyber-secondary btn-small"
                                       onClick={() => handleUpdateStudentPoints(student.id, Math.max(0, student.points - 50))}
                                       style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
@@ -3347,7 +6504,7 @@ export default function App() {
                                     <span style={{ fontWeight: 600, color: 'var(--accent-cyan)', minWidth: '55px', display: 'inline-block', textAlign: 'center' }}>
                                       {student.points} XP
                                     </span>
-                                    <button 
+                                    <button
                                       className="btn-cyber btn-cyber-green btn-small"
                                       onClick={() => handleUpdateStudentPoints(student.id, student.points + 50)}
                                       style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
@@ -3382,6 +6539,106 @@ export default function App() {
           )}
         </div>
       </main>
+
+      {/* Teacher: Read-Only Student Journal Viewer */}
+      {viewingStudent && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(3, 4, 9, 0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={handleCloseStudentJournal}
+        >
+          <div
+            className="glass-panel"
+            style={{ width: 'min(900px, 100%)', maxHeight: '85vh', overflowY: 'auto', padding: 24, textAlign: 'left' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+              <div>
+                <h3 style={{ margin: 0 }}>{viewingStudent.name}'s Project Journal</h3>
+                <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Read-only view — {viewingStudent.username}</p>
+              </div>
+              <button className="btn-cyber btn-cyber-red btn-small" onClick={handleCloseStudentJournal} style={{ padding: '4px 10px' }}>Close</button>
+            </div>
+
+            {viewingJournalLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading journal entries...</p>}
+            {!viewingJournalLoading && viewingJournalData.length === 0 && (
+              <p style={{ color: 'var(--text-muted)' }}>This student has no saved journal entries yet.</p>
+            )}
+
+            {!viewingJournalLoading && viewingJournalData.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {viewingJournalData.map(entry => (
+                    <div
+                      key={entry.id}
+                      onClick={() => {
+                        setViewingJournalEntryId(entry.id);
+                        setViewingJournalVersion(entry.activeVersion);
+                      }}
+                      className={`glass-panel ${viewingJournalEntryId === entry.id ? 'selected' : ''}`}
+                      style={{
+                        padding: 10, cursor: 'pointer', fontSize: '0.8rem',
+                        border: viewingJournalEntryId === entry.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
+                        background: viewingJournalEntryId === entry.id ? 'rgba(0, 242, 254, 0.05)' : 'none'
+                      }}
+                    >
+                      <div style={{ fontWeight: 600 }}>{entry.title}</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>{entry.date} · {entry.history.length} version{entry.history.length === 1 ? '' : 's'}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  {(() => {
+                    const entry = viewingJournalData.find(e => e.id === viewingJournalEntryId);
+                    if (!entry) return <p style={{ color: 'var(--text-muted)' }}>Select an entry to view.</p>;
+                    const hist = entry.history.find(h => h.version === viewingJournalVersion) || entry.history[entry.history.length - 1];
+                    if (!hist) return <p style={{ color: 'var(--text-muted)' }}>No versions saved for this entry.</p>;
+                    const data = deserializeJournalData(hist.code);
+                    const fields = [
+                      ['1. Plan & Design — Component Hierarchy & Specs', data.planSpecs],
+                      ['1. Plan & Design — Data & State Variables', data.planData],
+                      ['1. Plan & Design — Logic Flow', data.planFlow],
+                      ['2. Write AI Prompt', hist.prompt],
+                      ['3. Review & Explain — AI-Generated Code', data.codeOutput],
+                      ['3. Review & Explain — Code Defense & Explanation', data.codeReview],
+                      ['4. Test & Break — Test Cases', data.testCases],
+                      ['4. Test & Break — Test Results & Logs', data.testResults],
+                      ['5. Iterate & Improve — Changes Made', data.iterationChanges],
+                      ['5. Iterate & Improve — Lessons Learned', data.iterationLessons]
+                    ];
+                    return (
+                      <div>
+                        <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+                          {entry.history.map(h => (
+                            <button
+                              key={h.version}
+                              className={`version-nav-btn ${viewingJournalVersion === h.version ? 'active' : ''}`}
+                              onClick={() => setViewingJournalVersion(h.version)}
+                              style={{ padding: '2px 8px', fontSize: '0.75rem' }}
+                            >
+                              v{h.version}
+                            </button>
+                          ))}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                          {fields.map(([label, value]) => (
+                            <div key={label}>
+                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>{label}</label>
+                              <div style={{ whiteSpace: 'pre-wrap', background: 'rgba(6, 8, 20, 0.7)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.82rem', color: value ? 'var(--text-primary)' : 'var(--text-muted)', minHeight: '20px' }}>
+                                {value || '(not filled in)'}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

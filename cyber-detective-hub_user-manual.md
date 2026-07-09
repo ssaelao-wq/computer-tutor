@@ -171,23 +171,26 @@ If you click **Open in Sandbox** inside a quest card, you will notice it loads t
 * *Analogy*: You browse the **Quest Files** cabinet to choose which assignment sheet to study. Once you click **Open in Sandbox**, you carry that assignment sheet into the **Prompt Sandbox** lab to build and run your script.
 
 ### 📋 Active Sandbox Quests Index (Playable labs per Level)
-Only the sessions with active simulation compiler test suites appear as cards on your Quest Files board:
-* **Level 1 (Logic)**:
-  - *Session 1*: Robotic Chef Sequence Instructions
-  - *Session 2*: Variable Data Type Classification
-  - *Session 3*: Airlock State Machine Transitions
-  - *Session 4*: Climate Controller Conditionals & Safety Overrides
-  - *Session 5*: Counting & Condition Loops
+Only the sessions with active simulation compiler test suites appear as cards on your Quest Files board (titles below match the Cyberpunk Metropolis campaign theme; content is themed identically across all campaign choices):
+* **Level 1 (Logic)** — Racing Car Game:
+  - *Session 1*: Literal Logic & Digital Infiltration
+  - *Session 2*: Starting the Game — HTML Structure & Basic Elements
+  - *Session 3*: Styling the Track & Player Car — CSS Lanes & Visuals
+  - *Session 4*: Decisions, Decisions (conditional logic gates)
+  - *Session 5*: The Automated Pet Grid (loops & bounds)
 * **Level 2 (AI Copilot)**:
-  - *Session 5*: The AI Sandbox Prompt Duel
-  - *Session 6*: The Obfuscation Prompt Constraint
+  - *Session 5*: The AI Sandbox Duel
+  - *Session 6*: The Obfuscation Constraint
 * **Level 3 (Architect)**:
-  - *Session 1*: Client-Server Database Schema Access
-  - *Session 9*: Interactive Satellites Vulnerability Bounty
+  - *Session 1*: Where Does Data Live? (relational schema design)
+  - *Session 9*: The Bug Bounty Fair (attack & defend audit)
 * **Level 4 (Engineer)**:
-  - *Session 1*: Cloud Database Connection CRUD Operations
+  - *Session 1*: Connecting to the Cloud Database
   - *Session 2*: Security Keys & Environment Variables
-  - *Session 5*: Telemetry Row-Level Security Policies
+  - *Session 5*: Row-Level Security & Data Wards
+
+> [!NOTE]
+> Updated 2026-07-08 — this index previously listed stale pre-rework Level 1 titles ("Robotic Chef Sequence Instructions," "Variable Data Type Classification," "Airlock State Machine Transitions") from before the Racing Car Game theme was finalized. Levels 2-4 were largely accurate already and only received minor wording touch-ups to match the app's current session titles exactly.
 
 ---
 
@@ -322,10 +325,11 @@ The Leaderboard showcases the standings of all detectives registered in the trai
 ### Screen Layout & Table Columns:
 1. **Rank Position**: Your numerical rank (#1, #2, #3, etc.) displayed with colored numbers.
 2. **Detective Alias**: The student's display name.
-3. **Status Badge**: Displays your rank title badge:
-   - `Junior` (Green badge): `0 - 799 XP`
-   - `Senior` (Cyan badge): `800 - 1199 XP`
-   - `Master` (Purple badge): `1200+ XP`
+3. **Status Badge**: Displays your rank title badge — the same 4-tier rank used on your Dashboard:
+   - `Novice Decoder` (Yellow badge): `0 - 399 XP`
+   - `Junior Investigator` (Green badge): `400 - 799 XP`
+   - `Senior Auditor` (Cyan badge): `800 - 1199 XP`
+   - `Master Architect` (Purple badge): `1200+ XP`
 4. **Current Operation**: Displays the active session the student is currently working on.
 5. **Total XP**: Points score.
 * **Highlighting**: Your profile row is highlighted in neon green with a labeled `YOU` badge to help you find your standing instantly.

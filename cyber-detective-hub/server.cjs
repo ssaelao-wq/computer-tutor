@@ -121,6 +121,18 @@ async function createTables() {
     )
   `);
 
+  // 5. Sandbox Exercise Progress Table (one row per passed exercise, per user)
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS exercise_progress (
+      user_id VARCHAR(50),
+      session_id VARCHAR(20),
+      exercise_num INT,
+      completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id, session_id, exercise_num),
+      FOREIGN KEY (user_id) REFERENCES user_profile(id) ON DELETE CASCADE
+    )
+  `);
+
   // Seed default teacher "somboon/somboon123" if not exists
   const teacherRes = await db.query("SELECT * FROM user_profile WHERE username = 'somboon'");
   if (teacherRes.rows.length === 0) {
@@ -324,15 +336,69 @@ app.post('/api/user/quests', authenticateToken, async (req, res) => {
   }
 
   try {
-    await db.query("INSERT INTO completed_quests (user_id, quest_id) VALUES ($1, $2) ON CONFLICT (user_id, quest_id) DO NOTHING", [req.userId, questId]);
-    
-    // Add XP reward
-    if (xpReward) {
+    const insertRes = await db.query("INSERT INTO completed_quests (user_id, quest_id) VALUES ($1, $2) ON CONFLICT (user_id, quest_id) DO NOTHING", [req.userId, questId]);
+
+    // Add XP reward — only when the quest was newly completed (rowCount 0 means the
+    // quest row already existed), so repeated/duplicate claims can never double-award XP.
+    if (xpReward && insertRes.rowCount > 0) {
       await db.query("UPDATE user_profile SET points = points + $1 WHERE id = $2", [xpReward, req.userId]);
     }
-    
+
     const userRes = await db.query("SELECT points FROM user_profile WHERE id = $1", [req.userId]);
     res.json({ success: true, activePoints: userRes.rows[0].points });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 3b. Fetch Sandbox Exercise Progress (map of sessionId -> [exercise numbers passed])
+app.get('/api/user/exercise-progress', authenticateToken, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT session_id, exercise_num FROM exercise_progress WHERE user_id = $1 ORDER BY session_id, exercise_num",
+      [req.userId]
+    );
+    const progressMap = {};
+    result.rows.forEach(row => {
+      if (!progressMap[row.session_id]) progressMap[row.session_id] = [];
+      progressMap[row.session_id].push(row.exercise_num);
+    });
+    res.json(progressMap);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 3c. Record passed Sandbox exercises. Accepts a batch so the client can both mark a
+// single exercise and migrate legacy localStorage progress in one call. Idempotent
+// (ON CONFLICT DO NOTHING); returns the user's full refreshed progress map.
+app.post('/api/user/exercise-progress', authenticateToken, async (req, res) => {
+  const { entries } = req.body;
+  if (!Array.isArray(entries) || entries.length === 0) {
+    return res.status(400).json({ error: 'entries must be a non-empty array of { sessionId, exerciseNum }' });
+  }
+  try {
+    for (const entry of entries) {
+      const sessionId = String(entry.sessionId || '');
+      const exerciseNum = parseInt(entry.exerciseNum, 10);
+      if (!/^l\d+-s\d+$/.test(sessionId) || !Number.isInteger(exerciseNum) || exerciseNum < 1 || exerciseNum > 20) {
+        return res.status(400).json({ error: `Invalid entry: ${JSON.stringify(entry)}` });
+      }
+      await db.query(
+        "INSERT INTO exercise_progress (user_id, session_id, exercise_num) VALUES ($1, $2, $3) ON CONFLICT (user_id, session_id, exercise_num) DO NOTHING",
+        [req.userId, sessionId, exerciseNum]
+      );
+    }
+    const result = await db.query(
+      "SELECT session_id, exercise_num FROM exercise_progress WHERE user_id = $1 ORDER BY session_id, exercise_num",
+      [req.userId]
+    );
+    const progressMap = {};
+    result.rows.forEach(row => {
+      if (!progressMap[row.session_id]) progressMap[row.session_id] = [];
+      progressMap[row.session_id].push(row.exercise_num);
+    });
+    res.json({ success: true, progress: progressMap });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -454,6 +520,45 @@ app.put('/api/journal/version', authenticateToken, async (req, res) => {
       WHERE entry_id = $3 AND version = $4
     `, [prompt, code || '', entryId, parseInt(version)]);
     res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin Route: Read-only view of a specific student's journal entries
+app.get('/api/admin/students/:studentId/journal', authenticateToken, requireTeacher, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT je.id as entry_id, je.title, je.date, je.version as latest_version, je.active_version,
+             jv.version as version_num, jv.prompt, jv.code
+      FROM journal_entries je
+      LEFT JOIN journal_versions jv ON je.id = jv.entry_id
+      WHERE je.user_id = $1
+      ORDER BY je.date DESC, jv.version ASC
+    `, [req.params.studentId]);
+
+    const journalMap = {};
+    result.rows.forEach(row => {
+      if (!journalMap[row.entry_id]) {
+        journalMap[row.entry_id] = {
+          id: row.entry_id,
+          title: row.title,
+          date: row.date,
+          version: row.latest_version,
+          activeVersion: row.active_version,
+          history: []
+        };
+      }
+      if (row.version_num !== null) {
+        journalMap[row.entry_id].history.push({
+          version: row.version_num,
+          prompt: row.prompt,
+          code: row.code
+        });
+      }
+    });
+
+    res.json(Object.values(journalMap));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

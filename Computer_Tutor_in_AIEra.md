@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Superseded.** This is an earlier draft of the strategic pitch later developed in `Computer_Tutor_AIEra_Curriculum_Overview.md`. It predates the "Ethical Lens" and "Prompt Journal Protocol" pedagogical methods (§6 of the Overview doc), which are explicitly marked `(New)` there. Kept for historical reference only — treat `Computer_Tutor_AIEra_Curriculum_Overview.md` as the current source of truth for this material.
+
 # **Strategic Guide: Cultivating Logic, Critical Thinking, and System Design in the AI Era**
 
 ## **1\. Executive Summary: The Paradigm Shift**
@@ -49,62 +52,62 @@ In the traditional era, logic was built by wrestling with compilers. In the AI e
 
 | Stage | Focus Area | Language Syntax Level | Pedagogical Approach |
 | :---- | :---- | :---- | :---- |
-| **Level 1: Beginner** *(Mental Models)* | **Pure Logic & Sequencing** | **0% Syntax Writing** No writing of actual code text. Focus on reading and structuring. | Visual blocks, Flowcharts, State machines, Pseudo-code. Drawing logic diagrams. |
-| **Level 2: Intermediate** *(The Copilot)* | **Translating Logic & Code Reading** | **20% Syntax Literacy** Reading syntax, understanding code structure, writing prompts as PRDs. | Socratic debugging of AI-generated scripts. Writing highly structured prompts. |
-| **Level 3: Advanced** *(System Architect)* | **Orchestration & Deploying Systems** | **50% Full-Stack Logic** Understanding APIs, cloud databases, security rules, and user flow maps. | System architecture mapping. Directing AI tools to build and deploy complex full systems. |
+| **Level 1: Beginner** *(Racing Car Game)* | **Web Coding Basics & Inputs** | **30% Syntax Literacy** Writing basic HTML structure, simple CSS lanes, JS variables, inputs, and boundaries. | Design-Build-Audit AI pipeline. HTML/CSS/JS game elements. Tracing code, variable mappings, and collision logic. |
+| **Level 2: Intermediate** *(Mars Colony Defense)* | **State Arrays & Asynchronous APIs** | **50% Syntax Literacy** Reading and writing array maps, handling object lists, Canvas rendering, and API fetches. | Socratic debugging of dynamic objects lists. Building score submission requests to live endpoints. |
+| **Level 3: Advanced** *(Cyberpunk Hacker Arena)* | **Full-Stack Architecture & Databases** | **70% Syntax Literacy** Writing backend routes, designing database schemas, user authentication, and data rules. | Relational database mapping. Directing AI IDEs to wire client-server database transactions with security guards. |
 
 ## **5\. Detailed Curriculum for Ages 11–14 (Absolute Beginner to Advanced)**
 
-### **Level 1: Beginner — "The Logic Blueprint" (No Syntax, 100% Mental Models)**
+### **Level 1: Beginner — "The Logic Blueprint & Racing Car Game" (30% Syntax, Coding from Session 2)**
 
-**Goal:** Train the brain to construct absolute, unambiguous logic loops without getting frustrated by syntax rules (colons, brackets, indents).
+**Goal:** Train the brain to construct absolute, unambiguous logic loops while building a 2D vertical-scrolling arcade game using HTML, CSS, and JavaScript, supported by AI assistance.
 
-* **Module 1: Inputs, Processing, and Outputs (![][image3])**  
-  * **Core Concept:** How computers represent data. Variables as "named boxes" holding values.  
-  * **Logic Practice:** "Human Computer Simulation." Students write instructions for a peer to make a cup of tea. If the peer follows a step blindly and makes a mess (e.g., pouring water before putting the mug down), the student learns the absolute sequencing requirements of computer brains.  
-  * **Assessment:** Designing a state flowchart for a simple real-world device (e.g., how a microwave decides when to beep and turn off).  
-* **Module 2: Visual Structures & Logical Loops**  
-  * **Core Concept:** Conditionals (![][image4]), loops (![][image5]), and logic gates (![][image6]).  
-  * **Logic Practice:** Building games in block languages (e.g., Scratch) where they are forced to use boolean combinations. (e.g., "If ![][image7] AND ![][image8]").  
-  * **Assessment:** Create a logic maze game where the movement mechanics are purely logical rules rather than free play.  
-* **Module 3: Problem Decomposition & The Logic Map**  
-  * **Core Concept:** Breaking a complex, vague dream into modular, independent sub-systems.  
-  * **Logic Practice:** Take a game like *Pacman* and break it into 4 isolated logic diagrams: Ghost Movement, Pacman score counter, Pellet collision, and Game Over logic.  
-  * **Assessment:** Presenting a pen-and-paper architectural blueprint of a mini-app idea before writing a single block of instructions.
+* **Module 1: Creating the Game Board & Car States (Sessions 1–4)**  
+  * **Core Concept:** Inputs, processing, outputs, variables, and data representation.
+  * **Logic Practice:** "The Autopilot Warm-up" sequence mapping. Then, starting code in Session 2: writing HTML tags for the track (`<div id="track">`) and player car. Creating CSS road lanes, margins, and center alignments.
+  * **Assessment:** Setting up JS game state variables (coordinates `carX` / `carY`, integer `score`, boolean `gameActive`) and explaining how they hold data in memory.
+* **Module 2: Driving, steering, and boundary constraints (Sessions 5–8)**  
+  * **Core Concept:** Keyboard events, event listeners, parameters, conditionals, and logical guards.  
+  * **Logic Practice:** Implementing `keydown` event listeners to update `carX` upon Arrow Left or Arrow Right keystrokes. Writing conditional checks to ensure the player car doesn't run off-screen bounds.
+  * **Assessment:** Creating a logic barrier check: if `carX < leftBound`, snap back to `leftBound`.
+* **Module 3: Obstacles, Game Loops, and UI overlays (Sessions 9–12)**  
+  * **Core Concept:** Loops (`for` / `while`), animation loops (`requestAnimationFrame`), collision geometry, DOM updating, and error containment.  
+  * **Logic Practice:** Spawning highway obstacles dynamically using JS arrays. Moving obstacles down the screen. Writing a bounding-box overlap check (auditing AI-generated collision math).
+  * **Assessment:** Displaying the final scoreboard, triggering win/loss alerts, and performing a code review where the student explains the complete game script.
 
-### **Level 2: Intermediate — "The Language & The Copilot" (Focus: Active Code Reading & PRD Prompts)**
+### **Level 2: Intermediate — "Mars Colony Defense Game" (Focus: Active State Arrays & API Integrations)**
 
-**Goal:** Transition from blocks to text code structures. Learn how to *read* syntax so they can supervise an AI assistant writing it.
+**Goal:** Transition to tracking multiple active objects (laser arrays, enemy waves), canvas rendering, and communicating with web services.
 
-* **Module 1: "Read, Don't Write" (The Code Anatomy)**  
-  * **Core Concept:** Learning to recognize basic data types (Strings, Ints, Arrays) and structural flows in text formats (Python/JS syntax).  
-  * **Logic Practice:** "Code Translation." Students are presented with a Python script. They must act as the interpreter, tracing variables step-by-step with a pencil and documenting how values change after each line.  
-  * **Assessment:** Given a script, the student must write a detailed English explanation of its function and identify 2 logical design flaws.  
-* **Module 2: Prompting as a Specification Document (PRD)**  
-  * **Core Concept:** Designing structural specs. Students learn that communicating with AI requires strict constraints, input parameters, and expected outputs.  
-  * **Logic Practice:** "The AI Architect Sandbox." Students write prompts to create a simple script (e.g., a currency converter). If the AI generates an error, the student must find the *ambiguity* in their prompt that caused the failure and refine it.  
-  * **Assessment:** Draft a comprehensive Prompt Specification Sheet to generate a working logic calculator.  
-* **Module 3: Code Detective (Debugging & Defense)**  
-  * **Core Concept:** Active debugging. Separating syntax bugs from logical errors.  
-  * **Logic Practice:** "The Broken Machine." Teachers provide working scripts (e.g., a high-score tracker) that have been intentionally broken with logical faults (e.g., updating scores *after* checking if the game is over). Students must find the exact lines of code where the logic breaks.  
-  * **Assessment:** Fix 3 broken script puzzles using logical deductions rather than rebuilding.
+* **Module 1: Dynamic Arrays and Object Collections**  
+  * **Core Concept:** JavaScript arrays, objects, tracking arrays of moving active objects (lasers, enemies).  
+  * **Logic Practice:** "State Audit." Students trace an array of alien coordinates, adding new laser objects when spacebar is pressed and deleting objects when they pass off-screen.  
+  * **Assessment:** Write a function that sweeps through the lasers list and removes dead objects to prevent memory leaks.  
+* **Module 2: The Event Loop & Interactive Canvas**  
+  * **Core Concept:** Capturing keystroke maps (multiple keys pressed simultaneously), Canvas rendering loops, and timing variables.  
+  * **Logic Practice:** Rendering player ships, lasers, and aliens on a `<canvas>` coordinate system. Calculating delta-time updates for smooth framerates.  
+  * **Assessment:** Implement a key-state registry checking active inputs simultaneously.  
+* **Module 3: Asynchronous High-Score Leaderboard**  
+  * **Core Concept:** REST APIs, JSON parsing, asynchronous `fetch` calls, and HTTP headers.  
+  * **Logic Practice:** Wiring a game-over screen to post high-score JSON data to a remote leaderboard API. Debugging API errors (e.g. invalid score parameter).  
+  * **Assessment:** Trace and debug an asynchronous script containing API fetch failures.
 
-### **Level 3: Advanced — "The System Architect" (Focus: Orchestration & Systems Design)**
+### **Level 3: Advanced — "Cyberpunk Hacker Arena" (Focus: Full-Stack Architecture & Security Gates)**
 
-**Goal:** Act as a Lead Architect. Map complex user flows, establish APIs, structure simple databases, and guide AI IDEs to construct live software systems.
+**Goal:** Master client-server communication, database schemas, secure data storage, and role-based policies.
 
-* **Module 1: Databases, APIs, and Data Flows**  
-  * **Core Concept:** Client-Server models, data models, and API endpoints. Understanding how modular systems send information to each other.  
-  * **Logic Practice:** Designing database schemas (![][image9]). Diagramming relationships (e.g., How does a "User" table link to a "Message" table in a chat app?).  
-  * **Assessment:** Create a structural schematic of a social media messaging app's data flow.  
-* **Module 2: Complete Project Orchestration**  
-  * **Core Concept:** Organizing code files, environments, and deploying live products.  
-  * **Logic Practice:** Using advanced AI IDEs (Cursor, GitHub Copilot) to orchestrate a complex system. The student writes the architecture rules and file pathways, while the AI generates individual file syntax.  
-  * **Assessment:** Deploy a live, functional web application (e.g., a task manager with a database) designed and directed entirely by the student.  
-* **Module 3: Architectural Defense & Security**  
-  * **Core Concept:** Penetration testing, inputs protection, and logic defense.  
-  * **Logic Practice:** Students "attack" each other's deployed apps by inputting invalid variables, rapid-fire clicking buttons, and looking for data holes.  
-  * **Assessment:** The Final Capstone Defense. Students demonstrate their app, justify every design block choice, and prove how their system logic handles edge cases and protects its data database.
+* **Module 1: Relational Schemas & API Routes**  
+  * **Core Concept:** Backend APIs, relational databases, environment keys, server-side data routing.  
+  * **Logic Practice:** Designing database tables for player cards, scores, and hacking inventory using SQL schemas. Writing Express backend endpoints to query tables.  
+  * **Assessment:** Draw a schema linkage diagram showing how a `users` table joins with an `inventory` table.  
+* **Module 2: User Access & Sign-Up Security**  
+  * **Core Concept:** User authentication, password encryption, JWT tokens, and login/logout workflows.  
+  * **Logic Practice:** Building secure signup pages that post encrypted credentials to the database, receiving authentication tokens, and storing them in browser state.  
+  * **Assessment:** Complete a security audit identifying why hardcoded server API keys in front-end scripts are hazardous.  
+* **Module 3: Row-Level Security (RLS) & Relational Defense**  
+  * **Core Concept:** Row-Level Security rules, database defense, and security privileges.  
+  * **Logic Practice:** Designing database policies that restrict players from updating scores or buying inventory unless authenticated, and preventing editing of other players' inventories.  
+  * **Assessment:** Capstone Deployment. Launch a persistent multiplayer hacker card board game, defending its database records against unauthorized modification requests.
 
 ## **6\. Critical Discussion Points for Implementation**
 

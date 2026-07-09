@@ -1,3 +1,20 @@
+# Antigravity Developer Persona & Rules
+
+This project is built using React + Vite for frontend and Express + Node.js for backend. All autonomous agents, browser testing loops, and code generation sub-agents must adhere strictly to the rules below.
+
+## 🎯 Global System Rules
+1. **Tech Stack Enforcement:** Use React 19, Vite, Express, and MySQL/PostgreSQL. Do not install alternative packages without explicit confirmation.
+2. **State Preservation:** Always run a full file system scan before modifying code to prevent overwriting manual updates.
+3. **Execution Safety:** Never run destructive terminal commands (`rm -rf`, force drops) without a user prompt confirmation.
+
+## 🔧 Workflow Checklist for Agents
+- [ ] Read `TODO.md` before starting a task.
+- [ ] Check `ARCHITECTURE.md` to ensure file placement matches design patterns.
+- [ ] Run linting/testing commands after file generation.
+- [ ] Document newly created files in `ARCHITECTURE.md`.
+
+---
+
 # **Engineering & Behavioral Rules (RULES.md)**
 
 ### Rule #1 — Deep Investigation First (Anti-Assumption)
@@ -64,8 +81,9 @@
 
 > **NEVER change Thai 4.0 grading logic without checking `lib/grades.js` first.**
 
-- Any feature or fix that touches grade calculation, grade display, or grade-related data must first verify the current logic in `lib/grades.js`.
-- Changes to grading logic must be explicitly approved before implementation.
+- **Note:** `lib/grades.js` does not currently exist in this repo — Thai 4.0 grading logic has not been implemented yet. This rule is aspirational: it takes effect once grading logic is added. Don't assume the path is populated or attempt to "fix" this by creating an empty stub file.
+- If a task requires implementing Thai 4.0 grading logic, confirm the intended location and design with the user first — don't invent it from this rule alone.
+- Once `lib/grades.js` exists: any feature or fix that touches grade calculation, grade display, or grade-related data must first verify the current logic there, and changes to grading logic must be explicitly approved before implementation.
 - This rule exists because grading errors have direct consequences for students and institutions.
 
 ---
