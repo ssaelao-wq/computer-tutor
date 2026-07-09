@@ -214,28 +214,100 @@ The main thread of Level 1 is the **2D Highway Avoidance Racing Game**. Students
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students must complete the following 10 sandbox exercises structured as AI-Era workflow loops:
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. All 10 use the **same code editor**, but *what you type into it depends on the `[step tag]` in the exercise title.* This is the single most common point of confusion — read this key first:
 
-* **Exercise 2.1: [Plan & Design] Game Arena Skeleton**: Specify container structures for `#game-track` holding `#player-car`.
-  * *Solution:* Write `game-track > player-car` in comments.
-* **Exercise 2.2: [Write AI Prompt] Requesting the Track**: Draft a prompt asking an AI to create a div element with ID 'game-track'.
-  * *Solution:* "Create a div container with an ID of game-track"
-* **Exercise 2.3: [Review & Explain] Selector Audits**: Explain which attribute uniquely identifies this track element.
-  * *Solution:* ID value: `game-track`
-* **Exercise 2.4: [Test & Break] Spotting Rendering Leaks**: Correct an unclosed tag bug in the track block: `<div id="game-track"><div id="player-car"></div>`.
-  * *Solution:* `<div id="game-track"><div id="player-car"></div></div>`
-* **Exercise 2.5: [Iterate & Improve] Spawning Dividers**: Nest a div element with class 'lane-divider' inside the '#game-track' container.
-  * *Solution:* `<div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>`
-* **Exercise 2.6: [Plan & Design] Dashboard HUD**: Plan a 3-level deep tag structure: a dashboard parent holding an h2 header, which holds a span.
-  * *Solution:* `div > h2 > span`
-* **Exercise 2.7: [Write AI Prompt] Score HUD Prompting**: Write a prompt to direct the AI to generate the scoreboard HUD block.
-  * *Solution:* "Create a scoreboard dashboard panel showing score heading h2 with score-val span inside"
-* **Exercise 2.8: [Review & Explain] HTML Structure Audit**: Review if the span tag is nested inside the h2 tag.
-  * *Solution:* Type `YES` or `NO` (Correct answer is `YES`).
-* **Exercise 2.9: [Test & Break] Spotting Selector Failures**: Spot why scoreboard updates fail (wrong ID name spelling `scoreval` vs `score-val`).
-  * *Solution:* Correct ID to `score-val` inside the span tag.
-* **Exercise 2.10: [Iterate & Improve] Merging the Document**: Combine scoreboard dashboard and game-track HTML blocks into a single valid file.
-  * *Solution:* Merge dashboard div and track div blocks with proper closing tags.
+> **📝 Answer-Type Key (applies to every session's exercises)**
+> - **[Plan & Design]** → Type a **plain-English / arrow-notation plan** *inside* the `/* … */` comment. **Not code.**
+> - **[Write AI Prompt]** → Type **plain-English prompt text** (the instruction you would give Cursor/ChatGPT). **Not code.**
+> - **[Review & Explain]** → Type a **short plain-text answer** — a value, `YES`/`NO`, or `LEFT`/`RIGHT`.
+> - **[Test & Break]** → Type **corrected code** (edit the pre-loaded broken snippet).
+> - **[Iterate & Improve]** → Type **new/extended code**.
+>
+> The **Model Answer** shown per exercise below is exactly what the app's validator accepts as correct. Any equivalent phrasing that contains the required keywords also passes.
+
+* **Exercise 2.1: [Plan & Design] Game Arena Skeleton** — Plan the container hierarchy: `#game-track` holds `#player-car`.
+  * *Editor expects:* Plain-English arrow plan (inside the comment).
+  * *Model answer:* `game-track > player-car`
+  * *Why this is Plan & Design:* You are **not building anything yet** — you are sketching the blueprint of which box goes inside which box, before a single HTML tag is written. Engineers decide structure first, then code it. The `>` is just shorthand borrowed from CSS meaning *"parent contains child."* So `game-track > player-car` reads as *"the player-car sits **inside** the game-track."* This forces the student to think about nesting (from Session 1's DOM-tree lesson) before they get lost in tag syntax.
+* **Exercise 2.2: [Write AI Prompt] Requesting the Track** — Draft a prompt asking the AI to create the track container, giving it both an `id` and a `class`.
+  * *Editor expects:* Plain-English prompt. The student describes what they want to **see** — a "box"/"container" — since the HTML tag `div` hasn't been taught hands-on yet. (Validator accepts `box`, `container`, or `div`; must still contain `create`, `id`, `game-track`.)
+  * *Model answer:* `Create a box with an id of game-track and a class of game-container`
+  * *Live Preview:* The **Interactive Live Preview** always sits one step ahead of the Code Editor. Because this step's editor holds a *prompt* (not markup), after the student clicks **Verify** the preview shows the **HTML code the AI would generate** — `<div id="game-track" class="game-container"></div>` — displayed as source. (In the later code-editing steps such as E2.4, the editor holds real HTML, so the preview instead shows it *rendered* as a screen. Prompt → code; code → screen.)
+  * *Why:* This is the AI-Era skill at its most beginner-friendly — a student who knows **no HTML vocabulary yet** should still be able to command the AI by describing the *outcome* they want to see ("a box"). They keep the naming concepts they *have* met (`id`, `class`), but they do **not** need to know the tag name `div` to write a good prompt — the AI translates "box" into the correct tag (as the preview reveals). This is deliberate **scaffolding**: plain language now, the real tag name is earned in E2.3. A vague prompt like "make a track" is still too loose; naming the id and class keeps it precise.
+* **Exercise 2.3: [Review & Explain] Selector Audits** — Given `<section class='game-container' id='game-track'>`, name the attribute value that uniquely identifies it.
+  * *Editor expects:* A short plain-text value.
+  * *Model answer:* `game-track` (the ID value — an ID is unique, a class is not).
+  * *Why:* This is where the vocabulary is **earned.** In E2.2 the student asked for a "box"; here they see what the AI actually produced — a real HTML tag (`<section>`, a box-type element) carrying the `id` and `class` they requested. The teachable moment: *"the 'box' you described is written in code as a tag — here it's `<section>`; the most common box tag is `<div>`."* From this point on, the student knows the word `div` and later prompts can use it directly. The exercise's own question then trains judgment: of the two attributes, the answer is `game-track` because an **id is unique** (only one element can have it, so JavaScript can reliably find it), whereas a `class` can be shared by many elements — the reasoning behind "IDs for unique things, classes for repeated things."
+* **Exercise 2.4: [Test & Break] Spotting Rendering Leaks** — Fix the unclosed tag in `<div id="game-track"><div id="player-car"></div>`.
+  * *Editor expects:* Corrected HTML code.
+  * *Model answer:* `<div id="game-track"><div id="player-car"></div></div>`
+  * *Why:* Every `<div>` you open must be closed with a `</div>`. The broken code opens **two** divs but closes only **one**, so the browser never knows where `game-track` ends and the layout "leaks." The student learns to test AI-generated code and catch missing closing tags — the most common HTML bug.
+* **Exercise 2.5: [Iterate & Improve] Spawning Dividers** — Nest a `lane-divider` div inside `#game-track`, below the player car.
+  * *Editor expects:* Extended HTML code.
+  * *Model answer:* `<div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>`
+  * *Why:* "Iterate" means **take working code and add one more feature** without breaking it. The new `lane-divider` div goes *inside* the track (so it scrolls with the track) and *after* the player car.
+  * *Two questions students always ask here:*
+    - **"Why use a `div` to make a line?"** A `div` is a **blank, meaning-less box** — unlike `<h2>` (a heading) or `<button>` (a button), it has no built-in look or purpose. That's exactly why it's the right tool for a purely *visual* piece like a lane marking: you take an empty box and let **CSS shape it** into whatever you need — here, CSS gives it `width: 2px; height: 100%;` and a dashed border, turning the box into a thin vertical line. The `div` is the raw material; the CSS is the shaping. (A lane line isn't "a heading" or "a paragraph," so a neutral `div` — not a semantic tag — is the correct choice.) *This is also why the preview only shows a line once styled: an unstyled empty `div` has no size and is invisible.*
+    - **"Why is it a `class` and not an `id`?"** A real track has **many** lane dividers (this game uses two — at the 130px and 260px lane edges — and could have more). An **`id` must be unique**, so it can only ever label one element; a **`class` is made to be shared**, so every divider carries `class="lane-divider"` and a *single* CSS rule (`.lane-divider { … }`) styles all of them at once. Rule of thumb (from E2.3): **id = the one unique thing; class = a repeated category of things.**
+* **Exercise 2.6: [Plan & Design] Dashboard HUD** — Plan a 3-level-deep structure: a dashboard box holding a heading, which holds the score number.
+  * *Editor expects:* Plain-English arrow plan (inside the comment). **No tag names required** — describe the pieces, not the HTML.
+  * *Model answer:* `dashboard > heading > score number`
+  * *Why:* Same blueprint-first thinking as 2.1, but now **three levels deep**. This exercise used to require the literal words `h2` and `span` — but those tags aren't taught until **E2.8**, and E2.7 (the very next exercise) already deliberately avoids requiring them for exactly that reason. Asking for `h2`/`span` here, one step earlier, contradicted that. Now the plan captures the same nesting idea — box → heading → number — in words the student already has, and the exact tags get named later, at the moment they're actually earned.
+* **Exercise 2.7: [Write AI Prompt] Score HUD Prompting** — Prompt the AI to generate the scoreboard HUD.
+  * *Editor expects:* Plain-English prompt. Use the word **`div`** for the container (you learned it in E2.3), but describe the inner parts plainly — a **heading** and a **score area**. (Validator needs `dashboard` **or** `scoreboard`, a box word (`div`/`box`/`container`), a heading word (`heading`/`h2`/`title`), and `score-val`.)
+  * *Model answer:* `Create a dashboard div containing a heading, with a small score area of id score-val inside the heading` — or equivalently, `Create a scoreboard using div for heading, with small score area from id of score-val inside the heading` (both `dashboard` and `scoreboard` are accepted; the actual HTML `id` is always `dashboard`, not `scoreboard`).
+  * *Live Preview:* After **Verify**, the preview shows the HTML code the AI generates — `<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div>` — as source (prompt → code).
+  * *Why (scaffolding in action):* This is where the earlier plain-language step **pays off**. In E2.2 the student called the container a "box"; now that E2.3 has taught them the real tag, they use **`div`** directly — *introduce the word plainly, then use it once it's learned.* The inner tags `h2`/`span`, however, have only just been *named in the E2.6 plan* and aren't seen in real code until E2.8, so the student still describes them in plain words ("a heading," "a score area") and lets the AI choose the tags. They must still write `score-val` exactly, because later JavaScript searches for that id to update the score.
+  * *A question students always ask here — "Why is only the outer box a `div`? Isn't the heading a `div` too?"* Look closely at the generated result: there is only **one** `div` — the outer `dashboard`. The heading is an `<h2>`, a completely different, *semantic* tag, not a div.
+    - **Why `<h2>` and not a `div` for the heading?** Because a heading has real meaning — "this text is a title." `<h2>` tells the browser (and screen readers) *"this is a heading"* and gets automatic bold/large styling for free. A `div` has zero built-in meaning or look (as seen with the lane-divider in E2.5) — you'd have to manually rebuild everything `<h2>` already gives you. **Rule: use the semantic tag that matches your intent; only fall back to a blank `div` when nothing fits** (like a purely visual line).
+    - **Then why wrap the heading in a `div` at all — why not place `<h2>` straight on the page?** Because the dashboard needs to be **one movable, stylable panel** — a single box with its own background, border, padding, and position (the actual HUD look). The preview's canned CSS already styles `#dashboard` this way: `padding: 8px; background-color: #1a1a2e; border-radius: 6px; border: 1px solid #333;`. A bare `<h2>` has no "panel" to hold that styling — it's just floating text. Wrapping it in a `div` gives one named target (`#dashboard`) that can be positioned/styled as a unit, even as more elements (a timer, lives count) are added inside it later — they'd all move and style together. This mirrors `#game-track` wrapping `#player-car`: an **outer generic box provides structure/position; the meaningful content sits inside it.**
+    - **In short:** `div` = the panel/frame (generic box, shaped by CSS) · `h2` = the meaningful content inside it (a real heading, styled automatically by the browser). One div, one h2 — not two divs.
+* **Exercise 2.8: [Review & Explain] HTML Structure Audit** — Given `<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div>`, is the span nested inside the h2?
+  * *Editor expects:* `YES` or `NO`.
+  * *Model answer:* `YES` (the span opens and closes within the h2 bounds).
+  * *Why:* The student verifies the AI actually followed the 2.6 plan. Reading left to right: `<h2>` opens, then `<span>` opens and closes (`</span>`), then `</h2>` closes. Because the span both starts and ends *before* the h2 closes, it is genuinely nested inside — answer `YES`. This trains the eye to trace nesting boundaries.
+* **Exercise 2.9: [Test & Break] Spotting Selector Failures** — The JS looks for `score-val` but the HTML says `scoreval`. Fix the ID.
+  * *Editor expects:* Corrected HTML code.
+  * *Model answer:* `<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div>`
+  * *Why:* A one-character mismatch (`scoreval` vs `score-val`) means the JavaScript can't find the element, so the score never updates on screen — yet nothing "errors" loudly. The student learns that **names must match exactly** between HTML and the code that targets it. This is the classic "it looks fine but nothing happens" bug.
+* **Exercise 2.10: [Iterate & Improve] Merging the Document** — Combine the dashboard and track blocks into one valid file (dashboard, score-val, game-track, player-car, lane-divider all present and closed; ≥4 closing `</div>` tags).
+  * *Editor expects:* Full HTML code.
+  * *Model answer:*
+    ```html
+    <div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div>
+    <div id="game-track">
+      <div id="player-car"></div>
+      <div class="lane-divider"></div>
+    </div>
+    ```
+  * *Why:* The final "iterate" step assembles all the separate pieces built across 2.1–2.9 into one working page. The validator checks that every required element is present **and** every div is properly closed (4+ `</div>` tags) — proving the student can combine parts without leaving a tag open. This is the complete HTML skeleton (Roadmap Part 1) that Sessions 3–12 will style and animate.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+The **Project Journal** is a separate deliverable from the Sandbox exercises above: it tracks the student's **real project file** (`index.html`, built on their own machine with an external AI tool), logged step-by-step across the same 5-step methodology, one milestone card per session ("Part 1: HTML Document Skeleton" for this session). Below is what a **complete, correct** entry should contain in each of the 5 boxes.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "A highway-view racing screen: a vertical road area taking up most of the screen, with a small scoreboard panel above it showing the score. The player's car will later sit on the road — for now we're just building the empty containers, no colors or positions yet."
+   - *System Parts & Information (expected):* "Parts needed: a road area, a player's car, a lane divider line, and a scoreboard panel showing the score. Information to track (for later sessions): the score, how fast the car is going, and whether the game is currently running."
+   - *Logic Flow / Pseudocode (expected):* "Browser loads index.html sequentially. DOM elements are created in memory in a parent-child hierarchy. Parent containers constrain child positions."
+   - *Why:* Real system design starts with the **experience**, not the tags. Before any technical structure is decided, the student describes *what the player sees and does* (Visual Concept), then *what pieces the system needs and what it must remember* (System Parts & Information) — **in plain language, with no tag names, CSS properties, or typed variable syntax.** That last constraint is deliberate, not just a style choice: this session's students haven't been taught JS variables or types yet (that's Session 4), so asking for `score: Number` here would demand syntax they don't have. Plain language ("I need to track the score") captures the same system-design thinking — *what components exist, what information matters* — without assuming knowledge the student hasn't reached. The technical form (exact tags, exact variable declarations) only shows up later, once the AI prompt and code review steps translate the plan into real syntax.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Draft an AI prompt asking to create an HTML document containing: a div container with an ID of 'game-track'; a child div nested inside 'game-track' with an ID of 'player-car'; and a separate scoreboard panel with an ID of 'dashboard' containing an h2 heading and a nested span with an ID of 'score-val' initialized to '0'. Avoid inline styles or Javascript logic at this stage."
+   - *Why:* Notice the closing constraint — *"avoid inline styles or JavaScript."* A strong prompt actively **excludes work belonging to later sessions**. Since Session 2 is HTML-only, the prompt should be scoped to exactly this milestone, not "build the whole game" in one shot.
+
+3. **Review & Explain**
+   - *Expected checklist, walked against the AI's real output:* all tags open/close correctly (especially divs); `player-car` is nested inside `game-track`; the scoreboard uses `id="score-val"` (not a class, not misspelled).
+   - *Expected Socratic answer* — *"Why must the score value be placed inside a span tag? How does nesting it allow JavaScript to change it later?"* → A `span` is a small, isolated inline container; nesting the number inside it gives JavaScript **one exact element** (`#score-val`) to target and overwrite (`element.innerText = score`) without disturbing the surrounding "Score:" label text.
+   - *Why:* Mirrors sandbox E2.8's nesting-check reasoning, generalized to auditing the whole file.
+
+4. **Test & Break**
+   - *Expected test checklist (verified in the browser, e.g. via DevTools → Elements):* `#game-track` exists in the DOM; `#player-car` is a child of `#game-track`; `#dashboard` exists; `#score-val` is inside `#dashboard` and displays `0`.
+   - *Why:* These are the same four structural facts named in the Milestone Objectives — Test & Break is where the student **proves** their real file satisfies them, a first taste of the QA process formalized in Session 12.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "If the initial AI output lacks semantic elements or is missing closing tags, write a follow-up prompt to clean it up. Plan to add a '.lane-divider' inside the track to represent lanes."
+   - *Why:* Mirrors sandbox E2.5's iterate step — the AI's *first* pass rarely includes the lane-divider (it was never explicitly requested in Step 2's prompt), so a strong student notices the gap and writes a **follow-up prompt** rather than accepting incomplete output.
 
 * **Homework Evaluation Checklist**: Student must document a 3-level deep nested HTML structure representing a parking garage (Garage ➔ Floor ➔ Bay ➔ Car).
 
@@ -263,28 +335,104 @@ Students must complete the following 10 sandbox exercises structured as AI-Era w
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students must complete the following 10 sandbox exercises structured as AI-Era workflow loops:
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain English inside the `/* */` comment; Test/Iterate steps = real CSS code; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts.
 
-* **Exercise 3.1: [Plan & Design] Dark Arena Specs**: Define width (390px), height (500px), and background-color (#333) specs for the track container.
-  * *Solution:* List 390px, 500px, and #333 in comment blocks.
-* **Exercise 3.2: [Write AI Prompt] Styling the Track**: Draft a prompt requesting the styling specifications for '#game-track'.
-  * *Solution:* "Style game-track with width 390px, height 500px, background dark gray"
-* **Exercise 3.3: [Review & Explain] Selectors Review**: Identify Class selectors (.) vs ID selectors (#) symbols.
-  * *Solution:* ID: `#`, Class: `.`
-* **Exercise 3.4: [Test & Break] Drifting Cars Debugger**: Fix the coordinate drift by adding relative positioning on `#game-track`.
-  * *Solution:* Add `position: relative;` to the `#game-track` rule.
-* **Exercise 3.5: [Iterate & Improve] Dashed Lanes**: Style lane dividers with position absolute and dashed borders.
-  * *Solution:* `.lane-divider { position: absolute; height: 100%; border-left: 2px dashed white; }`
-* **Exercise 3.6: [Plan & Design] Car Offsets**: Map out absolute coordinates for centering the player car in the middle lane.
-  * *Solution:* Bottom 20px, left 165px.
-* **Exercise 3.7: [Write AI Prompt] Positioning the Car**: Write a prompt to position the player car at bottom 20px and left 165px.
-  * *Solution:* "Style player-car with absolute positioning, bottom 20px, left 165px"
-* **Exercise 3.8: [Review & Explain] Bounding Boxes**: Review if obstacle car top 50px left 40px coordinates are on the left or right side of the track.
-  * *Solution:* Answer `LEFT`.
-* **Exercise 3.9: [Test & Break] Invisible Elements**: Temporarily override `.hidden` helper styles to reveal display elements for rendering checks.
-  * *Solution:* Change `display: none;` to `display: flex;` in the `.hidden` class rule.
-* **Exercise 3.10: [Iterate & Improve] HUD Flex Alignment**: Align dashboard HUD horizontally using flexbox parameters.
-  * *Solution:* Apply `display: flex; justify-content: space-between; padding: 10px;` to `#dashboard`.
+* **Exercise 3.1: [Plan & Design] Dark Arena Specs** — Plan the track's width, height, and background color, in plain language.
+  * *Editor expects:* Plain-English spec list (inside the comment) — how wide, how tall, what color. **No CSS units or hex codes required.**
+  * *Model answer:* `Width: 390 wide, Height: 500 tall, Color: dark gray`
+  * *Why this is Plan & Design:* Before styling, the student **decides the numbers** the design needs — but this exercise used to require the literal strings `390px` and `#333`, which meant knowing CSS's pixel-unit and hex-color notation *before it had appeared anywhere in the curriculum* (this is the very first exercise of the session). The width (390, holding exactly 3 lanes of 130) and the color (a dark gray road) are decisions the student can make and state in plain words; the `px` unit and the `#333` hex code are how that decision gets *written in CSS*, which is exactly what E3.2 (Write AI Prompt) and E3.4 (Test & Break) teach next. Writing the target values down in plain language first means the coding step becomes "translate the plan," not "guess the syntax too."
+* **Exercise 3.2: [Write AI Prompt] Styling the Track** — Prompt the AI to style the game-track box, in plain language.
+  * *Editor expects:* Plain-English prompt describing what you want to **see** — how wide, how tall, what color. The CSS property names haven't been taught hands-on yet. (Validator needs `game-track`, a width (`390`/`wide`/`width`), a height (`500`/`tall`/`height`), and a background (`background`/`gray`/`dark`).)
+  * *Model answer:* `Make the game-track box 390 wide, 500 tall, with a dark gray background`
+  * *Live Preview:* This is a **CSS** prompt, so after **Verify** the preview shows the CSS code the AI generates — `#game-track { width: 390px; height: 500px; background-color: #333; }` — as source. (In the CSS code-editing steps like E3.4, the preview instead *renders* the styling applied to the track/car skeleton. Prompt → code; code → screen.)
+  * *Why (scaffolding in action):* The student converts the 3.1 plan into an AI instruction **without needing the CSS jargon**. They describe the outcome — "390 wide, 500 tall, dark gray" — and let the AI translate that into the real properties (`width`, `height`, `background-color`). Those property names are introduced hands-on shortly after, when the student edits raw CSS in **E3.4**; from that point on, later prompts can name them directly. This keeps the very first CSS prompt approachable for a student who has never written a style rule.
+* **Exercise 3.3: [Review & Explain] Selectors Review** — State the CSS symbols for an ID selector vs a Class selector.
+  * *Editor expects:* Short plain-text answer containing `#` and `.`.
+  * *Model answer:* `ID selector: #   Class selector: .`
+  * *Why:* CSS needs a way to point at HTML elements. A `#` before a name targets the one element with that **id** (`#game-track`); a `.` targets **every** element with that **class** (`.lane-divider`). Mixing them up is why student styles "don't apply" — so this cements the two symbols before they write real rules.
+* **Exercise 3.4: [Test & Break] Drifting Cars Debugger** — The absolute-positioned car drifts to the top of the screen because `#game-track` has no positioning anchor. Add one.
+  * *Editor expects:* Corrected CSS code (add `position: relative;`).
+  * *Model answer:*
+    ```css
+    #game-track {
+      width: 390px;
+      height: 500px;
+      background-color: #333;
+      position: relative;
+    }
+    ```
+  * *Why:* An element with `position: absolute` measures its `top`/`left` from the nearest **positioned** ancestor. If the track isn't marked `position: relative`, the car measures from the whole browser window instead and flies to the corner. Adding `position: relative` to the track makes it the anchor, so the car's coordinates stay *inside* the track. This parent-anchors-child rule is the backbone of the whole game layout.
+* **Exercise 3.5: [Iterate & Improve] Dashed Lanes** — Style `.lane-divider` with absolute position, full height, 2px width, and a dashed left border.
+  * *Editor expects:* CSS code.
+  * *Model answer:*
+    ```css
+    .lane-divider {
+      position: absolute;
+      height: 100%;
+      width: 2px;
+      border-left: 2px dashed white;
+    }
+    ```
+  * *Why:* This turns a plain dark box into a road. `height: 100%` makes the divider span the full track top-to-bottom; `border-left: 2px dashed white` draws the familiar dashed lane line. It uses `.` (a class) because a road has many dividers — reinforcing 3.3's class-vs-id rule.
+* **Exercise 3.6: [Plan & Design] Car Offsets** — Plan the offsets to center the player car in the middle lane of a 390px track.
+  * *Editor expects:* Plain-English plan containing `20px` and `165px`.
+  * *Model answer:* `Bottom offset: 20px, Left offset: 165px`
+  * *Why:* Pure positioning math, done on paper before coding. `bottom: 20px` sits the car just above the bottom edge (like a driver's viewpoint). `left: 165px` centers a 60px-wide car in a 390px track: `(390 − 60) ÷ 2 = 165`. Planning the numbers means the student understands *why* 165, not just copies it.
+* **Exercise 3.7: [Write AI Prompt] Positioning the Car** — Prompt the AI to position the player car, now using the CSS term you've learned.
+  * *Editor expects:* Prompt that **does** use the technical word `absolute` (plus `player-car`, `bottom`, `left`).
+  * *Model answer:* `Style player-car with absolute positioning at bottom 20px and left 165px`
+  * *Live Preview:* After **Verify**, the preview shows the generated CSS as source — `#player-car { position: absolute; bottom: 20px; left: 165px; }` (prompt → code).
+  * *Why (scaffolding payoff):* This is the **"now use the keyword" end of the ramp.** Unlike E3.2 (where CSS jargon was still avoided), the term `absolute` has by now been taught hands-on — the student added `position: relative` in **E3.4** and wrote `position: absolute` in **E3.5** — so here they are expected to *use* it deliberately. `absolute` positions the car relative to the track (the anchor from E3.4); `bottom` and `left` carry the exact offsets planned in E3.6. Every planned decision shows up as a precise word in the prompt — the goal state of prompt-writing once the vocabulary is earned.
+* **Exercise 3.8: [Review & Explain] Bounding Boxes** — An obstacle sits at `top: 50px; left: 40px;`. Which side of the track is it on?
+  * *Editor expects:* `LEFT` or `RIGHT`.
+  * *Model answer:* `LEFT` (a 40px left offset is near the left edge).
+  * *Why:* The student reads coordinates and pictures where the element lands. `left: 40px` means 40px in from the left edge of a 390px track — well under the halfway point (195px) — so it is on the **LEFT**. This spatial reading is what they'll need to reason about collisions in Session 10.
+* **Exercise 3.9: [Test & Break] Invisible Elements** — The restart panel is hidden by `.hidden { display: none; }`. Override it to be visible for layout testing.
+  * *Editor expects:* Corrected CSS code.
+  * *Model answer:*
+    ```css
+    .hidden {
+      display: flex;
+    }
+    ```
+  * *Why:* `display: none` removes an element from the page completely — useful for a "Game Over" panel that should stay hidden until the crash, but a problem when you need to *see* it while building. Switching to `display: flex` reveals it for layout testing. The student learns that "invisible" is often a style choice, not a missing element — a key debugging instinct.
+* **Exercise 3.10: [Iterate & Improve] HUD Flex Alignment** — Align the dashboard scores horizontally with flexbox.
+  * *Editor expects:* CSS code.
+  * *Model answer:*
+    ```css
+    #dashboard {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+    }
+    ```
+  * *Why:* Flexbox is the modern way to arrange items in a row. `display: flex` lays the dashboard's children side by side; `justify-content: space-between` pushes them to opposite ends (e.g. label on the left, score on the right); `padding: 10px` adds breathing room. This polishes the scoreboard from Session 2 into a real HUD.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & Coordinates Layout") tracks the student's real `styles.css`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "A dark 2-lane-divider highway (390px wide, 500px tall) with a white dashed line down the middle. A red car sits near the bottom-center of the road. The scoreboard sits above the road as a small horizontal bar."
+   - *System Parts & Information (expected):* "Parts needed: the road (sized to fit the screen), the car (positioned near the bottom, centered in a lane), and the lane divider (running down the middle). Information to track: the road's size, the car's position, and how wide each lane is."
+   - *Logic Flow / Pseudocode (expected):* "Parent relative positioning establishes coordinate system origin (0,0) at top-left. Child absolute positioning uses (left, top, bottom, right) parameters relative to parent bounds."
+   - *Why:* Same milestone-wide planning as Session 2, now for coordinates instead of tags. The Visual Concept line is written first for the same reason as Session 2's: describe the *look* (dark road, red car, dashed line) before deriving the *coordinates* that produce it. **System Parts & Information deliberately stays free of CSS syntax** — no `position: relative`, no exact pixel values written as code — because it names *what exists* (the road, the car, the divider) and *what needs sizing/positioning*, in plain words, before the AI prompt and code review steps translate that into real CSS property names and pixel values.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Draft an AI prompt to style the game HTML elements: target '#game-track' with width 390px, height 500px, background-color '#333', and relative positioning. Style '#player-car' with absolute positioning, bottom 20px, left 165px (to center it inside a 390px track), and red background. Style '.lane-divider' to run down the center with dashed borders."
+   - *Why:* Unlike the sandbox's E3.2 (which deliberately stays in plain language), the *milestone* prompt is expected to be fully technical — the student has completed the sandbox's scaffolded exercises 3.1–3.10 by this point, so the real project prompt should demonstrate the earned vocabulary (`position: relative`, `absolute`, `background-color`) in one complete request.
+
+3. **Review & Explain**
+   - *Expected checklist:* `#game-track` has `position: relative` (else the absolute children drift); `#player-car` is `position: absolute`.
+   - *Expected Socratic answer* — *"What happens if `#game-track` loses `position: relative`? Which coordinate box will the browser calculate offsets against?"* → Without a positioned ancestor, `#player-car`'s `absolute` offsets are calculated against the **browser window/body** instead of the track, so it visually "flies" to the corner — the same failure sandbox E3.4 has the student fix directly.
+
+4. **Test & Break**
+   - *Expected test checklist:* `#game-track` measures 390px × 500px; `#player-car` sits at `bottom: 20px, left: 165px`; `.lane-divider` uses a dashed `border-left`; `#dashboard` uses flex layout with `space-between`.
+   - *Why:* These map one-to-one to the Milestone Objectives — Test & Break is where the student confirms, in the real browser, that every planned number actually landed correctly.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Audit element visibility. If elements overlap or are hidden, check display/position definitions. Adjust contrasts and symbols for colorblind accessibility."
+   - *Why:* Introduces **accessibility as a real iteration criterion**, not just "does it work" — connects to this session's own Ethics Discussion topic (*Standardized Layouts & User Interfaces Inclusivity*) and previews the `.hidden`/`display` debugging skill from sandbox E3.9.
 
 * **Homework Evaluation Checklist**: Student must style a car element positioned exactly in the right-hand lane of a 390px track using absolute CSS coordinates.
 

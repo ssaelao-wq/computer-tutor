@@ -35,8 +35,8 @@ const CONCEPT_REFERENCES = {
       keywords: "browser DOM tree node hierarchy representation" 
     },
     { 
-      name: "HTML Tags and Element Syntax", 
-      desc: "Core Definition:\n  Tags define the type and boundaries of visual components.\n\nCheat Sheet Elements:\n  - <div>: A structural container box used to partition lanes, tracks, or dashboards.\n  - <span>: An inline text wrapper used to highlight individual words or scores.\n  - <h2>: A header title.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - ✅ Correct: <div><span>Hello</span></div>\n  - ❌ Incorrect: <div><span>Hello</div></span> (causes render errors)", 
+      name: "HTML Tags and Element Syntax",
+      desc: "Core Definition:\n  Tags define the type and boundaries of visual components. Some tags are GENERIC (a blank box with no built-in meaning) and some are SEMANTIC (they describe what their content IS).\n\nCheat Sheet Elements:\n  - <div>: A GENERIC block-level container box. It has NO built-in look or meaning — it is raw material you shape with CSS. Used to build tracks, lanes, dashboards, or even a thin line.\n  - <section>: Also a container box, but SEMANTIC — it signals 'a distinct section of content' (e.g. a game arena or a scoreboard region). Use <section> when the grouping has meaning; use <div> when it is purely visual/structural. They look identical until styled.\n  - <span>: A GENERIC inline wrapper (sits inside a line of text) used to highlight one word or a live score number.\n  - <h2>: A SEMANTIC heading/title — screen readers announce it as a heading.\n\nWhy 'blank box' matters (the lane-divider):\n  We draw a lane line with <div class=\"lane-divider\"></div> because a line isn't 'a heading' or 'a paragraph' — it is purely visual. The <div> starts as an INVISIBLE empty box; CSS (width: 2px; height: 100%; dashed border) shapes it into the line. The tag is the raw material; the CSS is the shaping. This is why an unstyled empty div shows nothing.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - ✅ Correct: <div><span>Hello</span></div>\n  - ❌ Incorrect: <div><span>Hello</div></span> (causes render errors)",
       keywords: "HTML element tags opening closing rules cheat sheet" 
     },
     { 
@@ -45,8 +45,8 @@ const CONCEPT_REFERENCES = {
       keywords: "nesting HTML tags structure parent child DOM" 
     },
     { 
-      name: "HTML Attributes (ID vs Class)", 
-      desc: "Core Definition:\n  Attributes provide identifiers and metadata to HTML elements.\n\nWhen to use which:\n  - ID (Unique): Must only be used ONCE per page. Identifies specific targets.\n    Example: <div id=\"player-car\"></div>\n  - Class (Reusable): Used to group multiple elements that share styles or behaviors.\n    Example: <div class=\"obstacle-car\"></div>\n             <div class=\"obstacle-car\"></div>", 
+      name: "HTML Attributes (ID vs Class)",
+      desc: "Core Definition:\n  Attributes add identifiers and metadata to HTML elements. The two you use most are id and class — both NAME an element so CSS and JavaScript can find it, but they follow opposite rules.\n\nWhen to use which:\n  - ID (Unique): Used ONCE per page. It names one specific target.\n    HTML:  <div id=\"player-car\"></div>\n    CSS finds it with a hash:  #player-car { ... }\n  - Class (Reusable): SHARED by many elements that need the same styling/behavior.\n    HTML:  <div class=\"lane-divider\"></div>\n           <div class=\"lane-divider\"></div>\n    CSS finds them all with a dot:  .lane-divider { ... }\n\nWorked Example (why the track uses each):\n  - There is only ONE player car, so it gets id=\"player-car\".\n  - There are MANY lane dividers, so they share class=\"lane-divider\" and a SINGLE rule styles all of them at once. An id could not do this — an id must be unique.\n\nRule of Thumb:\n  id   = the ONE unique thing        (CSS selector: # )\n  class = a REPEATED category of things (CSS selector: . )",
       keywords: "HTML attributes difference id vs class selector" 
     }
   ],
@@ -494,7 +494,7 @@ const S2_EXERCISES = [
   {
     num: 1,
     title: "Exercise 2.1: [Plan & Design] Game Arena Skeleton",
-    problem: "Before writing HTML, you must plan the container hierarchy. The main game arena needs a parent 'game-track' and a child 'player-car'.",
+    problem: "Before writing HTML, you must plan the container hierarchy. The main game arena needs a parent 'game-track' and a child 'player-car'. (You're not coding yet — just sketching which box goes inside which. The '>' means 'parent contains child', borrowed from CSS.)",
     instruction: "Write a design blueprint path indicating that player-car is inside game-track. Use the format: game-track > player-car",
     preloaded: "/* Write your structural plan here: e.g. parent > child */",
     validate: (code) => {
@@ -506,19 +506,23 @@ const S2_EXERCISES = [
   {
     num: 2,
     title: "Exercise 2.2: [Write AI Prompt] Requesting the Track",
-    problem: "Now you must instruct the AI to generate the track container exactly as planned.",
-    instruction: "Write an AI prompt asking to create a div element with an ID of 'game-track'. Your prompt must contain the words: 'create', 'div', 'id', and 'game-track'.",
+    problem: "Now you must instruct the AI to generate the track container exactly as planned. You don't need to know the HTML tag name yet — just describe what you want to see (a 'box' or 'container').",
+    instruction: "Write an AI prompt asking to create a box (container) with an ID of 'game-track' and a class of 'game-container'. Your prompt must contain the words: 'create', a box word ('box', 'container', or 'div'), 'id', and 'game-track'.",
     preloaded: "/* Write your AI Prompt here: */",
+    // The editor holds a prompt (not renderable HTML), so on Verify the preview shows
+    // what the AI would generate from that prompt instead of the raw prompt text.
+    previewHtml: '<div id="game-track" class="game-container"></div>',
     validate: (code) => {
       const clean = code.toLowerCase();
-      return clean.includes('create') && clean.includes('div') && clean.includes('id') && clean.includes('game-track');
+      const hasBoxWord = clean.includes('box') || clean.includes('container') || clean.includes('div');
+      return clean.includes('create') && hasBoxWord && clean.includes('id') && clean.includes('game-track');
     },
-    hint: "Make sure you ask to 'create' a 'div' with the 'id' set to 'game-track'."
+    hint: "Describe what you want to see: a 'box' (or 'container') with the 'id' set to 'game-track'."
   },
   {
     num: 3,
     title: "Exercise 2.3: [Review & Explain] Selector Audits",
-    problem: "The AI generated: `<section class='game-container' id='game-track'></section>`. Review this generated code.",
+    problem: "The AI generated: `<section class='game-container' id='game-track'></section>`. Review this generated code. (This is where the vocabulary is earned: your 'box' from E2.2 became a real tag — here <section>, a box-type element; the most common box tag is <div>. From now on you can use 'div' directly.)",
     instruction: "Explain which attribute (class or id) uniquely identifies this track element. Type the exact value of that unique identifier in plain text.",
     preloaded: "/* Enter the unique identifier value: */",
     validate: (code) => {
@@ -530,7 +534,7 @@ const S2_EXERCISES = [
   {
     num: 4,
     title: "Exercise 2.4: [Test & Break] Spotting Rendering Leaks",
-    problem: "You tested the code, but the browser layout is broken because of an unclosed tag in the AI code: `<div id=\"game-track\"><div id=\"player-car\"></div>`.",
+    problem: "You tested the code, but the browser layout is broken because of an unclosed tag in the AI code: `<div id=\"game-track\"><div id=\"player-car\"></div>`. (Every div you open must be closed with a </div>. This code opens two divs but closes only one, so the browser never knows where game-track ends.)",
     instruction: "Correct this broken HTML block by adding the missing closing </div> tag to clamp the track boundaries.",
     preloaded: "<div id=\"game-track\"><div id=\"player-car\"></div>",
     validate: (code) => {
@@ -542,7 +546,7 @@ const S2_EXERCISES = [
   {
     num: 5,
     title: "Exercise 2.5: [Iterate & Improve] Spawning Dividers",
-    problem: "Iterate on the track design to support lanes. You need to add a divider inside the track.",
+    problem: "Iterate on the track design to support lanes. You need to add a divider inside the track. (A div is a blank box; CSS later shapes it into a line. We use a class — not an id — because a track has many dividers.)",
     instruction: "Nest a div element with a class of 'lane-divider' inside the '#game-track' container, directly below the player car.",
     preloaded: "<div id=\"game-track\">\n  <div id=\"player-car\"></div>\n</div>",
     validate: (code) => {
@@ -554,31 +558,38 @@ const S2_EXERCISES = [
   {
     num: 6,
     title: "Exercise 2.6: [Plan & Design] Dashboard HUD",
-    problem: "We need a dashboard panel to render scores. Plan a 3-level deep tag structure: a dashboard parent holding an h2 header, which holds a span for score values.",
-    instruction: "Write the planned nested tag structure using arrows. Example: div > h2 > span",
-    preloaded: "/* Enter your nested tag plan: */",
+    problem: "We need a dashboard panel to render scores. Plan a 3-level deep structure, in plain language: a dashboard box holding a heading, which holds the score number. (Same blueprint-first thinking as E2.1, now three levels deep. You don't need the exact tag names yet — those come later, in E2.8.)",
+    instruction: "Write the planned nested structure in plain language, using arrows to show what's inside what. Example: dashboard > heading > score number",
+    preloaded: "/* Enter your nested plan: */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('div>h2>span') || (clean.includes('div') && clean.includes('h2') && clean.includes('span') && clean.includes('>'));
+      const hasBoxWord = clean.includes('dashboard') || clean.includes('div') || clean.includes('box') || clean.includes('container');
+      const hasHeadingWord = clean.includes('heading') || clean.includes('h2') || clean.includes('title');
+      const hasScoreWord = clean.includes('score') || clean.includes('number') || clean.includes('span');
+      return hasBoxWord && hasHeadingWord && hasScoreWord && clean.includes('>');
     },
-    hint: "Type 'div > h2 > span' to map out the dashboard nesting."
+    hint: "Plan the nesting in plain words: 'dashboard > heading > score number'."
   },
   {
     num: 7,
     title: "Exercise 2.7: [Write AI Prompt] Score HUD Prompting",
-    problem: "Write a prompt to direct the AI to generate the scoreboard HUD block.",
-    instruction: "Draft a prompt. It must contain the words 'dashboard', 'h2', 'span', and 'score-val'.",
+    problem: "Write a prompt to direct the AI to generate the scoreboard HUD block. You've now learned that a 'box' is called a div, so you can use that word here. You don't need tag names for the parts inside yet — just describe them (a heading, a score area). (Only the outer box is a div — a generic panel/frame shaped by CSS. The heading becomes its own tag, h2, since it has real meaning and gets automatic styling.)",
+    instruction: "Draft a prompt asking for a 'dashboard' (or 'scoreboard') box (div) that contains a heading, with a small score area (id 'score-val') inside it. Must contain: 'dashboard' or 'scoreboard', a box word ('div'/'box'/'container'), a heading word ('heading'/'h2'/'title'), and 'score-val'.",
     preloaded: "/* Write your AI Prompt here: */",
+    previewHtml: '<div id="dashboard">\n  <h2>Score: <span id="score-val">0</span></h2>\n</div>',
     validate: (code) => {
       const clean = code.toLowerCase();
-      return clean.includes('dashboard') && clean.includes('h2') && clean.includes('span') && clean.includes('score-val');
+      const hasBoxWord = clean.includes('div') || clean.includes('box') || clean.includes('container');
+      const hasHeadingWord = clean.includes('heading') || clean.includes('h2') || clean.includes('title');
+      const hasDashboardWord = clean.includes('dashboard') || clean.includes('scoreboard');
+      return hasDashboardWord && hasBoxWord && hasHeadingWord && clean.includes('score-val');
     },
-    hint: "Write a prompt mentioning 'dashboard', 'h2', 'span', and the ID 'score-val'."
+    hint: "Ask for a 'dashboard' (or 'scoreboard') box (div) with a 'heading' and a small score area with the id 'score-val'."
   },
   {
     num: 8,
     title: "Exercise 2.8: [Review & Explain] HTML Structure Audit",
-    problem: "The AI generated: `<div id=\"dashboard\"><h2>Score: <span id=\"score-val\">0</span></h2></div>`. Review this code.",
+    problem: "The AI generated: `<div id=\"dashboard\"><h2>Score: <span id=\"score-val\">0</span></h2></div>`. Review this code. (Trace it left to right: <h2> opens, then <span> opens AND closes, then </h2> closes — so the span is fully nested inside the h2.)",
     instruction: "Is the span element nested inside the h2 element? Answer with YES or NO.",
     preloaded: "/* Type YES or NO: */",
     validate: (code) => {
@@ -590,7 +601,7 @@ const S2_EXERCISES = [
   {
     num: 9,
     title: "Exercise 2.9: [Test & Break] Spotting Selector Failures",
-    problem: "You test the game, but the scoreboard value never changes. The JS selector expects 'score-val', but the AI generated: `<span id=\"scoreval\">0</span>`.",
+    problem: "You test the game, but the scoreboard value never changes. The JS selector expects 'score-val', but the AI generated: `<span id=\"scoreval\">0</span>`. (A one-character mismatch means the JavaScript can't find the element — nothing errors loudly, the score just silently never updates. Names must match exactly.)",
     instruction: "Fix this selector failure by correcting the ID attribute in the code editor to match 'score-val'.",
     preloaded: "<div id=\"dashboard\">\n  <h2>Score: <span id=\"scoreval\">0</span></h2>\n</div>",
     validate: (code) => {
@@ -602,7 +613,7 @@ const S2_EXERCISES = [
   {
     num: 10,
     title: "Exercise 2.10: [Iterate & Improve] Merging the Document",
-    problem: "Iterate to create the complete game structure. You must combine the dashboard and track arena blocks into a single valid file.",
+    problem: "Iterate to create the complete game structure. You must combine the dashboard and track arena blocks into a single valid file. (This assembles every piece from E2.1–E2.9 into one working file — proving you can combine parts without leaving a tag open. This becomes the real HTML skeleton the rest of Level 1 builds on.)",
     instruction: "Combine your scoreboard dashboard and game-track HTML blocks. Ensure all containers (dashboard, track, player car, divider) are present and closed.",
     preloaded: "<!-- Combine elements here: -->",
     validate: (code) => {
@@ -617,31 +628,38 @@ const S3_EXERCISES = [
   {
     num: 1,
     title: "Exercise 3.1: [Plan & Design] Dark Arena Specs",
-    problem: "You are planning layout styles for the track. Identify the target values needed.",
-    instruction: "List the planned track arena styling specs. Your answer must contain the values: '390px' (width), '500px' (height), and '#333' (color).",
+    problem: "You are planning layout styles for the track. Identify the target values needed, in plain language — you don't need CSS units or hex codes yet. (The 390-wide width isn't arbitrary — it holds exactly 3 lanes of 130 each, math that drives every coordinate in later sessions. The color is a dark gray, later written as the hex code #333.)",
+    instruction: "List the planned track arena specs in plain language: how wide, how tall, and what color. Example: 390 wide, 500 tall, dark gray.",
     preloaded: "/* Planned Width:\n   Planned Height:\n   Planned Color: */",
     validate: (code) => {
       const clean = code.toLowerCase();
-      return clean.includes('390px') && clean.includes('500px') && clean.includes('#333');
+      const hasWidth = clean.includes('390') || clean.includes('wide') || clean.includes('width');
+      const hasHeight = clean.includes('500') || clean.includes('tall') || clean.includes('height');
+      const hasBackground = clean.includes('background') || clean.includes('gray') || clean.includes('grey') || clean.includes('dark') || clean.includes('#333');
+      return hasWidth && hasHeight && hasBackground;
     },
-    hint: "List the properties containing '390px', '500px', and '#333'."
+    hint: "Describe the target in plain words: 390 wide, 500 tall, dark gray."
   },
   {
     num: 2,
     title: "Exercise 3.2: [Write AI Prompt] Styling the Track",
-    problem: "Write a prompt instructing the AI to generate track styling specifications.",
-    instruction: "Draft a prompt. It must contain the words 'game-track', 'width', 'height', and 'background-color'.",
+    problem: "Write a prompt instructing the AI to style the track. You haven't met the CSS property names yet, so just describe what you want to SEE — how wide, how tall, and what color. (The AI translates your words into real CSS properties like width, height, and background-color — you'll start writing those properties yourself in E3.4.)",
+    instruction: "Draft a prompt describing the game-track box: how wide (390), how tall (500), and its background color (dark gray). Must mention 'game-track', a width ('390'/'wide'/'width'), a height ('500'/'tall'/'height'), and a background color ('background'/'gray'/'dark').",
     preloaded: "/* Write your AI Prompt here: */",
+    previewCss: '#game-track {\n  width: 390px;\n  height: 500px;\n  background-color: #333;\n}',
     validate: (code) => {
       const clean = code.toLowerCase();
-      return clean.includes('game-track') && clean.includes('width') && clean.includes('height') && clean.includes('background-color');
+      const hasWidth = clean.includes('390') || clean.includes('wide') || clean.includes('width');
+      const hasHeight = clean.includes('500') || clean.includes('tall') || clean.includes('height');
+      const hasBackground = clean.includes('background') || clean.includes('gray') || clean.includes('grey') || clean.includes('dark') || clean.includes('#333');
+      return clean.includes('game-track') && hasWidth && hasHeight && hasBackground;
     },
-    hint: "Ask the AI to target '#game-track' with 'width', 'height', and 'background-color' properties."
+    hint: "Describe the 'game-track' box in plain words: 390 wide, 500 tall, with a dark gray background."
   },
   {
     num: 3,
     title: "Exercise 3.3: [Review & Explain] Selectors Review",
-    problem: "Review the CSS selectors rules. We target classes with dot (.) and IDs with hash (#).",
+    problem: "Review the CSS selectors rules. We target classes with dot (.) and IDs with hash (#). (A # targets the ONE element with that id; a . targets EVERY element with that class. Mixing them up is why styles seem to 'not apply'.)",
     instruction: "Type the selector symbol used to target an ID, and the symbol used for a Class. (e.g. '#' and '.').",
     preloaded: "/* ID selector: \n   Class selector: */",
     validate: (code) => {
@@ -652,7 +670,7 @@ const S3_EXERCISES = [
   {
     num: 4,
     title: "Exercise 3.4: [Test & Break] Drifting Cars Debugger",
-    problem: "You run the page, but the absolute-positioned car drifts to the top of the browser screen because the parent '#game-track' lacks a positioning anchor.",
+    problem: "You run the page, but the absolute-positioned car drifts to the top of the browser screen because the parent '#game-track' lacks a positioning anchor. (An absolute-positioned child measures its offsets from the nearest positioned ancestor. Without position: relative on the parent, it measures from the whole browser window instead and flies to the corner.)",
     instruction: "Fix this coordinate anchor bug by adding 'position: relative;' to the #game-track CSS block.",
     preloaded: "#game-track {\n  width: 390px;\n  height: 500px;\n  background-color: #333;\n}",
     validate: (code) => {
@@ -664,7 +682,7 @@ const S3_EXERCISES = [
   {
     num: 5,
     title: "Exercise 3.5: [Iterate & Improve] Dashed Lanes",
-    problem: "Iterate on the highway layout to define visual lanes for steering.",
+    problem: "Iterate on the highway layout to define visual lanes for steering. (height: 100% makes the divider span the full track top-to-bottom; the dashed border draws the lane line. It's a class — not an id — because a road has many dividers.)",
     instruction: "Style the '.lane-divider' class with: position absolute, height 100%, width 2px, and border-left '2px dashed white'.",
     preloaded: ".lane-divider {\n  \n}",
     validate: (code) => {
@@ -676,7 +694,7 @@ const S3_EXERCISES = [
   {
     num: 6,
     title: "Exercise 3.6: [Plan & Design] Car Offsets",
-    problem: "Plan the player car alignment offsets inside a 390px wide track container. The car needs to sit centered in the middle lane.",
+    problem: "Plan the player car alignment offsets inside a 390px wide track container. The car needs to sit centered in the middle lane. (bottom: 20px sits the car near the bottom edge. left: 165px centers a 60px-wide car in a 390px track: (390 - 60) / 2 = 165.)",
     instruction: "List the targeted bottom offset (20px) and center-left offset (165px).",
     preloaded: "/* Bottom offset: \n   Left offset: */",
     validate: (code) => {
@@ -687,9 +705,10 @@ const S3_EXERCISES = [
   {
     num: 7,
     title: "Exercise 3.7: [Write AI Prompt] Positioning the Car",
-    problem: "Write a prompt to instruct the AI to position the player car at bottom 20px and left 165px.",
+    problem: "Write a prompt to instruct the AI to position the player car at bottom 20px and left 165px. (Unlike E3.2, use the real CSS term 'absolute' here — you already wrote position: relative in E3.4 and position: absolute in E3.5, so this prompt uses the vocabulary you've earned.)",
     instruction: "Draft a prompt. It must contain the words 'player-car', 'absolute', 'bottom', and 'left'.",
     preloaded: "/* Write your AI Prompt here: */",
+    previewCss: '#player-car {\n  position: absolute;\n  bottom: 20px;\n  left: 165px;\n}',
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('player-car') && clean.includes('absolute') && clean.includes('bottom') && clean.includes('left');
@@ -699,7 +718,7 @@ const S3_EXERCISES = [
   {
     num: 8,
     title: "Exercise 3.8: [Review & Explain] Bounding Boxes",
-    problem: "The AI placed an obstacle car at coordinates: `top: 50px; left: 40px;`.",
+    problem: "The AI placed an obstacle car at coordinates: `top: 50px; left: 40px;`. (left: 40px is well under the track's halfway point of 195px, so it sits near the LEFT edge. This spatial reading is what you'll need for collision detection later.)",
     instruction: "Is this obstacle positioned near the LEFT or RIGHT side of the track lanes? Answer with LEFT or RIGHT.",
     preloaded: "/* Answer LEFT or RIGHT: */",
     validate: (code) => {
@@ -711,7 +730,7 @@ const S3_EXERCISES = [
   {
     num: 9,
     title: "Exercise 3.9: [Test & Break] Invisible Elements",
-    problem: "You tested the code, but the restart panel is hidden by default. The AI code has: `.hidden { display: none; }`.",
+    problem: "You tested the code, but the restart panel is hidden by default. The AI code has: `.hidden { display: none; }`. (display: none removes an element completely — useful once the game is finished, but a problem while you're building and need to SEE it. 'Invisible' is often a style choice, not a missing element.)",
     instruction: "Fix this issue for layout testing. Temporarily override display to flex in the editor to make it visible.",
     preloaded: ".hidden {\n  display: none;\n}",
     validate: (code) => {
@@ -723,7 +742,7 @@ const S3_EXERCISES = [
   {
     num: 10,
     title: "Exercise 3.10: [Iterate & Improve] HUD Flex Alignment",
-    problem: "Iterate on the scoreboard dashboard styles to align scores horizontally.",
+    problem: "Iterate on the scoreboard dashboard styles to align scores horizontally. (display: flex lays the dashboard's children side by side; justify-content: space-between pushes them to opposite ends; padding adds breathing room.)",
     instruction: "Select '#dashboard' and style it using flexbox layout: display flex, justify-content space-between, and padding 10px.",
     preloaded: "#dashboard {\n  \n}",
     validate: (code) => {
@@ -859,6 +878,170 @@ const S4_EXERCISES = [
     hint: "Your code needs: let/const declarations for carX/speed/score/gameActive/LANE_WIDTH, plus score++ and speed += 10."
   }
 ];
+
+// Escape a snippet so it renders as visible source code, not as live elements.
+function escapeHtmlSource(html) {
+  return html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Panel shown inside a prompt-step preview. The preview always sits one execution step
+// ahead of the Code Editor: on a PROMPT step, the editor holds a prompt, so the preview's
+// job is to reveal the source CODE the AI would generate from it (once Verify passes).
+// Before Verify it just nudges the student to write their prompt and check it.
+function promptPreviewPanel(codeSource, success, fileLabel) {
+  if (!success) {
+    return '<div style="color:#8899aa;font-family:monospace;padding:20px;text-align:center;line-height:1.6;">✍️ This step is a prompt.<br/>Write your prompt, then click <b>Verify</b> to see the ' + fileLabel + ' code the AI generates.</div>';
+  }
+  return '<div style="color:#8899aa;font-family:monospace;font-size:0.72rem;margin-bottom:6px;">✓ ' + fileLabel + ' — code the AI generated from your prompt:</div>'
+    + '<pre style="margin:0;background:#0d1526;border:1px solid #22314f;border-radius:4px;padding:12px;color:#00ffcc;font-family:monospace;font-size:0.85rem;white-space:pre-wrap;word-break:break-word;">'
+    + escapeHtmlSource(codeSource)
+    + '</pre>';
+}
+
+// Body for the S2 HTML "Interactive Live Preview" iframe:
+//   - Prompt step (ex.previewHtml set): show the generated HTML source (revealed on Verify).
+//   - Code step (no previewHtml): the editor holds real HTML, so RENDER it live.
+function buildHtmlPreviewBody(ex, codeInput, success) {
+  return ex.previewHtml ? promptPreviewPanel(ex.previewHtml, success, 'index.html') : codeInput;
+}
+
+// Canned "finished look" CSS for the S2 HTML sandbox preview and the Project Journal's
+// milestone Target Outcome preview. Session 2 only teaches HTML structure (no CSS yet),
+// so this pre-styles the known game elements (track, car, dashboard, lane-divider) to give
+// students a recognizable visual — a sneak peek of the styling Session 3 formally teaches.
+const S2_PREVIEW_STYLE_CSS = `
+  body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
+  #game-track {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    background-color: #222;
+    border: 3px solid #ffcc00;
+    margin: 10px 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #player-car {
+    position: absolute;
+    bottom: 10px;
+    left: 45%;
+    width: 30px;
+    height: 50px;
+    background-color: #ff4d4d;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+  .obstacle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 25px;
+    height: 40px;
+    background-color: #00e5ff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  #obstacle-2 {
+    left: 140px;
+    background-color: #ff9f43;
+  }
+  #dashboard {
+    padding: 8px;
+    background-color: #1a1a2e;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #333;
+  }
+  h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
+  .lane-divider {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    border-left: 2px dashed #ffffff;
+  }
+  .hidden { display: none !important; }
+`;
+
+// Compact variant of S2_PREVIEW_STYLE_CSS for the Project Journal's small Target Outcome
+// thumbnail. A plain height clamp on the iframe would CROP content instead of shrinking it
+// (an iframe doesn't scale its document to fit), so this scales every vertical dimension down
+// proportionally — the whole scene (dashboard + track + car) fits within ~100px, uncropped.
+const S2_PREVIEW_STYLE_CSS_MINI = `
+  body { margin: 0; padding: 4px; background: #060814; color: #fff; font-family: monospace; font-size: 0.55rem; }
+  #game-track {
+    position: relative;
+    width: 100%;
+    height: 62px;
+    background-color: #222;
+    border: 2px solid #ffcc00;
+    margin: 4px 0;
+    overflow: hidden;
+  }
+  #player-car {
+    position: absolute;
+    bottom: 4px;
+    left: 45%;
+    width: 15px;
+    height: 22px;
+    background-color: #ff4d4d;
+    border-radius: 2px;
+  }
+  .obstacle {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    width: 12px;
+    height: 18px;
+    background-color: #00e5ff;
+    border-radius: 2px;
+  }
+  #obstacle-2 {
+    left: 62px;
+    background-color: #ff9f43;
+  }
+  #dashboard {
+    padding: 3px;
+    background-color: #1a1a2e;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #333;
+  }
+  h2 { margin: 0; font-size: 0.6rem; color: #00ffcc; }
+  .lane-divider {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    border-left: 1px dashed #ffffff;
+  }
+  .hidden { display: none !important; }
+`;
+
+// Fixed markup the S3 CSS sandbox styles. On a code step the student's CSS (or, once
+// merged in later sessions, the game's CSS) applies to this skeleton and renders live.
+const S3_PREVIEW_SKELETON = `
+  <div id="dashboard">
+    <h2>Score: <span id="score-val">0</span></h2>
+  </div>
+  <div id="game-track">
+    <div class="lane-divider" style="left: 130px; height: 100%;"></div>
+    <div class="lane-divider" style="left: 260px; height: 100%;"></div>
+    <div id="player-car">🏎️</div>
+    <div id="obstacle-1" class="obstacle">🚗</div>
+    <div id="obstacle-2" class="obstacle">🚘</div>
+  </div>
+`;
 
 // Shared live-execution iframe for the Level 1 JS Sandboxes (Sessions 4-8+).
 // Unlike the S2/S3 HTML/CSS previews (which just re-render static markup), this
@@ -2064,8 +2247,8 @@ export default function App() {
   const [curriculumDetailTab, setCurriculumDetailTab] = useState('plan');
   
   // Tab fields state
+  const [editingPlanVision, setEditingPlanVision] = useState('');
   const [editingPlanSpecs, setEditingPlanSpecs] = useState('');
-  const [editingPlanData, setEditingPlanData] = useState('');
   const [editingPlanFlow, setEditingPlanFlow] = useState('');
   const [editingCodePrompt, setEditingCodePrompt] = useState('');
   const [editingCodeOutput, setEditingCodeOutput] = useState('');
@@ -2202,10 +2385,10 @@ export default function App() {
   }, []);
 
   // JSON Serialization logic
-  const serializeJournalData = (planSpecs, planData, planFlow, codeOutput, codeReview, testCases, testResults, iterationChanges, iterationLessons) => {
+  const serializeJournalData = (planVision, planSpecs, planFlow, codeOutput, codeReview, testCases, testResults, iterationChanges, iterationLessons) => {
     return JSON.stringify({
+      planVision,
       planSpecs,
-      planData,
       planFlow,
       codeOutput,
       codeReview,
@@ -2216,12 +2399,16 @@ export default function App() {
     });
   };
 
+  // planSpecs now holds the merged "System Parts & Information" answer. Older entries saved
+  // hierarchy/variables as two separate fields (planSpecs + planData) — fold any legacy
+  // planData content into planSpecs on load so nothing a student already wrote is lost.
   const deserializeJournalData = (rawText) => {
     try {
       const data = JSON.parse(rawText);
+      const legacySpecs = [data.planSpecs, data.planData].filter(Boolean).join('\n\n');
       return {
-        planSpecs: data.planSpecs || '',
-        planData: data.planData || '',
+        planVision: data.planVision || '',
+        planSpecs: legacySpecs,
         planFlow: data.planFlow || '',
         codeOutput: data.codeOutput || '',
         codeReview: data.codeReview || '',
@@ -2232,8 +2419,8 @@ export default function App() {
       };
     } catch (e) {
       return {
+        planVision: '',
         planSpecs: '',
-        planData: '',
         planFlow: '',
         codeOutput: rawText || '',
         codeReview: '',
@@ -3023,8 +3210,8 @@ export default function App() {
   useEffect(() => {
     if (activeJournalHistory) {
       const data = deserializeJournalData(activeJournalHistory.code);
+      setEditingPlanVision(data.planVision);
       setEditingPlanSpecs(data.planSpecs);
-      setEditingPlanData(data.planData);
       setEditingPlanFlow(data.planFlow);
       setEditingCodePrompt(activeJournalHistory.prompt || '');
       setEditingCodeOutput(data.codeOutput);
@@ -3034,8 +3221,8 @@ export default function App() {
       setEditingIterationChanges(data.iterationChanges || '');
       setEditingIterationLessons(data.iterationLessons || '');
     } else {
+      setEditingPlanVision('');
       setEditingPlanSpecs('');
-      setEditingPlanData('');
       setEditingPlanFlow('');
       setEditingCodePrompt('');
       setEditingCodeOutput('');
@@ -3050,8 +3237,8 @@ export default function App() {
   const handleSaveJournalCode = () => {
     if (!selectedJournalId || !activeJournalVersion || !activeJournalHistory) return;
     const serializedCode = serializeJournalData(
+      editingPlanVision,
       editingPlanSpecs,
-      editingPlanData,
       editingPlanFlow,
       editingCodeOutput,
       editingCodeReview,
@@ -3096,8 +3283,8 @@ export default function App() {
   const handleAddNewJournalVersion = () => {
     if (!selectedJournalId || !activeJournalHistory) return;
     const serializedCode = serializeJournalData(
+      editingPlanVision,
       editingPlanSpecs,
-      editingPlanData,
       editingPlanFlow,
       editingCodeOutput,
       editingCodeReview,
@@ -4500,71 +4687,10 @@ export default function App() {
                           srcDoc={`
                             <html>
                               <head>
-                                <style>
-                                  body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
-                                  #game-track {
-                                    position: relative;
-                                    width: 100%;
-                                    height: 140px;
-                                    background-color: #222;
-                                    border: 3px solid #ffcc00;
-                                    margin: 10px 0;
-                                    overflow: hidden;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                  }
-                                  #player-car {
-                                    position: absolute;
-                                    bottom: 10px;
-                                    left: 45%;
-                                    width: 30px;
-                                    height: 50px;
-                                    background-color: #ff4d4d;
-                                    border-radius: 4px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    font-size: 1.2rem;
-                                  }
-                                  .obstacle {
-                                    position: absolute;
-                                    top: 20px;
-                                    left: 20px;
-                                    width: 25px;
-                                    height: 40px;
-                                    background-color: #00e5ff;
-                                    border-radius: 4px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    font-size: 1rem;
-                                  }
-                                  #obstacle-2 {
-                                    left: 140px;
-                                    background-color: #ff9f43;
-                                  }
-                                  #dashboard {
-                                    padding: 8px;
-                                    background-color: #1a1a2e;
-                                    border-radius: 6px;
-                                    text-align: center;
-                                    border: 1px solid #333;
-                                  }
-                                  h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
-                                  .lane-divider {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 50%;
-                                    width: 2px;
-                                    height: 100%;
-                                    border-left: 2px dashed #ffffff;
-                                  }
-                                  .hidden { display: none !important; }
-                                </style>
+                                <style>${S2_PREVIEW_STYLE_CSS}</style>
                               </head>
                               <body>
-                                ${s2CodeInput}
+                                ${buildHtmlPreviewBody(S2_EXERCISES[s2ActiveExercise - 1], s2CodeInput, s2Success)}
                               </body>
                             </html>
                           `}
@@ -4712,20 +4838,13 @@ export default function App() {
                                   .lane-divider {
                                     border-left: 1px dashed white;
                                   }
-                                  ${s3CodeInput}
+                                  ${S3_EXERCISES[s3ActiveExercise - 1].previewCss ? '' : s3CodeInput}
                                 </style>
                               </head>
                               <body>
-                                <div id="dashboard">
-                                  <h2>Score: <span id="score-val">0</span></h2>
-                                </div>
-                                <div id="game-track">
-                                  <div class="lane-divider" style="left: 130px; height: 100%;"></div>
-                                  <div class="lane-divider" style="left: 260px; height: 100%;"></div>
-                                  <div id="player-car">🏎️</div>
-                                  <div id="obstacle-1" class="obstacle">🚗</div>
-                                  <div id="obstacle-2" class="obstacle">🚘</div>
-                                </div>
+                                ${S3_EXERCISES[s3ActiveExercise - 1].previewCss
+                                  ? promptPreviewPanel(S3_EXERCISES[s3ActiveExercise - 1].previewCss, s3Success, 'style.css')
+                                  : S3_PREVIEW_SKELETON}
                               </body>
                             </html>
                           `}
@@ -6027,13 +6146,41 @@ export default function App() {
                           <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-primary)' }}>
                             {PROJECT_TASKS[currentSession.id].partTitle}
                           </h3>
-                          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                            <strong>Milestone Objectives:</strong>
-                            <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px', listStyleType: 'disc' }}>
-                              {PROJECT_TASKS[currentSession.id].objectives.map((obj, i) => (
-                                <li key={i} style={{ marginBottom: '2px' }}>{obj}</li>
-                              ))}
-                            </ul>
+                          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                            <div style={{ flex: '1 1 260px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                              <strong>Milestone Objectives:</strong>
+                              <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px', listStyleType: 'disc' }}>
+                                {PROJECT_TASKS[currentSession.id].objectives.map((obj, i) => (
+                                  <li key={i} style={{ marginBottom: '2px' }}>{obj}</li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {/* Target Outcome Preview: a small rendered picture of what this milestone
+                                should visually produce once complete, so objectives aren't just text.
+                                Sits beside the objectives so students see the "screen so far" at a glance. */}
+                            {PROJECT_TASKS[currentSession.id].targetOutcomeHtml && (
+                              <div style={{ flex: '0 0 220px', width: '220px' }}>
+                                <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                  🎯 Target Outcome
+                                </span>
+                                <iframe
+                                  srcDoc={`
+                                    <html>
+                                      <head><style>${S2_PREVIEW_STYLE_CSS_MINI}</style></head>
+                                      <body>${PROJECT_TASKS[currentSession.id].targetOutcomeHtml}</body>
+                                    </html>
+                                  `}
+                                  style={{ width: '100%', height: '105px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                                  title="Milestone Target Outcome Preview"
+                                />
+                                {PROJECT_TASKS[currentSession.id].targetOutcomeCaption && (
+                                  <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '4px', marginBottom: 0, fontStyle: 'italic', lineHeight: 1.3 }}>
+                                    {PROJECT_TASKS[currentSession.id].targetOutcomeCaption}
+                                  </p>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
@@ -6080,21 +6227,21 @@ export default function App() {
                         {activeJournalTab === 'plan' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Component Hierarchy & Specs</label>
-                              <textarea 
-                                value={editingPlanSpecs}
-                                onChange={e => setEditingPlanSpecs(e.target.value)}
-                                style={{ width: '100%', height: '100px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned structure guidelines:\n" + PROJECT_TASKS[currentSession.id].planSpecs.hierarchy : "Describe the layout elements and nesting structure (e.g. game-track > player-car, scoreboard-panel > score-val)"}
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Visual Concept &amp; UX Flow</label>
+                              <textarea
+                                value={editingPlanVision}
+                                onChange={e => setEditingPlanVision(e.target.value)}
+                                style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
                               />
                             </div>
                             <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Data & State Variables</label>
-                              <textarea 
-                                value={editingPlanData}
-                                onChange={e => setEditingPlanData(e.target.value)}
-                                style={{ width: '100%', height: '100px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned state registers:\n" + PROJECT_TASKS[currentSession.id].planSpecs.variables : "List variables, their initial values, types, and constraints (e.g. carX: Number = 165, score: Number = 0)"}
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>System Parts & Information</label>
+                              <textarea
+                                value={editingPlanSpecs}
+                                onChange={e => setEditingPlanSpecs(e.target.value)}
+                                style={{ width: '100%', height: '130px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
                               />
                             </div>
                             <div className="form-field">
@@ -6595,8 +6742,8 @@ export default function App() {
                     if (!hist) return <p style={{ color: 'var(--text-muted)' }}>No versions saved for this entry.</p>;
                     const data = deserializeJournalData(hist.code);
                     const fields = [
-                      ['1. Plan & Design — Component Hierarchy & Specs', data.planSpecs],
-                      ['1. Plan & Design — Data & State Variables', data.planData],
+                      ['1. Plan & Design — Visual Concept & UX Flow', data.planVision],
+                      ['1. Plan & Design — System Parts & Information', data.planSpecs],
                       ['1. Plan & Design — Logic Flow', data.planFlow],
                       ['2. Write AI Prompt', hist.prompt],
                       ['3. Review & Explain — AI-Generated Code', data.codeOutput],
