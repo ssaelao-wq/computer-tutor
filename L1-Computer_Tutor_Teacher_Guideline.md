@@ -457,20 +457,88 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * *"What happens if we declare gameActive = "yes" as a string instead of true as a Boolean? What security logic leaks does this present?"* (Booleans are strict binary flags. Strings are mutable, prone to spelling errors, and consume more memory).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 4.1 (State Declarations) Solution**:
-  ```javascript
-  let carX = 130;
-  let score = 0;
-  let gameActive = true;
-  const trackWidth = 390;
-  const carWidth = 60;
-  ```
-- **Exercise 4.2 (Spawning Speeds) Solution**:
-  ```javascript
-  let obstacleSpeed = 5;
-  let obstacleY = -100;
-  ```
-* **Homework Evaluation Checklist**: Verify student declared three variables tracking game progress with correct types (`let`, `const`) in the Prompt Journal.
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. **Note on the live preview:** unlike the HTML/CSS sessions, the Plan/Prompt/Review steps here don't run in the preview (it shows a "nothing to run yet" note) — only the **Test & Break** and **Iterate & Improve** steps execute the student's JavaScript live against the racing-game DOM and stream `console.log`/errors to the terminal panel.
+
+Following the same principle as Sessions 2–3, the **[Plan & Design] steps stay at plain-language / system-design level** — the student describes *what changes, what stays fixed, what the system does* in plain words, and the technical form is accepted but never required. The JavaScript keywords (`let`, `const`, `event.key`, `requestAnimationFrame`, `textContent`, …) are each session's own board-lesson content and are *earned* at the **Write AI Prompt** and **Review & Explain** steps — not demanded at planning time.
+
+* **Exercise 4.1: [Plan & Design] The Variable Registry** — Sort the game's values into ones that change (`let`) vs ones fixed forever (`const`).
+  * *Editor expects:* Plain-language plan naming which values change vs stay fixed. **No `let`/`const` syntax required** (the technical form is still accepted).
+  * *Model answer:* `changing — car position, speed, score, game-running; fixed — lane width` (technical form `let carX, speed, score, gameActive | const LANE_WIDTH` also accepted)
+  * *Why:* State design starts by asking "what changes and what doesn't" — a decision the student makes in plain words before meeting the syntax. This step used to demand the literal `let`/`const` keywords in the session's very first exercise, before either had been written by hand; now the plan captures the *design thinking* (position/speed/score vary, lane width is fixed) and the keywords are earned at the prompt/review steps that follow — exactly as E3.1 does for CSS units.
+* **Exercise 4.2: [Write AI Prompt] Requesting the Declarations** — Turn the 4.1 plan into an AI instruction with concrete starting values.
+  * *Editor expects:* Plain-English prompt. Validator needs `let`, `const`, `carX`, and `165`.
+  * *Model answer:* `Declare mutable variables with let — carX starting at 165, speed 0, score 0, gameActive false — plus a const LANE_WIDTH`
+  * *Why:* A plan says *which* variables; a prompt must also supply their **initial values** (carX = 165 centers the car in a 390px track). Naming the starting numbers is what makes the AI's output runnable rather than a blank template.
+* **Exercise 4.3: [Review & Explain] Reading Data Types** — The AI generated `let score = 0;`. What type is `0`?
+  * *Editor expects:* One word — `Number`, `String`, or `Boolean`.
+  * *Model answer:* `Number`
+  * *Why:* A bare `0` (no quotes) is a **Number**, so the browser can do arithmetic on it. The whole session hinges on telling Numbers apart from quoted Strings — this is the read-check before the bug in E4.4 makes the distinction bite.
+* **Exercise 4.4: [Test & Break] The Quoted Number Bug** — The AI wrote `let speed = "0";`. Remove the quotes so `speed` is a real Number.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `let speed = 0;`
+  * *Why:* `"0"` is text, not a value you can count with. It looks identical on screen but silently breaks every later `+=`. Fixing it here — *before* any math runs — is cheaper than debugging the `"105"` symptom later, which is exactly the point of the Test & Break step.
+* **Exercise 4.5: [Iterate & Improve] Adding the Game State Flag** — Add the missing `gameActive` Boolean.
+  * *Editor expects:* JavaScript adding a Boolean. Validator needs `gameActive = false`.
+  * *Model answer:* `let gameActive = false;`
+  * *Why:* `gameActive` is a true/false switch, the simplest data type. It seems trivial now, but from Session 9 the game loop reads this one flag every frame to decide "keep running or stop?" — so this single Boolean is what later makes Game Over possible.
+* **Exercise 4.6: [Plan & Design] Planning the Math Updates** — Plan how `score` and `speed` change during play.
+  * *Editor expects:* Plain-language plan of how the two values change (no operator syntax required; the shorthand is still accepted).
+  * *Model answer:* `score goes up by 1 each time; speed goes up by 10` (shorthand `score++ | speed += 10` also accepted)
+  * *Why:* `score++` is shorthand for `score = score + 1`; `speed += 10` adds 10. Planning the exact increments now means the gameplay events in later sessions ("dodged an obstacle → score++") already have their math defined.
+* **Exercise 4.7: [Write AI Prompt] Requesting the Math Statements** — Prompt for the increment statements plus a console check.
+  * *Editor expects:* Plain-English prompt. Validator needs `score`, `speed`, and `console.log`.
+  * *Model answer:* `Write statements that increment score by 1 and speed by 10, then console.log both values`
+  * *Why:* Asking the AI to *also* log the values is a deliberate habit: `console.log` is the developer's window into whether the numbers really changed. A prompt that requests verification alongside the work is a stronger prompt.
+* **Exercise 4.8: [Review & Explain] Predicting the Output** — After `let speed = 0; speed += 10;`, what is `speed`?
+  * *Editor expects:* A number.
+  * *Model answer:* `10`
+  * *Why:* Predicting a result by *reading* code — before running it — is the core Review skill. `0 + 10 = 10`. Simple here, but it's the same tracing habit that will let the student audit the AI's collision math in Session 10.
+* **Exercise 4.9: [Test & Break] The String Concatenation Trap** — `let speed = "10"; speed += 5;` produces `"105"`. Fix the declaration.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `let speed = 10;`
+  * *Why:* This is E4.4's bug with the consequence made visible: with a String, `+= 5` glues `"5"` onto the end as text → `"105"`, not `15`. Seeing the wrong output firsthand is what makes "data types matter" stick better than any lecture.
+* **Exercise 4.10: [Iterate & Improve] The Complete Variable Registry** — Assemble the whole session into one correct registry + math block.
+  * *Editor expects:* Full JavaScript.
+  * *Model answer:*
+    ```javascript
+    let carX = 165;
+    let speed = 0;
+    let score = 0;
+    let gameActive = false;
+    const LANE_WIDTH = 130;
+    score++;
+    speed += 10;
+    ```
+  * *Why:* This is the real starting point of `game.js` that every later session builds on. Proving the student can assemble correctly-typed declarations *plus* working math in one block is the milestone competency for the session.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 3: JS Variable Registry") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "Screen still looks like Session 3's styled road and car — this session works behind the scenes, giving the game a memory of the score, speed, and whether it's running."
+   - *System Parts & Information (expected):* "Parts needed: none new on screen — this session gives the game a memory. Information to track: the car's position, the current speed, the score, whether the game is running, and the fixed width of a lane."
+   - *Logic Flow / Pseudocode (expected):* "State initialization (start) → Variable declarations → Math increments on game events → Render UI updates."
+   - *Why:* This is the first session with *nothing new on screen*, so the Visual Concept honestly says so. The design work is naming **what the game must remember** — and the student can now state it as real data (position, speed, score, a running flag, a fixed lane width) because Session 4 has finally taught variables and types. The plan lists *what to track*; the prompt and review steps decide the exact `let`/`const` lines.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Write a prompt asking to declare JavaScript variables for a 2D highway avoidance game: mutable variables for 'carX' (initial 165), 'speed' (initial 0), 'score' (initial 0), 'gameActive' (initial false), and constants for track limits. Write test statements that increment score by 1 and speed by 10, then log the results."
+   - *Why:* The milestone prompt is fully technical (the sandbox 4.1–4.10 scaffolding is complete by now): it names each variable, its initial value, and its mutability, and asks for a `console.log` check in the same breath — a complete, self-verifying request.
+
+3. **Review & Explain**
+   - *Expected checklist:* variables use `let` (mutable) and `const` (immutable) correctly; `speed` is a Number, not a quoted String.
+   - *Expected Socratic answer* — *"What would happen if we declared `speed = '10'` (string) and then executed `speed += 5`?"* → It produces `"105"` (string concatenation), not `15`. The data type silently dictates whether `+=` **adds** or **glues text** — so a wrong type corrupts every later calculation.
+
+4. **Test & Break**
+   - *Expected test checklist:* variables declared with correct syntax; `speed`/`score` update mathematically (not string-concatenating); console logs report the correct transitions.
+   - *Why:* These map to the Milestone Objectives — Test & Break is where the student proves, in the console, that the game's memory holds real Numbers.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Ensure zero game variables are exposed in the global browser scope directly (wrap them inside an object namespace or an immediately-invoked function) to prevent client-side console cheating."
+   - *Why:* Introduces **scope as a security concern** — a player could open DevTools and set `score = 9999` if the variables sit in global scope. This previews the modular-scope work of Session 8 and connects to the session's Ethics Discussion on immutable data.
+
+* **Homework Evaluation Checklist**: Verify the student declared the four game-state variables (`carX`, `speed`, `score`, `gameActive`) with correct types (no quoted numbers) plus at least one `const`, and demonstrated a working `+=` increment in the Project Journal.
 
 ---
 
@@ -493,22 +561,87 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * *"If the car snaps between lanes that are 130px apart, how do we write the variable updates for steering right and left?"* (`carX += 130` and `carX -= 130`).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 5.1 (Event bindings) Solution**:
-  ```javascript
-  window.addEventListener("keydown", function(event) {
-    if (event.key === "ArrowLeft") {
-      carX -= 130;
-    }
-    if (event.key === "ArrowRight") {
-      carX += 130;
-    }
-  });
-  ```
-- **Exercise 5.2 (Coordinates Update Log) Solution**:
-  ```javascript
-  console.log("Steered! New position: " + carX);
-  ```
-* **Homework Evaluation Checklist**: Verify student writes event listener bindings and registers ArrowLeft/ArrowRight key events.
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview (click the preview, then press the arrow keys to steer); Plan/Prompt/Review steps show a "nothing to run yet" note.
+
+* **Exercise 5.1: [Plan & Design] Reading the Key Pressed** — Plan how the browser reports which key was pressed.
+  * *Editor expects:* Plain-language description of how the browser reports the key (no `event.key` syntax required; the `keydown > event.key` form is still accepted).
+  * *Model answer:* `when a key is pressed, the keydown event reports which key it was` (form `keydown > event.key` also accepted)
+  * *Why:* The session rests on one fact: a keypress fires a `keydown` event and the key's name arrives with it. The student can state that pathway in plain words before writing `event.key` by hand — the syntax is earned at the prompt/review steps, so this plan step isn't gated on notation the student hasn't practiced yet.
+* **Exercise 5.2: [Write AI Prompt] Requesting the Listener** — Prompt for a keydown listener that logs the key.
+  * *Editor expects:* Plain-English prompt. Validator needs `addEventListener`, `keydown`, and `console.log`.
+  * *Model answer:* `Bind a keydown event listener to the window that logs event.key to the console`
+  * *Why:* `addEventListener` is how code says "run my function every time this happens." Asking to log the key first (before wiring movement) is a deliberately small, verifiable first step — confirm the listener fires at all before trusting it to move anything.
+* **Exercise 5.3: [Review & Explain] The Event Parameter** — Which callback parameter carries the key info?
+  * *Editor expects:* One word.
+  * *Model answer:* `event`
+  * *Why:* The browser fills the callback's `event` parameter with a fresh object describing each keypress. Recognizing that the parameter name is just a handle to that object — and that `event.key` reads from it — is the mental model behind all DOM event code.
+* **Exercise 5.4: [Test & Break] The Silent Input Fail** — `if (event.key === "left")` never fires. Fix the key string.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `if (event.key === "ArrowLeft") { carX -= 130; }`
+  * *Why:* Browsers report the arrow keys as the exact strings `"ArrowLeft"`/`"ArrowRight"`, never `"left"`. A wrong string makes the comparison always-false — no error, just nothing happens. Learning to check the *exact* reported value is a core debugging reflex.
+* **Exercise 5.5: [Iterate & Improve] Logging the Other Direction** — Add an `else if` branch for ArrowRight.
+  * *Editor expects:* JavaScript. Validator needs `ArrowRight` and `console.log`.
+  * *Model answer:* `else if (event.key === "ArrowRight") { console.log("Steering right"); }`
+  * *Why:* `else if` adds a second, mutually-exclusive branch — the browser checks ArrowLeft first, then ArrowRight only if the first failed. This is the standard shape for handling multiple keys and scales to any number of controls.
+* **Exercise 5.6: [Plan & Design] Steering Deltas** — Plan the exact ± amount per keypress.
+  * *Editor expects:* Plain-language plan of the per-press movement (no `carX -= 130` syntax required; the technical form is still accepted).
+  * *Model answer:* `left press moves the car 130 to the left; right press moves it 130 to the right` (technical `carX -= 130 | carX += 130` also accepted)
+  * *Why:* Lanes are 130px apart, so one press must move the car exactly one lane. Deciding the delta (130) on paper keeps the car snapping cleanly between lanes rather than drifting by arbitrary amounts.
+* **Exercise 5.7: [Write AI Prompt] Wiring Movement to the DOM** — Prompt to connect `carX` to the visible car.
+  * *Editor expects:* Plain-English prompt. Validator needs `carX`, `style.left`, `ArrowLeft`, and `ArrowRight`.
+  * *Model answer:* `When ArrowLeft or ArrowRight is pressed, update #player-car style.left to match carX`
+  * *Why:* Changing `carX` only updates a number in memory — nothing moves until that number is written into the element's `style.left`. This prompt closes the gap between *state* (the variable) and *view* (the pixels on screen), the central idea of DOM-driven UI.
+* **Exercise 5.8: [Review & Explain] Why 'px'?** — Why concatenate `"px"` onto `carX`?
+  * *Editor expects:* One word — the CSS unit.
+  * *Model answer:* `px`
+  * *Why:* CSS position values are meaningless without a unit. `carX` is a bare number (165); `carX + "px"` builds the string `"165px"`, which is what the style engine actually accepts.
+* **Exercise 5.9: [Test & Break] The Missing Unit** — `style.left = carX;` (no unit) makes the car vanish. Fix it.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `carElement.style.left = carX + "px";`
+  * *Why:* A unit-less number is invalid CSS, so the browser discards the whole rule and the car falls back to its default position — a silent failure with no console error. This is the practical payoff of the E5.8 concept.
+* **Exercise 5.10: [Iterate & Improve] The Complete Steering Handler** — Assemble the full working handler.
+  * *Editor expects:* Full JavaScript.
+  * *Model answer:*
+    ```javascript
+    window.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowLeft") {
+        carX -= 130;
+      } else if (event.key === "ArrowRight") {
+        carX += 130;
+      }
+      document.getElementById("player-car").style.left = carX + "px";
+    });
+    ```
+  * *Why:* This is the real steering control the rest of the game reuses — listener, key branch, `carX` update, and the `style.left` write, unified in one handler. Assembling it correctly is the session's milestone competency.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 4: Keyboard Control Interfaces") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "Same red car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering."
+   - *System Parts & Information (expected):* "Parts needed: a way to listen for arrow key presses. Information to track: which key was pressed, and how far the car should shift each time."
+   - *Logic Flow / Pseudocode (expected):* "User presses keyboard key → keydown event fires → JavaScript captures event.key → IF key is ArrowLeft, decrease carX → update #player-car.style.left coordinate."
+   - *Why:* The Visual Concept describes the first *interactive* change (the car now responds to the player). The plan then names the new capability needed — listening for key presses — and the two pieces of information it produces (which key, how far). The Logic Flow traces input → event → state change → screen update, the pipeline every later interactive feature reuses.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Write a prompt asking to bind a keydown event listener to the window. When 'ArrowLeft' is pressed, it should subtract 130 from 'carX' and update the left position style of '#player-car' to match. When 'ArrowRight' is pressed, it should add 130 to 'carX' and update the style. Log key presses to the console."
+   - *Why:* The milestone prompt specifies both keys, the exact delta (130), the DOM target (`#player-car` `style.left`), and a console check — a complete behavior spec, not just "make the car move."
+
+3. **Review & Explain**
+   - *Expected checklist:* `window.addEventListener('keydown', ...)` used correctly; the handler inspects `event.key` for the exact key strings; the style update is formatted as `carX + 'px'`.
+   - *Expected Socratic answer* — *"How does the browser know a key was pressed? What is the event object?"* → The browser's event loop detects the hardware keypress and calls every registered `keydown` listener, passing a fresh **event object** whose `.key` property holds the pressed key's name — the handler reads that to decide what to do.
+
+4. **Test & Break**
+   - *Expected test checklist:* pressing ArrowLeft logs the key and updates `carX`; ArrowRight increases `carX`; `#player-car` visibly moves on screen when keys are pressed.
+   - *Why:* Maps to the Milestone Objectives — Test & Break confirms the *visible* car actually moves, not just that a variable changed in memory.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Confirm that pressing keys repeatedly doesn't cause rendering locks. Plan on-screen tap controls (buttons) so the game is playable without a keyboard, for accessibility."
+   - *Why:* Raises **input accessibility** — a keyboard-only control scheme excludes touch users. This ties directly to the session's Ethics Discussion on control-layout standards for left-handed and alternative-input players.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows a keydown listener that checks `event.key` against the exact `"ArrowLeft"`/`"ArrowRight"` strings and writes the updated `carX` back to `#player-car` with a `px` unit.
 
 ---
 
@@ -527,26 +660,91 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * **If/Else Statements**: Executing specific code paths when logic expressions resolve to true.
 
 ### 2. Socratic Prompting
-* *"What happens if the player holds the ArrowLeft key indefinitely? How do we write a conditional guard check preventing carX from slipping below 0?"* (Check `if (carX < 0) { carX = 0; }`).
-* *"Why is the right-hand boundary 260 instead of 390? How do we calculate it?"* (390 - 130 = 260. The rightmost lane position is one lane-width in from the track edge, so the car stays within the track).
+* *"What happens if the player holds the ArrowLeft key indefinitely? How do we write a conditional guard that keeps carX from slipping past the leftmost lane (35)?"* (Wrap the move in a guard: `if (carX > 35) { carX -= 130; }` — the move is refused once carX reaches 35).
+* *"Why is the rightmost lane 295 and the leftmost 35, rather than 0 and 390?"* (The car has width and sits centered in each of the 3 lanes, so its `left` coordinate never reaches the raw track edges. The lanes sit at 35, 165, and 295 — each 130px apart — which keeps the whole car body on the road).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 6.1 (Clamping Position Checks) Solution**:
-  ```javascript
-  if (carX < 0) {
-    carX = 0;
-  }
-  if (carX > 260) {
-    carX = 260; // Rightmost lane position (390px track - 130px lane width)
-  }
-  ```
-- **Exercise 6.2 (Boundary Speed Alert) Solution**:
-  ```javascript
-  if (carX === 0 || carX === 260) {
-    console.log("Boundary reached!");
-  }
-  ```
-* **Homework Evaluation Checklist**: Student writes conditional code clamping coordinates bounds inside `[0, 260]` and logs warning messages.
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note.
+
+* **Exercise 6.1: [Plan & Design] Track Boundary Coordinates** — Plan the two limits carX must stay between.
+  * *Editor expects:* Plain-language plan naming the two outer limits (35 and 295).
+  * *Model answer:* `the car can go from 35 on the left to 295 on the right` (form `left boundary = 35 | right boundary = 295` also accepted)
+  * *Why:* A guard needs exactly two numbers — the smallest and largest legal `carX`. The three lanes sit at 35/165/295, so 35 and 295 are the outer walls. Naming them now turns "don't drive off the road" into a precise, checkable rule.
+* **Exercise 6.2: [Write AI Prompt] Requesting the Left Guard** — Prompt for a guard around the ArrowLeft move.
+  * *Editor expects:* Plain-English prompt. Validator needs `carX`, `ArrowLeft`, and `> 35`.
+  * *Model answer:* `Wrap the ArrowLeft movement in an if that only lets carX decrease while carX > 35`
+  * *Why:* A guard is an `if` wrapped around an action: run `carX -= 130` *only while* `carX > 35`. Describing the exact condition (`> 35`) in the prompt is what makes the AI produce a boundary check instead of unconditional movement.
+* **Exercise 6.3: [Review & Explain] Reading the Guard Condition** — With `if (carX > 35)`, what happens at carX = 35?
+  * *Editor expects:* `MOVES` or `BLOCKED`.
+  * *Model answer:* `BLOCKED`
+  * *Why:* `35 > 35` is false, so the inner block never runs and the car stays put. Reading a condition and predicting whether it passes at the boundary value is the exact skill that catches off-by-one bugs.
+* **Exercise 6.4: [Test & Break] The Infinite Teleporting Bug** — The check was loosened to `carX >= -130`; the car drives off-screen. Fix it.
+  * *Editor expects:* Corrected JavaScript (restore `carX > 35`).
+  * *Model answer:* `if (carX > 35) { carX -= 130; document.getElementById("player-car").style.left = carX + "px"; }`
+  * *Why:* The guard existed but pointed at the wrong number — `>= -130` keeps passing far past the edge, so carX marches into negative pixels. Fixing it teaches that a boundary check is only as good as the *value* it compares against.
+* **Exercise 6.5: [Iterate & Improve] Adding the Right Guard** — Mirror the guard for ArrowRight.
+  * *Editor expects:* JavaScript. Validator needs `ArrowRight`, `carX < 295`, and `carX += 130`.
+  * *Model answer:* `else if (event.key === "ArrowRight") { if (carX < 295) { carX += 130; document.getElementById("player-car").style.left = carX + "px"; } }`
+  * *Why:* The right guard is the mirror of the left: allow `carX += 130` only while `carX < 295`. Building the symmetric pair drives home that *every* movable direction needs its own boundary.
+* **Exercise 6.6: [Plan & Design] Overheat Threshold Rule** — Plan a clamp so speed can't exceed a safe maximum.
+  * *Editor expects:* Plain-language statement of the overheat rule (no code required; the pseudocode form is still accepted).
+  * *Model answer:* `if speed goes over 120, reset it back to 100` (form `IF speed > 120 THEN speed = 100` also accepted)
+  * *Why:* The same guard pattern, now applied to `speed` instead of position. Recognizing that a clamp is one reusable shape — "if past the limit, snap back" — whether it's lanes or speed, is the transferable idea of the session.
+* **Exercise 6.7: [Write AI Prompt] Requesting the Overheat Guard** — Prompt for the speed clamp.
+  * *Editor expects:* Plain-English prompt. Validator needs `speed`, `120`, and `100`.
+  * *Model answer:* `If speed is greater than 120, reset it to 100 and log a warning`
+  * *Why:* Naming both the trigger (120) and the reset value (100) is what pins the AI's condition to the plan. A vague "keep speed reasonable" would let the AI invent its own numbers.
+* **Exercise 6.8: [Review & Explain] Boundary-Value Precision** — Does `if (speed > 120)` trigger when speed is exactly 120?
+  * *Editor expects:* `YES` or `NO`.
+  * *Model answer:* `NO`
+  * *Why:* `>` is *strict* — 120 is not greater than 120, so the rule doesn't fire at exactly the threshold. Knowing the difference between `>` and `>=` is the whole discipline of boundary-value testing.
+* **Exercise 6.9: [Test & Break] The Mars Climate Mismatch** — `speed = "100";` resets to a String. Fix the type.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `speed = 100;`
+  * *Why:* A quoted `"100"` re-introduces the Session 4 type bug: the next `speed += ...` would concatenate text instead of adding. A clamp that fixes the value but corrupts the *type* is worse than no clamp — this ties boundary logic back to data types.
+* **Exercise 6.10: [Iterate & Improve] The Complete Boundary System** — Assemble both lane guards plus the overheat clamp.
+  * *Editor expects:* Full JavaScript. Validator needs `carX > 35`, `carX < 295`, `speed > 120`, and `speed = 100`.
+  * *Model answer:*
+    ```javascript
+    if (event.key === "ArrowLeft" && carX > 35) {
+      carX -= 130;
+    } else if (event.key === "ArrowRight" && carX < 295) {
+      carX += 130;
+    }
+    if (speed > 120) {
+      speed = 100;
+    }
+    ```
+  * *Why:* Left guard, right guard, and overheat clamp together form the complete rule set keeping `carX` and `speed` inside safe, playable limits — the session's milestone competency.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 5: Safety Guards & Boundary Clamps") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "Same steering car — but now it can't be steered off the edges of the road. Holding an arrow key at the edge just keeps it pinned at the outer lane instead of sliding off-screen."
+   - *System Parts & Information (expected):* "Parts needed: a safety check that runs every time a key is pressed. Information to track: the leftmost and rightmost positions the car is allowed to reach."
+   - *Logic Flow / Pseudocode (expected):* "IF key is ArrowLeft: IF carX > LeftLimit: carX -= 130. IF key is ArrowRight: IF carX < RightLimit: carX += 130."
+   - *Why:* The Visual Concept captures the *felt* difference (the car locks at the edge instead of vanishing). The plan names the new mechanism — a check that runs on every keypress — and the two limits it needs. This is the first session where the design is a *rule* rather than a new visual element.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Draft a prompt asking to modify the keyboard steering logic. Add conditional guards to prevent the player car from running off the road. The car must be locked inside 3 lanes (x coordinates 35px, 165px, 295px). If the user presses left, only move the car if it is not already in the leftmost lane (x = 35px)."
+   - *Why:* The milestone prompt names the exact lane coordinates and states the guard condition in plain terms — enough for the AI to reproduce the boundary logic the student planned, not a generic "keep it on screen."
+
+3. **Review & Explain**
+   - *Expected checklist:* the boundary checks use the correct comparison operators (e.g. `carX > 35`, `carX < 295`); the car snaps/locks cleanly at each edge rather than overshooting.
+   - *Expected Socratic answer* — *"What would happen if we used `>= 0` as the left boundary check instead of `> 35`?"* → The car could keep moving left until `carX` hit 0 — two lanes past the leftmost lane (35) — so it would visually slide off the left edge of the track. The guard's *value* matters as much as its existence.
+
+4. **Test & Break**
+   - *Expected test checklist:* from center (165), ArrowLeft moves to 35 and a second press locks (stays 35); from center, ArrowRight moves to 295 and a second press locks (stays 295).
+   - *Why:* These are boundary-value tests — pressing *again at the edge* is exactly the case that separates a working clamp from a broken one, previewing the QA rigor of Session 12.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Test the boundary limits. Refine the prompt to also reject negative values or any out-of-range override, so no input can push the car off the track."
+   - *Why:* Extends guarding from "the expected keys" to "any bad input," the defensive mindset behind the session's Ethics Discussion on safety clamps in aircraft autopilots.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows both lane guards (`carX > 35` and `carX < 295`) and demonstrates that pressing a direction key at the edge leaves the car pinned rather than driving off the track.
 
 ---
 
@@ -569,24 +767,87 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * *"How do we make the obstacle warp back to the top of the track when it reaches the bottom?"* (Check `if (obstacleY > 600) { obstacleY = -100; }`).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 7.1 (Obstacle Scroll Loop) Solution**:
-  ```javascript
-  for (let i = 0; i < 5; i++) {
-    obstacleY += obstacleSpeed;
-    if (obstacleY > 600) {
-      obstacleY = -100;
-      obstacleX = Math.floor(Math.random() * 3) * 130; // Random lane: 0, 130, or 260
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note. **Note:** E7.4 (the infinite-loop bug) is deliberately *not* runnable — executing a missing-increment loop live would hang the preview instead of teaching, so the student fixes it as static code.
+
+* **Exercise 7.1: [Plan & Design] Marker Spacing Plan** — Plan how many markers and how far apart.
+  * *Editor expects:* Plain-language plan of the count and spacing (5 and 120).
+  * *Model answer:* `5 markers, spaced 120 apart` (form `count = 5 | spacing = 120` also accepted)
+  * *Why:* A loop is defined by two numbers — how many times it runs (5) and the step per pass (120px). Fixing those before coding is what turns "repeat this" into a concrete, terminating loop.
+* **Exercise 7.2: [Write AI Prompt] Requesting the Loop** — Prompt for the counting loop.
+  * *Editor expects:* Plain-English prompt. Validator needs `for loop`, `i * 120`, and `5`.
+  * *Model answer:* `Write a for loop that runs 5 times, computing markerY as i * 120 each iteration`
+  * *Why:* The counter `i` (0,1,2,3,4) fed into `i * 120` is what spaces the markers automatically. Naming the formula in the prompt is how the AI produces evenly-spaced output instead of five identical elements.
+* **Exercise 7.3: [Review & Explain] Loop Anatomy** — Which part of the header advances `i`?
+  * *Editor expects:* The update expression.
+  * *Model answer:* `i++`
+  * *Why:* A `for` header has three parts — init (`let i = 0`), test (`i < 5`), and step (`i++`). Identifying the step is essential because forgetting it is the single most common cause of a frozen browser (E7.4).
+* **Exercise 7.4: [Test & Break] Browser Freezes** — The `i++` was deleted, causing an infinite loop. Restore it.
+  * *Editor expects:* Corrected JavaScript (add `i++`).
+  * *Model answer:* `for (let i = 0; i < 5; i++) { let markerY = i * 120; }`
+  * *Why:* With no `i++`, `i` stays 0, `i < 5` is always true, and the loop never ends — locking the whole page. Experiencing (safely, as static code) that a missing step crashes the tab makes the terminating condition unforgettable.
+* **Exercise 7.5: [Iterate & Improve] Logging Each Marker** — Log the computed position each pass.
+  * *Editor expects:* JavaScript. Validator needs `console.log` and `markerY`.
+  * *Model answer:* `console.log("Highway Marker position: " + markerY);`
+  * *Why:* One log line per pass is the quickest proof the loop runs exactly 5 times and computes 0/120/240/360/480 — turning an invisible loop into observable behavior.
+* **Exercise 7.6: [Plan & Design] Rendering the Markers** — Plan how a computed number becomes a visible element.
+  * *Editor expects:* Plain-language plan of create → style → place (no code required; the arrow form is still accepted).
+  * *Model answer:* `for each marker, create a box, give it the marker-dash style, and place it at its top position` (form `create div > class marker-dash > style.top = markerY` also accepted)
+  * *Why:* Computing `markerY` is only half the job. The plan must also spell out *create → style → attach*, the three steps that take a number and turn it into something on screen.
+* **Exercise 7.7: [Write AI Prompt] Requesting the DOM Append** — Prompt to build and attach each marker.
+  * *Editor expects:* Plain-English prompt. Validator needs `marker-dash`, `appendChild`, and `#game-track`.
+  * *Model answer:* `Create a div with class marker-dash, set its top to markerY, and appendChild it to #game-track inside the loop`
+  * *Why:* `createElement` builds the div in memory; `appendChild` is what actually inserts it into `#game-track` so the browser draws it. Omitting the append is a classic "my element exists but I can't see it" bug.
+* **Exercise 7.8: [Review & Explain] Why Not Hardcode 5 Divs?** — How many lines change to go from 5 markers to 20, by hand?
+  * *Editor expects:* A number (15 or more).
+  * *Model answer:* `20`
+  * *Why:* By hand, 20 markers means 20 written-out divs; with a loop, you change one number. Feeling that difference is the entire argument for loops — code that scales without more code.
+* **Exercise 7.9: [Test & Break] The Off-Track Marker** — `markerY = i * 12` bunches the markers. Fix the formula.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `let markerY = i * 120;`
+  * *Why:* `i * 12` yields 0/12/24/36/48 — all crammed in the top 48px; `i * 120` spreads them down the full track. One missing digit collapses the layout, a reminder to read the AI's numbers, not just its structure.
+* **Exercise 7.10: [Iterate & Improve] The Complete Marker Loop** — Assemble the full generate-and-render loop.
+  * *Editor expects:* Full JavaScript. Validator needs `for(...i<5...i++)`, `i * 120`, `marker-dash`, and `appendChild`.
+  * *Model answer:*
+    ```javascript
+    const track = document.getElementById("game-track");
+    for (let i = 0; i < 5; i++) {
+      let markerY = i * 120;
+      const dash = document.createElement("div");
+      dash.className = "marker-dash";
+      dash.style.top = markerY + "px";
+      track.appendChild(dash);
     }
-  }
-  ```
-- **Exercise 7.2 (Warping Obstacle coordinates) Solution**:
-  ```javascript
-  function resetObstacle() {
-    obstacleY = -100;
-    obstacleX = Math.floor(Math.random() * 3) * 130; // Snap to lane: 0, 130, or 260
-  }
-  ```
-* **Homework Evaluation Checklist**: Verify student writes a loop updating coordinate lists and warping off-screen elements.
+    ```
+  * *Why:* Loop, compute, build, attach — the complete generate-and-render pattern the game reuses every time it spawns many elements at once. This is the session's milestone competency.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 6: Obstacle Loop Generation") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "Other cars (obstacles) now appear on the road at the top and are visible on screen alongside the player's car, scattered across the lanes."
+   - *System Parts & Information (expected):* "Parts needed: several repeating lane-divider dashes down the highway. Information to track: how many dashes to create, and the vertical spacing between them."
+   - *Logic Flow / Pseudocode (expected):* "FOR i from 0 to 4: calculate markerY = i * 120 → create a div with class 'lane-divider-dash' → set top = markerY, left = center → append the dash to '#game-track'."
+   - *Why:* The design introduces the first *repeated* element. Rather than "what does one marker look like," the plan names the *count* and *spacing* — the two inputs a loop needs — so the AI generates the whole series programmatically instead of the student pasting divs by hand.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Write a prompt to generate repeating highway divider lines using a JavaScript 'for' loop. The loop should run 5 times, calculating a vertical offset 'i * 120' on each iteration, creating a div element with class 'lane-divider-dash' styled absolute, and nesting it inside '#game-track'."
+   - *Why:* The milestone prompt names the loop count, the spacing formula, the class, and the parent — a complete spec for programmatic generation, the technique that replaces hand-written repetition.
+
+3. **Review & Explain**
+   - *Expected checklist:* the loop has a clear terminating condition and increments its index (no infinite loop); each element's coordinate is computed from the loop index (`i * 120`), not hardcoded.
+   - *Expected Socratic answer* — *"What happens to the browser call stack if the loop increment block is deleted? Why does the screen freeze?"* → Without the increment, the test condition never becomes false, so the loop body repeats forever on the single JavaScript thread — the browser can never reach the render step, so the tab freezes.
+
+4. **Test & Break**
+   - *Expected test checklist:* the loop runs exactly 5 times and appends 5 elements; the markers are spaced 120px apart (0, 120, 240, 360, 480); all 5 divider elements are visible in the DOM tree.
+   - *Why:* Counting the generated elements and checking their spacing is how the student proves the loop's *count* and *math* both landed — the two things a generation loop can get wrong.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Audit the loop bounds and check CPU load. If a loop is sluggish or spawns too many elements, tighten the count or optimize the position formula."
+   - *Why:* Introduces **loop cost** — every extra iteration is work — which connects to the session's Ethics Discussion on runaway/spam loops in network routers.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows a bounded `for` loop that computes each element's position from the loop index and appends the generated elements to `#game-track`, with no infinite-loop risk.
 
 ---
 
@@ -609,27 +870,94 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * *"If a variable is declared inside a function, can we read its value on the global script?"* (No, it is locally scoped and inaccessible outside).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 8.1 (Reset game state function) Solution**:
-  ```javascript
-  function resetGame() {
-    carX = 130;
-    obstacleY = -100;
-    score = 0;
-    gameActive = true;
-  }
-  ```
-- **Exercise 8.2 (Updating car coordinates function) Solution**:
-  ```javascript
-  function steerPlayer(direction) {
-    if (direction === "left") {
-      carX -= 130;
-    } else if (direction === "right") {
-      carX += 130;
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note.
+
+* **Exercise 8.1: [Plan & Design] Decomposing the Steering Script** — Plan the split into single-purpose functions.
+  * *Editor expects:* Plain-language naming of the three single-purpose pieces (function names not required; the technical form is still accepted).
+  * *Model answer:* `one piece to update the car's position, one to move left, one to move right` (form `updatePlayerPosition() | moveLeft() | moveRight()` also accepted)
+  * *Why:* One block that does everything is hard to test or fix. Naming the three jobs — render, move-left, move-right — before coding is the decomposition skill: decide *the pieces* first, implement them second.
+* **Exercise 8.2: [Write AI Prompt] Requesting the Render Function** — Prompt for the shared renderer.
+  * *Editor expects:* Plain-English prompt. Validator needs `function`, `updatePlayerPosition`, and `style.left`.
+  * *Model answer:* `Write a function updatePlayerPosition() that sets #player-car style.left to carX + "px"`
+  * *Why:* `updatePlayerPosition()` becomes the single place that draws the car. Building it first means both movement functions can *reuse* it rather than each repeating the `style.left` write — the essence of "don't repeat yourself."
+* **Exercise 8.3: [Review & Explain] Function Signatures** — How many parameters does `updatePlayerPosition()` take?
+  * *Editor expects:* A number.
+  * *Model answer:* `0`
+  * *Why:* The empty `()` is the parameter list — this function takes no inputs because it reads the shared `carX` directly. Reading a signature to see what a function needs (and doesn't) is how you understand code you didn't write.
+* **Exercise 8.4: [Test & Break] Scope Access Violation** — `carX` was declared *inside* `moveLeft()`; the renderer logs `undefined`. Fix the scope.
+  * *Editor expects:* Corrected JavaScript (declare `carX` outside both functions).
+  * *Model answer:* `let carX = 165;` declared *before* both `moveLeft()` and `updatePlayerPosition()`.
+  * *Why:* A variable declared inside a function is local — invisible outside it. For two functions to share `carX`, it must live in an outer scope both can see. This is the single most important idea about scope, learned by hitting the bug directly.
+* **Exercise 8.5: [Iterate & Improve] Wiring moveLeft() to the Handler** — Make the handler call `moveLeft()` instead of inline logic.
+  * *Editor expects:* JavaScript. Validator needs `ArrowLeft` and `moveLeft()`.
+  * *Model answer:* `if (event.key === "ArrowLeft") { moveLeft(); }`
+  * *Why:* Once `moveLeft()` owns the boundary logic, the handler shrinks to a single call. The behavior is identical, but the logic now lives in one named place — easier to find, fix, and reuse.
+* **Exercise 8.6: [Plan & Design] The moveRight() Signature** — Plan the mirror function.
+  * *Editor expects:* Plain-language plan of the mirror function (no code required; the pseudocode form is still accepted).
+  * *Model answer:* `if the car isn't past the right limit (295), move it right, then redraw its position` (form `moveRight() -> IF carX < 295 THEN carX += 130, then updatePlayerPosition()` also accepted)
+  * *Why:* `moveRight()` mirrors `moveLeft()`: right-boundary guard, `+= 130`, then the shared redraw. Planning it as a mirror reinforces that well-decomposed functions share a common shape.
+* **Exercise 8.7: [Write AI Prompt] Requesting moveLeft() and moveRight()** — Prompt for both movement functions.
+  * *Editor expects:* Plain-English prompt. Validator needs `moveLeft`, `moveRight`, and `updatePlayerPosition`.
+  * *Model answer:* `Write moveLeft() and moveRight(), each clamping carX to its boundary and then calling updatePlayerPosition()`
+  * *Why:* Asking for both to *call the shared renderer* is the key instruction — it's what keeps rendering in one place instead of duplicated inside each mover.
+* **Exercise 8.8: [Review & Explain] Why Modularize?** — With a shared clamp helper, how many function bodies need fixing for a boundary bug?
+  * *Editor expects:* A number.
+  * *Model answer:* `1`
+  * *Why:* Shared logic means one fix, not one-per-copy. Quantifying the payoff (1 instead of 2+) makes "modularize" a concrete engineering argument, not a style preference.
+* **Exercise 8.9: [Test & Break] The Duplicate Render Call** — `updatePlayerPosition()` is called twice. Remove the duplicate.
+  * *Editor expects:* JavaScript with exactly one `updatePlayerPosition()` call.
+  * *Model answer:* `moveLeft()` with a single `updatePlayerPosition();` at the end.
+  * *Why:* Redrawing the same position twice is invisible now but doubles the work every keypress — the kind of quiet waste that matters once the 60-fps game loop arrives in Session 9.
+* **Exercise 8.10: [Iterate & Improve] The Complete Modular Controller** — Assemble the full modular controller.
+  * *Editor expects:* Full JavaScript. Validator needs `updatePlayerPosition`, `moveLeft`, `moveRight`, `addEventListener`, and `keydown`.
+  * *Model answer:*
+    ```javascript
+    function updatePlayerPosition() {
+      document.getElementById("player-car").style.left = carX + "px";
     }
-    clampPlayer(); // Call helper function
-  }
-  ```
-* **Homework Evaluation Checklist**: Verify student defines helper functions with inputs parameters and local variable declarations.
+    function moveLeft() {
+      if (carX > 35) { carX -= 130; }
+      updatePlayerPosition();
+    }
+    function moveRight() {
+      if (carX < 295) { carX += 130; }
+      updatePlayerPosition();
+    }
+    window.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowLeft") { moveLeft(); }
+      else if (event.key === "ArrowRight") { moveRight(); }
+    });
+    ```
+  * *Why:* Renderer, two movers, and a thin handler — the same steering behavior as Session 6, now organized into named, reusable pieces the later sessions extend without touching one tangled block.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 7: Modular Control Functions") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "Screen looks identical to Session 7 — this session is a behind-the-scenes cleanup, organizing the movement code into reusable pieces without changing what the player sees."
+   - *System Parts & Information (expected):* "Parts needed: none new on screen — this session reorganizes existing behavior into named, reusable pieces (move left, move right, update position). Information to track: which pieces of information each reusable piece is allowed to see and change."
+   - *Logic Flow / Pseudocode (expected):* "Key pressed → call moveLeft() → update carX state → call updatePlayerPosition() → update DOM style offsets."
+   - *Why:* This is a *refactoring* milestone — the honest Visual Concept says the screen is unchanged. The design work is about **structure and scope**: naming the reusable functions and deciding what each is allowed to see. It previews the idea that good code is organized for the *next* developer, not just the running browser.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Write a prompt instructing to refactor the steering script. Modularize into functions: 'updatePlayerPosition()' to style '#player-car' left coordinate; 'moveLeft()' to clamp 'carX' and call update; and 'moveRight()' to increment, clamp, and call update. Ensure key events invoke these modular functions."
+   - *Why:* A refactor prompt is unusual — it asks the AI to *reshape existing working code* without changing behavior. Naming each function and its single responsibility is what keeps the refactor disciplined rather than a rewrite.
+
+3. **Review & Explain**
+   - *Expected checklist:* functions have clean, clearly-named signatures; UI-rendering (the `style.left` write) is decoupled from the movement/clamp logic.
+   - *Expected Socratic answer* — *"What happens if you try to access a variable declared inside `moveLeft()` from the main update function?"* → You can't — a variable declared inside a function is local to it, so the outer function sees `undefined` (or a ReferenceError). Shared state must live in an enclosing scope both functions can reach.
+
+4. **Test & Break**
+   - *Expected test checklist:* `updatePlayerPosition`, `moveLeft`, and `moveRight` are all declared; pressing keys runs the correct function and steering behaves *identically* to before the refactor; no local variable leaks into global `window` scope.
+   - *Why:* The defining test of a refactor is "behavior unchanged" — the student proves the reorganized code does exactly what the old code did, with no new globals leaked.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Confirm the refactor changed structure only, not behavior — re-run every steering test. Keep shared state minimal and local variables truly local, so no function can accidentally corrupt another's data."
+   - *Why:* Reinforces that refactoring is measured by *sameness of behavior plus better structure*, and ties scope-discipline to the session's Ethics Discussion on isolated, tamper-resistant code.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows the steering logic split into `updatePlayerPosition()`, `moveLeft()`, and `moveRight()`, with `carX` declared in a shared scope and the keydown handler reduced to simple function calls.
 
 ---
 
@@ -652,27 +980,92 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * *"If gameActive becomes false, how do we halt our animation loop?"* (By wrapping requestAnimationFrame calls in a conditional `if (gameActive)` check).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 9.1 (Main loop assembly) Solution**:
-  ```javascript
-  function gameLoop() {
-    if (gameActive) {
-      updateObstacles();
-      verifyCollisions();
-      drawArena();
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note.
+
+* **Exercise 9.1: [Plan & Design] The Game Loop Lifecycle** — Plan the repeating frame cycle.
+  * *Editor expects:* Plain-language description of the repeating frame cycle (no `requestAnimationFrame` syntax required; the technical form is still accepted).
+  * *Model answer:* `each frame, update the state, redraw, then schedule the next frame` (form `gameLoop() -> update -> render -> requestAnimationFrame(gameLoop)` also accepted)
+  * *Why:* Every game is this one cycle: update → render → schedule the next frame. The student can describe that rhythm in plain words before meeting `requestAnimationFrame` (the session's brand-new API); naming the loop's *shape* first is the design insight, and the API name is earned at the prompt/review steps.
+* **Exercise 9.2: [Write AI Prompt] Requesting the Recursive Loop** — Prompt for the self-scheduling loop.
+  * *Editor expects:* Plain-English prompt. Validator needs `function`, `gameLoop`, and `requestAnimationFrame`.
+  * *Model answer:* `Write a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop)`
+  * *Why:* `requestAnimationFrame(gameLoop)` at the end is what makes the function loop — it books itself to run again before the next repaint. Specifying that call is the difference between a one-shot update and continuous animation.
+* **Exercise 9.3: [Review & Explain] Why Call It Again?** — What does the final `requestAnimationFrame(gameLoop)` do?
+  * *Editor expects:* `SCHEDULES_NEXT_FRAME` or `STOPS_THE_LOOP`.
+  * *Model answer:* `SCHEDULES_NEXT_FRAME`
+  * *Why:* It reschedules `gameLoop` to run again on the next screen repaint — the mechanism behind smooth 60-fps motion. Recognizing that a function can queue *itself* is the mental leap of this session.
+* **Exercise 9.4: [Test & Break] The Unstoppable Speed Bug** — The `gameActive` check was removed; the loop never stops. Add the guard.
+  * *Editor expects:* Corrected JavaScript (add an early return).
+  * *Model answer:* `function gameLoop() { if (!gameActive) { return; } moveObstacles(); requestAnimationFrame(gameLoop); }`
+  * *Why:* Without an early return when `gameActive` is false, nothing can ever halt the loop — Game Over becomes impossible. The guard clause at the top is what gives the game an off switch.
+* **Exercise 9.5: [Iterate & Improve] Confirming the Gate Works** — Log a message right before the halt.
+  * *Editor expects:* JavaScript. Validator needs `console.log` and `halted`.
+  * *Model answer:* `console.log("Loop halted");` placed before the `return`.
+  * *Why:* A log before the return turns "the loop stopped" from an invisible event into a visible, verifiable one — proof the gate actually fired.
+* **Exercise 9.6: [Plan & Design] Obstacle Movement & Reset** — Plan the scroll-and-wrap behavior.
+  * *Editor expects:* Plain-language plan of the scroll-and-wrap (no code required; the pseudocode form is still accepted).
+  * *Model answer:* `the obstacle moves down; when it passes the bottom (500), it wraps to the top (-100) and the score goes up` (pseudocode `obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10` also accepted)
+  * *Why:* Scrolling down (`+= speed`) plus wrapping to the top (`-100`) plus scoring the pass — the three parts of endless traffic. Planning them together ensures the reset and the score bump stay linked.
+* **Exercise 9.7: [Write AI Prompt] Requesting moveObstacles()** — Prompt for the movement/reset function.
+  * *Editor expects:* Plain-English prompt. Validator needs `moveObstacles`, `obstacleY`, `500`, and `score`.
+  * *Model answer:* `Write moveObstacles() that adds speed to obstacleY; once obstacleY exceeds 500, reset it to -100 and add 10 to score`
+  * *Why:* Naming the exact bottom edge (500) and respawn point (-100) pins the wrap-around to the track's real dimensions, so the AI can't invent its own boundaries.
+* **Exercise 9.8: [Review & Explain] Tracing the Update Math** — With `obstacleY = 490, speed = 5`, what is `obstacleY` after `obstacleY += speed`?
+  * *Editor expects:* A number.
+  * *Model answer:* `495`
+  * *Why:* `490 + 5 = 495`. Tracing a single frame by hand is how you confirm the motion math *before* trusting a loop that runs it 60 times a second.
+* **Exercise 9.9: [Test & Break] The Frozen Scoreboard** — The reset resets position but never scores. Add the increment.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `if (obstacleY > 500) { obstacleY = -100; score += 10; }`
+  * *Why:* Wrapping the obstacle is only half the event — passing it is what earns points. The `score += 10` must live *inside* the same reset block, tying the two halves of "a car went by" together.
+* **Exercise 9.10: [Iterate & Improve] The Complete Animation Engine** — Assemble the full loop plus mover.
+  * *Editor expects:* Full JavaScript. Validator needs `gameLoop`, `gameActive`, `requestAnimationFrame`, `moveObstacles`, `obstacleY`, and `score`.
+  * *Model answer:*
+    ```javascript
+    function moveObstacles() {
+      obstacleY += speed;
+      if (obstacleY > 500) {
+        obstacleY = -100;
+        score += 10;
+      }
+      document.getElementById("obstacle").style.top = obstacleY + "px";
+    }
+    function gameLoop() {
+      if (!gameActive) { return; }
+      moveObstacles();
       requestAnimationFrame(gameLoop);
     }
-  }
-  ```
-- **Exercise 9.2 (Difficulty Increments Interval) Solution**:
-  ```javascript
-  setInterval(function() {
-    if (gameActive) {
-      obstacleSpeed += 1;
-      score += 10;
-    }
-  }, 2000); // Increase difficulty every 2 seconds
-  ```
-* **Homework Evaluation Checklist**: Verify student logs continuous coordinate updates inside animation functions loops.
+    ```
+  * *Why:* A gated loop driving a movement function every frame — the engine that makes the road scroll, the score climb, and the game stoppable. This is the session's milestone competency.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 8: Timer Loops & Animations") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "The obstacle cars now visibly scroll DOWN the road continuously, like the player is driving forward past them, disappearing off the bottom and reappearing at the top — a real animated highway instead of a still picture."
+   - *System Parts & Information (expected):* "Parts needed: a continuously repeating game loop. Information to track: each obstacle's vertical position, how fast it moves, and the score increase each time one resets."
+   - *Logic Flow / Pseudocode (expected):* "gameLoop runs → IF gameActive: (1) obstacleY += speed, (2) IF obstacleY > trackHeight: reset obstacleY = -100 and increase score, (3) style obstacle top = obstacleY, (4) requestAnimationFrame(gameLoop)."
+   - *Why:* This is the milestone where the game finally *moves on its own*. The Visual Concept captures the felt effect (driving forward past traffic); the plan names the loop and the per-frame state it tracks. The Logic Flow is a genuine frame-by-frame recipe — the first design that describes *time*, not just layout.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Draft a prompt to build the animation engine. Write a 'gameLoop()' function that runs recursively using 'requestAnimationFrame'. Inside, update the vertical position 'obstacleY' of '#obstacle-car' by adding 'speed' on each tick. If the obstacle moves past the bottom (500px), reset it to the top (-100px) and increase the score by 10."
+   - *Why:* The milestone prompt specifies the loop mechanism (`requestAnimationFrame`), the per-frame update (`obstacleY += speed`), and the exact wrap/score rule — a complete spec for continuous, self-scheduling animation.
+
+3. **Review & Explain**
+   - *Expected checklist:* the loop checks `gameActive` before requesting the next frame; the obstacle resets to the top correctly after passing the bottom.
+   - *Expected Socratic answer* — *"Why is `requestAnimationFrame` preferred over `setInterval` for animation?"* → `requestAnimationFrame` syncs to the browser's actual repaint cycle (~60fps) and pauses on inactive tabs, so motion is smooth and efficient; `setInterval` fires on a fixed timer regardless of when the screen can actually redraw, causing stutter and wasted work.
+
+4. **Test & Break**
+   - *Expected test checklist:* `gameLoop()` scrolls the obstacle down continuously; it resets to `-100` at the bottom; the score increments on each reset; setting `gameActive = false` halts the loop instantly.
+   - *Why:* The "set `gameActive = false` and confirm it stops" test is the proof that the loop is *controllable* — the single most important property of a game loop.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Examine frame-rate stability. Refine the prompt or reset logic if wrapping obstacles overlap or glitch, so motion stays smooth at speed."
+   - *Why:* Introduces **performance/timing quality** as an iteration criterion, connecting to the session's Ethics Discussion on refresh-rate limits in assistive UIs.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows a `requestAnimationFrame`-driven `gameLoop()` gated on `gameActive`, with obstacles that scroll, wrap to the top, and increment the score on each pass.
 
 ---
 
@@ -695,29 +1088,89 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 * *"Why must all 4 coordinate checks be true to register a collision?"* (If even one check is false, the boxes do not overlap in that axis, meaning they are separated).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 10.1 (Collision Math check) Solution**:
-  ```javascript
-  function checkCollision(rect1, rect2) {
-    return (
-      rect1.x < rect2.x + rect2.width &&
-      rect1.x + rect1.width > rect2.x &&
-      rect1.y < rect2.y + rect2.height &&
-      rect1.y + rect1.height > rect2.y
-    );
-  }
-  ```
-- **Exercise 10.2 (Integrating Crash State) Solution**:
-  ```javascript
-  function verifyCollisions() {
-    let playerRect = { x: carX, y: 500, width: 60, height: 100 };
-    let obsRect = { x: obstacleX, y: obstacleY, width: 60, height: 100 };
-    if (checkCollision(playerRect, obsRect)) {
-      gameActive = false;
-      alert("Crashed! Final Score: " + score);
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note. This session's core skill is **auditing AI-generated math** — several exercises hand the student a subtly-wrong AABB check to find and fix.
+
+* **Exercise 10.1: [Plan & Design] The Overlap Condition** — Plan the four-part overlap test.
+  * *Editor expects:* Plain-language description of the overlap test naming both axes (the full comparison form is still accepted).
+  * *Model answer:* `they overlap only if they overlap in both directions — right vs left, and top vs bottom` (full form `player.right > obstacle.left AND player.left < obstacle.right AND player.bottom > obstacle.top AND player.top < obstacle.bottom` also accepted)
+  * *Why:* Two boxes overlap only if they overlap on *both* axes at once — four edge comparisons joined by AND. Writing all four before coding is what stops students from checking just one axis and wondering why cars clip through.
+* **Exercise 10.2: [Write AI Prompt] Requesting checkCollision()** — Prompt for the detection function.
+  * *Editor expects:* Plain-English prompt. Validator needs `checkCollision`, `width`, and `height`.
+  * *Model answer:* `Write checkCollision(rect1, rect2) that returns true if the two rectangles' x/y/width/height bounds overlap`
+  * *Why:* Naming `width` and `height` is what makes the function size-aware. A prompt that only mentions x/y would produce a point check that misses real, area-based collisions.
+* **Exercise 10.3: [Review & Explain] Why Dimensions Matter** — Would `player.x === obstacle.x` ever catch a real overlap?
+  * *Editor expects:* `YES` or `NO`.
+  * *Model answer:* `NO`
+  * *Why:* Two moving cars almost never share the exact same x to the pixel, so equality catches essentially nothing. Only comparing box *edges* detects the overlaps that actually happen — the whole reason AABB uses dimensions.
+* **Exercise 10.4: [Test & Break] The Ghost Car Bug** — One comparison operator was flipped; cars pass through. Fix it.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `rect1.x + rect1.width > rect2.x` (the second condition uses `>`, not `<`).
+  * *Why:* All four comparisons must point the right way — flip one and the combined AND can never be true, so collisions silently never fire. This is the classic "audit the AI's math" bug the session is built around.
+* **Exercise 10.5: [Iterate & Improve] Wiring Collision into the Loop** — Make a hit actually stop the game.
+  * *Editor expects:* JavaScript. Validator needs `checkCollision`, `gameActive = false`, and `console.log`.
+  * *Model answer:* `if (checkCollision(player, obstacle)) { gameActive = false; console.log("Collision detected!"); }`
+  * *Why:* Detection is useless without a consequence. Calling the check inside the loop and setting `gameActive = false` on a hit is what connects "they overlapped" to "the game ends" (via the Session 9 gate).
+* **Exercise 10.6: [Plan & Design] Bounding Box Dimensions** — Plan the exact box sizes.
+  * *Editor expects:* Plain-language plan of the two box sizes (30/50 and 25/40).
+  * *Model answer:* `player is 30 wide and 50 tall; obstacle is 25 wide and 40 tall` (form `player width=30 height=50 | obstacle width=25 height=40` also accepted)
+  * *Why:* The edge math (`x + width`, `y + height`) needs real dimensions. Pinning them down means the collision boxes match what the player actually sees on screen.
+* **Exercise 10.7: [Write AI Prompt] Building the Rect Objects** — Prompt to package the two rectangles.
+  * *Editor expects:* Plain-English prompt. Validator needs `carX`, `obstacleY`, `width`, and `height`.
+  * *Model answer:* `Build a playerRect from carX and a fixed y, and an obsRect from obstacleY, each with the correct width and height`
+  * *Why:* Each rect bundles the live position (`carX`, `obstacleY`) with fixed sizes — the four numbers `checkCollision()` reads per car. Building them from the *live* variables is what keeps the boxes in sync with the moving cars.
+* **Exercise 10.8: [Review & Explain] The Exact-Touch Edge Case** — Do edges that touch exactly count as a hit under `>`?
+  * *Editor expects:* `YES` or `NO`.
+  * *Model answer:* `NO`
+  * *Why:* Touching is not overlapping — a strict `>` requires the value to be *greater*, so edges meeting at the same coordinate don't register. Whether that's right depends on how forgiving you want the crash to feel, a real game-design call.
+* **Exercise 10.9: [Test & Break] The Axis Swap Bug** — The first condition compares `rect1.y` to a horizontal bound. Fix the axis.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `rect1.x < rect2.x + rect2.width` (the first condition uses `rect1.x`, not `rect1.y`).
+  * *Why:* Comparing an x against a y measures horizontal against vertical — meaningless geometry. Keeping x-with-x and y-with-y is the discipline that makes the four conditions describe a real rectangle.
+* **Exercise 10.10: [Iterate & Improve] The Complete Collision System** — Assemble detection plus loop wiring.
+  * *Editor expects:* Full JavaScript. Validator needs `checkCollision`, `gameActive = false`, `width`, and `height`.
+  * *Model answer:*
+    ```javascript
+    function checkCollision(rect1, rect2) {
+      return (
+        rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+      );
     }
-  }
-  ```
-* **Homework Evaluation Checklist**: Student writes a validation function returning Boolean status based on bounding coordinates.
+    // inside gameLoop():
+    if (checkCollision(player, obstacle)) { gameActive = false; }
+    ```
+  * *Why:* A correct 4-condition check wired to end the game on a hit — the sensor that finally gives the racing game real stakes. This is the session's milestone competency.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 9: Collision Detection Overlap Math") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "When the player's car touches an obstacle car, the screen should visibly react — the game freezes and shows that a crash happened."
+   - *System Parts & Information (expected):* "Parts needed: a collision check that runs every loop. Information to track: the edges (left/right/top/bottom) and size of the player's car and each obstacle."
+   - *Logic Flow / Pseudocode (expected):* "IF player.right > obstacle.left AND player.left < obstacle.right AND player.bottom > obstacle.top AND player.top < obstacle.bottom: collision detected → set gameActive = false → trigger Game Over."
+   - *Why:* The design is a pure *rule* again, this time geometric. The plan names the four-edge condition and the box data it needs. Writing the AABB logic in plain math first is exactly what lets the student later *audit* whether the AI's generated version is correct.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Write a prompt asking to code a collision detection sensor: a function checking if the bounding boxes of '#player-car' and '#obstacle-car' overlap. If they intersect, set 'gameActive' to false to stop the animation loop, and call a 'gameOver()' function."
+   - *Why:* The milestone prompt asks for both the detection *and* the consequence (halt the loop, trigger game over) — a complete behavior, not just a true/false function floating unused.
+
+3. **Review & Explain**
+   - *Expected checklist:* the function matches the AABB overlap formula (all four comparisons, correct operators/axes); it triggers exactly when the boxes overlap, not before or after.
+   - *Expected Socratic answer* — *"If we only checked whether the center coordinates were identical, why would cars drive through each other?"* → Two independently-moving boxes almost never land on the *exact* same center pixel, so equality is essentially always false — the cars overlap visually but the check never fires. Box *dimensions* are what let overlap be detected across a whole area instead of a single point.
+
+4. **Test & Break**
+   - *Expected test checklist:* driving the player into an obstacle registers a collision immediately on overlap; `gameActive` flips to false and motion halts; the console logs the overlap coordinates.
+   - *Why:* Collision code is notoriously easy to get *almost* right — testing that it fires *exactly* on overlap (not one pixel early or late) is the core QA skill this session builds.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Audit collision accuracy. If crashes trigger too early or too late, adjust the box width/height offsets. Add boundary-value test objects to confirm the exact-touch edge case behaves as intended."
+   - *Why:* Frames collision *tuning* (hitbox generosity) as an iteration lever — the same "audit the AI's math against test cases" mindset that anchors the session's Bug Hunt assessment.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows a four-condition AABB `checkCollision()` with correct operators and axes, wired into the game loop to set `gameActive = false` on a real overlap.
 
 ---
 
@@ -737,25 +1190,96 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 
 ### 2. Socratic Prompting
 * *"Why does the scoreboard show score: -5? What guard check should we add to prevent values from slipping below 0?"* (Check `if (score < 0) { score = 0; }` before updating scoreboard).
-* *"How does the DOM represent a bridge between code variables and visual HTML elements?"* (JavaScript queries elements by ID and mutates properties like `.innerText`).
+* *"How does the DOM represent a bridge between code variables and visual HTML elements?"* (JavaScript queries elements by ID and mutates properties like `.textContent` — the safe property this session teaches for writing the score).
 
 ### 3. Digital Sandbox Exercises & Solutions
-* **Exercise 11.1 (Score updates DOM) Solution**:
-  ```javascript
-  function updateScoreboard() {
-    let scoreVal = document.getElementById("score-val");
-    if (score < 0) { score = 0; } // defensive check
-    scoreVal.innerText = score;
-  }
-  ```
-- **Exercise 11.2 (Show game over display) Solution**:
-  ```javascript
-  function triggerGameOverScreen() {
-    let screen = document.getElementById("game-over-screen");
-    screen.style.display = "block";
-  }
-  ```
-* **Homework Evaluation Checklist**: Check selectors syntax, and ensure validation checks block negative integers.
+
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note. **Key detail:** the spacebar's real `event.key` value is a single space `" "`, *not* the word `"Space"` — the restart handler must check `event.key === " "`.
+
+* **Exercise 11.1: [Plan & Design] The DOM Update Pipeline** — Plan how each state change reaches the screen.
+  * *Editor expects:* Plain-language mapping of state changes to on-screen results (no `textContent`/id syntax required; the technical form is still accepted).
+  * *Model answer:* `when the score changes, show it on the scoreboard; on a crash, show the restart panel` (form `score -> #score-val.textContent | crash -> remove hidden from #restart-panel` also accepted)
+  * *Why:* A variable is invisible until pushed into the page. The student maps each state change (score, crash) to *what appears on screen* in plain words — the deliberate design of the pipeline — before meeting `textContent` and the exact element ids, which are earned at the prompt/review steps.
+* **Exercise 11.2: [Write AI Prompt] Requesting the Scoreboard Updater** — Prompt for the score-sync function.
+  * *Editor expects:* Plain-English prompt. Validator needs `function`, `textContent`, and `score-val`.
+  * *Model answer:* `Write updateScoreboard() that sets the textContent of #score-val to match the score variable`
+  * *Why:* `textContent` is the text inside an element; setting `#score-val`'s `textContent` to `score` is the single line that makes the on-screen number track the in-memory one.
+* **Exercise 11.3: [Review & Explain] textContent vs. innerHTML** — What risk does `innerHTML` introduce?
+  * *Editor expects:* `SCRIPT_INJECTION` or `SLOWER_RENDERING`.
+  * *Model answer:* `SCRIPT_INJECTION`
+  * *Why:* `innerHTML` parses its input as HTML, so untrusted data could inject and run a script; `textContent` treats input as plain text and can't. Choosing the safe property by default is a first taste of secure front-end coding.
+* **Exercise 11.4: [Test & Break] The Negative Score Leak** — A penalty shows `score: -5`. Clamp it.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `if (score < 0) { score = 0; }` placed before the `textContent` write.
+  * *Why:* A negative score reads as broken. A defensive clamp *before* the DOM write keeps the display sensible no matter what the scoring math does — the "never trust the value, guard the output" habit.
+* **Exercise 11.5: [Iterate & Improve] Revealing the Restart Panel** — Show the game-over overlay.
+  * *Editor expects:* JavaScript. Validator needs `restart-panel`, `remove`, and `hidden`.
+  * *Model answer:* `function triggerGameOverScreen() { document.getElementById("restart-panel").classList.remove("hidden"); }`
+  * *Why:* The panel already exists in the HTML, hidden by a `hidden` class. Removing the class reveals it — showing/hiding by *toggling a class* rather than building or destroying elements, the standard DOM pattern.
+* **Exercise 11.6: [Plan & Design] The Restart Flow** — Plan the reset checklist.
+  * *Editor expects:* Plain-language restart checklist (no `gameActive` syntax required; the technical form is still accepted).
+  * *Model answer:* `press Space → reset the score to 0, reset the car, hide the panel, and start the game running again` (form `press Space -> reset score -> reset carX -> hide restart-panel -> gameActive = true` also accepted)
+  * *Why:* Restart is a checklist — *every* piece of game state returned to its starting value. Listing them all prevents the classic "restarted but forgot to reset X" bug (which E11.9 makes concrete).
+* **Exercise 11.7: [Write AI Prompt] Requesting the Restart Handler** — Prompt for the Space-key restart.
+  * *Editor expects:* Plain-English prompt. Validator needs `Space`, `gameActive`, and `addEventListener`.
+  * *Model answer:* `Write a keydown listener that, when Space is pressed, resets score to 0 and sets gameActive to true`
+  * *Why:* Another keydown listener — this one watching for Space — runs the reset checklist and flips `gameActive` back on. (In code, "Space" is the key value `" "`.)
+* **Exercise 11.8: [Review & Explain] What the Hidden Class Does** — What if you forget to remove `.hidden` on restart?
+  * *Editor expects:* `STAYS_HIDDEN` or `BECOMES_VISIBLE`.
+  * *Model answer:* `STAYS_HIDDEN`
+  * *Why:* `display: none !important` keeps applying as long as the class is on the element, so the game-over screen would stay stuck on the page. Understanding that class presence *is* the visibility state is what makes toggle-based UIs predictable.
+* **Exercise 11.9: [Test & Break] The Frozen Restart** — Restart resets the screen but the game won't move. Fix it.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `gameActive = true;` added inside the Space-key branch.
+  * *Why:* The screen looks reset, but the Session 9 loop is still gated off. Without `gameActive = true`, `requestAnimationFrame` is never re-armed — a reminder that *visible* reset and *functional* reset are two different things.
+* **Exercise 11.10: [Iterate & Improve] The Complete HUD & Restart System** — Assemble scoreboard, overlay, and restart.
+  * *Editor expects:* Full JavaScript. Validator needs `score-val`, `restart-panel`, `gameActive`, `addEventListener`, and a `event.key === " "` check.
+  * *Model answer:*
+    ```javascript
+    function updateScoreboard() {
+      if (score < 0) { score = 0; }
+      document.getElementById("score-val").textContent = score;
+    }
+    function triggerGameOverScreen() {
+      document.getElementById("restart-panel").classList.remove("hidden");
+    }
+    window.addEventListener("keydown", function(event) {
+      if (event.key === " ") {
+        score = 0;
+        document.getElementById("restart-panel").classList.add("hidden");
+        gameActive = true;
+      }
+    });
+    ```
+  * *Why:* Live score updates, a crash overlay, and a Space-to-restart handler — the loop that turns a single run into a replayable game. This is the session's milestone competency.
+
+### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 10: DOM HUD Visual Updates") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "The scoreboard number visibly climbs as the game runs, and after a crash a 'Game Over' screen appears on top of the road showing the final score and a prompt to restart."
+   - *System Parts & Information (expected):* "Parts needed: a Game Over screen with a restart prompt (hidden until needed). Information to track: the current score to display, and whether the game is active or showing the Game Over screen."
+   - *Logic Flow / Pseudocode (expected):* "Score changes → #score-val.textContent = score. Collision triggers → remove '.hidden' from the modal. Press Space → reset game variables, restart loop."
+   - *Why:* The design closes the loop between the game's internal state and what the player sees and does. The plan names the new visible element (the game-over modal) and the *state* that controls it (active vs. showing game-over) — the connection between data and UI that all interactive software rests on.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Draft a prompt to build the HUD score updater and restart module. Set the textContent of '#score-val' to match 'score'. When a collision occurs, remove class 'hidden' from '#restart-panel'. If the user presses Space while the restart panel is visible, reset score to 0, reset positions, hide the panel, set gameActive to true, and restart the loop."
+   - *Why:* The milestone prompt covers the full round-trip — score out to the DOM, crash in from the game, and a complete restart sequence — so the AI produces a coherent HUD module rather than three disconnected snippets.
+
+3. **Review & Explain**
+   - *Expected checklist:* score updates in the DOM whenever it changes; the restart panel's class is toggled (not the element rebuilt); the restart cleanly resets state without spawning a second loop.
+   - *Expected Socratic answer* — *"What is the difference between `textContent` and `innerHTML`, and why is `textContent` safer?"* → `textContent` writes plain text; `innerHTML` parses its value as markup and would execute any injected `<script>`. For a numeric score, `textContent` is safer (no injection) and faster (no HTML parsing).
+
+4. **Test & Break**
+   - *Expected test checklist:* the score counts up live on the HUD as the game runs; a crash reveals the restart panel; pressing Space resets the score to 0, clears the track, and starts a clean loop.
+   - *Why:* The restart test is the tricky one — it must reset *everything* and start exactly *one* new loop, the integration bug this session is designed to surface.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Check that restarting doesn't spawn a second game loop running alongside the first. Ensure every visibility class toggles cleanly so no stale panel lingers."
+   - *Why:* Raises **duplicate-loop / stale-state** bugs — the subtle defects that appear only after a restart — and connects to the session's Ethics Discussion on privacy limits for public leaderboard names.
+
+* **Homework Evaluation Checklist**: Verify the student's Project Journal shows `#score-val` updated via `textContent` (with a non-negative guard), the restart panel toggled by its `hidden` class, and a Space-key handler that fully resets state and sets `gameActive = true`.
 
 ---
 
@@ -769,6 +1293,79 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 
 ### 1. Tutor Guidance: Evaluation Solutions
 * **Part A (Blueprint Check)**: Verify the student mapped HTML tag structures (`game-track`, `player-car`), CSS layouts, JS variables, and lane boundaries.
-* **Part B (Defense Check)**: Verify collision checks and clamping values at `carX = 0` and `carX = 260`.
+* **Part B (Defense Check)**: Verify collision checks and clamping values at the lane boundaries `carX = 35` (leftmost) and `carX = 295` (rightmost).
 * **Part C (Diagnostic Check)**: Student must debug overlap math and correct boundary signs.
 * **Take-Home Evaluation**: Verify self-reflection logs on variables, coordinate updates, and DOM interactions.
+
+### 2. Digital Sandbox Exercises & Solutions (Capstone Lab)
+
+The capstone sandbox is 10 exercises structured as the same AI-Era workflow loops — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview. This final lab pulls together *config-driven design* (removing magic numbers) and a full *QA sweep* over everything built since Session 4. The **Model Answer** per exercise is exactly what the app's validator accepts.
+
+* **Exercise 12.1: [Plan & Design] The Configuration Object** — Plan one object holding every tunable value.
+  * *Editor expects:* Plain-language plan of the tunables to gather (no object syntax required; the technical form is still accepted).
+  * *Model answer:* `gather the tunable numbers — starting speed, difficulty ramp, top speed — into one config object` (form `const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed }` also accepted)
+  * *Why:* Magic numbers scattered through the code are hard to find and change. Gathering every tunable value into one `CONFIG` object means the game's feel can be retuned by editing a single place — the payoff of the whole session.
+* **Exercise 12.2: [Write AI Prompt] Requesting Difficulty Scaling** — Prompt for score-driven, clamped speed.
+  * *Editor expects:* Plain-English prompt. Validator needs `CONFIG`, `speed`, and `clamp` (or `max`).
+  * *Model answer:* `Write a function that increases speed based on score using CONFIG.difficultyMultiplier, clamped to CONFIG.maxSpeed`
+  * *Why:* Difficulty should ramp with score but never become impossible. Asking for the clamp *and* referencing CONFIG values (not raw numbers) is what makes the scaling both tunable and safe.
+* **Exercise 12.3: [Review & Explain] Tracing the Difficulty Formula** — Evaluate `startSpeed + score * difficultyMultiplier` at score 50.
+  * *Editor expects:* A number.
+  * *Model answer:* `10`
+  * *Why:* Order of operations: multiply first (`50 * 0.1 = 5`), then add (`5 + 5 = 10`). Tracing named config values through a formula is the same audit skill from earlier sessions, now on the difficulty curve.
+* **Exercise 12.4: [Test & Break] The Unbounded Speed Bug** — High scores blow past `maxSpeed`. Add the cap.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `speed = Math.min(speed, CONFIG.maxSpeed);`
+  * *Why:* A ramp with no ceiling eventually makes the game unplayable. `Math.min` caps it — the same clamp idea from Session 6, now sourced from CONFIG instead of a hardcoded literal.
+* **Exercise 12.5: [Iterate & Improve] Refactoring Magic Numbers** — Replace the hardcoded 35/295 with CONFIG values.
+  * *Editor expects:* JavaScript. Validator needs `CONFIG.leftBound` and `CONFIG.rightBound`.
+  * *Model answer:* `if (carX > CONFIG.leftBound) { carX -= 130; } if (carX < CONFIG.rightBound) { carX += 130; }`
+  * *Why:* The literal 35 and 295 from Session 6 become named config properties — same behavior, but now every tunable number lives in the one central object, the definition of maintainable code.
+* **Exercise 12.6: [Plan & Design] The Final QA Matrix** — List the systems to verify.
+  * *Editor expects:* Plain-language list of the four systems to verify.
+  * *Model answer:* `variables, boundaries, collision, restart` (form `variables | boundaries | collision | restart` also accepted)
+  * *Why:* A final QA pass checks each pillar in turn. Listing them is how the student proves the *whole* game still works — not just the last thing they touched — the regression-testing mindset.
+* **Exercise 12.7: [Write AI Prompt] Requesting the Smoke-Test Script** — Prompt for a PASS/FAIL checklist script.
+  * *Editor expects:* Plain-English prompt. Validator needs `test`, `console.log`, and `pass`.
+  * *Model answer:* `Write a diagnostic test script that logs PASS or FAIL for each core system using console.log`
+  * *Why:* A smoke test surfaces a regression as a visible FAIL line instead of a silent break — the student's first taste of automated testing, formalized properly in later levels.
+* **Exercise 12.8: [Review & Explain] The Malicious QA Officer's Question** — Can inconsistent `>` vs `>=` guards create an edge-case gap?
+  * *Editor expects:* `YES` or `NO`.
+  * *Model answer:* `YES`
+  * *Why:* Inconsistent operators create exactly the rare boundary gaps an adversarial tester hunts for. Defending code under hostile questioning — and admitting where it's weak — is a genuine engineering skill.
+* **Exercise 12.9: [Test & Break] The Final Diagnostic** — One flipped operator in the AABB check. Fix it.
+  * *Editor expects:* Corrected JavaScript.
+  * *Model answer:* `rect1.x < rect2.x + rect2.width` (the first condition uses `<`, not `>`).
+  * *Why:* The same class of bug as Session 10, now caught *fast* under exam conditions — proof the student can audit AI-generated math without hand-holding.
+* **Exercise 12.10: [Iterate & Improve] Capstone Reflection** — One sentence on the trickiest bug and how tracing found it.
+  * *Editor expects:* A free-text reflection of at least a full sentence (~20+ characters).
+  * *Model answer (example):* `The trickiest bug was the string "10" breaking speed math; logging speed's value showed it concatenating instead of adding, which pointed me to the quoted number.`
+  * *Why:* There's no single right answer — the point is metacognition. Naming a specific bug and the tracing method that exposed it turns a semester of fixes into a transferable debugging habit for Level 2.
+
+### 3. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+
+As in Session 2, the **Project Journal** milestone card ("Part 11: Game Polish & Final Assessment") tracks the student's real `game.js` — here, the *finished, config-driven* build.
+
+1. **Plan & Design**
+   - *Visual Concept & UX Flow (expected):* "The complete game: obstacle cars appear faster and more often as the score climbs (harder over time), and everything from the scoreboard to the crash screen works smoothly together, ready to demo."
+   - *System Parts & Information (expected):* "Parts needed: none new on screen — this session collects all the game's tunable numbers in one place. Information to track: the starting speed, how quickly difficulty ramps up, and the maximum allowed speed."
+   - *Logic Flow / Pseudocode (expected):* "Game running → speed increases based on score * difficultyMultiplier → clamp speed to CONFIG.maxSpeed."
+   - *Why:* The final design milestone is about *polish and maintainability*, not a new feature. The plan names the tunables to centralize and the difficulty curve — recognizing that a finished product is judged partly on how easily the *next* person can change it.
+
+2. **Write AI Prompt**
+   - *Expected prompt:* "Write a prompt to complete the game. Store configuration details (starting speed, lane width, collision offsets) inside a single read-only constant config object. Add logic that increases obstacle speed dynamically as score increases, clamping it to a maximum speed to maintain playable limits."
+   - *Why:* The capstone prompt asks the AI to *refactor toward configurability* and add the difficulty curve in one coherent request — demonstrating the full command of prompt-writing earned across the level.
+
+3. **Review & Explain**
+   - *Expected checklist:* magic values are refactored into a single `CONFIG` constant; difficulty scaling has an upper clamp so speed can't run away.
+   - *Expected Socratic answer* — *"Why is it bad practice to hardcode layout dimensions inside code logic, and how does a config object help?"* → Hardcoded values are duplicated and easy to miss when a change is needed, so edits are error-prone; a config object gives every tunable a single named home, so one edit updates the whole game consistently.
+
+4. **Test & Break**
+   - *Expected test checklist:* the game speeds up dynamically as the score climbs; speed locks at the `maxSpeed` clamp; a full regression run confirms zero breakage in input, collision math, or restart.
+   - *Why:* This is the level's capstone QA — the student proves *every* system built since Session 2 still works together, the whole-game verification that the Session 12 assessment formalizes.
+
+5. **Iterate & Improve**
+   - *Expected answer:* "Complete a self-reflection journal entry summarizing the optimization tweaks made, the bugs solved across the project, and the lessons learned about data types, boundaries, and debugging."
+   - *Why:* Closes the level with **metacognition** — reflecting on the whole journey (from Session 1's IPO blueprint to the certified build) cements transferable method over one-off fixes, the bridge into Level 2.
+
+* **Homework / Certification Checklist**: Verify the finished Project Journal build uses a single `CONFIG` object for tunables, applies score-based difficulty scaling clamped to `maxSpeed`, and passes a full regression sweep across variables, boundaries, collision, and restart.

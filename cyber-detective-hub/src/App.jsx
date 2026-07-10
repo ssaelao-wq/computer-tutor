@@ -749,19 +749,22 @@ const S4_EXERCISES = [
   {
     num: 1,
     title: "Exercise 4.1: [Plan & Design] The Variable Registry",
-    problem: "Before writing any code, plan which game values need to change during play and which stay fixed forever.",
-    instruction: "Write the plan using the format: let carX, speed, score, gameActive | const LANE_WIDTH",
+    problem: "Before writing any code, plan which game values need to change during play and which stay fixed forever. (Values that change — the car's position, speed, score — become 'let' variables; values fixed for the whole game, like a lane's width, become 'const'. Sorting them now prevents accidentally overwriting a constant later.)",
+    instruction: "In plain language, list which game values CHANGE during play and which stay FIXED. Example: changing — car position, speed, score, game-running; fixed — lane width. (The technical form 'let ... | const ...' is also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.toLowerCase().replace(/\s+/g, '');
-      return clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('speed');
+      const clean = code.toLowerCase();
+      const hasChanging = clean.includes('chang') || clean.includes('vary') || clean.includes('update') || clean.includes('let');
+      const hasFixed = clean.includes('fixed') || clean.includes('stay') || clean.includes('same') || clean.includes('never') || clean.includes('const');
+      const namesValues = clean.includes('speed') || clean.includes('score') || clean.includes('car') || clean.includes('position');
+      return hasChanging && hasFixed && namesValues;
     },
-    hint: "Type 'let carX, speed, score, gameActive | const LANE_WIDTH'."
+    hint: "In plain words: changing — car position, speed, score, game-running; fixed — lane width."
   },
   {
     num: 2,
     title: "Exercise 4.2: [Write AI Prompt] Requesting the Declarations",
-    problem: "Now instruct the AI to write the actual variable declaration block.",
+    problem: "Now instruct the AI to write the actual variable declaration block. (You supply the starting values and which ones change; the AI turns that into real let/const lines — which you'll read and verify in the next step, never just trust.)",
     instruction: "Write a prompt asking to declare mutable variables carX (initial 165), speed (initial 0), score (initial 0), and gameActive (initial false), plus a constant LANE_WIDTH. Your prompt must contain 'let', 'const', 'carX', and '165'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -773,7 +776,7 @@ const S4_EXERCISES = [
   {
     num: 3,
     title: "Exercise 4.3: [Review & Explain] Reading Data Types",
-    problem: `The AI generated: let score = 0;. Review this declaration.`,
+    problem: `The AI generated: let score = 0;. Review this declaration. (A bare 0 with no quotes is a Number — the browser can do math on it. Wrap it in quotes as "0" and it silently becomes a String (text), which breaks arithmetic — exactly the trap in E4.4.)`,
     instruction: "What data type is the value 0? Type Number, String, or Boolean.",
     preloaded: "/* Type the data type: */",
     validate: (code) => {
@@ -785,7 +788,7 @@ const S4_EXERCISES = [
   {
     num: 4,
     title: "Exercise 4.4: [Test & Break] The Quoted Number Bug",
-    problem: `Bug: the AI generated let speed = "0"; — the quotes make speed a String, not a Number.`,
+    problem: `Bug: the AI generated let speed = "0"; — the quotes make speed a String, not a Number. (Everything looks fine until you do math: adding to a String glues text together instead of counting — you'll watch that failure happen live in E4.9.)`,
     instruction: "Fix the declaration so speed is a real Number, not a quoted string.",
     preloaded: 'let speed = "0";',
     runnable: true,
@@ -798,7 +801,7 @@ const S4_EXERCISES = [
   {
     num: 5,
     title: "Exercise 4.5: [Iterate & Improve] Adding the Game State Flag",
-    problem: "Iterate on your fixed declarations to add the missing game-state flag.",
+    problem: "Iterate on your fixed declarations to add the missing game-state flag. (gameActive is a Boolean — a true/false switch. From Session 9 on, the game loop checks this one flag every frame to decide whether to keep running or stop.)",
     instruction: "Add a boolean variable gameActive initialized to false.",
     preloaded: 'let speed = 0;\nlet score = 0;',
     runnable: true,
@@ -811,19 +814,22 @@ const S4_EXERCISES = [
   {
     num: 6,
     title: "Exercise 4.6: [Plan & Design] Planning the Math Updates",
-    problem: "Plan how score and speed will change during gameplay.",
-    instruction: "Write the plan using the format: score++ | speed += 10",
+    problem: "Plan how score and speed will change during gameplay. (score++ adds 1 — shorthand for score = score + 1; speed += 10 adds 10. These are the exact increments the game runs each time you dodge an obstacle or speed up.)",
+    instruction: "In plain language, say how score and speed change during play. Example: score goes up by 1 each time, speed goes up by 10. (The shorthand 'score++ | speed += 10' is also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return (clean.includes('score++') || clean.includes('score+=1')) && clean.includes('speed+=10');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = (compact.includes('score++') || compact.includes('score+=1')) && compact.includes('speed+=10');
+      const clean = code.toLowerCase();
+      const plain = clean.includes('score') && clean.includes('speed') && (clean.includes('up') || clean.includes('increase') || clean.includes('add') || clean.includes('plus') || clean.includes('+')) && clean.includes('10');
+      return tech || plain;
     },
-    hint: "Type 'score++ | speed += 10'."
+    hint: "In plain words: score goes up by 1 each time; speed goes up by 10."
   },
   {
     num: 7,
     title: "Exercise 4.7: [Write AI Prompt] Requesting the Math Statements",
-    problem: "Instruct the AI to write the increment statements.",
+    problem: "Instruct the AI to write the increment statements. (console.log prints a value into the browser's console — a developer's window into what the code is really doing, so you can confirm the numbers actually change.)",
     instruction: "Write a prompt asking for statements that increment score by 1 and speed by 10, then log both values to the console. Your prompt must contain 'score', 'speed', and 'console.log'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -835,7 +841,7 @@ const S4_EXERCISES = [
   {
     num: 8,
     title: "Exercise 4.8: [Review & Explain] Predicting the Output",
-    problem: `The AI generated: let speed = 0; speed += 10;. Review this code.`,
+    problem: `The AI generated: let speed = 0; speed += 10;. Review this code. (Predicting a result by reading code — before running it — is the core Review skill: speed starts at 0, then += 10 adds 10 to it.)`,
     instruction: "After this code runs, what is the value of speed? Type a number.",
     preloaded: "/* Type a number: */",
     validate: (code) => {
@@ -847,7 +853,7 @@ const S4_EXERCISES = [
   {
     num: 9,
     title: "Exercise 4.9: [Test & Break] The String Concatenation Trap",
-    problem: `Bug: speed was declared as let speed = "10"; (a string). Running speed += 5; produces "105" instead of 15.`,
+    problem: `Bug: speed was declared as let speed = "10"; (a string). Running speed += 5; produces "105" instead of 15. (With a String, += glues "5" onto the end as text → "105". Same root cause as E4.4's quoted number, now visibly wrong — this is why data types matter.)`,
     instruction: "Fix the original declaration so speed is a Number, making speed += 5 produce 15 as expected.",
     preloaded: 'let speed = "10";\nspeed += 5;',
     runnable: true,
@@ -860,7 +866,7 @@ const S4_EXERCISES = [
   {
     num: 10,
     title: "Exercise 4.10: [Iterate & Improve] The Complete Variable Registry",
-    problem: "Combine every piece from this session into the final variable registry and math block.",
+    problem: "Combine every piece from this session into the final variable registry and math block. (This is the real starting point of game.js that every later session builds on — get the types right here and steering, scoring, and the game loop all receive correct data to work with.)",
     instruction: "Write the complete code: declare carX, speed, score, gameActive (all correct Number/Boolean types, no quoted numbers), plus a LANE_WIDTH constant, then increment score by 1 and speed by 10.",
     preloaded: "/* Write the complete variable registry here */",
     validate: (code) => {
@@ -1094,19 +1100,22 @@ const S5_EXERCISES = [
   {
     num: 1,
     title: "Exercise 5.1: [Plan & Design] Reading the Key Pressed",
-    problem: "Before writing any JavaScript, plan how the browser will tell you which key the player pressed.",
-    instruction: "Write your plan using the format: eventType > property. The browser fires a 'keydown' event, and the specific key is reported on the event object's 'key' property.",
-    preloaded: "/* Write your plan here: eventType > property */",
+    problem: "Before writing any JavaScript, plan how the browser will tell you which key the player pressed. (Every keypress fires a 'keydown' event, and the browser hands your code an event object with the exact key name on its .key property — that one fact is what this whole session depends on.)",
+    instruction: "In plain language, describe how the browser tells you which key was pressed. Example: when a key is pressed, the keydown event reports which key it was. (The 'keydown > event.key' form is also accepted.)",
+    preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.toLowerCase().replace(/\s+/g, '');
-      return clean.includes('keydown') && (clean.includes('event.key') || clean.includes('e.key') || clean.includes('>key'));
+      const compact = code.toLowerCase().replace(/\s+/g, '');
+      const tech = compact.includes('keydown') && (compact.includes('event.key') || compact.includes('e.key') || compact.includes('>key'));
+      const clean = code.toLowerCase();
+      const plain = (clean.includes('press') || clean.includes('keydown') || clean.includes('key down')) && clean.includes('key');
+      return tech || plain;
     },
-    hint: "Type 'keydown > event.key' to describe the plan."
+    hint: "In plain words: when a key is pressed, the keydown event reports which key it was."
   },
   {
     num: 2,
     title: "Exercise 5.2: [Write AI Prompt] Requesting the Listener",
-    problem: "Now instruct the AI to generate the keydown listener.",
+    problem: "Now instruct the AI to generate the keydown listener. (addEventListener tells the browser 'run my function every time this happens' — it's how code reacts to the player continuously instead of running once and stopping.)",
     instruction: "Write a prompt asking to bind a keydown event listener to the window that logs the pressed key to the console. Your prompt must contain the words 'addEventListener', 'keydown', and 'console.log'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1118,7 +1127,7 @@ const S5_EXERCISES = [
   {
     num: 3,
     title: "Exercise 5.3: [Review & Explain] The Event Parameter",
-    problem: `The AI generated: window.addEventListener("keydown", function(event) { console.log(event.key); });. Review this code.`,
+    problem: `The AI generated: window.addEventListener("keydown", function(event) { console.log(event.key); });. Review this code. (The word in the parentheses — event — is the callback's parameter: the browser fills it with a fresh object describing each keypress, and event.key holds the name of the key that was pressed.)`,
     instruction: "Which parameter of the callback function carries information about which key was pressed? Type the parameter name.",
     preloaded: "/* Type the parameter name: */",
     validate: (code) => {
@@ -1131,7 +1140,7 @@ const S5_EXERCISES = [
     num: 4,
     title: "Exercise 5.4: [Test & Break] The Silent Input Fail",
     runnable: true,
-    problem: `The listener checks if (event.key === "left") but nothing happens when ArrowLeft is pressed.`,
+    problem: `The listener checks if (event.key === "left") but nothing happens when ArrowLeft is pressed. (Browsers report the arrow keys as the exact strings "ArrowLeft"/"ArrowRight" — not "left". One wrong string makes the comparison silently always-false, so the branch never runs and no error appears.)`,
     instruction: "Fix the broken key-string comparison so it correctly checks for the exact key name the browser actually reports.",
     preloaded: 'if (event.key === "left") {\n  carX -= 130;\n}',
     validate: (code) => {
@@ -1144,7 +1153,7 @@ const S5_EXERCISES = [
     num: 5,
     title: "Exercise 5.5: [Iterate & Improve] Logging the Other Direction",
     runnable: true,
-    problem: "Extend your fixed listener to also acknowledge ArrowRight presses.",
+    problem: "Extend your fixed listener to also acknowledge ArrowRight presses. (An else-if adds a second, mutually-exclusive branch: the browser tests ArrowLeft first, and only if that fails does it check ArrowRight — the standard shape for handling several keys.)",
     instruction: `Add an else-if branch checking for "ArrowRight" that logs "Steering right" to the console.`,
     preloaded: 'if (event.key === "ArrowLeft") {\n  carX -= 130;\n}',
     validate: (code) => {
@@ -1156,19 +1165,22 @@ const S5_EXERCISES = [
   {
     num: 6,
     title: "Exercise 5.6: [Plan & Design] Steering Deltas",
-    problem: "Plan the exact coordinate deltas for steering the car between lanes.",
-    instruction: "Write the plan using the format: ArrowLeft: carX -= 130 | ArrowRight: carX += 130",
+    problem: "Plan the exact coordinate deltas for steering the car between lanes. (Lanes are 130px apart, so one press should shift carX by exactly one lane: −130 to go left, +130 to go right. Fixing the number now keeps the car snapping cleanly to lanes instead of drifting.)",
+    instruction: "In plain language, say how far the car moves each press. Example: left press moves the car 130 to the left; right press moves it 130 to the right. (The 'carX -= 130 | carX += 130' form is also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('carx-=130') && clean.includes('carx+=130');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('carx-=130') && compact.includes('carx+=130');
+      const clean = code.toLowerCase();
+      const plain = clean.includes('left') && clean.includes('right') && clean.includes('130');
+      return tech || plain;
     },
-    hint: "Type 'ArrowLeft: carX -= 130 | ArrowRight: carX += 130'."
+    hint: "In plain words: left press moves the car 130 left; right press moves it 130 right."
   },
   {
     num: 7,
     title: "Exercise 5.7: [Write AI Prompt] Wiring Movement to the DOM",
-    problem: "Instruct the AI to connect the steering logic to the visible player car element.",
+    problem: "Instruct the AI to connect the steering logic to the visible player car element. (Updating carX only changes a number in memory — nothing moves until you also write that number into the element's style.left, which is what actually repositions the car on screen.)",
     instruction: "Write a prompt asking to update '#player-car' style.left to match carX whenever ArrowLeft or ArrowRight is pressed. Your prompt must contain 'carX', 'style.left', 'ArrowLeft', and 'ArrowRight'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1180,7 +1192,7 @@ const S5_EXERCISES = [
   {
     num: 8,
     title: "Exercise 5.8: [Review & Explain] Why 'px'?",
-    problem: `The AI generated: carElement.style.left = carX + "px";. Review this line.`,
+    problem: `The AI generated: carElement.style.left = carX + "px";. Review this line. (CSS position values need a unit. carX is a bare number like 165; gluing "px" onto it makes the string "165px", which is what the browser's style engine actually understands.)`,
     instruction: "Why does the code concatenate the string \"px\" onto the carX number? Type the one-word CSS unit being appended.",
     preloaded: "/* Type the unit: */",
     validate: (code) => {
@@ -1193,7 +1205,7 @@ const S5_EXERCISES = [
     num: 9,
     title: "Exercise 5.9: [Test & Break] The Missing Unit",
     runnable: true,
-    problem: `Bug: carElement.style.left = carX; (missing the "px" unit) makes the car vanish from the game track.`,
+    problem: `Bug: carElement.style.left = carX; (missing the "px" unit) makes the car vanish from the game track. (A unit-less number is invalid CSS, so the browser ignores the whole rule and the car snaps back to its default spot — another silent failure with no error message.)`,
     instruction: "Fix the assignment so it appends the required unit string to carX.",
     preloaded: 'let carElement = document.getElementById("player-car");\ncarElement.style.left = carX;',
     validate: (code) => {
@@ -1206,7 +1218,7 @@ const S5_EXERCISES = [
     num: 10,
     title: "Exercise 5.10: [Iterate & Improve] The Complete Steering Handler",
     runnable: true,
-    problem: "Combine every piece from this session into one working keydown handler.",
+    problem: "Combine every piece from this session into one working keydown handler. (This is the real steering control the rest of the game reuses — bind the listener, branch on the key, update carX, and write it back to style.left, all in one place.)",
     instruction: "Write the complete handler: bind the keydown listener, branch on ArrowLeft/ArrowRight, update carX, and write the new position to '#player-car' style.left.",
     preloaded: "/* Write the complete handler here */",
     validate: (code) => {
@@ -1221,19 +1233,19 @@ const S6_EXERCISES = [
   {
     num: 1,
     title: "Exercise 6.1: [Plan & Design] Track Boundary Coordinates",
-    problem: "Plan the left and right lane coordinates the car must never cross. The three lane positions are 35px, 165px, and 295px (car starts centered at 165).",
-    instruction: "Write the plan using the format: left boundary = 35 | right boundary = 295",
+    problem: "Plan the left and right lane coordinates the car must never cross. The three lane positions are 35px, 165px, and 295px (car starts centered at 165). (A boundary guard needs just two numbers: the smallest and largest carX the car may reach. Anything between is a valid lane; outside means driving off the road.)",
+    instruction: "In plain language, name the leftmost and rightmost positions the car may reach. Example: the car can go from 35 on the left to 295 on the right.",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('35') && clean.includes('295');
     },
-    hint: "Type 'left boundary = 35 | right boundary = 295'."
+    hint: "In plain words: leftmost position 35, rightmost position 295."
   },
   {
     num: 2,
     title: "Exercise 6.2: [Write AI Prompt] Requesting the Left Guard",
-    problem: "Instruct the AI to add a safety guard preventing the car from steering off the left edge.",
+    problem: "Instruct the AI to add a safety guard preventing the car from steering off the left edge. (A guard is just an if-check wrapped around the movement: only run carX -= 130 while carX is still greater than the left limit, so the move is refused at the edge.)",
     instruction: "Write a prompt asking to wrap the ArrowLeft movement in a conditional that only allows carX to decrease if carX is greater than 35 (the leftmost lane). Your prompt must contain 'carX', 'ArrowLeft', and '> 35'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1245,7 +1257,7 @@ const S6_EXERCISES = [
   {
     num: 3,
     title: "Exercise 6.3: [Review & Explain] Reading the Guard Condition",
-    problem: `The AI generated: if (event.key === "ArrowLeft") { if (carX > 35) { carX -= 130; } }. Review this code.`,
+    problem: `The AI generated: if (event.key === "ArrowLeft") { if (carX > 35) { carX -= 130; } }. Review this code. (Read it as a nested gate: the outer if checks the key, the inner if checks the boundary. Both must be true for the car to move — when carX is already 35, the inner test fails and the move is skipped.)`,
     instruction: "What happens to the movement if carX is already 35 (leftmost lane) and ArrowLeft is pressed again? Type MOVES or BLOCKED.",
     preloaded: "/* Type MOVES or BLOCKED: */",
     validate: (code) => {
@@ -1258,7 +1270,7 @@ const S6_EXERCISES = [
     num: 4,
     title: "Exercise 6.4: [Test & Break] The Infinite Teleporting Bug",
     runnable: true,
-    problem: `The tutor changed the boundary check from carX > 35 to carX >= -130, and the car teleports off-screen when ArrowLeft is held. Try it live: click the preview and hold ArrowLeft.`,
+    problem: `The tutor changed the boundary check from carX > 35 to carX >= -130, and the car teleports off-screen when ArrowLeft is held. Try it live: click the preview and hold ArrowLeft. (A too-loose limit still passes the check far past the edge, so carX keeps subtracting into negative pixels — the guard exists, but it points at the wrong number.)`,
     instruction: "Fix the comparison operator and value so the car cannot move past the leftmost lane (35).",
     preloaded: 'window.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX >= -130) {\n      carX -= 130;\n      document.getElementById("player-car").style.left = carX + "px";\n    }\n  }\n});',
     validate: (code) => {
@@ -1271,7 +1283,7 @@ const S6_EXERCISES = [
     num: 5,
     title: "Exercise 6.5: [Iterate & Improve] Adding the Right Guard",
     runnable: true,
-    problem: "Iterate to also guard the right boundary, mirroring the left-side logic.",
+    problem: "Iterate to also guard the right boundary, mirroring the left-side logic. (The right guard is the mirror image: only allow carX += 130 while carX is still less than the rightmost lane (295), so the car locks at the right edge the same way it locks at the left.)",
     instruction: "Add an else-if branch for ArrowRight that only allows carX to increase if carX is less than 295 (the rightmost lane).",
     preloaded: 'window.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX > 35) {\n      carX -= 130;\n      document.getElementById("player-car").style.left = carX + "px";\n    }\n  }\n});',
     validate: (code) => {
@@ -1283,19 +1295,22 @@ const S6_EXERCISES = [
   {
     num: 6,
     title: "Exercise 6.6: [Plan & Design] Overheat Threshold Rule",
-    problem: "Plan a second safety rule: the car's speed must never exceed a safe overheat threshold.",
-    instruction: "Write the plan using the format: IF speed > 120 THEN speed = 100",
+    problem: "Plan a second safety rule: the car's speed must never exceed a safe overheat threshold. (Same guard pattern as the lane limits, applied to speed instead of position: if speed climbs past 120, clamp it back to 100 — a rule that keeps the game from becoming unplayably fast.)",
+    instruction: "In plain language, state the overheat rule. Example: if speed goes over 120, reset it back to 100. (The 'IF speed > 120 THEN speed = 100' form is also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('speed>120') && clean.includes('speed=100');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('speed>120') && compact.includes('speed=100');
+      const clean = code.toLowerCase();
+      const plain = clean.includes('speed') && clean.includes('120') && clean.includes('100');
+      return tech || plain;
     },
-    hint: "Type 'IF speed > 120 THEN speed = 100'."
+    hint: "In plain words: if speed goes over 120, reset it to 100."
   },
   {
     num: 7,
     title: "Exercise 6.7: [Write AI Prompt] Requesting the Overheat Guard",
-    problem: "Instruct the AI to implement the overheat clamp.",
+    problem: "Instruct the AI to implement the overheat clamp. (Describe the exact numbers — the trigger threshold (120) and the reset value (100) — plus a warning log, so the AI's condition matches your plan precisely.)",
     instruction: "Write a prompt asking for a conditional check: if speed is greater than 120, reset it to 100 and log a warning. Your prompt must contain 'speed', '120', and '100'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1307,7 +1322,7 @@ const S6_EXERCISES = [
   {
     num: 8,
     title: "Exercise 6.8: [Review & Explain] Boundary-Value Precision",
-    problem: `The AI generated: if (speed > 120) { speed = 100; }. Review this rule.`,
+    problem: `The AI generated: if (speed > 120) { speed = 100; }. Review this rule. (The operator matters at the edge: > is a strict greater-than, so exactly 120 does not trigger it. Off-by-one boundary bugs live right here — the operator (>, >=) and the exact threshold value must both match the intended rule.)`,
     instruction: "If speed is exactly 120, does this rule trigger? Type YES or NO.",
     preloaded: "/* Type YES or NO: */",
     validate: (code) => {
@@ -1320,7 +1335,7 @@ const S6_EXERCISES = [
     num: 9,
     title: "Exercise 6.9: [Test & Break] The Mars Climate Mismatch",
     runnable: true,
-    problem: `Bug: the guard was written as if (speed > 120) { speed = "100"; } — the reset value is a string, not a number.`,
+    problem: `Bug: the guard was written as if (speed > 120) { speed = "100"; } — the reset value is a string, not a number. (Resetting to the String "100" re-introduces the Session 4 type bug: the next speed += math would glue text instead of adding — a clamp that quietly breaks arithmetic.)`,
     instruction: "Fix the reset assignment so speed becomes the Number 100, not the String \"100\".",
     preloaded: 'if (speed > 120) {\n  speed = "100";\n}',
     validate: (code) => {
@@ -1333,7 +1348,7 @@ const S6_EXERCISES = [
     num: 10,
     title: "Exercise 6.10: [Iterate & Improve] The Complete Boundary System",
     runnable: true,
-    problem: "Combine every guard from this session into one complete safety system.",
+    problem: "Combine every guard from this session into one complete safety system. (Left lane guard, right lane guard, and overheat clamp together — the full set of rules that keep carX and speed inside safe, playable limits.)",
     instruction: "Write the complete conditional block: left/right lane guards on carX (35/295) plus the overheat guard on speed (120 -> 100).",
     preloaded: "/* Write the complete safety system here */",
     validate: (code) => {
@@ -1348,19 +1363,19 @@ const S7_EXERCISES = [
   {
     num: 1,
     title: "Exercise 7.1: [Plan & Design] Marker Spacing Plan",
-    problem: "Plan how 5 highway lane markers should be spaced vertically down the track.",
-    instruction: "Write the plan using the format: count = 5 | spacing = 120",
+    problem: "Plan how 5 highway lane markers should be spaced vertically down the track. (A loop that repeats a task needs two numbers: how many times to run (5 markers) and the step between each (120px down). Those two values drive the whole loop.)",
+    instruction: "In plain language, plan how many markers and how far apart. Example: 5 markers, spaced 120 apart.",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('5') && clean.includes('120');
     },
-    hint: "Type 'count = 5 | spacing = 120'."
+    hint: "In plain words: 5 markers, 120 apart."
   },
   {
     num: 2,
     title: "Exercise 7.2: [Write AI Prompt] Requesting the Loop",
-    problem: "Instruct the AI to generate the marker-spawning loop.",
+    problem: "Instruct the AI to generate the marker-spawning loop. (A for loop repeats a block a fixed number of times; the counter i (0,1,2,3,4) feeds the formula i * 120 to place each marker further down — so one small block builds all 5.)",
     instruction: "Write a prompt asking for a 'for' loop that runs 5 times, calculating markerY as i * 120 on each iteration. Your prompt must contain 'for loop', 'i * 120', and '5'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1372,7 +1387,7 @@ const S7_EXERCISES = [
   {
     num: 3,
     title: "Exercise 7.3: [Review & Explain] Loop Anatomy",
-    problem: `The AI generated: for (let i = 0; i < 5; i++) { let markerY = i * 120; }. Review this loop header.`,
+    problem: `The AI generated: for (let i = 0; i < 5; i++) { let markerY = i * 120; }. Review this loop header. (A for header has three parts split by semicolons: start (let i = 0), keep-going test (i < 5), and the step after each pass (i++). Miss the third and the loop never advances.)`,
     instruction: "Which part of the loop header increases 'i' after each pass? Type the exact expression (e.g. i++).",
     preloaded: "/* Type the update expression: */",
     validate: (code) => {
@@ -1386,7 +1401,7 @@ const S7_EXERCISES = [
     title: "Exercise 7.4: [Test & Break] Browser Freezes",
     // Deliberately NOT runnable: the seeded bug is a missing loop increment (infinite loop),
     // and actually executing it live in the iframe would hang the preview instead of teaching.
-    problem: `Bug: the tutor removed the increment, leaving for (let i = 0; i < 5; ) { let markerY = i * 120; } — the browser freezes.`,
+    problem: `Bug: the tutor removed the increment, leaving for (let i = 0; i < 5; ) { let markerY = i * 120; } — the browser freezes. (With no i++, i stays 0 forever, so i < 5 is always true and the loop never ends — an infinite loop that locks the whole page. This step is deliberately not runnable, so the preview won't hang.)`,
     instruction: "Restore the missing increment so the loop actually terminates after 5 passes.",
     preloaded: "for (let i = 0; i < 5; ) {\n  let markerY = i * 120;\n}",
     validate: (code) => {
@@ -1398,7 +1413,7 @@ const S7_EXERCISES = [
   {
     num: 5,
     title: "Exercise 7.5: [Iterate & Improve] Logging Each Marker",
-    problem: "Iterate on the fixed loop to also log each marker's computed position.",
+    problem: "Iterate on the fixed loop to also log each marker's computed position. (Logging inside the loop prints one line per pass — the fastest way to confirm the loop really runs 5 times and computes 0, 120, 240, 360, 480 as expected.)",
     instruction: `Inside the loop body, add a console.log that prints "Highway Marker position: " followed by markerY.`,
     preloaded: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}",
     validate: (code) => {
@@ -1410,19 +1425,22 @@ const S7_EXERCISES = [
   {
     num: 6,
     title: "Exercise 7.6: [Plan & Design] Rendering the Markers",
-    problem: "Plan how each computed marker position becomes a visible element on the track.",
-    instruction: "Write the plan using the format: create div > class marker-dash > style.top = markerY",
+    problem: "Plan how each computed marker position becomes a visible element on the track. (Computing markerY is only half the job — each pass must also create a real div, place it at that Y, and attach it to the track so it actually appears on screen.)",
+    instruction: "In plain language, plan how each computed position becomes a visible element. Example: for each marker, create a box, give it the marker-dash style, and place it at its top position. (create div > class marker-dash > style.top = markerY also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('div') && clean.includes('marker-dash') && clean.includes('markery');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('marker-dash') && compact.includes('markery');
+      const clean = code.toLowerCase();
+      const plain = (clean.includes('div') || clean.includes('box') || clean.includes('element')) && (clean.includes('marker') || clean.includes('dash')) && (clean.includes('top') || clean.includes('position') || clean.includes('place') || clean.includes('height'));
+      return tech || plain;
     },
-    hint: "Type 'create div > class marker-dash > style.top = markerY'."
+    hint: "In plain words: for each marker, create a box and place it at its computed top position."
   },
   {
     num: 7,
     title: "Exercise 7.7: [Write AI Prompt] Requesting the DOM Append",
-    problem: "Instruct the AI to append a marker element to the game track on every loop iteration.",
+    problem: "Instruct the AI to append a marker element to the game track on every loop iteration. (createElement builds a div in memory; appendChild attaches it into #game-track so the browser draws it. Without the append, the element exists but is never shown.)",
     instruction: "Write a prompt asking to create a div with class 'marker-dash', set its top style to markerY, and append it to '#game-track' inside the loop. Your prompt must contain 'marker-dash', 'appendChild', and '#game-track'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1434,7 +1452,7 @@ const S7_EXERCISES = [
   {
     num: 8,
     title: "Exercise 7.8: [Review & Explain] Why Not Hardcode 5 Divs?",
-    problem: "Compare writing a loop against manually copy-pasting 5 separate div elements by hand.",
+    problem: "Compare writing a loop against manually copy-pasting 5 separate div elements by hand. (A loop is one block that scales to any count by changing a single number; hand-written divs mean editing every line by hand. That's the payoff of loops — change 5 to 20 and the loop just works.)",
     instruction: "If the track needed 20 markers instead of 5 with hand-written divs, how many lines would you need to change? Type a number.",
     preloaded: "/* Type a number: */",
     validate: (code) => {
@@ -1446,7 +1464,7 @@ const S7_EXERCISES = [
   {
     num: 9,
     title: "Exercise 7.9: [Test & Break] The Off-Track Marker",
-    problem: `Bug: a marker's spacing formula was written as markerY = i * 12 (missing a zero), bunching all 5 markers near the top of the track.`,
+    problem: `Bug: a marker's spacing formula was written as markerY = i * 12 (missing a zero), bunching all 5 markers near the top of the track. (i * 12 gives 0,12,24,36,48 — all crammed in the top 48px; i * 120 gives 0,120,240,360,480, spread down the full track. One missing digit collapses the whole layout.)`,
     instruction: "Fix the spacing formula so markers are spread out correctly across the track (120px apart, not 12px).",
     preloaded: "let markerY = i * 12;",
     validate: (code) => {
@@ -1458,7 +1476,7 @@ const S7_EXERCISES = [
   {
     num: 10,
     title: "Exercise 7.10: [Iterate & Improve] The Complete Marker Loop",
-    problem: "Combine every piece from this session into one complete marker-generation loop.",
+    problem: "Combine every piece from this session into one complete marker-generation loop. (Loop 5 times, compute markerY = i * 120, build a marker-dash div at that position, and append it to #game-track — the full generate-and-render pattern reused whenever the game spawns many elements.)",
     instruction: "Write the complete loop: iterate 5 times, compute markerY as i * 120, create a 'marker-dash' div positioned at markerY, and append it to '#game-track'.",
     preloaded: "/* Write the complete loop here */",
     validate: (code) => {
@@ -1473,19 +1491,22 @@ const S8_EXERCISES = [
   {
     num: 1,
     title: "Exercise 8.1: [Plan & Design] Decomposing the Steering Script",
-    problem: "Plan how to break the monolithic steering script into single-purpose functions.",
-    instruction: "Write the plan using the format: updatePlayerPosition() | moveLeft() | moveRight()",
+    problem: "Plan how to break the monolithic steering script into single-purpose functions. (One giant block that does everything is hard to fix; splitting it into named functions — one to render, one to move left, one to move right — gives each piece a single, testable job.)",
+    instruction: "In plain language, name the single-purpose pieces to split into. Example: one piece to update the car's position, one to move left, one to move right. (updatePlayerPosition() | moveLeft() | moveRight() also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('updateplayerposition') && clean.includes('moveleft') && clean.includes('moveright');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('updateplayerposition') && compact.includes('moveleft') && compact.includes('moveright');
+      const clean = code.toLowerCase();
+      const plain = (clean.includes('update') || clean.includes('render') || clean.includes('redraw') || clean.includes('position') || clean.includes('draw')) && clean.includes('left') && clean.includes('right');
+      return tech || plain;
     },
-    hint: "Type 'updatePlayerPosition() | moveLeft() | moveRight()'."
+    hint: "In plain words: one piece to update the car's position, one to move left, one to move right."
   },
   {
     num: 2,
     title: "Exercise 8.2: [Write AI Prompt] Requesting the Render Function",
-    problem: "Instruct the AI to write the shared rendering function first.",
+    problem: "Instruct the AI to write the shared rendering function first. (updatePlayerPosition() is the one place that writes carX to the screen. Building it first lets moveLeft/moveRight both call it instead of each repeating the same style.left line.)",
     instruction: "Write a prompt asking for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px'. Your prompt must contain 'function', 'updatePlayerPosition', and 'style.left'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1497,7 +1518,7 @@ const S8_EXERCISES = [
   {
     num: 3,
     title: "Exercise 8.3: [Review & Explain] Function Signatures",
-    problem: `The AI generated: function updatePlayerPosition() { let carElement = document.getElementById("player-car"); carElement.style.left = carX + "px"; }. Review this function.`,
+    problem: `The AI generated: function updatePlayerPosition() { let carElement = document.getElementById("player-car"); carElement.style.left = carX + "px"; }. Review this function. (The empty parentheses () are the parameter list — this function takes no inputs. It reads the shared carX and writes it to the DOM, so nothing needs to be passed in.)`,
     instruction: "How many parameters does updatePlayerPosition() take? Type a number.",
     preloaded: "/* Type a number: */",
     validate: (code) => {
@@ -1509,7 +1530,7 @@ const S8_EXERCISES = [
   {
     num: 4,
     title: "Exercise 8.4: [Test & Break] Scope Access Violation",
-    problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'.`,
+    problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'. (A variable declared inside a function is local — it only exists there. For two functions to share carX, it must be declared once outside both, in the scope they can both see.)`,
     instruction: "Move the carX declaration out of moveLeft() so it becomes a variable both functions can share.",
     preloaded: 'function moveLeft() {\n  let carX = 165;\n  if (carX > 35) {\n    carX -= 130;\n  }\n}\nfunction updatePlayerPosition() {\n  console.log(carX);\n}',
     validate: (code) => {
@@ -1521,7 +1542,7 @@ const S8_EXERCISES = [
   {
     num: 5,
     title: "Exercise 8.5: [Iterate & Improve] Wiring moveLeft() to the Handler",
-    problem: "Iterate on the keydown handler to call the new modular function instead of updating carX inline.",
+    problem: "Iterate on the keydown handler to call the new modular function instead of updating carX inline. (Once moveLeft() owns the boundary-check logic, the handler just calls it by name — same behavior, but the logic lives in one place instead of being copied into the listener.)",
     instruction: "Rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() instead of repeating the boundary-check logic inline.",
     preloaded: 'if (event.key === "ArrowLeft") {\n  if (carX > 35) {\n    carX -= 130;\n  }\n}',
     validate: (code) => {
@@ -1533,19 +1554,22 @@ const S8_EXERCISES = [
   {
     num: 6,
     title: "Exercise 8.6: [Plan & Design] The moveRight() Signature",
-    problem: "Plan the mirror function for the right lane.",
-    instruction: "Write the plan using the format: moveRight() -> IF carX < 295 THEN carX += 130, then call updatePlayerPosition()",
+    problem: "Plan the mirror function for the right lane. (moveRight() mirrors moveLeft(): guard against the right boundary (carX < 295), add 130, then call the shared updatePlayerPosition() to redraw — same shape, opposite direction.)",
+    instruction: "In plain language, plan the mirror function for the right lane. Example: if the car isn't past the right limit (295), move it right, then redraw its position. (moveRight() -> IF carX < 295 THEN carX += 130, then updatePlayerPosition() also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('moveright') && clean.includes('carx<295') && clean.includes('updateplayerposition');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('moveright') && compact.includes('carx<295') && compact.includes('updateplayerposition');
+      const clean = code.toLowerCase();
+      const plain = clean.includes('right') && clean.includes('295') && (clean.includes('update') || clean.includes('redraw') || clean.includes('position') || clean.includes('draw'));
+      return tech || plain;
     },
-    hint: "Type 'moveRight() -> IF carX < 295 THEN carX += 130, then call updatePlayerPosition()'."
+    hint: "In plain words: if the car isn't past 295, move it right, then redraw its position."
   },
   {
     num: 7,
     title: "Exercise 8.7: [Write AI Prompt] Requesting moveLeft() and moveRight()",
-    problem: "Instruct the AI to write both modular movement functions.",
+    problem: "Instruct the AI to write both modular movement functions. (Each function clamps carX to its own boundary, then calls updatePlayerPosition() — reusing the shared renderer instead of each writing its own style.left line.)",
     instruction: "Write a prompt asking for two functions: moveLeft() and moveRight(), each clamping carX to its boundary and calling updatePlayerPosition(). Your prompt must contain 'moveLeft', 'moveRight', and 'updatePlayerPosition'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1557,7 +1581,7 @@ const S8_EXERCISES = [
   {
     num: 8,
     title: "Exercise 8.8: [Review & Explain] Why Modularize?",
-    problem: "Compare the modular version against the original inline version from Session 6.",
+    problem: "Compare the modular version against the original inline version from Session 6. (When rendering lives in one shared function, a bug in it is fixed once — not copied across every branch. Fewer copies of a line means fewer places for a bug to hide.)",
     instruction: "If a bug is found in the boundary-clamp logic, in a modular version how many function bodies need fixing (assuming both moveLeft/moveRight call a shared clamp helper)? Type a number.",
     preloaded: "/* Type a number: */",
     validate: (code) => {
@@ -1569,7 +1593,7 @@ const S8_EXERCISES = [
   {
     num: 9,
     title: "Exercise 8.9: [Test & Break] The Duplicate Render Call",
-    problem: `Bug: moveLeft() calls updatePlayerPosition() twice by accident, wasting a render cycle every keypress.`,
+    problem: `Bug: moveLeft() calls updatePlayerPosition() twice by accident, wasting a render cycle every keypress. (Redrawing the same position twice does no visible harm but doubles the work on every keypress — the kind of small waste that adds up once the game loop runs 60 times a second.)`,
     instruction: "Remove the duplicate call so updatePlayerPosition() runs exactly once per moveLeft() call.",
     preloaded: 'function moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n  updatePlayerPosition();\n}',
     validate: (code) => {
@@ -1581,7 +1605,7 @@ const S8_EXERCISES = [
   {
     num: 10,
     title: "Exercise 8.10: [Iterate & Improve] The Complete Modular Controller",
-    problem: "Combine every piece from this session into the final modular movement controller.",
+    problem: "Combine every piece from this session into the final modular movement controller. (updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler that calls them — clean, named pieces later sessions can extend without touching one tangled block.)",
     instruction: "Write the complete code: updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler that calls moveLeft()/moveRight() based on the key pressed.",
     preloaded: "/* Write the complete modular controller here */",
     validate: (code) => {
@@ -1596,19 +1620,22 @@ const S9_EXERCISES = [
   {
     num: 1,
     title: "Exercise 9.1: [Plan & Design] The Game Loop Lifecycle",
-    problem: "Before animating anything, plan how the game should redraw itself every single frame.",
-    instruction: "Write the plan using the format: gameLoop() -> update state -> render -> requestAnimationFrame(gameLoop)",
+    problem: "Before animating anything, plan how the game should redraw itself every single frame. (A game is an animation: each frame updates the state, redraws, then schedules the next frame — a loop that calls itself ~60 times a second.)",
+    instruction: "In plain language, describe the repeating frame cycle. Example: each frame, update the state, redraw, then schedule the next frame. (gameLoop() -> update -> render -> requestAnimationFrame(gameLoop) also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('gameloop') && clean.includes('requestanimationframe');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('gameloop') && compact.includes('requestanimationframe');
+      const clean = code.toLowerCase();
+      const plain = (clean.includes('frame') || clean.includes('loop')) && clean.includes('update') && (clean.includes('render') || clean.includes('draw') || clean.includes('redraw')) && (clean.includes('next') || clean.includes('again') || clean.includes('repeat') || clean.includes('schedule'));
+      return tech || plain;
     },
-    hint: "Type 'gameLoop() -> update state -> render -> requestAnimationFrame(gameLoop)'."
+    hint: "In plain words: each frame — update the state, redraw, then schedule the next frame."
   },
   {
     num: 2,
     title: "Exercise 9.2: [Write AI Prompt] Requesting the Recursive Loop",
-    problem: "Instruct the AI to write the core recursive animation function.",
+    problem: "Instruct the AI to write the core recursive animation function. (requestAnimationFrame(gameLoop) tells the browser 'run gameLoop again right before the next repaint' — so the function scheduling itself is what keeps the animation going smoothly.)",
     instruction: "Write a prompt asking for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame. Your prompt must contain 'function', 'gameLoop', and 'requestAnimationFrame'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1620,7 +1647,7 @@ const S9_EXERCISES = [
   {
     num: 3,
     title: "Exercise 9.3: [Review & Explain] Why Call It Again?",
-    problem: `The AI generated: function gameLoop() { moveObstacles(); requestAnimationFrame(gameLoop); }. Review this code.`,
+    problem: `The AI generated: function gameLoop() { moveObstacles(); requestAnimationFrame(gameLoop); }. Review this code. (The last line is what makes it a loop: after moving the obstacles, it books gameLoop to run again on the next frame. Remove it and the game updates once, then stops forever.)`,
     instruction: "What does calling requestAnimationFrame(gameLoop) at the end of the function do? Type SCHEDULES_NEXT_FRAME or STOPS_THE_LOOP.",
     preloaded: "/* Type your answer: */",
     validate: (code) => {
@@ -1632,7 +1659,7 @@ const S9_EXERCISES = [
   {
     num: 4,
     title: "Exercise 9.4: [Test & Break] The Unstoppable Speed Bug",
-    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends.",
+    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends. (Without a guard that returns early when gameActive is false, nothing can ever stop the loop — Game Over becomes impossible because the animation never halts.)",
     instruction: "Add a guard at the very top of gameLoop() that returns immediately if gameActive is false.",
     preloaded: 'function gameLoop() {\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}',
     runnable: true,
@@ -1645,7 +1672,7 @@ const S9_EXERCISES = [
   {
     num: 5,
     title: "Exercise 9.5: [Iterate & Improve] Confirming the Gate Works",
-    problem: "Iterate on your fixed loop to make the halt visible in the console.",
+    problem: "Iterate on your fixed loop to make the halt visible in the console. (A log line right before the return proves the gate actually fired — turning an invisible 'the loop stopped' into a visible, verifiable event.)",
     instruction: `Add a console.log("Loop halted") line right before the return statement in your gameActive guard.`,
     preloaded: 'function gameLoop() {\n  if (!gameActive) {\n    return;\n  }\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}',
     runnable: true,
@@ -1658,19 +1685,24 @@ const S9_EXERCISES = [
   {
     num: 6,
     title: "Exercise 9.6: [Plan & Design] Obstacle Movement & Reset",
-    problem: "Plan how the obstacle moves down the track and resets once it passes the bottom.",
-    instruction: "Write the plan using the format: obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10",
+    problem: "Plan how the obstacle moves down the track and resets once it passes the bottom. (Each frame adds speed to obstacleY to scroll it down; once it passes the bottom (500), it wraps back to the top (-100) and the score goes up — the illusion of endless oncoming traffic.)",
+    instruction: "In plain language, plan the scroll-and-wrap behavior. Example: the obstacle moves down; when it passes the bottom (500), it wraps to the top (-100) and the score goes up. (obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10 also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('obstacley') && clean.includes('500') && clean.includes('-100') && clean.includes('score');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('obstacley') && compact.includes('500') && compact.includes('-100') && compact.includes('score');
+      const clean = code.toLowerCase();
+      const hasObstacle = clean.includes('obstacle') || compact.includes('obstacley');
+      const hasReset = clean.includes('-100') || clean.includes('top') || clean.includes('reset') || clean.includes('wrap');
+      const plain = hasObstacle && clean.includes('500') && hasReset && clean.includes('score');
+      return tech || plain;
     },
-    hint: "Type 'obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10'."
+    hint: "In plain words: the obstacle moves down; passing 500 wraps it to -100 and the score goes up."
   },
   {
     num: 7,
     title: "Exercise 9.7: [Write AI Prompt] Requesting moveObstacles()",
-    problem: "Instruct the AI to write the obstacle movement and reset function.",
+    problem: "Instruct the AI to write the obstacle movement and reset function. (Give the exact numbers — the bottom edge (500) and the respawn point (-100) — plus the score bump, so the wrap-around and scoring match your plan precisely.)",
     instruction: "Write a prompt asking for a function moveObstacles() that adds speed to obstacleY, and once obstacleY exceeds 500, resets it to -100 and adds 10 to score. Your prompt must contain 'moveObstacles', 'obstacleY', '500', and 'score'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1682,7 +1714,7 @@ const S9_EXERCISES = [
   {
     num: 8,
     title: "Exercise 9.8: [Review & Explain] Tracing the Update Math",
-    problem: `The AI generated: obstacleY += speed;. Review this line.`,
+    problem: `The AI generated: obstacleY += speed;. Review this line. (Each frame nudges the obstacle down by speed pixels: at obstacleY 490 with speed 5, the next value is 495. Tracing one frame by hand is how you verify the motion before trusting the loop.)`,
     instruction: "If obstacleY is 490 and speed is 5, what is obstacleY immediately after this line runs (before any reset check)? Type a number.",
     preloaded: "/* Type a number: */",
     validate: (code) => {
@@ -1694,7 +1726,7 @@ const S9_EXERCISES = [
   {
     num: 9,
     title: "Exercise 9.9: [Test & Break] The Frozen Scoreboard",
-    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen.`,
+    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen. (Resetting the obstacle is only half the event: passing one is what earns points, so the score += must live inside the same reset block that wraps it back to the top.)`,
     instruction: "Add the missing score increment inside the reset block.",
     preloaded: 'if (obstacleY > 500) {\n  obstacleY = -100;\n}',
     runnable: true,
@@ -1707,7 +1739,7 @@ const S9_EXERCISES = [
   {
     num: 10,
     title: "Exercise 9.10: [Iterate & Improve] The Complete Animation Engine",
-    problem: "Combine every piece from this session into the complete animation engine.",
+    problem: "Combine every piece from this session into the complete animation engine. (gameLoop() with its gameActive gate driving moveObstacles() every frame — the beating heart that makes the road scroll, the score climb, and the game stoppable.)",
     instruction: "Write the complete code: gameLoop() with the gameActive gate calling moveObstacles() and requestAnimationFrame(gameLoop), plus moveObstacles() updating and resetting obstacleY with the score increment.",
     preloaded: "/* Write the complete animation engine here */",
     validate: (code) => {
@@ -1722,19 +1754,19 @@ const S10_EXERCISES = [
   {
     num: 1,
     title: "Exercise 10.1: [Plan & Design] The Overlap Condition",
-    problem: "Before coding collision detection, plan the mathematical condition for two boxes overlapping.",
-    instruction: "Write the plan using the format: player.right > obstacle.left AND player.left < obstacle.right AND player.bottom > obstacle.top AND player.top < obstacle.bottom",
+    problem: "Before coding collision detection, plan the mathematical condition for two boxes overlapping. (Two rectangles overlap only when they overlap on BOTH axes at once — so the check is four comparisons joined by AND: right/left on the X axis, top/bottom on the Y axis.)",
+    instruction: "In plain language, describe when two boxes overlap: they must overlap in both directions — right vs left, and top vs bottom. (The full 'player.right > obstacle.left AND ...' form is also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
       const clean = code.toLowerCase().replace(/\s+/g, '');
       return clean.includes('right') && clean.includes('left') && clean.includes('top') && clean.includes('bottom');
     },
-    hint: "Your plan needs all four bounds: right, left, top, and bottom."
+    hint: "In plain words: they overlap only if they overlap on both axes — right vs left, and top vs bottom."
   },
   {
     num: 2,
     title: "Exercise 10.2: [Write AI Prompt] Requesting checkCollision()",
-    problem: "Instruct the AI to write the collision-detection function.",
+    problem: "Instruct the AI to write the collision-detection function. (Each car is a box with an x, y, width, and height — the function compares two such boxes and returns true only if their edges overlap. Naming width and height is what makes it size-aware, not just point-based.)",
     instruction: "Write a prompt asking for a function checkCollision(rect1, rect2) that returns true if the two rectangles' x/y/width/height bounds overlap. Your prompt must contain 'checkCollision', 'width', and 'height'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1746,7 +1778,7 @@ const S10_EXERCISES = [
   {
     num: 3,
     title: "Exercise 10.3: [Review & Explain] Why Dimensions Matter",
-    problem: "Compare checking only center coordinates (player.x === obstacle.x) against a full AABB check using width/height.",
+    problem: "Compare checking only center coordinates (player.x === obstacle.x) against a full AABB check using width/height. (Two moving cars almost never share the exact same x to the pixel, so an equality check would miss nearly every real crash — comparing the box edges is what catches overlaps that aren't perfectly aligned.)",
     instruction: "If we only checked player.x === obstacle.x (ignoring width/height), would two overlapping-but-not-perfectly-aligned cars ever register a collision? Type YES or NO.",
     preloaded: "/* Type YES or NO: */",
     validate: (code) => {
@@ -1758,7 +1790,7 @@ const S10_EXERCISES = [
   {
     num: 4,
     title: "Exercise 10.4: [Test & Break] The Ghost Car Bug",
-    problem: `Bug: the tutor flipped one comparison operator, so the obstacle drives right through the player car with no crash registered.`,
+    problem: `Bug: the tutor flipped one comparison operator, so the obstacle drives right through the player car with no crash registered. (All four AABB comparisons must point the right way; flip even one and the combined AND can never be true, so collisions silently never fire — a ghost car.)`,
     instruction: "Fix the flipped comparison so the second condition correctly checks rect1.x + rect1.width > rect2.x (not <).",
     preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.x < rect2.x + rect2.width &&\n    rect1.x + rect1.width < rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
     runnable: true,
@@ -1771,7 +1803,7 @@ const S10_EXERCISES = [
   {
     num: 5,
     title: "Exercise 10.5: [Iterate & Improve] Wiring Collision into the Loop",
-    problem: "Iterate to actually stop the game when a collision is detected.",
+    problem: "Iterate to actually stop the game when a collision is detected. (Detecting a crash is useless unless something happens: calling checkCollision() inside the loop and setting gameActive = false on a hit is what turns 'they touched' into 'game over'.)",
     instruction: "Inside gameLoop(), add a call to checkCollision(player, obstacle) that sets gameActive to false and logs 'Collision detected!' when it returns true.",
     preloaded: 'function gameLoop() {\n  if (!gameActive) { return; }\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}',
     runnable: true,
@@ -1784,19 +1816,19 @@ const S10_EXERCISES = [
   {
     num: 6,
     title: "Exercise 10.6: [Plan & Design] Bounding Box Dimensions",
-    problem: "Plan the exact pixel dimensions for the player car and the obstacle.",
-    instruction: "Write the plan using the format: player width=30 height=50 | obstacle width=25 height=40",
+    problem: "Plan the exact pixel dimensions for the player car and the obstacle. (The overlap math needs each box's real width and height — 30×50 for the player, 25×40 for the obstacle — because the edges are computed from x/y plus those sizes.)",
+    instruction: "In plain language, plan the box sizes. Example: the player is 30 wide and 50 tall; the obstacle is 25 wide and 40 tall.",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('30') && clean.includes('50') && clean.includes('25') && clean.includes('40');
     },
-    hint: "Type 'player width=30 height=50 | obstacle width=25 height=40'."
+    hint: "In plain words: player 30 wide, 50 tall; obstacle 25 wide, 40 tall."
   },
   {
     num: 7,
     title: "Exercise 10.7: [Write AI Prompt] Building the Rect Objects",
-    problem: "Instruct the AI to build the two rectangle objects that checkCollision() will compare.",
+    problem: "Instruct the AI to build the two rectangle objects that checkCollision() will compare. (Each rect bundles the live position (carX, obstacleY) with its fixed width/height — packaging the four numbers the collision function reads for each car.)",
     instruction: "Write a prompt asking to build a playerRect object using carX and a fixed y, and an obsRect object using obstacleY, each with the correct width/height. Your prompt must contain 'carX', 'obstacleY', 'width', and 'height'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1808,7 +1840,7 @@ const S10_EXERCISES = [
   {
     num: 8,
     title: "Exercise 10.8: [Review & Explain] The Exact-Touch Edge Case",
-    problem: "Consider two boxes whose edges touch exactly, with no actual overlap.",
+    problem: "Consider two boxes whose edges touch exactly, with no actual overlap. (Touching is not overlapping: with a strict > comparison, edges that meet at exactly the same coordinate don't count as a hit — a deliberate choice about how forgiving the collision feels.)",
     instruction: "If rect1.x + rect1.width is exactly equal to rect2.x (edges touching, not overlapping), does a strict '>' comparison register a collision? Type YES or NO.",
     preloaded: "/* Type YES or NO: */",
     validate: (code) => {
@@ -1820,7 +1852,7 @@ const S10_EXERCISES = [
   {
     num: 9,
     title: "Exercise 10.9: [Test & Break] The Axis Swap Bug",
-    problem: `Bug: the first condition accidentally compares rect1.y (not rect1.x) against rect2's horizontal bound, swapping the X and Y axes.`,
+    problem: `Bug: the first condition accidentally compares rect1.y (not rect1.x) against rect2's horizontal bound, swapping the X and Y axes. (Comparing an x against a y measures horizontal against vertical — nonsense geometry that makes crashes register in the wrong place or not at all. Each comparison must keep x with x and y with y.)`,
     instruction: "Fix the axis-swap bug in the first condition so it correctly compares rect1.x, not rect1.y.",
     preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.y < rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
     runnable: true,
@@ -1833,7 +1865,7 @@ const S10_EXERCISES = [
   {
     num: 10,
     title: "Exercise 10.10: [Iterate & Improve] The Complete Collision System",
-    problem: "Combine every piece from this session into the complete collision-detection system.",
+    problem: "Combine every piece from this session into the complete collision-detection system. (The full 4-condition checkCollision() plus the loop wiring that ends the game on a hit — the sensor that finally gives the racing game real stakes.)",
     instruction: "Write the complete checkCollision(rect1, rect2) function using all 4 AABB conditions, plus a snippet showing gameLoop() calling it and setting gameActive to false on a hit.",
     preloaded: "/* Write the complete collision system here */",
     validate: (code) => {
@@ -1848,19 +1880,22 @@ const S11_EXERCISES = [
   {
     num: 1,
     title: "Exercise 11.1: [Plan & Design] The DOM Update Pipeline",
-    problem: "Before writing any code, plan how state changes become visible on screen.",
-    instruction: "Write the plan using the format: score changes -> #score-val.textContent = score | collision -> remove hidden from #restart-panel",
+    problem: "Before writing any code, plan how state changes become visible on screen. (A variable changing in memory is invisible until you push it into the page: score → write it into #score-val's text; a crash → reveal the restart panel. The plan maps each state change to its DOM update.)",
+    instruction: "In plain language, map each state change to what appears on screen. Example: when the score changes, show it on the scoreboard; on a crash, show the restart panel. (score -> #score-val.textContent | crash -> remove hidden from #restart-panel also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('score-val') && clean.includes('textcontent') && clean.includes('restart-panel');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('score-val') && compact.includes('textcontent') && compact.includes('restart-panel');
+      const clean = code.toLowerCase();
+      const plain = clean.includes('score') && (clean.includes('show') || clean.includes('display') || clean.includes('update') || clean.includes('scoreboard') || clean.includes('screen')) && (clean.includes('crash') || clean.includes('collision') || clean.includes('restart') || clean.includes('game over') || clean.includes('game-over') || clean.includes('panel'));
+      return tech || plain;
     },
-    hint: "Type 'score changes -> #score-val.textContent = score | collision -> remove hidden from #restart-panel'."
+    hint: "In plain words: when the score changes, show it on the scoreboard; on a crash, show the restart panel."
   },
   {
     num: 2,
     title: "Exercise 11.2: [Write AI Prompt] Requesting the Scoreboard Updater",
-    problem: "Instruct the AI to write the function that keeps the scoreboard in sync with the score variable.",
+    problem: "Instruct the AI to write the function that keeps the scoreboard in sync with the score variable. (textContent is the text inside an element; setting #score-val's textContent to the score variable is what makes the number on screen match the number in memory.)",
     instruction: "Write a prompt asking for a function updateScoreboard() that sets the textContent of '#score-val' to match the score variable. Your prompt must contain 'function', 'textContent', and 'score-val'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1872,7 +1907,7 @@ const S11_EXERCISES = [
   {
     num: 3,
     title: "Exercise 11.3: [Review & Explain] textContent vs. innerHTML",
-    problem: "Compare using .textContent against .innerHTML for writing the score value into the DOM.",
+    problem: "Compare using .textContent against .innerHTML for writing the score value into the DOM. (textContent treats its input as plain text; innerHTML parses it as HTML — so innerHTML with untrusted data can run injected scripts. For a plain number, textContent is both safer and faster.)",
     instruction: "Why is 'textContent' safer than 'innerHTML' for updating a score display? Type the risk innerHTML introduces: SCRIPT_INJECTION or SLOWER_RENDERING.",
     preloaded: "/* Type your answer: */",
     validate: (code) => {
@@ -1884,7 +1919,7 @@ const S11_EXERCISES = [
   {
     num: 4,
     title: "Exercise 11.4: [Test & Break] The Negative Score Leak",
-    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5".`,
+    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5". (Displaying a negative score looks broken to players. A defensive clamp — if score < 0, snap it to 0 — before writing to the DOM keeps the display sensible no matter what the math does.)`,
     instruction: "Add a defensive check that clamps score to 0 if it's ever negative, before writing it to the DOM.",
     preloaded: 'function updateScoreboard() {\n  document.getElementById("score-val").textContent = score;\n}',
     runnable: true,
@@ -1897,7 +1932,7 @@ const S11_EXERCISES = [
   {
     num: 5,
     title: "Exercise 11.5: [Iterate & Improve] Revealing the Restart Panel",
-    problem: "Iterate to show the game-over overlay when a collision happens.",
+    problem: "Iterate to show the game-over overlay when a collision happens. (The panel already exists in the HTML but is hidden by a 'hidden' class; removing that class with classList.remove is what makes it appear — showing/hiding by toggling a class, not creating elements.)",
     instruction: "Add a function triggerGameOverScreen() that removes the 'hidden' class from '#restart-panel'.",
     preloaded: "/* Add your function here */",
     runnable: true,
@@ -1910,19 +1945,22 @@ const S11_EXERCISES = [
   {
     num: 6,
     title: "Exercise 11.6: [Plan & Design] The Restart Flow",
-    problem: "Plan what should happen when the player presses Space after a game over.",
-    instruction: "Write the plan using the format: press Space -> reset score to 0 -> reset carX -> hide restart-panel -> gameActive = true",
+    problem: "Plan what should happen when the player presses Space after a game over. (Restart is a reset checklist: score back to 0, car back to center, hide the panel, and set gameActive = true to wake the loop — every piece of game state returned to its starting value.)",
+    instruction: "In plain language, plan the restart sequence. Example: press Space -> reset the score to 0, reset the car, hide the panel, and start the game running again. (press Space -> reset score -> reset carX -> hide restart-panel -> gameActive = true also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('space') && clean.includes('score') && clean.includes('gameactive');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('space') && compact.includes('score') && compact.includes('gameactive');
+      const clean = code.toLowerCase();
+      const plain = clean.includes('space') && (clean.includes('reset') || clean.includes('restart')) && clean.includes('score') && (clean.includes('start') || clean.includes('run') || clean.includes('active') || clean.includes('play') || clean.includes('again'));
+      return tech || plain;
     },
-    hint: "Type 'press Space -> reset score to 0 -> reset carX -> hide restart-panel -> gameActive = true'."
+    hint: "In plain words: press Space -> reset score to 0, reset the car, hide the panel, start the game again."
   },
   {
     num: 7,
     title: "Exercise 11.7: [Write AI Prompt] Requesting the Restart Handler",
-    problem: "Instruct the AI to write the keydown handler that restarts the game.",
+    problem: "Instruct the AI to write the keydown handler that restarts the game. (One more keydown listener, this time watching for the Space key, that runs the reset checklist and flips gameActive back to true to restart the loop.)",
     instruction: "Write a prompt asking for a keydown listener that, when Space is pressed, resets score to 0 and sets gameActive to true. Your prompt must contain 'Space', 'gameActive', and 'addEventListener'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -1934,7 +1972,7 @@ const S11_EXERCISES = [
   {
     num: 8,
     title: "Exercise 11.8: [Review & Explain] What the Hidden Class Does",
-    problem: `The CSS rule .hidden { display: none !important; } is applied to #restart-panel.`,
+    problem: `The CSS rule .hidden { display: none !important; } is applied to #restart-panel. (display: none removes the panel from view entirely. As long as the class stays on the element, it stays invisible — so forgetting to remove it after restart leaves the game-over screen stuck on the page.)`,
     instruction: "What happens if you forget to remove this class after a restart handler runs? Type STAYS_HIDDEN or BECOMES_VISIBLE.",
     preloaded: "/* Type your answer: */",
     validate: (code) => {
@@ -1946,7 +1984,7 @@ const S11_EXERCISES = [
   {
     num: 9,
     title: "Exercise 11.9: [Test & Break] The Frozen Restart",
-    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true — the game stays frozen.`,
+    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true — the game stays frozen. (The screen looks reset, but the game loop is still gated off from Session 9. Without gameActive = true, requestAnimationFrame is never re-armed, so nothing moves.)`,
     instruction: "Add the missing line that sets gameActive back to true inside the restart handler.",
     preloaded: 'window.addEventListener("keydown", function(event) {\n  if (event.key === " ") {\n    score = 0;\n    document.getElementById("restart-panel").classList.add("hidden");\n  }\n});',
     runnable: true,
@@ -1959,7 +1997,7 @@ const S11_EXERCISES = [
   {
     num: 10,
     title: "Exercise 11.10: [Iterate & Improve] The Complete HUD & Restart System",
-    problem: "Combine every piece from this session into the complete HUD and restart system.",
+    problem: "Combine every piece from this session into the complete HUD and restart system. (Live score updates, a game-over panel that appears on a crash, and a Space-to-restart handler — the loop that turns a single run into a replayable game.)",
     instruction: "Write the complete code: updateScoreboard() (with the negative-score guard), triggerGameOverScreen(), and a keydown handler restarting the game on Space.",
     preloaded: "/* Write the complete HUD and restart system here */",
     validate: (code) => {
@@ -1977,19 +2015,22 @@ const S12_EXERCISES = [
   {
     num: 1,
     title: "Exercise 12.1: [Plan & Design] The Configuration Object",
-    problem: "Before polishing the final game, plan a single config object holding every tunable value.",
-    instruction: "Write the plan using the format: const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed }",
+    problem: "Before polishing the final game, plan a single config object holding every tunable value. (Scattering magic numbers — speeds, limits — across the code makes them hard to find and change. A CONFIG object gathers every tunable value in one place, so you can retune the game's feel by editing one object.)",
+    instruction: "In plain language, plan the single object of tunable values. Example: gather the tunable numbers — starting speed, difficulty ramp, top speed — into one config object. (const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed } also accepted.)",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('config') && clean.includes('startspeed') && clean.includes('maxspeed');
+      const compact = code.replace(/\s+/g, '').toLowerCase();
+      const tech = compact.includes('config') && compact.includes('startspeed') && compact.includes('maxspeed');
+      const clean = code.toLowerCase();
+      const plain = (clean.includes('config') || clean.includes('setting') || clean.includes('tunable') || clean.includes('one object') || clean.includes('one place')) && clean.includes('speed') && (clean.includes('max') || clean.includes('top') || clean.includes('limit') || clean.includes('start'));
+      return tech || plain;
     },
-    hint: "Type 'const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed }'."
+    hint: "In plain words: gather the tunable numbers — starting speed, difficulty ramp, top speed — into one config object."
   },
   {
     num: 2,
     title: "Exercise 12.2: [Write AI Prompt] Requesting Difficulty Scaling",
-    problem: "Instruct the AI to write the difficulty-scaling function using your CONFIG object.",
+    problem: "Instruct the AI to write the difficulty-scaling function using your CONFIG object. (Difficulty should ramp with score — faster as you go — but a clamp to CONFIG.maxSpeed keeps it from becoming impossible. Reference the CONFIG values instead of raw numbers.)",
     instruction: "Write a prompt asking for a function that increases speed based on score, using CONFIG.difficultyMultiplier, and clamps the result to CONFIG.maxSpeed. Your prompt must contain 'CONFIG', 'speed', and 'clamp' (or 'max').",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -2001,7 +2042,7 @@ const S12_EXERCISES = [
   {
     num: 3,
     title: "Exercise 12.3: [Review & Explain] Tracing the Difficulty Formula",
-    problem: `Given const CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 }; and score = 50, review the formula startSpeed + score * difficultyMultiplier.`,
+    problem: `Given const CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 }; and score = 50, review the formula startSpeed + score * difficultyMultiplier. (Order of operations: the multiply runs first (50 * 0.1 = 5), then the add (5 + 5 = 10). Tracing named config values through a formula is the same audit skill from earlier sessions.)`,
     instruction: "What does the formula equal when score is 50? Type a number.",
     preloaded: "/* Type a number: */",
     validate: (code) => {
@@ -2013,7 +2054,7 @@ const S12_EXERCISES = [
   {
     num: 4,
     title: "Exercise 12.4: [Test & Break] The Unbounded Speed Bug",
-    problem: "Bug: at very high scores, the computed speed exceeds CONFIG.maxSpeed, making the game unplayably fast.",
+    problem: "Bug: at very high scores, the computed speed exceeds CONFIG.maxSpeed, making the game unplayably fast. (A ramp with no ceiling eventually breaks the game. Math.min(speed, CONFIG.maxSpeed) caps it — the same clamp idea from Session 6, now pulled from config instead of hardcoded.)",
     instruction: "Add a clamp so speed never exceeds CONFIG.maxSpeed.",
     preloaded: 'let speed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;',
     runnable: true,
@@ -2026,7 +2067,7 @@ const S12_EXERCISES = [
   {
     num: 5,
     title: "Exercise 12.5: [Iterate & Improve] Refactoring Magic Numbers",
-    problem: "Iterate on your boundary guards from Session 6 to remove hardcoded values.",
+    problem: "Iterate on your boundary guards from Session 6 to remove hardcoded values. (The literal 35 and 295 from Session 6 become CONFIG.leftBound and CONFIG.rightBound — same behavior, but now every tunable number lives in one central object.)",
     instruction: "Rewrite the boundary values (35 and 295) as CONFIG.leftBound and CONFIG.rightBound instead of hardcoded numbers.",
     preloaded: 'if (carX > 35) { carX -= 130; }\nif (carX < 295) { carX += 130; }',
     validate: (code) => {
@@ -2038,19 +2079,19 @@ const S12_EXERCISES = [
   {
     num: 6,
     title: "Exercise 12.6: [Plan & Design] The Final QA Matrix",
-    problem: "Plan the full verification sweep across every system you built this level.",
-    instruction: "List the 4 core systems to verify, separated by |: variables, boundaries, collision, restart.",
+    problem: "Plan the full verification sweep across every system you built this level. (A final QA pass checks each pillar in turn — variables, boundaries, collision, restart. Listing them is how you prove the whole game still works, not just the last thing you touched.)",
+    instruction: "In plain language, list the 4 core systems to verify: variables, boundaries, collision, restart.",
     preloaded: "/* Write your plan here: */",
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('variable') && clean.includes('boundar') && clean.includes('collision') && clean.includes('restart');
     },
-    hint: "Type 'variables | boundaries | collision | restart'."
+    hint: "In plain words: variables, boundaries, collision, restart."
   },
   {
     num: 7,
     title: "Exercise 12.7: [Write AI Prompt] Requesting the Smoke-Test Script",
-    problem: "Instruct the AI to generate a checklist script that verifies every system logs pass or fail.",
+    problem: "Instruct the AI to generate a checklist script that verifies every system logs pass or fail. (A smoke test logs PASS/FAIL for each core system at a glance — automating the QA sweep so a regression shows up as a FAIL line instead of a silent break.)",
     instruction: "Write a prompt asking for a diagnostic script that logs PASS or FAIL for each core system using console.log. Your prompt must contain 'test', 'console.log', and 'pass'.",
     preloaded: "/* Write your AI Prompt here: */",
     validate: (code) => {
@@ -2062,7 +2103,7 @@ const S12_EXERCISES = [
   {
     num: 8,
     title: "Exercise 12.8: [Review & Explain] The Malicious QA Officer's Question",
-    problem: "The tutor, playing a 'Malicious QA Officer', asks about boundary-check consistency.",
+    problem: "The tutor, playing a 'Malicious QA Officer', asks about boundary-check consistency. (Defending your code under hostile questioning is a real engineering skill: inconsistent operators — > in one place, >= in another — create rare edge-case gaps an adversarial tester will hunt for.)",
     instruction: "If your left-boundary guard used '> 35' in one place but '>= 35' in another, could that inconsistency let the car overlap the track edge in rare cases? Type YES or NO.",
     preloaded: "/* Type YES or NO: */",
     validate: (code) => {
@@ -2074,7 +2115,7 @@ const S12_EXERCISES = [
   {
     num: 9,
     title: "Exercise 12.9: [Test & Break] The Final Diagnostic",
-    problem: "The tutor seeds one last collision logic error into your capstone build before certification.",
+    problem: "The tutor seeds one last collision logic error into your capstone build before certification. (One final audit: a single flipped operator in the AABB check — the same class of bug from Session 10, now to be caught fast under exam conditions.)",
     instruction: "Diagnose and fix the seeded collision logic error (hint: one comparison operator is flipped).",
     preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.x > rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
     runnable: true,
@@ -2087,7 +2128,7 @@ const S12_EXERCISES = [
   {
     num: 10,
     title: "Exercise 12.10: [Iterate & Improve] Capstone Reflection",
-    problem: "Reflect on the entire Racing Car Game project, from Session 1's IPO blueprint to today's certified build.",
+    problem: "Reflect on the entire Racing Car Game project, from Session 1's IPO blueprint to today's certified build. (Naming the trickiest bug and how tracing variable values exposed it turns a semester of fixes into a transferable debugging method you'll carry into Level 2.)",
     instruction: "Write a one-sentence reflection: what was the trickiest bug you fixed across this entire project, and how did tracing variable values help you find it?",
     preloaded: "/* Write your reflection here */",
     validate: (code) => {
@@ -6288,11 +6329,11 @@ export default function App() {
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI-Generated Code</label>
-                              <textarea 
+                              <textarea
                                 value={editingCodeOutput}
                                 onChange={e => setEditingCodeOutput(e.target.value)}
                                 style={{ width: '100%', height: '350px', background: '#030409', color: '#c5cdd8', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}
-                                placeholder="Paste the code generated by the AI here..."
+                                placeholder={PROJECT_TASKS[currentSession.id] && PROJECT_TASKS[currentSession.id].sampleGeneratedHtml ? "Paste the code generated by the AI here. Example of what this milestone's AI output might look like:\n\n" + PROJECT_TASKS[currentSession.id].sampleGeneratedHtml : "Paste the code generated by the AI here..."}
                               />
                             </div>
                             <div className="form-field">
