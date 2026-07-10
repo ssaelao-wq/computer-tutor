@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { CURRICULUM_DATA } from './curriculumData';
 import { PROJECT_TASKS } from './projectTasksData';
@@ -481,14 +481,6 @@ const CAMPAIGN_THEMES = {
     }
   }
 };
-
-const LEADERBOARD_INITIAL = [
-  { rank: 1, name: 'Ava "ByteSlayer" Smith', level: 'Level 3', points: 1420, active: 'Session 9: Comm Security' },
-  { rank: 2, name: 'Lucas "PromptGod" Chen', level: 'Level 3', points: 1250, active: 'Session 8: Security' },
-  { rank: 3, name: 'Sophia "LogicQueen" Davis', level: 'Level 2', points: 890, active: 'Session 6: Constraints' },
-  { rank: 4, name: 'You (Detective-in-Training)', level: 'Level 2', points: 450, active: 'Session 5: Sandbox', isCurrentUser: true },
-  { rank: 5, name: 'Ethan "BugHunter" Miller', level: 'Level 1', points: 380, active: 'Session 5: Loops' }
-];
 
 const S2_EXERCISES = [
   {
@@ -2417,7 +2409,7 @@ export default function App() {
         iterationChanges: data.iterationChanges || '',
         iterationLessons: data.iterationLessons || ''
       };
-    } catch (e) {
+    } catch {
       return {
         planVision: '',
         planSpecs: '',
@@ -2474,7 +2466,7 @@ export default function App() {
   }, [token]);
 
   // Load student list for teacher admin panel
-  const fetchStudentsList = () => {
+  const fetchStudentsList = useCallback(() => {
     if (!token) return;
     fetch('/api/admin/students', {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -2486,9 +2478,9 @@ export default function App() {
         }
       })
       .catch(err => console.warn("Failed to load students list:", err.message));
-  };
+  }, [token]);
 
-  const fetchLeaderboard = () => {
+  const fetchLeaderboard = useCallback(() => {
     if (!token) return;
     fetch('/api/leaderboard', {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -2500,19 +2492,19 @@ export default function App() {
         }
       })
       .catch(err => console.warn("Failed to load leaderboard:", err.message));
-  };
+  }, [token]);
 
   useEffect(() => {
     if (token && currentUser && currentUser.role === 'teacher') {
       fetchStudentsList();
     }
-  }, [token, currentUser]);
+  }, [token, currentUser, fetchStudentsList]);
 
   useEffect(() => {
     if (activeTab === 'leaderboard') {
       fetchLeaderboard();
     }
-  }, [activeTab, token]);
+  }, [activeTab, token, fetchLeaderboard]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -3042,6 +3034,10 @@ export default function App() {
         break; // claim one at a time; solvedCases update re-runs this effect for the next
       }
     }
+    // isQuestLocked/claimCaseEvidence intentionally omitted: they close over sandbox
+    // state that changes every keystroke and are recreated each render, so including
+    // them would rerun this effect far more often than the state it actually cares about.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exerciseProgress, solvedCases, currentUser]);
 
   // Helper to load templates into the sandbox
