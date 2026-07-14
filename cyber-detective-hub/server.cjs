@@ -66,6 +66,7 @@ async function createTables() {
       name VARCHAR(100) NOT NULL,
       points INT DEFAULT 0,
       student_level VARCHAR(10) DEFAULT 'L1',
+      is_active BOOLEAN DEFAULT true,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -83,6 +84,9 @@ async function createTables() {
   try {
     await db.query("ALTER TABLE user_profile ADD COLUMN IF NOT EXISTS student_level VARCHAR(10) DEFAULT 'L1'");
   } catch (e) { console.log("student_level migration status:", e.message); }
+  try {
+    await db.query("ALTER TABLE user_profile ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true");
+  } catch (e) { console.log("is_active migration status:", e.message); }
 
   // 2. Completed Quests Table
   await db.query(`
@@ -132,6 +136,36 @@ async function createTables() {
       FOREIGN KEY (user_id) REFERENCES user_profile(id) ON DELETE CASCADE
     )
   `);
+
+  // 6. Parent-Student Links Table (many-to-many: one parent account can link to multiple students)
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS parent_links (
+      parent_id VARCHAR(50),
+      student_id VARCHAR(50),
+      PRIMARY KEY (parent_id, student_id),
+      FOREIGN KEY (parent_id) REFERENCES user_profile(id) ON DELETE CASCADE,
+      FOREIGN KEY (student_id) REFERENCES user_profile(id) ON DELETE CASCADE
+    )
+  `);
+
+  // 7. Session Reports Table (attendance date + teacher/parent feedback, one row per student per curriculum session)
+  // session_date is stored as plain 'YYYY-MM-DD' text (not a DATE column) so it round-trips
+  // exactly as entered, with no JS Date/timezone conversion on the way out.
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS session_reports (
+      student_id VARCHAR(50),
+      session_id VARCHAR(50),
+      session_date VARCHAR(10),
+      teacher_feedback TEXT,
+      parent_feedback TEXT,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (student_id, session_id),
+      FOREIGN KEY (student_id) REFERENCES user_profile(id) ON DELETE CASCADE
+    )
+  `);
+  try {
+    await db.query("ALTER TABLE session_reports ALTER COLUMN session_date TYPE VARCHAR(10) USING session_date::text");
+  } catch (e) { console.log("session_date type migration status:", e.message); }
 
   // Seed default teacher "somboon/somboon123" if not exists
   const teacherRes = await db.query("SELECT * FROM user_profile WHERE username = 'somboon'");
@@ -211,6 +245,14 @@ async function createTables() {
     SET code = 'Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)\n\nSystem Preconditions:\n- [Write preconditions, e.g. powerState is "ON"]\n\nInputs (Identify variables and types):\n- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)\n\nProcessing Logic Steps (Step-by-step algorithm and loops):\n1. [First Step]\n2. [Second Step]\n3. [Repeat/Loop Check Step]\n\nOutputs (Identify expected actions/results):\n- [Output Variable Name]: [Expected Action/Value]' 
     WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Detailed Spec v2)%')
   `).catch(err => console.warn(err));
+}
+
+// Bangkok (UTC+7, no DST) wall-clock timestamp as "YYYY-MM-DD HH:MM", used instead of
+// toISOString() so journal entries show the time the student actually experienced it,
+// regardless of what timezone the server process itself happens to run in.
+function formatBangkokTimestamp(date = new Date()) {
+  const bangkokMs = date.getTime() + 7 * 60 * 60 * 1000;
+  return new Date(bangkokMs).toISOString().replace('T', ' ').substring(0, 16);
 }
 
 // Authentication Middleware
@@ -445,7 +487,7 @@ app.post('/api/journal', authenticateToken, async (req, res) => {
   }
 
   try {
-    const formattedDate = date || new Date().toISOString().replace('T', ' ').substring(0, 16);
+    const formattedDate = date || formatBangkokTimestamp();
     
     // Insert entry metadata
     await db.query(`
@@ -561,29 +603,128 @@ app.get('/api/admin/students/:studentId/journal', authenticateToken, requireTeac
 // Admin Route: Get all students
 app.get('/api/admin/students', authenticateToken, requireTeacher, async (req, res) => {
   try {
-    const studentsRes = await db.query("SELECT id, username, name, role, points, student_level, created_at FROM user_profile WHERE role = 'student' ORDER BY created_at DESC");
+    const studentsRes = await db.query("SELECT id, username, name, role, points, student_level, is_active, created_at FROM user_profile WHERE role = 'student' ORDER BY created_at DESC");
     res.json(studentsRes.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Admin Route: Add new student
+// Admin Route: Get all parent accounts with their linked student(s)
+app.get('/api/admin/parents', authenticateToken, requireTeacher, async (req, res) => {
+  try {
+    const parentsRes = await db.query("SELECT id, username, name, role, created_at FROM user_profile WHERE role = 'parent' ORDER BY created_at DESC");
+    const linksRes = await db.query(`
+      SELECT pl.parent_id, s.id as student_id, s.name as student_name, s.username as student_username, s.is_active as student_is_active
+      FROM parent_links pl
+      JOIN user_profile s ON s.id = pl.student_id
+    `);
+    const linksByParent = {};
+    linksRes.rows.forEach(row => {
+      if (!linksByParent[row.parent_id]) linksByParent[row.parent_id] = [];
+      linksByParent[row.parent_id].push({
+        id: row.student_id,
+        name: row.student_name,
+        username: row.student_username,
+        is_active: row.student_is_active
+      });
+    });
+    const parents = parentsRes.rows.map(p => ({ ...p, linkedStudents: linksByParent[p.id] || [] }));
+    res.json(parents);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin Route: Activate/deactivate a student
+app.post('/api/admin/students/active', authenticateToken, requireTeacher, async (req, res) => {
+  const { studentId, active } = req.body;
+  if (!studentId || typeof active !== 'boolean') {
+    return res.status(400).json({ error: 'studentId and a boolean active value are required' });
+  }
+  try {
+    await db.query("UPDATE user_profile SET is_active = $1 WHERE id = $2 AND role = 'student'", [active, studentId]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin Route: Link a parent account to an additional student
+app.post('/api/admin/parents/link', authenticateToken, requireTeacher, async (req, res) => {
+  const { parentId, studentId } = req.body;
+  if (!parentId || !studentId) {
+    return res.status(400).json({ error: 'parentId and studentId are required' });
+  }
+  try {
+    const parentCheck = await db.query("SELECT id FROM user_profile WHERE id = $1 AND role = 'parent'", [parentId]);
+    const studentCheck = await db.query("SELECT id FROM user_profile WHERE id = $1 AND role = 'student'", [studentId]);
+    if (parentCheck.rows.length === 0 || studentCheck.rows.length === 0) {
+      return res.status(400).json({ error: 'Parent or student not found' });
+    }
+    await db.query(`
+      INSERT INTO parent_links (parent_id, student_id) VALUES ($1, $2)
+      ON CONFLICT DO NOTHING
+    `, [parentId, studentId]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin Route: Unlink a parent account from a student
+app.post('/api/admin/parents/unlink', authenticateToken, requireTeacher, async (req, res) => {
+  const { parentId, studentId } = req.body;
+  if (!parentId || !studentId) {
+    return res.status(400).json({ error: 'parentId and studentId are required' });
+  }
+  try {
+    await db.query("DELETE FROM parent_links WHERE parent_id = $1 AND student_id = $2", [parentId, studentId]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin Route: Add new student, or a new parent account linked to existing student(s)
 app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, res) => {
-  const { username, password, name, level } = req.body;
+  const { username, password, name, level, linkedStudentIds } = req.body;
   if (!username || !password || !name) {
     return res.status(400).json({ error: 'Username, password and name are required' });
   }
-  const studentLevel = level || 'L1';
+  const isParent = Array.isArray(linkedStudentIds) && linkedStudentIds.length > 0;
   try {
     const checkUser = await db.query("SELECT id FROM user_profile WHERE username = $1", [username]);
     if (checkUser.rows.length > 0) {
       return res.status(400).json({ error: 'Username already exists' });
     }
-    
+
+    if (isParent) {
+      const linkedRes = await db.query("SELECT id FROM user_profile WHERE id = ANY($1) AND role = 'student'", [linkedStudentIds]);
+      if (linkedRes.rows.length !== linkedStudentIds.length) {
+        return res.status(400).json({ error: 'One or more linked students were not found' });
+      }
+
+      const parentId = 'parent_' + Date.now();
+      await db.query(`
+        INSERT INTO user_profile (id, username, password, role, name, points)
+        VALUES ($1, $2, $3, 'parent', $4, 0)
+      `, [parentId, username, password, name]);
+
+      for (const studentId of linkedStudentIds) {
+        await db.query(`
+          INSERT INTO parent_links (parent_id, student_id) VALUES ($1, $2)
+          ON CONFLICT DO NOTHING
+        `, [parentId, studentId]);
+      }
+
+      return res.json({ success: true, parent: { id: parentId, username, name, role: 'parent', linkedStudentIds } });
+    }
+
+    const studentLevel = level || 'L1';
     const studentId = 'std_' + Date.now();
     await db.query(`
-      INSERT INTO user_profile (id, username, password, role, name, points, student_level) 
+      INSERT INTO user_profile (id, username, password, role, name, points, student_level)
       VALUES ($1, $2, $3, 'student', $4, 0, $5)
     `, [studentId, username, password, name, studentLevel]);
 
@@ -591,7 +732,7 @@ app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, r
     await db.query(`
       INSERT INTO journal_entries (id, user_id, title, date, version, active_version)
       VALUES ($1, $2, $3, $4, 1, 1)
-    `, [studentId + '_j1', studentId, 'L1 S1: Household IPO Blueprint', new Date().toISOString().replace('T', ' ').substring(0, 16)]);
+    `, [studentId + '_j1', studentId, 'L1 S1: Household IPO Blueprint', formatBangkokTimestamp()]);
 
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
@@ -629,6 +770,109 @@ app.post('/api/admin/students/points', authenticateToken, requireTeacher, async 
   }
   try {
     await db.query("UPDATE user_profile SET points = $1 WHERE id = $2 AND role = 'student'", [points, studentId]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Student Report Helper: does this user (teacher or linked parent) have access to this student's report?
+async function canAccessStudentReport(userId, studentId) {
+  const userRes = await db.query("SELECT role FROM user_profile WHERE id = $1", [userId]);
+  if (userRes.rows.length === 0) return { allowed: false, role: null };
+  const role = userRes.rows[0].role;
+  if (role === 'teacher') return { allowed: true, role };
+  if (role === 'parent') {
+    const linkRes = await db.query("SELECT 1 FROM parent_links WHERE parent_id = $1 AND student_id = $2", [userId, studentId]);
+    return { allowed: linkRes.rows.length > 0, role };
+  }
+  return { allowed: false, role };
+}
+
+// Student Report Route: students a teacher can pick from, or a parent's linked student(s)
+app.get('/api/report/my-students', authenticateToken, async (req, res) => {
+  try {
+    const userRes = await db.query("SELECT role FROM user_profile WHERE id = $1", [req.userId]);
+    if (userRes.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const role = userRes.rows[0].role;
+    if (role === 'student') {
+      return res.status(403).json({ error: 'Forbidden: Students do not have access to Student Report' });
+    }
+    if (role === 'teacher') {
+      const studentsRes = await db.query("SELECT id, username, name, student_level FROM user_profile WHERE role = 'student' AND is_active = true ORDER BY name ASC");
+      return res.json(studentsRes.rows);
+    }
+    const linkedRes = await db.query(`
+      SELECT up.id, up.username, up.name, up.student_level
+      FROM parent_links pl
+      JOIN user_profile up ON up.id = pl.student_id
+      WHERE pl.parent_id = $1 AND up.is_active = true
+      ORDER BY up.name ASC
+    `, [req.userId]);
+    res.json(linkedRes.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Student Report Route: fetch all session attendance/feedback rows for a student
+app.get('/api/report/:studentId', authenticateToken, async (req, res) => {
+  try {
+    const access = await canAccessStudentReport(req.userId, req.params.studentId);
+    if (!access.allowed) {
+      return res.status(403).json({ error: "Forbidden: No access to this student's report" });
+    }
+    const reportRes = await db.query(
+      "SELECT session_id, session_date, teacher_feedback, parent_feedback FROM session_reports WHERE student_id = $1",
+      [req.params.studentId]
+    );
+    res.json(reportRes.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Student Report Route: teacher sets the attendance date for a session
+app.put('/api/report/:studentId/:sessionId/date', authenticateToken, requireTeacher, async (req, res) => {
+  const { studentId, sessionId } = req.params;
+  const { date } = req.body;
+  try {
+    await db.query(`
+      INSERT INTO session_reports (student_id, session_id, session_date, updated_at)
+      VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+      ON CONFLICT (student_id, session_id)
+      DO UPDATE SET session_date = $3, updated_at = CURRENT_TIMESTAMP
+    `, [studentId, sessionId, date || null]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Student Report Route: teacher edits either feedback box; a linked parent may only edit the parent box
+app.put('/api/report/:studentId/:sessionId/feedback', authenticateToken, async (req, res) => {
+  const { studentId, sessionId } = req.params;
+  const { field, text } = req.body;
+  if (field !== 'teacher' && field !== 'parent') {
+    return res.status(400).json({ error: "field must be 'teacher' or 'parent'" });
+  }
+  try {
+    const access = await canAccessStudentReport(req.userId, studentId);
+    if (!access.allowed) {
+      return res.status(403).json({ error: "Forbidden: No access to this student's report" });
+    }
+    if (field === 'teacher' && access.role !== 'teacher') {
+      return res.status(403).json({ error: 'Forbidden: Only teachers can edit teacher feedback' });
+    }
+    const column = field === 'teacher' ? 'teacher_feedback' : 'parent_feedback';
+    await db.query(`
+      INSERT INTO session_reports (student_id, session_id, ${column}, updated_at)
+      VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+      ON CONFLICT (student_id, session_id)
+      DO UPDATE SET ${column} = $3, updated_at = CURRENT_TIMESTAMP
+    `, [studentId, sessionId, text || '']);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });

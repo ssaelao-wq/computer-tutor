@@ -3009,6 +3009,13 @@ const L2_QUEST_SESSIONS = L2_SESSION_SEQUENCE.map(s => ({
   xp: 100
 }));
 
+// Bangkok (UTC+7, no DST) wall-clock timestamp as "YYYY-MM-DD HH:MM", used instead of
+// toISOString() so journal entries show the time the student actually experienced it.
+function formatBangkokTimestamp(date = new Date()) {
+  const bangkokMs = date.getTime() + 7 * 60 * 60 * 1000;
+  return new Date(bangkokMs).toISOString().replace('T', ' ').substring(0, 16);
+}
+
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('detective_token') || null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -3018,6 +3025,7 @@ export default function App() {
 
   // Admin student states
   const [students, setStudents] = useState([]);
+  const [parents, setParents] = useState([]);
   const [newStudentUsername, setNewStudentUsername] = useState('');
   const [newStudentPassword, setNewStudentPassword] = useState('');
   const [newStudentName, setNewStudentName] = useState('');
@@ -3031,6 +3039,19 @@ export default function App() {
   const [viewingJournalEntryId, setViewingJournalEntryId] = useState(null);
   const [viewingJournalVersion, setViewingJournalVersion] = useState(null);
   const [leaderboardData, setLeaderboardData] = useState([]);
+
+  // Student Report states (Attendance + Feedback, for teacher and parent roles)
+  const [reportStudent, setReportStudent] = useState(null);
+  const [reportLinkedStudents, setReportLinkedStudents] = useState([]);
+  const [reportSubTab, setReportSubTab] = useState('attendance');
+  const [reportSessionFocus, setReportSessionFocus] = useState(null);
+  const [reportCameFromAdmin, setReportCameFromAdmin] = useState(false);
+  const [reportData, setReportData] = useState({});
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportStatusMsg, setReportStatusMsg] = useState('');
+
+  // Unified create-person form: optional link to existing student(s) makes the new account a Parent
+  const [newPersonLinkedStudentIds, setNewPersonLinkedStudentIds] = useState([]);
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [points, setPoints] = useState(0);
@@ -3072,6 +3093,13 @@ export default function App() {
       
       setSelectedSessionId(defaultSessionMap[levelNum] || 'l1-s1');
       setCurriculumSessionId(defaultCurriculumMap[levelNum] || 'l1-s1');
+    }
+  }, [currentUser]);
+
+  // Parent auto-routing: Student Report is the only menu a parent account can reach
+  useEffect(() => {
+    if (currentUser && currentUser.role === 'parent') {
+      setActiveTab('studentReport');
     }
   }, [currentUser]);
 
@@ -3401,6 +3429,20 @@ export default function App() {
       .catch(err => console.warn("Failed to load students list:", err.message));
   }, [token]);
 
+  const fetchParentsList = useCallback(() => {
+    if (!token) return;
+    fetch('/api/admin/parents', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setParents(data);
+        }
+      })
+      .catch(err => console.warn("Failed to load parents list:", err.message));
+  }, [token]);
+
   const fetchLeaderboard = useCallback(() => {
     if (!token) return;
     fetch('/api/leaderboard', {
@@ -3418,14 +3460,144 @@ export default function App() {
   useEffect(() => {
     if (token && currentUser && currentUser.role === 'teacher') {
       fetchStudentsList();
+      fetchParentsList();
     }
-  }, [token, currentUser, fetchStudentsList]);
+  }, [token, currentUser, fetchStudentsList, fetchParentsList]);
 
   useEffect(() => {
     if (activeTab === 'leaderboard') {
       fetchLeaderboard();
     }
   }, [activeTab, token, fetchLeaderboard]);
+
+  // Student Report: load a parent's linked student(s)
+  const fetchReportLinkedStudents = useCallback(() => {
+    if (!token) return;
+    fetch('/api/report/my-students', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setReportLinkedStudents(data);
+          if (data.length === 1) {
+            setReportStudent(data[0]);
+          }
+        }
+      })
+      .catch(err => console.warn("Failed to load linked students:", err.message));
+  }, [token]);
+
+  useEffect(() => {
+    if (activeTab === 'studentReport' && currentUser && currentUser.role === 'parent') {
+      fetchReportLinkedStudents();
+    }
+  }, [activeTab, currentUser, fetchReportLinkedStudents]);
+
+  // Student Report: load the attendance/feedback rows for whichever student is currently selected
+  const fetchReportData = useCallback((studentId) => {
+    if (!token || !studentId) return;
+    setReportLoading(true);
+    fetch(`/api/report/${studentId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const map = {};
+          data.forEach(row => {
+            map[row.session_id] = {
+              session_date: row.session_date ? row.session_date.substring(0, 10) : '',
+              teacher_feedback: row.teacher_feedback || '',
+              parent_feedback: row.parent_feedback || ''
+            };
+          });
+          setReportData(map);
+        }
+      })
+      .catch(err => console.warn("Failed to load student report:", err.message))
+      .finally(() => setReportLoading(false));
+  }, [token]);
+
+  useEffect(() => {
+    if (reportStudent) {
+      fetchReportData(reportStudent.id);
+    }
+  }, [reportStudent, fetchReportData]);
+
+  // Scroll the focused session into view when jumping from Attendance to Feedback
+  useEffect(() => {
+    if (reportSubTab === 'feedback' && reportSessionFocus) {
+      const el = document.getElementById(`report-feedback-${reportSessionFocus}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [reportSubTab, reportSessionFocus]);
+
+  const handleSelectReportStudent = (student) => {
+    setReportStudent(student);
+    setReportSubTab('attendance');
+    setReportSessionFocus(null);
+    setReportStatusMsg('');
+  };
+
+  const handleJumpToSessionFeedback = (sessionId) => {
+    setReportSubTab('feedback');
+    setReportSessionFocus(sessionId);
+  };
+
+  const handleSetAttendanceDate = (sessionId, date) => {
+    if (!token || !reportStudent) return;
+    setReportData(prev => ({
+      ...prev,
+      [sessionId]: { teacher_feedback: '', parent_feedback: '', ...(prev[sessionId] || {}), session_date: date }
+    }));
+    fetch(`/api/report/${reportStudent.id}/${sessionId}/date`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ date })
+    }).catch(err => console.warn("Failed to save attendance date:", err.message));
+  };
+
+  const handleFeedbackTextChange = (sessionId, field, text) => {
+    const column = field === 'teacher' ? 'teacher_feedback' : 'parent_feedback';
+    setReportData(prev => ({
+      ...prev,
+      [sessionId]: { session_date: '', teacher_feedback: '', parent_feedback: '', ...(prev[sessionId] || {}), [column]: text }
+    }));
+  };
+
+  const handleSaveFeedback = (sessionId, field) => {
+    if (!token || !reportStudent) return;
+    const row = reportData[sessionId] || {};
+    const text = field === 'teacher' ? (row.teacher_feedback || '') : (row.parent_feedback || '');
+    setReportStatusMsg('');
+    fetch(`/api/report/${reportStudent.id}/${sessionId}/feedback`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ field, text })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to save feedback"); });
+        return res.json();
+      })
+      .then(() => setReportStatusMsg('Feedback saved.'))
+      .catch(err => setReportStatusMsg(`Error: ${err.message}`));
+  };
+
+  const handleOpenAdminFeedback = (student) => {
+    setReportStudent(student);
+    setReportCameFromAdmin(true);
+    setReportSubTab('feedback');
+    setReportSessionFocus(null);
+    setActiveTab('studentReport');
+  };
+
+  const handleBackToAdmin = () => {
+    setReportCameFromAdmin(false);
+    setReportStudent(null);
+    setReportData({});
+    setActiveTab('admin');
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -3480,7 +3652,7 @@ export default function App() {
 
     fetch('/api/admin/students', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
@@ -3488,20 +3660,24 @@ export default function App() {
         username: newStudentUsername,
         password: newStudentPassword,
         name: newStudentName,
-        level: newStudentLevel
+        level: newStudentLevel,
+        linkedStudentIds: newPersonLinkedStudentIds
       })
     })
       .then(res => {
-        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to create student"); });
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to create profile"); });
         return res.json();
       })
       .then(data => {
-        setAdminStatusMsg(`Success: Student "${data.student.name}" registered successfully.`);
+        const created = data.student || data.parent;
+        setAdminStatusMsg(`Success: ${created.role === 'parent' ? 'Parent' : 'Student'} "${created.name}" registered successfully.`);
         setNewStudentUsername('');
         setNewStudentPassword('');
         setNewStudentName('');
         setNewStudentLevel('L1');
+        setNewPersonLinkedStudentIds([]);
         fetchStudentsList();
+        fetchParentsList();
       })
       .catch(err => {
         setAdminStatusMsg(`Error: ${err.message}`);
@@ -3551,6 +3727,76 @@ export default function App() {
       .catch(err => {
         console.error("Failed to update student points:", err.message);
         alert("Failed to update student points: " + err.message);
+      });
+  };
+
+  const handleToggleStudentActive = (studentId, nextActive) => {
+    if (!token) return;
+    fetch('/api/admin/students/active', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ studentId, active: nextActive })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to update active status"); });
+        return res.json();
+      })
+      .then(() => {
+        fetchStudentsList();
+        fetchParentsList();
+      })
+      .catch(err => {
+        console.error("Failed to update student active status:", err.message);
+        alert("Failed to update student active status: " + err.message);
+      });
+  };
+
+  const handleAddParentLink = (parentId, studentId) => {
+    if (!token || !studentId) return;
+    fetch('/api/admin/parents/link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ parentId, studentId })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to link student"); });
+        return res.json();
+      })
+      .then(() => {
+        fetchParentsList();
+      })
+      .catch(err => {
+        console.error("Failed to link student:", err.message);
+        alert("Failed to link student: " + err.message);
+      });
+  };
+
+  const handleRemoveParentLink = (parentId, studentId) => {
+    if (!token) return;
+    fetch('/api/admin/parents/unlink', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ parentId, studentId })
+    })
+      .then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to unlink student"); });
+        return res.json();
+      })
+      .then(() => {
+        fetchParentsList();
+      })
+      .catch(err => {
+        console.error("Failed to unlink student:", err.message);
+        alert("Failed to unlink student: " + err.message);
       });
   };
 
@@ -3618,6 +3864,10 @@ export default function App() {
     })
     .catch(err => console.warn("Failed to sync points to DB:", err.message));
   };
+
+  // Students eligible to appear in a "pick a student" list (parent-link checklist, teacher's
+  // Student Report picker). Deactivated students are still visible in the Admin roster itself.
+  const activeStudents = students.filter(s => s.is_active !== false);
 
   // Active campaign variables
   const currentCampaign = CAMPAIGN_THEMES[campaignId];
@@ -3880,7 +4130,7 @@ export default function App() {
       console.warn("Journal DB save failed, writing to local client state:", err.message);
       const newJournal = {
         id: journalId,
-        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        date: formatBangkokTimestamp(),
         title: journalTitle,
         version: 1,
         activeVersion: 1,
@@ -4346,7 +4596,7 @@ export default function App() {
   }
 
   const accountName = currentUser ? (currentUser.name || currentUser.username) : 'Detective Me';
-  const displayRole = currentUser ? (currentUser.role === 'teacher' ? 'Teacher' : 'Student') : 'Novice';
+  const displayRole = currentUser ? (currentUser.role === 'teacher' ? 'Teacher' : currentUser.role === 'parent' ? 'Parent' : 'Student') : 'Novice';
 
   return (
     <div className="cyber-container">
@@ -4360,50 +4610,63 @@ export default function App() {
         </div>
 
         <nav className="sidebar-nav">
-          <button className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
-            <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path>
-            </svg>
-            Dashboard
-          </button>
-          
-          <button className={`nav-item ${activeTab === 'cases' ? 'active' : ''}`} onClick={() => setActiveTab('cases')}>
-            <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            Quest Board
-          </button>
+          {currentUser && currentUser.role !== 'parent' && (
+            <>
+              <button className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+                <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path>
+                </svg>
+                Dashboard
+              </button>
 
-          <button className={`nav-item ${activeTab === 'curriculum' ? 'active' : ''}`} onClick={() => setActiveTab('curriculum')}>
-            <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
-            Curriculum Syllabus Catalog
-          </button>
-          
-          <button className={`nav-item ${activeTab === 'sandbox' ? 'active' : ''}`} onClick={() => setActiveTab('sandbox')}>
-            <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-            </svg>
-            Exercises Journal
-          </button>
-          
-          <button className={`nav-item ${activeTab === 'journal' ? 'active' : ''}`} onClick={() => setActiveTab('journal')}>
-            <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
-            Project Journal
-          </button>
-          
-          <button className={`nav-item ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>
-            <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            Leaderboard
-          </button>
+              <button className={`nav-item ${activeTab === 'cases' ? 'active' : ''}`} onClick={() => setActiveTab('cases')}>
+                <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Quest Board
+              </button>
+
+              <button className={`nav-item ${activeTab === 'curriculum' ? 'active' : ''}`} onClick={() => setActiveTab('curriculum')}>
+                <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                Curriculum Syllabus Catalog
+              </button>
+
+              <button className={`nav-item ${activeTab === 'sandbox' ? 'active' : ''}`} onClick={() => setActiveTab('sandbox')}>
+                <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                </svg>
+                Exercises Journal
+              </button>
+
+              <button className={`nav-item ${activeTab === 'journal' ? 'active' : ''}`} onClick={() => setActiveTab('journal')}>
+                <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                Project Journal
+              </button>
+
+              <button className={`nav-item ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>
+                <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                Leaderboard
+              </button>
+            </>
+          )}
+
+          {currentUser && (currentUser.role === 'teacher' || currentUser.role === 'parent') && (
+            <button className={`nav-item ${activeTab === 'studentReport' ? 'active' : ''}`} onClick={() => setActiveTab('studentReport')} style={{ marginTop: 'auto', borderTop: '1px solid var(--border-color)', borderRadius: 0, paddingTop: 16 }}>
+              <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h3m-7 4h11a2 2 0 002-2V7.414a1 1 0 00-.293-.707l-3.414-3.414A1 1 0 0013.586 3H6a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+              Student Report
+            </button>
+          )}
 
           {currentUser && currentUser.role === 'teacher' && (
-            <button className={`nav-item ${activeTab === 'admin' ? 'active' : ''}`} onClick={() => setActiveTab('admin')} style={{ marginTop: 'auto', borderTop: '1px solid var(--border-color)', borderRadius: 0, paddingTop: 16 }}>
+            <button className={`nav-item ${activeTab === 'admin' ? 'active' : ''}`} onClick={() => setActiveTab('admin')} style={{ borderRadius: 0 }}>
               <svg className="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 20, height: 20}}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -4440,6 +4703,7 @@ export default function App() {
               {activeTab === 'sandbox' && 'Exercises Journal'}
               {activeTab === 'journal' && 'Project Journal'}
               {activeTab === 'leaderboard' && 'Active Decoders'}
+              {activeTab === 'studentReport' && 'Student Report'}
               {activeTab === 'admin' && 'Admin Settings Console'}
             </h1>
           </div>
@@ -7880,6 +8144,208 @@ export default function App() {
             </div>
           )}
 
+          {/* Student Report Tab View */}
+          {activeTab === 'studentReport' && (
+            <div className="tab-student-report glass-panel animate-in" style={{ textAlign: 'left' }}>
+              <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3>Student Report{reportStudent ? `: ${reportStudent.name}` : ''}</h3>
+                  {reportStudent && <span className="badge-cyber badge-cyan">{reportStudent.username}</span>}
+                </div>
+                {reportCameFromAdmin && (
+                  <button className="btn-cyber btn-cyber-secondary btn-small" onClick={handleBackToAdmin}>
+                    Back to Admin
+                  </button>
+                )}
+              </div>
+
+              <div className="panel-body" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+                {!reportCameFromAdmin && currentUser.role === 'parent' && reportLinkedStudents.length > 1 && (
+                  <div className="form-group">
+                    <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Select your child</label>
+                    <select
+                      className="login-input"
+                      value={reportStudent ? reportStudent.id : ''}
+                      onChange={e => {
+                        const found = reportLinkedStudents.find(s => s.id === e.target.value);
+                        if (found) handleSelectReportStudent(found);
+                      }}
+                      style={{ padding: '8px 12px', background: 'rgba(6, 8, 20, 0.8)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px' }}
+                    >
+                      <option value="">-- choose a student --</option>
+                      {reportLinkedStudents.map(s => (
+                        <option key={s.id} value={s.id}>{s.name} ({s.username})</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {!reportCameFromAdmin && currentUser.role === 'teacher' && (
+                  <div className="form-group">
+                    <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Select a student</label>
+                    <select
+                      className="login-input"
+                      value={reportStudent ? reportStudent.id : ''}
+                      onChange={e => {
+                        const found = activeStudents.find(s => s.id === e.target.value);
+                        if (found) handleSelectReportStudent(found);
+                      }}
+                      style={{ padding: '8px 12px', background: 'rgba(6, 8, 20, 0.8)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px' }}
+                    >
+                      <option value="">-- choose a student --</option>
+                      {activeStudents.map(s => (
+                        <option key={s.id} value={s.id}>{s.name} ({s.username})</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {!reportStudent && (
+                  <p style={{ color: 'var(--text-muted)' }}>
+                    {currentUser.role === 'parent' && reportLinkedStudents.length === 0
+                      ? 'No student is linked to your account yet. Please contact the teacher.'
+                      : 'Choose a student above to view their report.'}
+                  </p>
+                )}
+
+                {reportStudent && (
+                  <>
+                    <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid var(--border-color)', paddingBottom: 12 }}>
+                      <button
+                        className={`btn-cyber btn-small ${reportSubTab === 'attendance' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => setReportSubTab('attendance')}
+                      >
+                        Attendance
+                      </button>
+                      <button
+                        className={`btn-cyber btn-small ${reportSubTab === 'feedback' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => setReportSubTab('feedback')}
+                      >
+                        Feedback
+                      </button>
+                    </div>
+
+                    {reportLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading report...</p>}
+
+                    {!reportLoading && reportSubTab === 'attendance' && (
+                      <div style={{ border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', background: 'rgba(0, 242, 254, 0.04)' }}>
+                              <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Session</th>
+                              <th style={{ padding: 10, textAlign: 'center', color: 'var(--accent-cyan)' }}>Date</th>
+                              <th style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)' }}></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {CURRICULUM_DATA.filter(s => s.level === (parseInt((reportStudent.student_level || 'L1').replace('L', '')) || 1)).map(session => {
+                              const row = reportData[session.id] || { session_date: '' };
+                              return (
+                                <tr key={session.id} style={{ borderBottom: '1px solid rgba(0, 242, 254, 0.05)' }}>
+                                  <td style={{ padding: 10, color: 'var(--text-primary)' }}>{session.title}</td>
+                                  <td style={{ padding: 10, textAlign: 'center' }}>
+                                    <input
+                                      type="date"
+                                      value={row.session_date || ''}
+                                      disabled={currentUser.role !== 'teacher'}
+                                      onChange={e => handleSetAttendanceDate(session.id, e.target.value)}
+                                      style={{ padding: '4px 8px', background: 'rgba(6, 8, 20, 0.8)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px' }}
+                                    />
+                                  </td>
+                                  <td style={{ padding: 10, textAlign: 'right' }}>
+                                    <button
+                                      className="btn-cyber btn-cyber-primary btn-small"
+                                      onClick={() => handleJumpToSessionFeedback(session.id)}
+                                      style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                                    >
+                                      Feedback
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {!reportLoading && reportSubTab === 'feedback' && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        {reportStatusMsg && (
+                          <div className="badge-cyber" style={{
+                            padding: 8, textAlign: 'center',
+                            color: reportStatusMsg.startsWith('Error') ? 'var(--accent-red)' : 'var(--accent-green)',
+                            background: reportStatusMsg.startsWith('Error') ? 'rgba(255,51,102,0.1)' : 'rgba(57,255,20,0.1)',
+                            borderColor: reportStatusMsg.startsWith('Error') ? 'var(--accent-red)' : 'var(--accent-green)'
+                          }}>
+                            {reportStatusMsg}
+                          </div>
+                        )}
+                        {CURRICULUM_DATA.filter(s => s.level === (parseInt((reportStudent.student_level || 'L1').replace('L', '')) || 1)).map(session => {
+                          const row = reportData[session.id] || { session_date: '', teacher_feedback: '', parent_feedback: '' };
+                          const canEditTeacher = currentUser.role === 'teacher';
+                          const canEditParent = currentUser.role === 'teacher' || currentUser.role === 'parent';
+                          return (
+                            <div
+                              key={session.id}
+                              id={`report-feedback-${session.id}`}
+                              className="glass-panel"
+                              style={{ padding: 16, border: reportSessionFocus === session.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)' }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                                <h5 style={{ margin: 0, color: 'var(--accent-cyan)' }}>{session.title}</h5>
+                                {row.session_date && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{row.session_date}</span>}
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+                                <div>
+                                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: 4 }}>Teacher Feedback</label>
+                                  <textarea
+                                    value={row.teacher_feedback || ''}
+                                    disabled={!canEditTeacher}
+                                    onChange={e => handleFeedbackTextChange(session.id, 'teacher', e.target.value)}
+                                    style={{ width: '100%', minHeight: 90, background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: 10, fontSize: '0.85rem', resize: 'vertical' }}
+                                  />
+                                  {canEditTeacher && (
+                                    <button
+                                      className="btn-cyber btn-cyber-green btn-small"
+                                      onClick={() => handleSaveFeedback(session.id, 'teacher')}
+                                      style={{ marginTop: 8, padding: '4px 10px' }}
+                                    >
+                                      Save Feedback
+                                    </button>
+                                  )}
+                                </div>
+                                <div>
+                                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: 4 }}>Parent Feedback</label>
+                                  <textarea
+                                    value={row.parent_feedback || ''}
+                                    disabled={!canEditParent}
+                                    onChange={e => handleFeedbackTextChange(session.id, 'parent', e.target.value)}
+                                    style={{ width: '100%', minHeight: 90, background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: 10, fontSize: '0.85rem', resize: 'vertical' }}
+                                  />
+                                  {canEditParent && (
+                                    <button
+                                      className="btn-cyber btn-cyber-green btn-small"
+                                      onClick={() => handleSaveFeedback(session.id, 'parent')}
+                                      style={{ marginTop: 8, padding: '4px 10px' }}
+                                    >
+                                      Save Feedback
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Admin Panel Tab View */}
           {activeTab === 'admin' && (
             <div className="tab-admin glass-panel animate-in" style={{ textAlign: 'left' }}>
@@ -7918,7 +8384,7 @@ export default function App() {
 
                 <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
                   <div>
-                    <h4 style={{ color: 'var(--accent-cyan)', margin: 0, fontSize: '1.1rem', marginBottom: 12 }}>Register New Student Profile</h4>
+                    <h4 style={{ color: 'var(--accent-cyan)', margin: 0, fontSize: '1.1rem', marginBottom: 12 }}>Register New Student or Parent Profile</h4>
                     <form onSubmit={handleAddStudent} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       <div className="form-group">
                         <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Student Name / Alias</label>
@@ -7959,28 +8425,56 @@ export default function App() {
                         />
                       </div>
 
+                      {newPersonLinkedStudentIds.length === 0 && (
+                        <div className="form-group">
+                          <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Student Assigned Level</label>
+                          <select
+                            className="login-input"
+                            value={newStudentLevel}
+                            onChange={e => setNewStudentLevel(e.target.value)}
+                            style={{
+                              padding: '8px 12px',
+                              background: 'rgba(6, 8, 20, 0.8)',
+                              color: 'var(--text-primary)',
+                              border: '1px solid var(--border-color)',
+                              borderRadius: '4px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <option value="L1">Level 1: Logic</option>
+                            <option value="L2">Level 2: AI Copilot</option>
+                            <option value="L3">Level 3: Architect</option>
+                            <option value="L4">Level 4: Engineer</option>
+                          </select>
+                        </div>
+                      )}
+
                       <div className="form-group">
-                        <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Student Assigned Level</label>
-                        <select
-                          className="login-input"
-                          value={newStudentLevel}
-                          onChange={e => setNewStudentLevel(e.target.value)}
-                          style={{ 
-                            padding: '8px 12px', 
-                            background: 'rgba(6, 8, 20, 0.8)', 
-                            color: 'var(--text-primary)', 
-                            border: '1px solid var(--border-color)', 
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <option value="L1">Level 1: Logic</option>
-                          <option value="L2">Level 2: AI Copilot</option>
-                          <option value="L3">Level 3: Architect</option>
-                          <option value="L4">Level 4: Engineer</option>
-                        </select>
+                        <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                          Link to existing student(s) — makes this a Parent account instead of a Student
+                        </label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 140, overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: '4px', padding: 8 }}>
+                          {activeStudents.length === 0 ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>No active students registered yet.</span>
+                          ) : (
+                            activeStudents.map(s => (
+                              <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem', color: 'var(--text-primary)', cursor: 'pointer' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={newPersonLinkedStudentIds.includes(s.id)}
+                                  onChange={e => {
+                                    setNewPersonLinkedStudentIds(prev =>
+                                      e.target.checked ? [...prev, s.id] : prev.filter(id => id !== s.id)
+                                    );
+                                  }}
+                                />
+                                {s.name} ({s.username})
+                              </label>
+                            ))
+                          )}
+                        </div>
                       </div>
-                      
+
                       {adminStatusMsg && (
                         <div className="badge-cyber" style={{ 
                           padding: 8, 
@@ -7994,81 +8488,165 @@ export default function App() {
                       )}
                       
                       <button type="submit" className="btn-cyber btn-cyber-green" style={{ justifyContent: 'center', padding: '10px 14px' }}>
-                        Create Student Profile
+                        {newPersonLinkedStudentIds.length > 0 ? 'Create Parent Profile' : 'Create Student Profile'}
                       </button>
                     </form>
                   </div>
 
                   <div>
-                    <h4 style={{ color: 'var(--accent-cyan)', margin: 0, fontSize: '1.1rem', marginBottom: 12 }}>Active Student Roster & Progress</h4>
-                    <div style={{ maxHeight: '320px', overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'rgba(6, 8, 20, 0.4)' }}>
-                      {students.length === 0 ? (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', padding: 16, margin: 0, textAlign: 'center' }}>No students registered yet.</p>
+                    <h4 style={{ color: 'var(--accent-cyan)', margin: 0, fontSize: '1.1rem', marginBottom: 12 }}>Student & Parent Roster</h4>
+                    <div style={{ maxHeight: '420px', overflowY: 'auto', overflowX: 'auto', border: '1px solid var(--border-color)', borderRadius: '8px', background: 'rgba(6, 8, 20, 0.4)' }}>
+                      {students.length === 0 && parents.length === 0 ? (
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', padding: 16, margin: 0, textAlign: 'center' }}>No students or parents registered yet.</p>
                       ) : (
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                        <table style={{ width: '100%', minWidth: 760, borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                           <thead>
                             <tr style={{ borderBottom: '1px solid var(--border-color)', background: 'rgba(0, 242, 254, 0.04)' }}>
                               <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Name</th>
                               <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Username</th>
-                              <th style={{ padding: 10, textAlign: 'center', color: 'var(--accent-cyan)' }}>Assigned Level</th>
-                              <th style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)' }}>Points</th>
+                              <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Role</th>
+                              <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Level / Linked To</th>
+                              <th style={{ padding: 10, textAlign: 'center', color: 'var(--accent-cyan)' }}>Active</th>
+                              <th style={{ padding: 10, textAlign: 'right', color: 'var(--accent-cyan)' }}>Points / Actions</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {students.map(student => (
-                              <tr key={student.id} style={{ borderBottom: '1px solid rgba(0, 242, 254, 0.05)' }}>
-                                <td style={{ padding: 10, color: 'var(--text-primary)', fontWeight: 500 }}>{student.name}</td>
-                                <td style={{ padding: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{student.username}</td>
-                                <td style={{ padding: 10, textAlign: 'center' }}>
-                                  <select
-                                    value={student.student_level || 'L1'}
-                                    onChange={e => handleUpdateStudentLevel(student.id, e.target.value)}
-                                    style={{
-                                      padding: '4px 8px',
-                                      background: 'rgba(6, 8, 20, 0.8)',
-                                      color: 'var(--text-primary)',
-                                      border: '1px solid var(--border-color)',
-                                      borderRadius: '4px',
-                                      fontSize: '0.8rem',
-                                      cursor: 'pointer'
-                                    }}
-                                  >
-                                    <option value="L1">L1: Logic</option>
-                                    <option value="L2">L2: AI Copilot</option>
-                                    <option value="L3">L3: Architect</option>
-                                    <option value="L4">L4: Engineer</option>
-                                  </select>
-                                </td>
-                                <td style={{ padding: 10, textAlign: 'right' }}>
-                                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
-                                    <button
-                                      className="btn-cyber btn-cyber-primary btn-small"
-                                      onClick={() => handleViewStudentJournal(student)}
-                                      style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                            {[
+                              ...students.map(s => ({ ...s, _rowRole: 'student' })),
+                              ...parents.map(p => ({ ...p, _rowRole: 'parent' }))
+                            ]
+                              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                              .map(person => person._rowRole === 'student' ? (
+                                <tr key={person.id} style={{ borderBottom: '1px solid rgba(0, 242, 254, 0.05)', opacity: person.is_active === false ? 0.5 : 1 }}>
+                                  <td style={{ padding: 10, color: 'var(--text-primary)', fontWeight: 500 }}>{person.name}</td>
+                                  <td style={{ padding: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{person.username}</td>
+                                  <td style={{ padding: 10 }}>
+                                    <span className="badge-cyber badge-cyan" style={{ fontSize: '0.7rem' }}>Student</span>
+                                  </td>
+                                  <td style={{ padding: 10 }}>
+                                    <select
+                                      value={person.student_level || 'L1'}
+                                      onChange={e => handleUpdateStudentLevel(person.id, e.target.value)}
+                                      style={{
+                                        padding: '4px 8px',
+                                        background: 'rgba(6, 8, 20, 0.8)',
+                                        color: 'var(--text-primary)',
+                                        border: '1px solid var(--border-color)',
+                                        borderRadius: '4px',
+                                        fontSize: '0.8rem',
+                                        cursor: 'pointer'
+                                      }}
                                     >
-                                      View Journal
-                                    </button>
-                                    <button
-                                      className="btn-cyber btn-cyber-secondary btn-small"
-                                      onClick={() => handleUpdateStudentPoints(student.id, Math.max(0, student.points - 50))}
-                                      style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
+                                      <option value="L1">L1: Logic</option>
+                                      <option value="L2">L2: AI Copilot</option>
+                                      <option value="L3">L3: Architect</option>
+                                      <option value="L4">L4: Engineer</option>
+                                    </select>
+                                  </td>
+                                  <td style={{ padding: 10, textAlign: 'center' }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={person.is_active !== false}
+                                      onChange={e => handleToggleStudentActive(person.id, e.target.checked)}
+                                      title={person.is_active === false ? 'Deactivated — hidden from student pickers' : 'Active'}
+                                      style={{ cursor: 'pointer', width: 16, height: 16 }}
+                                    />
+                                  </td>
+                                  <td style={{ padding: 10, textAlign: 'right' }}>
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
+                                      <button
+                                        className="btn-cyber btn-cyber-primary btn-small"
+                                        onClick={() => handleViewStudentJournal(person)}
+                                        style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                                      >
+                                        View Journal
+                                      </button>
+                                      <button
+                                        className="btn-cyber btn-cyber-primary btn-small"
+                                        onClick={() => handleOpenAdminFeedback(person)}
+                                        style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                                      >
+                                        Feedback
+                                      </button>
+                                      <button
+                                        className="btn-cyber btn-cyber-secondary btn-small"
+                                        onClick={() => handleUpdateStudentPoints(person.id, Math.max(0, person.points - 50))}
+                                        style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
+                                      >
+                                        -
+                                      </button>
+                                      <span style={{ fontWeight: 600, color: 'var(--accent-cyan)', minWidth: '55px', display: 'inline-block', textAlign: 'center' }}>
+                                        {person.points} XP
+                                      </span>
+                                      <button
+                                        className="btn-cyber btn-cyber-green btn-small"
+                                        onClick={() => handleUpdateStudentPoints(person.id, person.points + 50)}
+                                        style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ) : (
+                                <tr key={person.id} style={{ borderBottom: '1px solid rgba(0, 242, 254, 0.05)' }}>
+                                  <td style={{ padding: 10, color: 'var(--text-primary)', fontWeight: 500 }}>{person.name}</td>
+                                  <td style={{ padding: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{person.username}</td>
+                                  <td style={{ padding: 10 }}>
+                                    <span className="badge-cyber badge-green" style={{ fontSize: '0.7rem' }}>Parent</span>
+                                  </td>
+                                  <td style={{ padding: 10 }}>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                                      {person.linkedStudents.length === 0 ? (
+                                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>No students linked</span>
+                                      ) : (
+                                        person.linkedStudents.map(linked => (
+                                          <span
+                                            key={linked.id}
+                                            className="badge-cyber"
+                                            style={{ fontSize: '0.7rem', display: 'inline-flex', alignItems: 'center', gap: 6, opacity: linked.is_active === false ? 0.5 : 1 }}
+                                          >
+                                            {linked.name}{linked.is_active === false ? ' (inactive)' : ''}
+                                            <button
+                                              onClick={() => handleRemoveParentLink(person.id, linked.id)}
+                                              title="Remove link"
+                                              style={{ background: 'none', border: 'none', color: 'var(--accent-red)', cursor: 'pointer', padding: 0, fontSize: '0.8rem', lineHeight: 1 }}
+                                            >
+                                              ×
+                                            </button>
+                                          </span>
+                                        ))
+                                      )}
+                                    </div>
+                                    <select
+                                      value=""
+                                      onChange={e => {
+                                        const studentId = e.target.value;
+                                        e.target.value = '';
+                                        if (studentId) handleAddParentLink(person.id, studentId);
+                                      }}
+                                      style={{
+                                        padding: '4px 8px',
+                                        background: 'rgba(6, 8, 20, 0.8)',
+                                        color: 'var(--text-primary)',
+                                        border: '1px solid var(--border-color)',
+                                        borderRadius: '4px',
+                                        fontSize: '0.75rem',
+                                        cursor: 'pointer'
+                                      }}
                                     >
-                                      -
-                                    </button>
-                                    <span style={{ fontWeight: 600, color: 'var(--accent-cyan)', minWidth: '55px', display: 'inline-block', textAlign: 'center' }}>
-                                      {student.points} XP
-                                    </span>
-                                    <button
-                                      className="btn-cyber btn-cyber-green btn-small"
-                                      onClick={() => handleUpdateStudentPoints(student.id, student.points + 50)}
-                                      style={{ padding: '2px 8px !important', minWidth: '22px', height: '22px', fontSize: '0.7rem' }}
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
+                                      <option value="">+ Link another student...</option>
+                                      {activeStudents
+                                        .filter(s => !person.linkedStudents.some(l => l.id === s.id))
+                                        .map(s => (
+                                          <option key={s.id} value={s.id}>{s.name} ({s.username})</option>
+                                        ))}
+                                    </select>
+                                  </td>
+                                  <td style={{ padding: 10, textAlign: 'center', color: 'var(--text-muted)' }}>—</td>
+                                  <td style={{ padding: 10, textAlign: 'right', color: 'var(--text-muted)' }}>—</td>
+                                </tr>
+                              ))}
                           </tbody>
                         </table>
                       )}
@@ -8145,44 +8723,76 @@ export default function App() {
                   {(() => {
                     const entry = viewingJournalData.find(e => e.id === viewingJournalEntryId);
                     if (!entry) return <p style={{ color: 'var(--text-muted)' }}>Select an entry to view.</p>;
-                    const hist = entry.history.find(h => h.version === viewingJournalVersion) || entry.history[entry.history.length - 1];
-                    if (!hist) return <p style={{ color: 'var(--text-muted)' }}>No versions saved for this entry.</p>;
-                    const data = deserializeJournalData(hist.code);
-                    const fields = [
-                      ['1. Plan & Design — Visual Concept & UX Flow', data.planVision],
-                      ['1. Plan & Design — System Parts & Information', data.planSpecs],
-                      ['1. Plan & Design — Logic Flow', data.planFlow],
-                      ['2. Write AI Prompt', hist.prompt],
-                      ['3. Review & Explain — AI-Generated Code', data.codeOutput],
-                      ['3. Review & Explain — Code Defense & Explanation', data.codeReview],
-                      ['4. Test & Break — Test Cases', data.testCases],
-                      ['4. Test & Break — Test Results & Logs', data.testResults],
-                      ['5. Iterate & Improve — Changes Made', data.iterationChanges],
-                      ['5. Iterate & Improve — Lessons Learned', data.iterationLessons]
-                    ];
-                    return (
-                      <div>
-                        <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-                          {entry.history.map(h => (
-                            <button
-                              key={h.version}
-                              className={`version-nav-btn ${viewingJournalVersion === h.version ? 'active' : ''}`}
-                              onClick={() => setViewingJournalVersion(h.version)}
-                              style={{ padding: '2px 8px', fontSize: '0.75rem' }}
-                            >
-                              v{h.version}
-                            </button>
-                          ))}
+                    // Only the AI Prompt is versioned — Plan/Review/Test/Iterate always reflect the
+                    // entry's active (latest) version, regardless of which prompt version is selected.
+                    const activeHist = entry.history.find(h => h.version === entry.activeVersion) || entry.history[entry.history.length - 1];
+                    if (!activeHist) return <p style={{ color: 'var(--text-muted)' }}>No versions saved for this entry.</p>;
+                    const data = deserializeJournalData(activeHist.code);
+                    const selectedHist = entry.history.find(h => h.version === viewingJournalVersion) || activeHist;
+
+                    const renderField = (label, value) => (
+                      <div key={label || 'prompt'}>
+                        {label && (
+                          <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>{label}</label>
+                        )}
+                        <div style={{ whiteSpace: 'pre-wrap', background: 'rgba(6, 8, 20, 0.7)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.82rem', color: value ? 'var(--text-primary)' : 'var(--text-muted)', minHeight: '20px' }}>
+                          {value || '(not filled in)'}
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                          {fields.map(([label, value]) => (
-                            <div key={label}>
-                              <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>{label}</label>
-                              <div style={{ whiteSpace: 'pre-wrap', background: 'rgba(6, 8, 20, 0.7)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.82rem', color: value ? 'var(--text-primary)' : 'var(--text-muted)', minHeight: '20px' }}>
-                                {value || '(not filled in)'}
-                              </div>
+                      </div>
+                    );
+
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        <div>
+                          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>1. Plan & Design</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                            {renderField('Visual Concept & UX Flow', data.planVision)}
+                            {renderField('System Parts & Information', data.planSpecs)}
+                            {renderField('Logic Flow Diagram / Pseudocode', data.planFlow)}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                            <h4 style={{ margin: 0, color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>2. Write AI Prompt</h4>
+                            <div style={{ display: 'flex', gap: 6 }}>
+                              {entry.history.map(h => (
+                                <button
+                                  key={h.version}
+                                  className={`version-nav-btn ${viewingJournalVersion === h.version ? 'active' : ''}`}
+                                  onClick={() => setViewingJournalVersion(h.version)}
+                                  style={{ padding: '2px 8px', fontSize: '0.75rem' }}
+                                >
+                                  v{h.version}
+                                </button>
+                              ))}
                             </div>
-                          ))}
+                          </div>
+                          {renderField(null, selectedHist.prompt)}
+                        </div>
+
+                        <div>
+                          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>3. Review & Explain</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                            {renderField('AI-Generated Code', data.codeOutput)}
+                            {renderField('Code Defense & Explanations', data.codeReview)}
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>4. Test & Break</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                            {renderField('Test Cases Checklist', data.testCases)}
+                            {renderField('Test Failure Results & Logs', data.testResults)}
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>5. Iterate & Improve</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                            {renderField('Prompt Iteration Changes', data.iterationChanges)}
+                            {renderField('Reflective Lessons Learned', data.iterationLessons)}
+                          </div>
                         </div>
                       </div>
                     );
