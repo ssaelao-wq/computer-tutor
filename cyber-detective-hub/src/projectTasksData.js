@@ -628,310 +628,576 @@ export const PROJECT_TASKS = {
   },
   "l3-s1": {
     partNum: "Part 1",
-    partTitle: "Relational Schema Design",
+    partTitle: "Lifecycle Mapping & the Project Charter",
     objectives: [
-      "Design the `players`, `hacking_tools`, and `inventories` tables",
-      "Declare primary keys and foreign key relationships between tables",
-      "Add cascade-delete constraints so orphaned records can't be left behind"
+      "Map the software lifecycle phases in order",
+      "Reverse-engineer the finished Hacker Arena demo into a component list",
+      "Draft and harden a one-page Project Charter"
     ],
     planSpecs: {
-      hierarchy: "players (1) --< inventories >-- (1) hacking_tools\ninventories.player_id REFERENCES players(id)\ninventories.tool_id REFERENCES hacking_tools(id)",
-      variables: "players: {id, username, created_at}\nhacking_tools: {id, name, cost}\ninventories: {player_id, tool_id}",
-      flow: "Create players and hacking_tools first (no dependencies) -> create inventories referencing both by foreign key -> deleting a player cascades to delete their inventory rows"
+      vision: "A one-page Project Charter for the Hacker Arena: what's being built, for whom, and what 'done' means — the first artifact every later session gets checked against.",
+      parts: "Parts needed: a lifecycle phase list (requirements, design, build, test, deploy, iterate), a first-guess component list (pages, API endpoints, tables) from reverse-engineering the demo, and the Project Charter itself.",
+      flow: "Play the finished demo as a user -> open DevTools and reverse-engineer its moving parts -> draft the Project Charter -> prompt the AI to critique it for vagueness -> tighten it."
     },
-    promptGuide: "Draft an AI prompt asking to generate SQL `CREATE TABLE` statements for `players` (id, username unique, created_at), `hacking_tools` (id, name, cost), and `inventories` (player_id, tool_id) with foreign keys referencing both parent tables and `ON DELETE CASCADE` on the player reference.",
+    promptGuide: "Prompt the AI IDE to critique your Project Charter draft for vagueness, hidden assumptions, and anything that isn't yet testable — then revise based on its findings.",
     codeReviewGuide: [
-      "Does `inventories` declare foreign keys to both `players` and `hacking_tools`?",
-      "Is `ON DELETE CASCADE` present on the player reference?",
-      "Socratic Question: If a player row is deleted without cascade, why do their old inventory rows keep pointing at an ID that no longer exists?"
+      "Lifecycle Ordering: Requirements -> Design -> Build -> Test -> Deploy -> Iterate (accept \"Test\" woven into \"Build\" if the 5-Step loop explanation is given).",
+      "Demo Deconstruction: does your component list include a login/register page, an arena/shop page, endpoints like POST /signup and POST /purchase, and tables like players/hacking_tools/inventories?",
+      "Socratic Question: The code in the war story worked perfectly — why did the project still fail? Which phase was skipped?"
     ],
-    testCasesGuide: "- Insert a player, a tool, and an inventory row: verify all three insert successfully\n- Delete the player: verify their inventory row is automatically removed\n- Attempt to insert an inventory row referencing a non-existent tool_id: verify it's rejected",
-    iterationGuide: "Confirm every foreign key column's type exactly matches its referenced primary key's type before running the schema."
+    testCasesGuide: "- Confirm the lifecycle phases are listed in the correct order\n- Confirm the component list names at least 2 pages, 3 endpoints, and 2 tables\n- Confirm the Project Charter states a concrete definition of 'done'",
+    iterationGuide: "Revise the Charter after the AI critique until every sentence in it is something a tester could actually verify."
   },
   "l3-s2": {
     partNum: "Part 2",
-    partTitle: "Authentication & Hacking Sign-Ups",
+    partTitle: "The Hacker Arena PRD",
     objectives: [
-      "Build a `/signup` route that validates and hashes incoming passwords",
-      "Never store or log plaintext passwords",
-      "Reject signups with passwords under 8 characters"
+      "Turn a vague product idea into testable user stories",
+      "Prioritize scope with MoSCoW",
+      "Produce the PRD every later session is audited against"
     ],
     planSpecs: {
-      hierarchy: "POST /signup -> validate password length -> bcrypt.hash(password) -> INSERT INTO players -> 201 response",
-      variables: "password: String (raw input, min length 8)\nhashedPassword: String (bcrypt output, never logged)",
-      flow: "Client submits {username, password} -> server checks password.length -> hashes password -> inserts hashed value into players table -> responds 201 or 400"
+      vision: "The Hacker Arena PRD: 6-10 user stories with acceptance criteria, MoSCoW priorities, and an explicit out-of-scope list — the single source of truth for the rest of Level 3.",
+      parts: "Parts needed: a goal statement, a users list, 6-10 user stories, an acceptance-criteria line per Must story, and an out-of-scope list.",
+      flow: "Extract requirements from the 'ambiguous client' roleplay -> draft the PRD skeleton -> mark each story Must/Should/Could -> prompt the AI to attack the PRD for untestable criteria and missing failure cases -> revise."
     },
-    promptGuide: "Write a prompt asking for an Express `POST /signup` route that rejects passwords under 8 characters with a 400 status, hashes valid passwords with `bcrypt.hash()`, and inserts the username and hashed password into the `players` table.",
+    promptGuide: "Prompt the AI to find untestable criteria, hidden assumptions, and missing failure cases in your PRD draft, then revise based on its findings.",
+    codeReviewGuide: [
+      "Story Rewrite: does 'cool shopping' become something like 'As a player, I want to buy a hacking tool with credits so it appears in my inventory,' with criteria like 'purchase rejected with message if credits < cost'?",
+      "MoSCoW Cut: are register/login/list-tools/purchase Must, with a defensible Should/Could split for the rest?",
+      "Socratic Question: How would a tester prove 'fast and secure' is done? If it can't be proven done, what is it?"
+    ],
+    testCasesGuide: "- Confirm every Must story has at least one testable acceptance criterion (a number or an observable behavior, not an adjective)\n- Confirm the PRD has an explicit out-of-scope list\n- Confirm at least 6 user stories total",
+    iterationGuide: "Reject any acceptance criterion that's still an adjective without a number or behavior attached, and rewrite it."
+  },
+  "l3-s3": {
+    partNum: "Part 3",
+    partTitle: "The Arena Blueprint",
+    objectives: [
+      "Draw the three-tier architecture and trace PRD stories through it",
+      "Design the players/hacking_tools/inventories schema",
+      "Draft the API contract before any code exists"
+    ],
+    planSpecs: {
+      vision: "The Arena Blueprint: a component diagram (client -> Express -> MySQL), the players/hacking_tools/inventories schema with keys and constraints, and an API contract mapping every PRD Must-story to an endpoint.",
+      parts: "Parts needed: a component diagram, table definitions for players/hacking_tools/inventories with primary and foreign keys, and an endpoint list (method + path + status codes) for every PRD Must-story.",
+      flow: "Sketch the component diagram (what talks to what, and what's forbidden) -> design the schema -> map every Must-story to an endpoint -> prompt the AI to generate the SQL schema -> audit it against the blueprint's keys, constraints, and types."
+    },
+    promptGuide: "Prompt the AI to generate the SQL schema for players/hacking_tools/inventories from your blueprint, then audit every key, constraint, and type against what you designed.",
+    codeReviewGuide: [
+      "Does `inventories` declare foreign keys to both `players` and `hacking_tools` with `ON DELETE CASCADE` on the player reference?",
+      "Does the API contract give every endpoint both a success AND a failure status code (not just the happy path)?",
+      "Socratic Question: Why does the database still list tools for a player who no longer exists if the foreign key constraint is missing?"
+    ],
+    testCasesGuide: "- Insert a player, a tool, and an inventory row: verify all three insert successfully\n- Delete the player: verify their inventory row is automatically removed\n- Verify the API contract lists at least 5 endpoints, each with a failure status code",
+    iterationGuide: "Confirm every foreign key column's type exactly matches its referenced primary key's type before running the schema."
+  },
+  "l3-s4": {
+    partNum: "Part 4",
+    partTitle: "Base Camp Setup",
+    objectives: [
+      "Initialize the repo and connect it to GitHub",
+      "Structure the workspace and protect secrets with .gitignore + .env",
+      "Stand up local MySQL and apply the Session 3 schema"
+    ],
+    planSpecs: {
+      vision: "A clean, pushed GitHub repo with a working local MySQL database already carrying the Session 3 schema, and zero secrets anywhere in its history.",
+      parts: "Parts needed: a folder structure (frontend/, server/, db/), a .gitignore list, a .env key template (DB_HOST, DB_USER, DB_PASS), and the local MySQL database with the schema applied.",
+      flow: "Plan the folder structure and what gets committed vs. ignored -> git init -> initial commit -> create and push to GitHub -> install/start MySQL via Servbay -> create the database -> apply the Session 3 schema."
+    },
+    promptGuide: "No AI generation this session — draft the exact git command sequence yourself, then verify on GitHub that .env is absent and the commit history is clean.",
+    codeReviewGuide: [
+      "Does `.gitignore` include `.env` and `node_modules/` before the first commit?",
+      "Does the GitHub repo's commit history show no trace of any secret value, even in an early commit?",
+      "Socratic Question: The key is gone from the file — is it gone from the repo? What must happen once a real secret is pushed?"
+    ],
+    testCasesGuide: "- Run `git status` after adding secrets: verify `.env` shows as ignored, not staged\n- Verify the GitHub repo is reachable and the latest commit matches local\n- Verify the local MySQL database has all three Session 3 tables",
+    iterationGuide: "If a secret was ever committed by mistake, treat it as compromised — rotate it, don't just delete the line in a new commit."
+  },
+  "l3-s5": {
+    partNum: "Part 5",
+    partTitle: "The Login Gate",
+    objectives: [
+      "Convert a PRD story into a feature spec",
+      "Build register/login: forms -> POST routes -> bcrypt hashing -> MySQL",
+      "Commit the feature with a PRD-linked message"
+    ],
+    planSpecs: {
+      vision: "A working register/login flow: a signup form posts to a route that hashes the password with bcrypt before it ever reaches the database, and login compares hashes, never plaintext.",
+      parts: "Parts needed: a feature spec (story reference, files affected, I/O, constraints, out-of-scope), a POST /signup route, a POST /login route, and a bcrypt hashing step in between.",
+      flow: "Write the feature spec for register + login from the PRD's Must stories, including failure behaviors (duplicate username, short password) -> run the spec through the AI IDE -> audit output against spec/schema/contract -> commit with a PRD-linked message."
+    },
+    promptGuide: "Give the AI IDE your feature spec, the players schema, and the API contract, and prompt it to implement the /signup and /login routes exactly to spec, including the failure behaviors.",
     codeReviewGuide: [
       "Is the password length check performed before hashing, not after?",
-      "Is `bcrypt.hash()` (or equivalent) used instead of storing `password` directly?",
-      "Socratic Question: If an attacker gains direct read access to the `players` table, what do they see in the password column — and why does that matter?"
+      "Is `bcrypt.hash()` used instead of storing `password` directly?",
+      "Socratic Question: If attackers dump the table tonight, what do they have — and whose fault is it?"
     ],
     testCasesGuide: "- Submit a 5-character password: verify a 400 response and no row is inserted\n- Submit a valid password: verify the stored value is a bcrypt hash, not the raw string\n- Verify no server log line ever prints the raw password",
     iterationGuide: "Grep your own server logs for the literal password string after a test signup to confirm it never appears anywhere."
   },
-  "l3-s3": {
-    partNum: "Part 3",
-    partTitle: "Environment Variable Security",
-    objectives: [
-      "Move database and secret credentials into a `.env` file",
-      "Load them in code via `process.env`",
-      "Confirm `.gitignore` blocks `.env` from being committed"
-    ],
-    planSpecs: {
-      hierarchy: "require('dotenv').config() -> process.env.DB_HOST / DB_USER / DB_PASS / JWT_SECRET",
-      variables: ".env: DB_HOST, DB_USER, DB_PASS, JWT_SECRET (all string values, no quotes, no spaces around =)",
-      flow: "Server boots -> dotenv loads .env into process.env -> Pool/connection config reads process.env.* -> secrets never appear as literals in tracked code"
-    },
-    promptGuide: "Draft a prompt asking to extract hardcoded database credentials and a JWT secret out of the codebase into a `.env` file, load them with `dotenv` at server startup, and confirm `.gitignore` already excludes `.env`.",
-    codeReviewGuide: [
-      "Are all four secrets (`DB_HOST`, `DB_USER`, `DB_PASS`, `JWT_SECRET`) read via `process.env`, not hardcoded?",
-      "Does `.gitignore` list `.env` before any commit happens?",
-      "Socratic Question: If `.env` were accidentally committed to a public GitHub repo, what could an attacker do within minutes of finding it?"
-    ],
-    testCasesGuide: "- Run `git status` after adding secrets: verify `.env` shows as ignored, not staged\n- Delete `.env` temporarily: verify the server fails to connect (proving it truly reads from the file, not a hardcoded fallback)\n- Search the committed source for any secret literal: verify zero matches",
-    iterationGuide: "If any secret is still hardcoded as a fallback default in code, remove the fallback so a missing `.env` fails loudly instead of silently using a weak default."
-  },
-  "l3-s4": {
-    partNum: "Part 4",
-    partTitle: "Inventory JOIN Queries",
-    objectives: [
-      "Write a JOIN query across `players`, `inventories`, and `hacking_tools`",
-      "Return a clean JSON array of a player's owned tools",
-      "Wire the frontend to fetch and render that inventory list"
-    ],
-    planSpecs: {
-      hierarchy: "GET /inventory/:playerId -> SQL: inventories JOIN players JOIN hacking_tools -> res.json(rows)",
-      variables: "req.params.playerId: String\nrows: Array of {username, name, cost}",
-      flow: "Frontend requests GET /inventory/:playerId -> server runs 3-table JOIN filtered by players.id -> maps rows to JSON -> frontend renders the returned array"
-    },
-    promptGuide: "Write a prompt asking for a route that JOINs `inventories`, `players`, and `hacking_tools` to return every tool a specific player owns as a JSON array, filtered by the player's id parameter.",
-    codeReviewGuide: [
-      "Does the query use `INNER JOIN` (not `LEFT JOIN`) so it only returns rows with a real match on both sides?",
-      "Is the `WHERE` clause filtering by the correct player id parameter, using a parameterized query (`$1`)?",
-      "Socratic Question: If `INNER JOIN` were swapped for `LEFT JOIN`, why might the response start including tool rows for players who don't actually own them?"
-    ],
-    testCasesGuide: "- Query a player with 2 owned tools: verify exactly 2 rows return\n- Query a player with zero owned tools: verify an empty array, not an error\n- Verify the query is parameterized (`$1`), not string-concatenated with the player id",
-    iterationGuide: "Confirm the endpoint is scoped to only the requesting player's own inventory, not any player id passed in — cross-reference this against the RLS work coming in Part 7."
-  },
-  "l3-s5": {
-    partNum: "Part 5",
-    partTitle: "REST API Routing",
-    objectives: [
-      "Define REST routes for reading tools and modifying a player's deck",
-      "Use the correct HTTP verb for each route's purpose",
-      "Return appropriate status codes on success"
-    ],
-    planSpecs: {
-      hierarchy: "router.get('/tools') / router.post('/deck/add') / router.delete('/deck/remove')",
-      variables: "req.body.player_id / req.body.tool_id (for writes)\nres status: 200 (read success), 201 (created)",
-      flow: "Client calls the matching verb+path -> Express router matches route -> handler runs the DB query -> responds with JSON or a status code"
-    },
-    promptGuide: "Draft a prompt asking for an Express router file (`api.js`) with GET `/tools` (list all tools), POST `/deck/add` (insert a player_id/tool_id pair), and DELETE `/deck/remove` (remove a specific pair), each using the correct HTTP verb for its purpose.",
-    codeReviewGuide: [
-      "Is the read-only `/tools` endpoint a GET route, not POST?",
-      "Does `/deck/add` return 201 Created on success rather than a generic 200?",
-      "Socratic Question: If `/tools` were implemented as a POST route instead of GET, why would the browser refuse to cache it on page reload?"
-    ],
-    testCasesGuide: "- Call GET `/tools`: verify it returns the full tool list with a 200 status\n- Call POST `/deck/add` with a valid pair: verify a 201 status and the row appears in `inventories`\n- Call DELETE `/deck/remove`: verify the matching row is removed",
-    iterationGuide: "Check that none of the three routes silently accept the wrong HTTP verb (e.g. GET also triggering a write) due to a router misconfiguration."
-  },
   "l3-s6": {
     partNum: "Part 6",
-    partTitle: "Server-Side Parameter Validation",
+    partTitle: "The Tool Shop API",
     objectives: [
-      "Validate request parameters on the server before touching the database",
-      "Reject invalid quantity/cost values with a 400 status",
-      "Never trust a value just because the frontend already checked it"
+      "Review code by diff, not by full file",
+      "Build GET /tools and GET /inventory (JOIN query)",
+      "Apply the review checklist and annotate at least three findings"
     ],
     planSpecs: {
-      hierarchy: "router.post('/buy-tool') -> if (!Number.isInteger(quantity) || quantity <= 0) return 400 -> else proceed to DB operations",
-      variables: "quantity: Number (must be a positive integer)\ncost: Number (must be non-negative)",
-      flow: "Request arrives -> server re-validates every numeric parameter regardless of frontend checks -> reject with 400 on any violation -> only then run the database transaction"
+      vision: "GET /tools and GET /inventory endpoints, the second built on a 3-table JOIN, reviewed the way a real Pull Request gets reviewed: by diff, with annotated findings, not a full re-read.",
+      parts: "Parts needed: a feature spec for both endpoints, the JOIN query across inventories/players/hacking_tools, a commit synced into the platform's diff view, and at least three annotated review findings.",
+      flow: "Spec GET /tools and GET /inventory per the API contract -> implement via the AI IDE -> commit -> sync into the platform -> review the diff line-by-line with the checklist, annotating at least three findings."
     },
-    promptGuide: "Write a prompt asking for a `/buy-tool` route that validates `quantity` is a positive integer using `Number.isInteger()`, returning a 400 Bad Request with a clear message if it isn't, before any database operation runs.",
+    promptGuide: "Prompt the AI IDE to implement GET /tools and GET /inventory to spec, then use the platform's 'Sync Latest Code' diff view (not the full file) to review what it actually changed.",
     codeReviewGuide: [
-      "Does the validation run and `return` immediately on failure, before any query executes?",
-      "Is `Number.isInteger()` used rather than a loose truthy check that would accept `\"5\"` or `-1`?",
-      "Socratic Question: If this same check only existed in the frontend form, how could someone bypass it entirely using their browser's DevTools console?"
+      "Does the query use `INNER JOIN` (not `LEFT JOIN`) so it only returns rows with a real match on both sides?",
+      "Is the WHERE clause filtering by the correct player id using a parameterized query, not string concatenation?",
+      "Socratic Question: The feature works — so why is a diff line the spec never asked for still dangerous to approve?"
     ],
-    testCasesGuide: "- Submit quantity `-5`: verify 400 and no database write occurs\n- Submit quantity `\"abc\"`: verify 400 rather than a server crash\n- Submit quantity `3`: verify the purchase proceeds normally",
-    iterationGuide: "List every numeric or string parameter this route accepts and confirm each one has its own validation check, not just the one seeded in the tutor manual."
+    testCasesGuide: "- Query a player with 2 owned tools: verify exactly 2 rows return\n- Query a player with zero owned tools: verify an empty array, not an error\n- Confirm your diff review has at least three annotated findings, including at least one security check",
+    iterationGuide: "If `INNER JOIN` were swapped for `LEFT JOIN`, confirm you can explain exactly which rows would incorrectly start appearing."
   },
   "l3-s7": {
     partNum: "Part 7",
-    partTitle: "Row-Level Security Policies",
+    partTitle: "The Zero-Trust Server",
     objectives: [
-      "Enable Row-Level Security on the `inventories` table",
-      "Write SELECT and UPDATE policies scoped to `auth.uid()`",
-      "Confirm one player cannot read or modify another player's rows"
+      "Write a test plan before building",
+      "Build server-side validation guards returning correct 400/401/404",
+      "Execute the plan and log pass/fail results"
     ],
     planSpecs: {
-      hierarchy: "ALTER TABLE inventories ENABLE ROW LEVEL SECURITY;\nCREATE POLICY ... USING (player_id = auth.uid())",
-      variables: "auth.uid(): the authenticated session's user id, provided by the database engine\nplayer_id: the row's owning player, compared against auth.uid()",
-      flow: "Any query against inventories -> RLS engine checks the active policy -> row is only returned/writable if player_id = auth.uid() -> otherwise the row is silently excluded"
+      vision: "A validation-guarded POST /purchase route where every hostile or malformed input is rejected with the correct status code — proven by a test plan written and executed before the guards existed.",
+      parts: "Parts needed: a 10+ row test-case table (input -> expected result -> actual result -> pass/fail), the validation guards themselves, and a completed test run with every row logged.",
+      flow: "Write the validation spec and 10+ test cases for POST /purchase before any implementation, including hostile cases -> implement validation guards via the AI IDE -> audit -> execute the full test plan against the running server."
     },
-    promptGuide: "Draft a prompt asking to enable Row-Level Security on the `inventories` table and write a SELECT policy and an UPDATE policy, both restricting access to rows where `player_id = auth.uid()`.",
+    promptGuide: "Give the AI IDE your test plan and prompt it to implement validation guards that make every row pass — not the other way around.",
     codeReviewGuide: [
-      "Is RLS actually enabled with `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` (not just policies written but never activated)?",
-      "Do both the SELECT and UPDATE policies compare against `auth.uid()`, not a client-supplied player_id parameter?",
-      "Socratic Question: If RLS is written but never enabled on the table, why would a query still return every player's rows despite the policy existing?"
+      "Does the validation run and `return` immediately on failure, before any query executes?",
+      "Is `Number.isInteger()` used rather than a loose truthy check that would accept \"5\" or -1?",
+      "Socratic Question: Every line executed correctly — where is the bug? What assumption did the code make about the client?"
     ],
-    testCasesGuide: "- Log in as Player A, query inventories: verify only Player A's rows return\n- Attempt to UPDATE a row belonging to Player B while authenticated as Player A: verify it's rejected\n- Temporarily disable RLS: verify the leak reappears, confirming the policy was the actual protection",
-    iterationGuide: "Test with RLS both enabled and disabled side-by-side to prove to yourself the policy is what's doing the isolating, not application-layer code."
+    testCasesGuide: "- Submit quantity -5: verify 400 and no database write occurs\n- Submit quantity \"abc\": verify 400 rather than a server crash\n- Confirm your 10+ case test-plan table shows every row passing",
+    iterationGuide: "List every numeric or string parameter this route accepts and confirm each one has its own validation check, not just the one seeded in the tutor manual."
   },
   "l3-s8": {
     partNum: "Part 8",
-    partTitle: "Transaction-Safe Inventory Exchange",
+    partTitle: "The Atomic Purchase",
     objectives: [
-      "Wrap a credit-deduction-plus-item-insert exchange in a database transaction",
-      "Roll back cleanly if any step fails",
-      "Always release the database client connection, even on error"
+      "Apply the debugging protocol: reproduce -> isolate -> hypothesize -> fix -> re-test -> log",
+      "Implement the purchase as a database transaction (BEGIN/COMMIT/ROLLBACK)",
+      "Maintain an iteration log tying bugs to root causes and fix commits"
     ],
     planSpecs: {
-      hierarchy: "BEGIN -> SELECT credits -> check balance -> UPDATE credits -> INSERT inventory row -> COMMIT (or ROLLBACK on any failure) -> finally release client",
-      variables: "client: a checked-out Pool connection\ncredits: Number (player's current balance)",
-      flow: "Start transaction -> read current balance -> if insufficient, throw -> deduct credits -> insert the purchased item -> commit; any thrown error triggers rollback instead, and the client is always released in a finally block"
+      vision: "A transaction-wrapped purchase route where credits and inventory either both update or neither does — proven by deliberately crashing it mid-transaction and watching the rollback hold.",
+      parts: "Parts needed: a transaction flowchart with rollback triggers, the BEGIN/COMMIT/ROLLBACK-wrapped route, two debugged seeded bugs, and an iteration log entry per bug.",
+      flow: "Draw the purchase flow with rollback triggers -> implement the transactional purchase via the AI IDE -> the tutor activates two seeded bugs -> run the full debugging protocol on both -> log root cause and fix commit for each."
     },
-    promptGuide: "Write a prompt asking for a `/purchase-item` route that wraps a credit check, credit deduction, and inventory insert inside `BEGIN`/`COMMIT`, rolling back on any error, and always releasing the pooled client connection in a `finally` block.",
+    promptGuide: "Prompt the AI IDE to wrap the credit check, deduction, and inventory insert inside BEGIN/COMMIT with rollback on any error, and to always release the pooled client in a finally block.",
     codeReviewGuide: [
       "Does the route check the player's balance before deducting, and throw if insufficient?",
       "Is `client.release()` inside a `finally` block so it always runs, on both success and failure paths?",
-      "Socratic Question: If the server crashed between the credit deduction and the inventory insert with no transaction wrapper, what state would the player's account be left in?"
+      "Socratic Question: Why did the player lose credits and get nothing? How does BEGIN/COMMIT make this impossible?"
     ],
-    testCasesGuide: "- Purchase with sufficient credits: verify credits deduct and the item appears in inventory in the same commit\n- Attempt a purchase with insufficient credits: verify the transaction rolls back and no partial deduction occurs\n- Force an error mid-transaction (e.g. invalid tool_id): verify credits are unchanged afterward",
-    iterationGuide: "Deliberately break the insert step (bad column name) mid-test to confirm the rollback actually restores the original credit balance, not just that it doesn't crash."
+    testCasesGuide: "- Purchase with sufficient credits: verify credits deduct and the item appears in inventory in the same commit\n- Attempt a purchase with insufficient credits: verify the transaction rolls back and no partial deduction occurs\n- Force an error mid-transaction: verify credits are unchanged afterward",
+    iterationGuide: "Deliberately break the insert step mid-test to confirm the rollback actually restores the original credit balance, not just that it doesn't crash."
   },
   "l3-s9": {
     partNum: "Part 9",
-    partTitle: "Git Branching & Merge Resolution",
+    partTitle: "Branch, PR & Merge",
     objectives: [
-      "Develop features on isolated git branches",
-      "Resolve merge conflicts by hand rather than discarding either side blindly",
-      "Run a peer code-review checklist before merging"
+      "Develop a feature on a branch and open a Pull Request",
+      "Resolve a merge conflict deliberately",
+      "Review a PR diff with the Session 6 checklist"
     ],
     planSpecs: {
-      hierarchy: "git checkout -b feature/x -> commit changes -> push -> open PR -> peer review -> resolve conflicts -> merge to main",
-      variables: "Conflict markers: <<<<<<< HEAD / ======= / >>>>>>> branch-name",
-      flow: "Two branches edit the same file region -> merge attempt inserts conflict markers -> developer manually chooses/combines the correct lines -> markers are deleted -> file is staged and committed"
+      vision: "A Should-priority PRD feature built on its own branch, opened as a real GitHub Pull Request, reviewed with the Session 6 checklist, and merged after resolving a deliberately triggered conflict.",
+      parts: "Parts needed: a feature branch, a feature spec for the chosen Should-story, a pushed PR with a real description, and a resolved merge conflict.",
+      flow: "Pick a Should-priority PRD feature and spec it -> build it on the branch via the AI IDE -> push -> open the PR -> review your own diff with the checklist -> resolve the tutor's triggered merge conflict -> merge."
     },
-    promptGuide: "Ask the AI to explain, line by line, what a specific merge conflict's `<<<<<<< HEAD` / `=======` / `>>>>>>> branch-name` markers each represent, and draft the combined resolution before applying it yourself.",
+    promptGuide: "Ask the AI to explain, line by line, what a specific merge conflict's <<<<<<< HEAD / ======= / >>>>>>> branch-name markers each represent, and draft the combined resolution before applying it yourself.",
     codeReviewGuide: [
-      "Are all three conflict marker lines fully removed from the resolved file (not just one of the two sides picked blindly)?",
-      "Does the resolution preserve the intent of both changes where they don't actually contradict each other?",
-      "Socratic Question: Why does the server crash on startup if a conflict marker line like `<<<<<<< HEAD` is left inside a `.js` file?"
+      "Are all three conflict marker lines fully removed from the resolved file (not just one side picked blindly)?",
+      "Does the PR description state what changed, why, and how it was tested?",
+      "Socratic Question: Why did Git refuse to decide the conflict for you — and what would it mean if it had?"
     ],
     testCasesGuide: "- Create a deliberate conflict between two branches on the same route file: verify git flags it as unmergeable automatically\n- Resolve it and run the server: verify no syntax errors from leftover markers\n- Verify `git log` shows a clean merge commit afterward",
     iterationGuide: "Practice a conflict where both sides added genuinely different, needed logic, forcing a real manual merge rather than a pick-one-side resolution."
   },
   "l3-s10": {
     partNum: "Part 10",
-    partTitle: "Cloud Deployment Configuration",
+    partTitle: "The Integration Sprint",
     objectives: [
-      "Deploy the Express API and PostgreSQL database to a cloud host",
-      "Bind production environment variables on the hosting dashboard",
-      "Verify the deployed API can reach the deployed database"
+      "Verify every PRD Must-story end-to-end",
+      "Resolve integration bugs between components",
+      "Enforce per-user data isolation with a cross-user attack drill"
     ],
     planSpecs: {
-      hierarchy: "Local repo -> git push -> CD pipeline builds -> cloud server boots with production env vars -> connects to managed Postgres instance",
-      variables: "Production env vars: DATABASE_URL, JWT_SECRET (set on the host's dashboard, not in code)",
-      flow: "Push to main -> hosting provider detects the push -> triggers a build -> new server instance boots reading env vars from its dashboard config -> connects to the cloud database using those vars"
+      vision: "Every PRD Must-story working end-to-end — frontend form through to UI update — with isolation proven by a logged attack drill where player A can never touch player B's data.",
+      parts: "Parts needed: the full data-flow checklist (Form -> Route -> Validation -> Transaction -> DB Write -> Response -> UI), fixes for any integration gaps found, and a cross-user attack drill log.",
+      flow: "Outline the full data-flow checklist for the purchase story -> run every Must-story end-to-end against it, fixing gaps -> log in as player A and attempt to read/write player B's inventory via DevTools -> confirm every attempt fails with 401/403."
     },
-    promptGuide: "Draft a prompt asking to generate a deployment config file (e.g. a Render/Railway blueprint) declaring the web service and its required environment variables, without hardcoding any secret values into the file itself.",
+    promptGuide: "Ask the AI to help trace a specific end-to-end flow (e.g. signup -> login -> purchase) across your frontend, routes, and database, flagging any layer where the expected data isn't reaching the next one.",
     codeReviewGuide: [
-      "Does the deployment config reference environment variable names only, with actual secret values set in the host's dashboard, not the file?",
-      "Is the production database URL distinct from any local development URL?",
-      "Socratic Question: If the deployed server's `DATABASE_URL` variable is missing or wrong, what specific error would appear in production logs, and how would you trace it back to that cause?"
+      "Does every layer in the checklist actually get exercised by a single real user action, not tested in isolation only?",
+      "Does the inventory route take the player id from the authenticated session, never from the request body or query string?",
+      "Socratic Question: Who controls the request body? Then who controls whose inventory this endpoint reads?"
     ],
-    testCasesGuide: "- Deploy with a correct DATABASE_URL: verify the live site loads data successfully\n- Temporarily blank the DATABASE_URL on the host: verify the live site throws a connection error rather than silently failing\n- Verify no secret values are visible in the deployment config file itself",
-    iterationGuide: "After first deploy, rotate one credential (e.g. the database password) and confirm updating only the host's dashboard value is enough to keep the app working."
+    testCasesGuide: "- Run a full signup -> login -> purchase flow live: verify each step succeeds and the final inventory reflects the purchase\n- Attempt a cross-user read/write via DevTools: verify every attempt returns 401/403\n- Verify no TODO stubs or mock data remain from earlier sessions",
+    iterationGuide: "Write a short QA log documenting which integration gap took longest to find, since that's usually the most useful lesson to carry forward."
   },
   "l3-s11": {
     partNum: "Part 11",
-    partTitle: "Load Testing & Connection Pool Diagnostics",
+    partTitle: "Cloud Deployment",
     objectives: [
-      "Simulate concurrent load against the deployed API",
-      "Diagnose a connection-pool exhaustion bug from server logs",
-      "Guarantee every database client is released, even on error"
+      "Understand hosting architectures",
+      "Deploy the backend and database to a cloud platform",
+      "Re-run the Session 7 test plan against the live URL"
     ],
     planSpecs: {
-      hierarchy: "try { client = await pool.connect(); ...query...; } catch {...} finally { client.release(); }",
-      variables: "pool: shared connection pool with a fixed max size\nclient: a single connection checked out from the pool",
-      flow: "Route handler checks out a client -> runs its query inside try -> on error, catches and responds with a status -> finally always releases the client back to the pool, regardless of success or failure"
+      vision: "The Hacker Arena live on a real URL, with production credentials bound only in the host's dashboard, and the Session 7 test plan re-run and passing against it.",
+      parts: "Parts needed: a deployment config (declaring the service and its env vars, no secret literals inside it), production DB credentials set on the host dashboard, and the re-executed Session 7 test plan.",
+      flow: "Map production connections and draft the env-var list and a rollback plan -> prompt the AI to generate the deployment config -> deploy -> re-run the Session 7 test plan against the live URL."
     },
-    promptGuide: "Write a prompt asking for a route that checks out a pooled database client, runs a query inside a try/catch, and always releases the client in a `finally` block so a failed request doesn't leak a connection.",
+    promptGuide: "Prompt the AI to generate a deployment config file declaring the web service and its required environment variables, without hardcoding any secret values into the file itself.",
     codeReviewGuide: [
-      "Is `client.release()` placed inside a `finally` block rather than only after a successful query?",
-      "Does the catch block respond with an appropriate error status instead of leaving the request hanging?",
-      "Socratic Question: If `client.release()` is missing, why does the server start refusing all requests after only a handful of page reloads?"
+      "Does the deployment config reference environment variable names only, with actual secret values set in the host's dashboard, not the file?",
+      "Is the production database URL distinct from any local development URL?",
+      "Socratic Question: It works on your machine — why not in production? Which environment is missing what?"
     ],
-    testCasesGuide: "- Send 100 concurrent requests to a route with the release fix: verify the server stays responsive throughout\n- Temporarily remove the `finally` release call and repeat the test: verify the server eventually hangs, reproducing the bug\n- Verify error responses still return a proper status code rather than timing out silently",
-    iterationGuide: "Log the pool's active connection count before and after a burst of requests to confirm it returns to baseline once requests complete."
+    testCasesGuide: "- Deploy with a correct DATABASE_URL: verify the live site loads data successfully\n- Temporarily blank the DATABASE_URL on the host: verify the live site throws a connection error rather than silently failing\n- Verify no secret values are visible in the deployment config file itself",
+    iterationGuide: "After first deploy, rotate one credential and confirm updating only the host's dashboard value is enough to keep the app working."
   },
   "l3-s12": {
     partNum: "Part 12",
-    partTitle: "Full-Stack Integration Sprint",
+    partTitle: "Hardening & the Release Sweep",
     objectives: [
-      "Trace a complete request end-to-end across frontend, API, and database",
-      "Close any remaining gaps between individually-working modules",
-      "Confirm all tables, environment keys, and RLS policies are active together"
+      "Read production logs to locate failing lines and inputs",
+      "Guard resources under load with pooling and guaranteed client release",
+      "Run a release-readiness sweep against every PRD Must acceptance criterion"
     ],
     planSpecs: {
-      hierarchy: "Frontend Form -> Express Route -> Server Validation -> DB Transaction -> Response JSON -> UI Redraw",
-      variables: "Full integration checklist: DB tables initialized, .env keys loaded, RLS policies enabled, routes wired to the correct frontend calls",
-      flow: "Trigger a real user action from the UI (e.g. sign up, then purchase a tool) -> trace it through every layer -> confirm each layer hands off correctly to the next with no silent gaps"
+      vision: "A production system that survives 100 concurrent requests without hanging, with every connection guaranteed released, and every PRD Must acceptance criterion checked and signed off.",
+      parts: "Parts needed: structured logging, connection-pool release discipline (finally blocks everywhere a client is checked out), a load test at 100 concurrent requests, and the completed release checklist.",
+      flow: "Plan load thresholds and assemble the release checklist from the PRD's acceptance criteria -> prompt the AI to add pooling and structured logging -> execute the full release sweep against the deployed system, logging every criterion pass/fail."
     },
-    promptGuide: "Ask the AI to help trace a specific end-to-end flow (e.g. signup → login → purchase) across your frontend, Express routes, and database, flagging any layer where the expected data isn't reaching the next one.",
+    promptGuide: "Prompt the AI for a route that checks out a pooled database client, runs a query inside a try/catch, and always releases the client in a finally block so a failed request doesn't leak a connection.",
     codeReviewGuide: [
-      "Does every layer in the checklist (DB, env, RLS, routes, frontend) actually get exercised by a single real user action, not tested in isolation only?",
-      "Are there any TODO stubs or mock data left over from earlier sessions that need to be wired to the real backend now?",
-      "Socratic Question: If registration works but the subsequent purchase silently fails, which specific layer boundary would you check first, and why?"
+      "Is `client.release()` placed inside a `finally` block rather than only after a successful query?",
+      "Does every PRD Must acceptance criterion have a pass/fail entry in the release checklist, not just the ones that were easy to check?",
+      "Socratic Question: If `client.release()` is missing, why does the server start refusing all requests after only a handful of page reloads?"
     ],
-    testCasesGuide: "- Run a full signup -> login -> purchase flow live: verify each step succeeds and the final inventory reflects the purchase\n- Deliberately break one env var and confirm you can pinpoint which layer failed from the resulting error\n- Verify RLS is still active throughout (no test-mode bypass left enabled)",
-    iterationGuide: "Write a short QA log documenting which integration gap took longest to find, since that's usually the most useful lesson to carry into Level 4."
+    testCasesGuide: "- Send 100 concurrent requests to a route with the release fix: verify the server stays responsive throughout\n- Temporarily remove the `finally` release call and repeat the test: verify the server eventually hangs, reproducing the bug\n- Confirm the release checklist has a pass/fail entry for every PRD Must story",
+    iterationGuide: "Log the pool's active connection count before and after a burst of requests to confirm it returns to baseline once requests complete."
   },
   "l3-s13": {
     partNum: "Part 13",
-    partTitle: "Capstone Defense",
+    partTitle: "The Process Defense",
     objectives: [
-      "Present the completed Hacking Console architecture end-to-end",
-      "Defend specific security and transaction design choices under questioning",
-      "Patch a live seeded bug within a time limit"
+      "Present the project through its process artifacts",
+      "Defend design and security decisions in a hostile review",
+      "Diagnose and patch a live fault under time pressure"
     ],
     planSpecs: {
-      hierarchy: "Full stack: schema.sql (DB) + auth routes + api routes + RLS policies + deployed instance",
-      variables: "All Level 3 state integrated: players, hacking_tools, inventories, RLS policies, transaction-wrapped routes",
-      flow: "Part A: live presentation of the deployed system -> Part B: tutor-led code audit defense -> Part C: timed live bug patch"
+      vision: "One PRD story traced live, end to end, through every artifact it produced — its user story, its design entries, its feature-spec prompt, its diff review, its test-plan rows, its commit/PR, and its behavior in the deployed build.",
+      parts: "Parts needed: the full artifact trail (PRD, blueprints, commit history, diffs/PRs, test logs, deployed URL) and readiness to defend any design or security choice under direct questioning.",
+      flow: "Part A: present one PRD story traced through every artifact -> Part B: defend design and security decisions under hostile questioning -> Part C: diagnose and patch a live seeded fault under time pressure."
     },
-    promptGuide: "Prepare to walk through your full Hacking Console codebase without notes: schema, authentication, validation, RLS policies, and transactions, explaining why each security decision was made.",
+    promptGuide: "No AI generation this session — prepare to walk through your full codebase without notes: schema, auth, validation, transactions, and diffs, explaining why each decision was made.",
     codeReviewGuide: [
-      "Can you point to and explain each RLS policy's purpose without looking it up?",
+      "Can you trace one PRD story from its user story all the way to its live behavior without notes?",
       "Can you explain why the purchase route uses a transaction, using a concrete failure scenario?",
-      "Socratic Question: If asked 'what happens if this RLS policy is removed,' can you describe the exact leak that would result?"
+      "Socratic Question: What did you reject from the AI, and why?"
     ],
-    testCasesGuide: "- Demonstrate signup, login, and a tool purchase live end-to-end\n- Patch the tutor's seeded runtime exception or policy leak within the time limit\n- Defend at least 2 security design choices under direct questioning",
+    testCasesGuide: "- Demonstrate signup, login, and a tool purchase live end-to-end\n- Patch the tutor's seeded runtime fault within the time limit\n- Defend at least 2 design or security choices under direct questioning",
     iterationGuide: "Write down which question from the defense you answered least confidently, to revisit before Level 4."
   },
   "l3-s14": {
     partNum: "Part 14",
-    partTitle: "Reflection & Level 4 Planning",
+    partTitle: "Retrospective & Level 4 Planning",
     objectives: [
-      "Review your Prompt Journal history across Levels 1-3",
-      "Identify which software engineering role interests you most",
+      "Run a Keep/Problem/Try retrospective on the whole project",
+      "Connect process skills to the engineering roles that own them",
       "Set concrete goals for Level 4"
     ],
     planSpecs: {
-      hierarchy: "Portfolio review -> role identification -> Level 4 goal list",
-      variables: "N/A — reflection session, no new code artifacts",
-      flow: "Review past journal versions -> discuss engineering roles -> write 3 concrete goals for Level 4"
+      vision: "A completed Keep/Problem/Try retrospective on the whole Level 3 project, plus 3 concrete goals for Level 4's independent capstone.",
+      parts: "Parts needed: the full artifact trail reviewed as a portfolio piece, a Keep/Problem/Try board, and 3 written Level 4 goals.",
+      flow: "Review the full artifact trail — Prompt Journal versions, commits, PRs, test logs — as a portfolio piece -> run the Keep/Problem/Try retrospective -> write 3 concrete Level 4 goals."
     },
-    promptGuide: "No AI prompt this session — instead, review your own Prompt Journal entries across all three levels and write a short reflection on how your specification quality changed over time.",
+    promptGuide: "No AI prompt this session — instead, review your own Prompt Journal entries across the whole level and write a short reflection on how your process changed over time.",
     codeReviewGuide: [
-      "Looking back at your Level 1 prompts vs. your Level 3 prompts, what's the clearest difference in specificity?",
-      "Which of your own past prompts would you rewrite today, and why?",
-      "Socratic Question: What's one AI-generated bug from this level that taught you something you wouldn't have learned from writing the code yourself?"
+      "Looking back at your Session 1 prompts vs. your Session 9 prompts, what's the clearest difference in specificity?",
+      "Which process step felt like bureaucracy — and did it catch anything?",
+      "Socratic Question: What did the AI get wrong that your process caught?"
     ],
-    testCasesGuide: "- Confirm you can locate and re-read at least one journal entry from each of Levels 1, 2, and 3\n- Confirm you've written down 3 specific, concrete Level 4 goals (not vague aspirations)",
+    testCasesGuide: "- Confirm you can locate and re-read at least one artifact from each module of Level 3\n- Confirm you've written down 3 specific, concrete Level 4 goals (not vague aspirations)",
     iterationGuide: "Revisit this reflection at the start of Level 4 to check whether your stated goals actually shaped what you chose to focus on."
+  },
+
+  // ================= LEVEL 4 =================
+  "l4-s1": {
+    partNum: "Part 1",
+    partTitle: "Your Game's PRD & Scope Contract",
+    objectives: [
+      "Pitch your own game concept and negotiate a buildable scope contract",
+      "Write your capstone PRD independently",
+      "Translate your creative ideas into testable constraints"
+    ],
+    planSpecs: {
+      vision: "Your own game's PRD: goal, core loop, 8-12 user stories with acceptance criteria, MoSCoW priorities, and an explicit out-of-scope list — negotiated into a scope contract the teacher signs off.",
+      parts: "Parts needed: your one-core-loop pitch, 8-12 user stories with acceptance criteria, a MoSCoW priority pass, an out-of-scope list, and the final signed scope contract.",
+      flow: "Pitch your game in two minutes -> draft the PRD solo -> prompt the AI to attack it for untestable criteria and hidden scope monsters -> negotiate the final scope contract with the tutor."
+    },
+    promptGuide: "Prompt the AI to attack your PRD draft for untestable criteria, hidden scope monsters (like 'multiplayer' or 'a level editor'), and missing failure cases, then revise before negotiating your scope contract.",
+    codeReviewGuide: [
+      "Does the Must line fit 5 sprints — one core mechanic, one progression/scoring system, one data feature, and a UI shell?",
+      "Has every vague constraint been rewritten as a number + behavior (e.g. 'responsive controls' -> 'input-to-movement under 50ms')?",
+      "Socratic Question: How does a computer evaluate 'feels fast'? What number is hiding inside that sentence?"
+    ],
+    testCasesGuide: "- Confirm your PRD has 8-12 user stories with testable acceptance criteria\n- Confirm your Must line has been signed off by the tutor as fitting 5 sprints\n- Confirm your out-of-scope list explicitly names at least 2 cut features",
+    iterationGuide: "If your Must line still doesn't fit 5 sprints after tutor review, cut features from Must to Should — don't quietly plan to build them anyway."
+  },
+  "l4-s2": {
+    partNum: "Part 2",
+    partTitle: "Your Architecture & Sprint Map",
+    objectives: [
+      "Design your game's architecture independently",
+      "Choose and justify your tech stack",
+      "Break your Must-scope into a 5-sprint milestone plan"
+    ],
+    planSpecs: {
+      vision: "Your own architecture blueprint pack: a component diagram, a schema (if a backend is in scope), an API contract, a 5-sprint map, and at least 2 ADRs justifying your stack choices.",
+      parts: "Parts needed: a component diagram (game loop, renderer, input, state, persistence), a schema and API contract if a backend is in scope, a 5-sprint map with a demo target per sprint, and 2 Architectural Decision Records.",
+      flow: "Map your own game's player journey screen-by-screen -> draw the component diagram and design the schema/contract -> slot every Must story into one of 5 sprints -> prompt the AI to generate a Mermaid diagram and critique the sprint plan for dependency errors."
+    },
+    promptGuide: "Prompt the AI to generate a Mermaid architecture diagram from your component list and critique your sprint plan for dependency errors (e.g. a leaderboard sprint scheduled before the accounts sprint).",
+    codeReviewGuide: [
+      "Does the sprint map order risky/dependent components before the features that need them?",
+      "Does each ADR contain Status, Context, Decision, and Consequences — with a real cost named in Consequences, not just benefits?",
+      "Socratic Question: Sprint 2 needs data that doesn't exist until Sprint 4 — what happens in week 2?"
+    ],
+    testCasesGuide: "- Confirm the component diagram names every major system (loop, renderer, input, state, persistence)\n- Confirm every Must story from your PRD is slotted into one of the 5 sprints\n- Confirm at least 2 ADRs each contain Status/Context/Decision/Consequences",
+    iterationGuide: "If the AI flags a dependency error in your sprint order, reorder the sprints rather than just noting the risk and moving on."
+  },
+  "l4-s3": {
+    partNum: "Part 3",
+    partTitle: "Foundation: Repo, Vitest & TDD",
+    objectives: [
+      "Stand up your capstone repo and CI-ready workspace independently",
+      "Set up Vitest and write your first test suites",
+      "Apply the Red -> Green -> Refactor TDD cycle"
+    ],
+    planSpecs: {
+      vision: "Your capstone repo standing on its own: workspace structure, Vitest installed, and at least one pure-logic utility built test-first (Red, then Green, then refactored).",
+      parts: "Parts needed: the repo/workspace skeleton, a Vitest configuration, a list of your game's pure-logic functions with boundary-value test cases for the two most critical, and one utility built through the full TDD cycle.",
+      flow: "List your game's pure-logic functions and draft boundary-value test cases for the two most critical -> initialize the repo/workspace/Vitest -> write the failing test first -> prompt the AI for the implementation -> verify Red -> Green -> refactor."
+    },
+    promptGuide: "Write your test first, then prompt the AI IDE for an implementation that makes it pass — never the other way around.",
+    codeReviewGuide: [
+      "Did the test actually fail (Red) before the implementation existed, proving it tests something real?",
+      "Do the assertions use correct matchers (toBe, toThrow) rather than loose truthy checks?",
+      "Socratic Question: Why did the suite pass when the function was wrong? How do we test that our tests are actually testing?"
+    ],
+    testCasesGuide: "- Run the test suite before the implementation exists: confirm it fails (Red)\n- Run it after: confirm it passes (Green)\n- Confirm the suite includes one boundary case and one expected throw",
+    iterationGuide: "If a test passes even against an intentionally broken implementation, the test itself is broken — fix the test before trusting it again."
+  },
+  "l4-s4": {
+    partNum: "Part 4",
+    partTitle: "Sprint 1: Core Mechanic",
+    objectives: [
+      "Ship your game's core loop end-to-end",
+      "Drive the sprint without tutor prompting",
+      "Keep TDD discipline on the mechanic's pure logic"
+    ],
+    planSpecs: {
+      vision: "Your game's core mechanic — the thing that makes it a game — playable end-to-end and surviving the tutor's hostile key-mash QA.",
+      parts: "Parts needed: the sprint goal and feature spec from your milestone plan, the mechanic's pure-logic tests written first, the AI-generated implementation and rendering shell, and a story-linked commit/PR.",
+      flow: "State the sprint goal and write the feature spec -> TDD the mechanic's logic -> prompt the AI IDE for implementation and rendering -> audit diffs against the spec -> commit/PR and demo to the tutor's 'hostile publisher' persona."
+    },
+    promptGuide: "Prompt the AI IDE to implement the rendering and glue code around your already-tested pure-logic mechanic — keep the tested logic separate from what the AI generates.",
+    codeReviewGuide: [
+      "Can the mechanic's core logic be unit-tested without opening a browser?",
+      "Does the demo survive multiple keys held at once and rapid restarts?",
+      "Socratic Question: Why can't we test the jump arc without opening a browser? What would separating logic from rendering buy us?"
+    ],
+    testCasesGuide: "- Demo the mechanic live: verify it survives the tutor's key-mash QA (multiple keys, spam restart, window resize)\n- Confirm the mechanic's pure logic has passing unit tests\n- Confirm the Sprint 1 log documents what shipped and what was cut",
+    iterationGuide: "If the sprint goal was missed, log the cut openly in the Sprint 1 log — don't ship it broken to look finished."
+  },
+  "l4-s5": {
+    partNum: "Part 5",
+    partTitle: "Sprint 2: State & Reliability",
+    objectives: [
+      "Centralize your game state and implement clean transitions",
+      "Apply rollback and defensive guards on every transition",
+      "(Stretch) add WebSockets only if your concept needs them"
+    ],
+    planSpecs: {
+      vision: "A single source of truth for your game's state, with clean menu -> playing -> paused -> game-over transitions and at least one operation that rolls back cleanly on failure.",
+      parts: "Parts needed: the centralized state store, drawn transition diagram, defensive guards on every transition, and one optimistic-update operation with a working rollback.",
+      flow: "Triage Sprint 1's issue list and spec the state machine with a transition diagram -> implement the state store, auditing that no component mutates state directly -> add rollback for any operation that can fail -> demo pause/resume/restart under hostile input."
+    },
+    promptGuide: "Prompt the AI IDE to implement the state store and transitions from your diagram, then have it add an optimistic update with rollback for one action that can fail (e.g. a save).",
+    codeReviewGuide: [
+      "Does every state mutation go through the central store, with no component reaching in and changing it directly?",
+      "Does the rollback actually restore the old state and notify the player, not just silently fail?",
+      "Socratic Question: Why did the newer state disappear? How do we reject updates that represent older state?"
+    ],
+    testCasesGuide: "- Demo pause/resume/restart live under hostile input (rapid key-mashing): verify no broken transitions\n- Trigger a failed optimistic update: verify the UI rolls back and shows a notification\n- Confirm no component mutates state outside the central store",
+    iterationGuide: "If two state updates can race, confirm your fix rejects the OLDER one specifically, not just 'the second one that arrives.'"
+  },
+  "l4-s6": {
+    partNum: "Part 6",
+    partTitle: "Sprint 3: Data Features",
+    objectives: [
+      "Ship your PRD's data features: accounts, saves, and/or a leaderboard",
+      "Re-apply Level 3 backend discipline unassisted",
+      "Run the cross-user attack drill against your own endpoints"
+    ],
+    planSpecs: {
+      vision: "Your game's data features — accounts, saves, and/or leaderboard per your PRD's Must line — built with validated, parameterized, per-user-isolated endpoints (or, for local-only capstones, a versioned localStorage save schema with corrupted-save handling).",
+      parts: "Parts needed: the data-feature spec with hostile test cases written first, the implemented routes and DB (or localStorage) logic, and a logged cross-user attack drill.",
+      flow: "Spec the data features against your schema and API contract, writing hostile test cases first -> implement via the AI IDE, auditing every query for placeholders and every multi-step write for a transaction -> log in as player A and attempt to read/write player B's data — every attempt must fail."
+    },
+    promptGuide: "Prompt the AI IDE to implement your data-feature routes using parameterized queries and the authenticated session id — explicitly forbid reading any id from the request body in your prompt.",
+    codeReviewGuide: [
+      "Does every query use a placeholder, never string concatenation?",
+      "Does every route take the player id from the session, never from the request body or query string?",
+      "Socratic Question: Who controls the request body? Then who controls whose save file this endpoint writes?"
+    ],
+    testCasesGuide: "- Run your test-plan table (happy/boundary/hostile) against your data endpoints: verify every row's observed status matches expected\n- Attempt to read/write another player's data by editing a payload: verify 401/403\n- If local-only: corrupt a save file and verify the game falls back gracefully instead of crashing",
+    iterationGuide: "If you find even one endpoint trusting a client-supplied id, treat it as a live vulnerability and fix it before moving to Sprint 4."
+  },
+  "l4-s7": {
+    partNum: "Part 7",
+    partTitle: "Sprint 4: Integration Tests",
+    objectives: [
+      "Write integration tests covering component interactions and network roundtrips",
+      "Mock API calls including failure responses",
+      "Measure coverage and close the riskiest gaps"
+    ],
+    planSpecs: {
+      vision: "Integration tests covering your game's highest-risk seams (input->state, state->render, client->API), including at least one test that mocks a failure response and asserts the UI shows it.",
+      parts: "Parts needed: a map of your game's integration seams ranked by risk, mocked API tests for the highest-risk flows including error paths, a coverage report, and one new test targeting the biggest uncovered branch.",
+      flow: "Map your integration seams and pick the highest-risk flows -> prompt the AI to write integration tests for those seams including error-path renders -> run coverage -> write one more test for the biggest uncovered branch."
+    },
+    promptGuide: "Prompt the AI to write an integration test that mocks a failed API response (500 or rejected promise) for one of your game's features and asserts the UI shows the correct failure state.",
+    codeReviewGuide: [
+      "Does at least one integration test mock a FAILURE response, not just the happy path?",
+      "Does the coverage report get read for risk, not chased to 100%?",
+      "Socratic Question: Why did the suite report green while the build is broken? How do we keep mocks synchronized with reality?"
+    ],
+    testCasesGuide: "- Run the coverage report: verify it's read and at least one real gap is named and defended\n- Run the mocked-failure test: verify it asserts the UI's failure state, not just that the function was called\n- Confirm the biggest uncovered branch from the report now has a test",
+    iterationGuide: "If a mock's payload shape doesn't match your real API's current response shape, fix the mock — a passing test against a stale mock is worse than no test."
+  },
+  "l4-s8": {
+    partNum: "Part 8",
+    partTitle: "Sprint 5: Performance & Feature Freeze",
+    objectives: [
+      "Profile your game and fix the top bottlenecks",
+      "Apply memory discipline at product scale",
+      "Close the Must line — feature freeze"
+    ],
+    planSpecs: {
+      vision: "Your game holding a stable 60 FPS and passing performance budget, with every PRD Must story demonstrably done — the feature freeze point.",
+      parts: "Parts needed: measurable performance targets (FPS, LCP, array caps), a baseline profile, fixes for the top bottlenecks, a re-profile, and a story-by-story PRD Must-line walkthrough with the tutor.",
+      flow: "Set measurable performance targets and run the baseline profile -> fix the top profiled bottlenecks (sprite pruning, pagination, asset sizes) -> re-profile -> walk the PRD Must line story-by-story with the tutor, cutting or fixing anything failing now."
+    },
+    promptGuide: "Share your profiler output with the AI IDE and prompt it to fix the specific bottleneck functions it identifies — not a generic 'optimize this' request.",
+    codeReviewGuide: [
+      "Do the before/after profiler numbers show measurable improvement, not just a claim that it 'feels smoother'?",
+      "Is every PRD Must story either demonstrably done or explicitly cut in this session's log — nothing left ambiguous?",
+      "Socratic Question: Why does rendering 10,000 elements crash the tab? What does pagination change about what the DOM has to hold?"
+    ],
+    testCasesGuide: "- Record before/after FPS, LCP, and array-cap numbers: verify measurable improvement\n- Confirm every PRD Must story is marked done or explicitly cut in the freeze review\n- Confirm no new feature work is planned after this session",
+    iterationGuide: "If you're tempted to add 'just one more feature' after the freeze, that impulse IS the lesson this session teaches — log it as a Level-4-retrospective note instead."
+  },
+  "l4-s9": {
+    partNum: "Part 9",
+    partTitle: "CI/CD Pipeline",
+    objectives: [
+      "Write a GitHub Actions workflow that installs, lints, tests, and builds on every push",
+      "Gate merges on green pipelines",
+      "Connect the pipeline to auto-deploy"
+    ],
+    planSpecs: {
+      vision: "A working `.github/workflows/deploy.yml` that blocks a bad push and auto-deploys a good one — proven with one deliberately failing run and one green run.",
+      parts: "Parts needed: the pipeline flow diagram (push -> lint -> test -> build -> deploy staging -> gate -> production), the YAML workflow file, and evidence of both a blocked run and a green run.",
+      flow: "Sketch the pipeline flow -> prompt the AI to generate the workflow YAML -> push a commit and watch it run -> deliberately push a failing test and watch the gate hold."
+    },
+    promptGuide: "Prompt the AI to generate a GitHub Actions workflow that installs dependencies, lints, runs your Vitest suite, and builds on every push, failing the job if any step fails.",
+    codeReviewGuide: [
+      "Does the YAML run steps in a meaningful order (lint/test before deploy, never after)?",
+      "Does a genuinely failing test actually block the pipeline, not just log a warning?",
+      "Socratic Question: Why did the deploy stop? Read the logs upward from the failure — where exactly did the pipeline halt?"
+    ],
+    testCasesGuide: "- Push a commit with passing tests: verify the pipeline goes green end-to-end\n- Push a commit with a deliberately failing test: verify the pipeline blocks and the deploy does not run\n- Confirm both runs are saved as evidence for Session 12's engineering tour",
+    iterationGuide: "If the pipeline goes green on a build that's actually broken, find out which step should have caught it and add that check."
+  },
+  "l4-s10": {
+    partNum: "Part 10",
+    partTitle: "Monitoring & Beta Test",
+    objectives: [
+      "Implement structured JSON logging with an error-handler middleware",
+      "Plan and run a live beta test with real testers",
+      "Harden inputs against the hostile beta user"
+    ],
+    planSpecs: {
+      vision: "Structured JSON error logs from a real, live mini-beta with 2-3 testers, plus a triage matrix (Severity × Priority) with at least one honestly-labeled Blocker.",
+      parts: "Parts needed: the log entry schema (timestamp, level, endpoint, userId), the structured logger middleware and input sanitizers, a beta test script and findings form, and the completed triage matrix.",
+      flow: "Design the log schema and write the beta test script -> prompt the AI for the logger middleware and input sanitizers -> run a live mini-beta while watching the logs -> file every finding into the triage matrix."
+    },
+    promptGuide: "Prompt the AI for an error-handler middleware that logs stack trace, timestamp, endpoint, and client IP as structured JSON, plus an input sanitizer that clamps length and strips dangerous characters.",
+    codeReviewGuide: [
+      "Does every server error produce a structured JSON log line, not a raw console print?",
+      "Is at least one beta finding honestly labeled a Blocker, not softened?",
+      "Socratic Question: The player saw an error page and our logs are empty — where did the exception go?"
+    ],
+    testCasesGuide: "- Trigger a server error during the live beta: verify a structured JSON log line is produced\n- Confirm the triage matrix has real findings from real testers, with severity and priority both labeled\n- Confirm at least one input sanitizer is proven against a genuinely hostile input during the beta",
+    iterationGuide: "If a tester's crash produced no log entry, fix the logging gap immediately — an unlogged failure is worse than the failure itself."
+  },
+  "l4-s11": {
+    partNum: "Part 11",
+    partTitle: "Docs & Launch Prep",
+    objectives: [
+      "Write a README a stranger can follow",
+      "Produce the API spec and finalize the ADR set",
+      "Fix Blocker/Major beta findings and complete the launch checklist"
+    ],
+    planSpecs: {
+      vision: "A README that passes a clean-machine test — the tutor follows it from zero and the app runs — plus a finalized API spec and ADR set, and every Blocker/Major beta finding closed.",
+      parts: "Parts needed: the README (prerequisites, install, env vars, run, deploy), the OpenAPI-style spec for any backend routes, the finalized ADR set, and the launch checklist with a rollback plan.",
+      flow: "Outline the README and list every env var -> prompt the AI to draft the README and API spec from the codebase -> verify by clean-machine test (the tutor follows it from zero) -> burn down remaining Blocker/Major findings."
+    },
+    promptGuide: "Prompt the AI to draft your README and API spec directly from your actual codebase and env var usage, then have the tutor follow it on a machine that's never seen your project.",
+    codeReviewGuide: [
+      "Does the clean-machine test actually pass — does the tutor's from-zero run succeed?",
+      "Does every ADR contain Status, Context, Decision, and Consequences with a real named cost?",
+      "Socratic Question: It works on your machine and died on mine. What did your documentation assume that it never stated?"
+    ],
+    testCasesGuide: "- Have the tutor follow your README from a clean machine: verify it succeeds without asking you anything\n- Confirm every Blocker/Major beta finding from Session 10 is now closed\n- Confirm the launch checklist includes an explicit rollback plan",
+    iterationGuide: "Every step the tutor had to ask you about during the clean-machine test is a gap — add it to the README before calling this session done."
+  },
+  "l4-s12": {
+    partNum: "Part 12",
+    partTitle: "The Grand Launch",
+    objectives: [
+      "Launch your game publicly and present it end-to-end",
+      "Demonstrate the full engineering apparatus",
+      "Defend the live system against chaos testing in real time"
+    ],
+    planSpecs: {
+      vision: "Your game live in production on a shareable URL, defended in real time against the tutor's chaos testing — hostile inputs, forced network failures, cross-user attacks, and key-mash storms — with every failure caught, logged, and explained.",
+      parts: "Parts needed: the live production URL, the full engineering apparatus on display (tests/coverage, CI/CD logs, structured logs, README/API spec/ADRs, commit/PR history), and a live defense against chaos testing.",
+      flow: "Present the live game and map the PRD's promises to what shipped, including honest cuts -> walk the codebase and apparatus for the tutor -> defend live against Chaos Monkey testing -> run the final retrospective against the Session 1 scope contract."
+    },
+    promptGuide: "No AI generation this session — this is the live defense. Prepare to explain every artifact (tests, pipeline logs, beta findings, docs) without notes.",
+    codeReviewGuide: [
+      "Does every PRD Must story work in the live deployed game, with cuts logged and explained rather than silently missing?",
+      "Do sanitizers hold, does state roll back, and does isolation reject cross-user writes under live chaos testing?",
+      "Socratic Question: What was promised vs. what shipped — can you account for every difference?"
+    ],
+    testCasesGuide: "- Survive at minimum: garbage/extreme input into every form field, a forced network failure mid-save, a replayed cross-user payload attack, and a key-mash/restart storm — no crash, no frozen state, no unhandled failure\n- Confirm the live URL works from outside the classroom network\n- Confirm the final retrospective explicitly references the Session 1 scope contract",
+    iterationGuide: "Whatever breaks during the live chaos test, run the debugging protocol out loud rather than going silent — that's the actual skill being assessed."
   }
 };

@@ -485,485 +485,497 @@ export const CURRICULUM_DATA = [
   {
     id: "l3-s1",
     level: 3,
-    module: "Module 1: Relational Databases & Hacking Sign-Ups",
-    title: "Session 1: \"Where Does Data Live? Relational Database Schemas\"",
+    module: "Module 1: From Idea to Plan",
+    title: "Session 1: \"How Software Gets Built: The Development Lifecycle\"",
     duration: "2 hours",
     objectives: [
-      "Explain client-server architecture and how data is separated from application code",
-      "Define relational SQL terms: Tables, Fields, Primary Keys, and Foreign Keys",
-      "Model database schemas representing player decks, hacking tools, and transaction logs"
+      "Describe the phases of a software project: requirements → design → build → test → deploy → iterate",
+      "Map the 5-Step AI-Era loop (Plan → Prompt → Review → Test → Iterate) onto the professional lifecycle",
+      "Explore the finished Hacker Arena demo as users and as reverse-engineers, and state what will be built"
     ],
-    warmUp: "Relational Schema Match: using the in-app diagramming tool, connect hacking tools to player cards using primary- and foreign-key nodes.",
-    miniLesson: "Relational Data Modeling: why local variables reset on page reload (making a backend database necessary), relational table structures (One-to-Many, Many-to-Many), and SQL field constraints (Unique, Not Null, Default).",
-    coreActivity: "Arena DB Schema Blueprint: design tables for `players`, `hacking_tools` (id, name, speed_rating, cost), and `inventories` (player_id, tool_id), then prompt the AI to generate the SQL schema and audit its key relationships.",
-    handsOn: "Socratic Debugging — The Floating Record: the tutor removes the foreign-key constraint on `inventories`; a deleted player's inventory items are left stranded in the database. Explain the role of foreign keys and cascade deletes, then restore the constraint.",
-    homework: "In the Journal tab under 'Session 1 Homework', sketch a 3-table relational schema for a virtual card marketplace, indicating primary and foreign key references (+50 XP).",
-    ethics: "Data Privacy & Sensitivity Classification: the 2017 Equifax breach exposed 147 million people's data because sensitive fields (Social Security numbers) lacked adequate access controls. What fields in our schema are public (high scores) vs. private (email, transaction logs), and how does that shape the schema before we write it?",
-    adaptations: "Age 13-16: Diagram a schema with at least one many-to-many relationship (e.g. tools shared across multiple decks) and discuss why it needs a join table."
+    warmUp: "Play the Finished Product: the tutor demos their own completed Hacker Arena build — the student plays it (registers, logs in, buys a tool, sees credits drop) before writing a line of the project's own code.",
+    miniLesson: "The Lifecycle & The Loop: the lifecycle phases and why order matters (requirements before design, design before code), the 5-Step AI loop as the inner cycle that runs inside every build phase, and engineering roles (product, frontend, backend, DBA, QA, DevOps) that the student plays solo, guided.",
+    coreActivity: "Demo Deconstruction & Project Charter: with DevTools open, map the demo's moving parts (which requests fire on login? on purchase? where must a database be involved?) and draft a first-guess component list, then write a one-page Project Charter and prompt the AI IDE to critique it for vagueness before tightening it.",
+    handsOn: "Socratic Debrief — The Skipped-Phase Disaster: the tutor tells a war story of a team that started coding with no requirements and shipped the wrong product. Explain why the code worked perfectly yet the project still failed, and which phase was skipped.",
+    homework: "In the Journal tab under 'Session 1 Homework', write the lifecycle phases in order, and for each phase, one sentence on what the Hacker Arena will need in that phase (+50 XP).",
+    ethics: "Building the Right Thing: in 2013, HealthCare.gov launched after skipping integration testing phases under deadline pressure, collapsing on day one under real users — a $1.7B lesson in process discipline. Who gets hurt when engineers skip process steps to go faster? When is 'move fast' irresponsible?",
+    adaptations: "Age 13-16: Full reverse-engineering pass on the demo plus an independently drafted Project Charter, defended against AI critique."
   },
   {
     id: "l3-s2",
     level: 3,
-    module: "Module 1: Relational Databases & Hacking Sign-Ups",
-    title: "Session 2: \"User Authentication & Hacking Sign-Ups\"",
+    module: "Module 1: From Idea to Plan",
+    title: "Session 2: \"Mission Briefing: Requirements & the PRD\"",
     duration: "2 hours",
     objectives: [
-      "Understand authentication workflows, encryption, and password hashing concepts",
-      "Build signup/login forms collecting username and password credentials",
-      "Link forms to backend routes that validate and store credentials securely"
+      "Turn a vague product idea into user stories with acceptance criteria",
+      "Prioritize scope with Must/Should/Could (MoSCoW) and defend the cut line",
+      "Produce the Hacker Arena PRD — the document every later session will be audited against"
     ],
-    warmUp: "Password Hashing Trace: compare raw password strings against their hashed equivalents, observing that hashes reveal nothing about the original text.",
-    miniLesson: "The Authentication Chain: why we never store passwords in plaintext, hashing algorithms (bcrypt, argon2) and salt parameters, and the login flow that compares an input's hash against the stored hash.",
-    coreActivity: "Auth Routing Flow: draw the signup sequence (Form → POST → Hash → Insert → DB), draft the request payload requirements, then prompt the AI to generate the authentication route and signup controller.",
-    handsOn: "Socratic Debugging — The Plaintext Leak: the tutor replaces the hash-generation call with a direct string insert, writing plaintext passwords into the database. Explain why storing raw passwords is a security risk if an attacker ever reads the table directly, then restore the hashing step.",
-    homework: "In the Journal tab under 'Session 2 Homework', write a JS code snippet checking if a password string meets length bounds (min 8 characters) and hashing it (+50 XP).",
-    ethics: "User Credentials Exposure: the 2012 LinkedIn breach exposed 6.5 million password hashes, but because they used unsalted SHA-1 instead of bcrypt, most were cracked within hours. If our database is breached and passwords leak in plaintext, how does it affect users who reuse passwords elsewhere?",
-    adaptations: "Age 13-16: Research the cost-factor parameter in bcrypt and discuss why a higher cost factor is more secure but slower."
+    warmUp: "The Ambiguous Client: the tutor plays a client who says only 'I want a cool hacker game with shopping.' The student must extract requirements by asking questions; the tutor answers only what is asked — requirements are pulled, not given.",
+    miniLesson: "User Stories & Acceptance Criteria: the story template (As a [player], I want [to buy a tool] so that [my deck gets stronger]), acceptance criteria as testable statements, and MoSCoW prioritization — why 'Could' features die first.",
+    coreActivity: "PRD Drafting & Hardening: draft the Hacker Arena PRD skeleton (goal, users, 6–10 user stories, priorities, out-of-scope list), marking each story Must/Should/Could with acceptance criteria for every Must, then prompt the AI to attack the PRD for untestable criteria, hidden assumptions, and missing failure cases before revising.",
+    handsOn: "Socratic Debugging — The Untestable Requirement: the tutor plants a requirement like 'the login should be fast and secure.' Rewrite it into measurable criteria (responds within N ms; passwords hashed; lockout after N failures) — if a tester can't prove it done, what is it?",
+    homework: "In the Journal tab under 'Session 2 Homework', write two additional user stories for the Hacker Arena (one Must, one Could) with acceptance criteria, and one sentence defending why each sits at that priority (+50 XP).",
+    ethics: "Scope Honesty: a client asks for 20 features in the time 8 fit. Is it more ethical to promise everything and fail quietly, or to negotiate the cut line up front? What do engineers owe non-technical stakeholders?",
+    adaptations: "Age 13-16: Full PRD draft with at least 8 user stories and a defended MoSCoW cut line."
   },
   {
     id: "l3-s3",
     level: 3,
-    module: "Module 1: Relational Databases & Hacking Sign-Ups",
-    title: "Session 3: \"Access Security & Environment Variables\"",
+    module: "Module 1: From Idea to Plan",
+    title: "Session 3: \"System Design: Architecture Blueprints\"",
     duration: "2 hours",
     objectives: [
-      "Explain the security hazards of hardcoding API keys and database credentials in client code",
-      "Use environment configuration files (`.env`) to isolate sensitive credentials",
-      "Access environment parameters in backend code using configuration wrappers"
+      "Draw the three-tier architecture (client → Express server → MySQL) and trace each PRD story through it",
+      "Design the relational schema (`players`, `hacking_tools`, `inventories`) with primary/foreign keys",
+      "Draft the API contract: endpoints, methods, payloads, status codes — before any code exists"
     ],
-    warmUp: "API Keys Leak Audit: inspect a mock public GitHub repository to locate hidden API keys and database links accidentally committed to the code.",
-    miniLesson: "Credentials Containment: why client-side code is public (DevTools reveals everything), environment configuration files (`.env`) and `.gitignore` safety rules, and accessing system environment variables (`process.env.DB_PASSWORD`).",
-    coreActivity: "Credentials Shielding Blueprint: plan which keys (database URL, JWT secret) must be moved off-code, draft the environment-variable key template, then prompt the AI to extract hardcoded credentials into a `.env` file and wire up configuration access.",
-    handsOn: "Socratic Debugging — The Exposed Config Bug: the tutor copies database connection keys into a front-end script, making them visible in browser network logs. Explain why exposing credentials on the frontend is a threat, then move them back into `.env`.",
-    homework: "In the Journal tab under 'Session 3 Homework', write a mock `.env` file declaring 3 secrets and show the code loading them via `process.env` (+50 XP).",
-    ethics: "Responsible Disclosures: in 2022, a Samsung engineer accidentally uploaded proprietary source code to ChatGPT, exposing trade secrets. If you discover a company's credentials publicly exposed on a repo, what should you do, and what does responsible disclosure look like?",
-    adaptations: "Age 13-16: Verify `.gitignore` actually blocks `.env` from being tracked by running `git status` after adding secrets."
+    warmUp: "Relational Schema Match: using the in-app diagramming tool, connect hacking tools to players via primary- and foreign-key nodes — the schema is the load-bearing wall, cheaper to move now, on paper, than after data exists.",
+    miniLesson: "Designing Before Building: component diagrams (what talks to what, and what is forbidden — the client never touches the DB), relational modeling (one-to-many, many-to-many, constraints), and API contracts as promises written down before implementation.",
+    coreActivity: "The Arena Blueprint: design tables for `players`, `hacking_tools` (id, name, speed_rating, cost), and `inventories` (player_id, tool_id), mapping every PRD Must-story to endpoints, then prompt the AI to generate the SQL schema and audit it against the blueprint's keys, constraints, and types.",
+    handsOn: "Socratic Debugging — The Floating Record: the tutor removes the foreign-key constraint on `inventories`; a deleted player's inventory rows are left stranded. Explain why the database still lists tools for a player who no longer exists, then restore the constraint.",
+    homework: "In the Journal tab under 'Session 3 Homework', sketch a 3-table relational schema for a virtual card marketplace, indicating primary and foreign keys, and list its API contract (4+ endpoints with methods and status codes) (+50 XP).",
+    ethics: "Data Privacy & Sensitivity Classification: the 2017 Equifax breach exposed 147 million people's data because sensitive fields lacked adequate access controls. In our schema, what is public (tool list) vs. private (inventories, credentials), and why must classification happen at design time, not after launch?",
+    adaptations: "Age 13-16: Full schema + API contract draft, audited against the AI-generated SQL for deviations."
   },
   {
     id: "l3-s4",
     level: 3,
-    module: "Module 1: Relational Databases & Hacking Sign-Ups",
-    title: "Session 4: \"Relational Queries: Retrieving Player Inventories\"",
+    module: "Module 1: From Idea to Plan",
+    title: "Session 4: \"Base Camp: Git, Repos & the Workspace\"",
     duration: "2 hours",
     objectives: [
-      "Write database queries fetching user data from multiple tables (relational JOIN queries)",
-      "Parse tabular query rows into structured JSON array payloads",
-      "Wire the frontend dashboard to fetch and render player inventories"
+      "Initialize the project repository: `git init`, `git add`, `git commit`, and connect it to GitHub with `git push`",
+      "Structure the workspace (frontend/, server/, db/) and protect secrets with `.gitignore` + `.env`",
+      "Stand up the local MySQL server (Servbay/XAMPP) and apply the Session 3 schema"
     ],
-    warmUp: "JOIN Table Matches: given a relational table grid, match keys by hand to assemble an inventory list before writing any SQL.",
-    miniLesson: "SQL JOIN Queries: retrieving data across tables with `INNER JOIN`, linking records via foreign keys (`inventories.player_id = players.id`), and converting flat SQL rows into nested JSON arrays.",
-    coreActivity: "Inventory Fetch Flowchart: sketch the pipeline (GET `/inventory` → run SQL join query → send JSON array response), draft the SQL join template, then prompt the AI to write the backend route executing the join.",
-    handsOn: "Socratic Debugging — The Empty Join Leak: the tutor replaces `INNER JOIN` with a `LEFT JOIN`, so the query starts returning tool records for non-existent player IDs. Explain what INNER vs. LEFT JOIN dictates, then correct the join type.",
-    homework: "In the Journal tab under 'Session 4 Homework', write a SQL query joining `players` and `inventories`, filtering by player username 'HackerZero' (+50 XP).",
-    ethics: "Data Isolation: if inventory lookup requests don't check player-constraint parameters, could a hacker fetch another player's deck? Why is query-level isolation critical, not just RLS?",
-    adaptations: "Age 13-16: Extend the join to a 3-table chain (players → inventories → hacking_tools) and trace how each foreign key links the next table."
+    warmUp: "The Time Machine Demo: the tutor breaks a file in a demo repo, then restores it instantly from history, then shows the commit log of a real open-source project — version control is the profession's undo button and its diary.",
+    miniLesson: "Repositories & Secrets: the commit as a snapshot and the staging area, remote repos (push/pull) and why the platform will read this repo for code review from Session 6 onward, and secrets containment (`.env`, `process.env`, `.gitignore`) — credentials must never enter history.",
+    coreActivity: "Workspace Layout & Base Camp: plan the folder structure and what gets committed vs. ignored, draft the `.gitignore` list and `.env` key template, then run `git init`, make the initial commit, create the GitHub repo, push, install/start MySQL via Servbay, create the database, and apply the Session 3 schema.",
+    handsOn: "Socratic Debugging — The Leaked Key: in a throwaway demo repo, the tutor commits a fake API key, then deletes it in a later commit — and shows it still visible in history. The key is gone from the file; is it gone from the repo? What must happen once a real secret is pushed?",
+    homework: "In the Journal tab under 'Session 4 Homework', write the exact command sequence to stage and commit a change and push it to GitHub, plus a mock `.env` with 3 secrets and the code line that loads one of them (+50 XP).",
+    ethics: "Code Leakage & AI Tools: in 2022, a Samsung engineer pasted proprietary source code into ChatGPT, exposing trade secrets — prompts are disclosures. What belongs in an AI prompt, and what never does?",
+    adaptations: "Age 13-16: Full repo + local MySQL setup, verified live on GitHub with a clean commit history and no leaked `.env`."
   },
   {
     id: "l3-s5",
     level: 3,
-    module: "Module 2: REST APIs & Server-Side Security",
-    title: "Session 5: \"Server Routing & REST API Endpoints\"",
+    module: "Module 2: The Build Loop",
+    title: "Session 5: \"Build Loop I: Feature Specs & Prompting at Project Scale — The Login Gate\"",
     duration: "2 hours",
     objectives: [
-      "Explain REST API methods (GET, POST, PUT, DELETE) and routing architectures",
-      "Write backend route handlers mapping endpoints to database transactions",
-      "Intercept client request parameters to execute matching logic routes"
+      "Convert a PRD story into a feature spec an AI IDE can implement inside an existing codebase",
+      "Build the register/login flow: forms → POST routes → hashed passwords (bcrypt) → MySQL",
+      "Commit the feature with a message linked to its PRD story"
     ],
-    warmUp: "Reverse Engineering — Intercepting API Traffic: open a public web app, open DevTools' Network tab filtered to XHR/Fetch, click through the app, and identify which endpoints are called, which HTTP methods are used, and what the JSON response contains.",
-    miniLesson: "REST Route Architectures: HTTP verb semantics (GET reads, POST writes, PUT updates, DELETE removes) and URL path parameters (`/tools/:id`) vs. query parameters.",
-    coreActivity: "Deck Management API Blueprint: outline the REST routes needed (GET `/tools`, POST `/deck/add`, DELETE `/deck/remove`), write the endpoint spec sheet, then prompt the AI to generate the REST routing file (`api.js`).",
-    handsOn: "Socratic Debugging — The POST Read Trap: the tutor maps a data-read request to a POST endpoint, causing the browser to refuse to cache the resource on reload. Explain why GET endpoints must use GET, then correct the route's HTTP verb.",
-    homework: "In the Journal tab under 'Session 5 Homework', write Express routing declarations for GET, POST, and DELETE endpoints matching deck cards (+50 XP).",
-    ethics: "Standard API Design: why is standardizing endpoint conventions crucial for open systems, and how does clear API documentation help developers cooperate instead of guessing at each other's routes?",
-    adaptations: "Age 13-16: Add a PUT `/tools/:id` route for editing an existing tool and discuss when PUT is the right verb instead of POST."
+    warmUp: "Password Hashing Trace: compare raw password strings with their hashed equivalents — a recap of Level 2 Session 12 awareness, now made real.",
+    miniLesson: "The Feature Spec: anatomy of a feature spec (story reference, files affected, inputs/outputs, constraints, out-of-scope), prompting inside a codebase (giving the AI the schema, contract, and constraints — context is the difference between project code and generic code), and the auth chain (form → POST → validate → hash (bcrypt) → INSERT; login compares hashes, never plaintext).",
+    coreActivity: "Spec the Login Gate: write the feature spec for register + login from the PRD's Must stories, including failure behaviors (duplicate username, short password), then run the spec through the AI IDE, audit output against spec/schema/contract, and fix deviations via follow-up prompts.",
+    handsOn: "Socratic Debugging — The Plaintext Leak: the tutor swaps the hash call for direct string insertion. If attackers dump the table tonight, what do they have — and whose fault is it? Why is hashing non-negotiable even in a class project?",
+    homework: "In the Journal tab under 'Session 5 Homework', write a feature spec (story, files, I/O, constraints, out-of-scope) for a 'change password' endpoint — spec only, no code (+50 XP).",
+    ethics: "Credential Reuse: LinkedIn's 2012 breach exposed 6.5M unsalted SHA-1 hashes, cracked within hours. Users reuse passwords — what does that make every credentials table, and every developer who stores one?",
+    adaptations: "Age 13-16: Full register/login implementation with a PRD-linked commit message."
   },
   {
     id: "l3-s6",
     level: 3,
-    module: "Module 2: REST APIs & Server-Side Security",
-    title: "Session 6: \"Defensive Coding: Server-Side Parameter Verification\"",
+    module: "Module 2: The Build Loop",
+    title: "Session 6: \"Build Loop II: Diff-Based Code Review — The Tool Shop API\"",
     duration: "2 hours",
     objectives: [
-      "Apply defensive programming to validate parameters on the server side",
-      "Enforce bounds validation (range, type, existence checks) to reject invalid requests",
-      "Return correct HTTP status codes matching request outcomes (400, 403, 404, 500)"
+      "Review code as professionals do: by diff, not by full file — using the platform's \"Sync Latest Code\" `git diff` view",
+      "Build the tool-catalog and inventory endpoints (`GET /tools`, `GET /inventory`, JOIN query)",
+      "Apply a review checklist (correctness vs. spec, security, naming, dead code) and annotate findings"
     ],
-    warmUp: "Parameter Sanity Checks: audit a mock request payload to find values that could crash the server or database (e.g. a string where a cost number is expected, or a negative value).",
-    miniLesson: "The Zero-Trust Backend: why frontend validation is trivially bypassed via DevTools, validating types/ranges/fields on the server itself, and REST status code classification.",
-    coreActivity: "Validation Rules Matrix: plan validation thresholds (e.g. quantity must be a positive integer), draft the validation pseudocode, then prompt the AI to write server-side validation guards inside the request handler.",
-    handsOn: "Socratic Debugging — The Free Credits Hack: the tutor removes server-side price validation, so a request payload with cost `-100` increases the player's credit balance. Explain the hazard of trusting client-provided price values, then insert the server-side check.",
-    homework: "In the Journal tab under 'Session 6 Homework', write a server-side parameter check that throws a 400 Bad Request if a cost parameter is not a positive number (+50 XP).",
-    ethics: "Edge Valuation Validation: if backend validation has logic holes, players can exploit them to steal digital assets — is that exploit the player's fault or the coder's fault?",
-    adaptations: "Age 13-16: Write a validation guard covering at least three distinct failure modes (wrong type, negative value, missing field) with distinct status codes."
+    warmUp: "Spot the Change: two near-identical 60-line files on screen; hunt differences by eye for 3 painful minutes, then see the same pair as a colour-coded diff — nobody reviews by rereading everything.",
+    miniLesson: "Reading Diffs: diff anatomy (additions, deletions, context lines, file headers), the review checklist (does it match the spec? does it trust client input? is anything changed the spec didn't ask for?), and the platform workflow (commit → \"Sync Latest Code\" → annotate the diff → TA/tutor cross-check).",
+    coreActivity: "Spec the Shop: write the feature spec for `GET /tools` and `GET /inventory` (the JOIN across `inventories`/`players`/`hacking_tools`) per the API contract, implement via the AI IDE, commit, sync into the platform, and review the diff line-by-line with the checklist, annotating at least three findings.",
+    handsOn: "Socratic Debugging — The Smuggled Change: the tutor's prepared diff contains one line the spec never asked for (an extra route, or a widened WHERE clause). The feature works — so why is this diff dangerous to approve? What does 'out of scope' mean in a review?",
+    homework: "In the Journal tab under 'Session 6 Homework', review the provided 20-line diff (seeded with one spec deviation and one unsafe query) and write your findings as review comments (+50 XP).",
+    ethics: "Review Accountability: if you approve a diff without reading it and it ships a security hole, who is responsible — the author, the AI, or the approver? What does your approval actually certify?",
+    adaptations: "Age 13-16: Full diff review with at least three annotated findings, one of which must be a security concern."
   },
   {
     id: "l3-s7",
     level: 3,
-    module: "Module 2: REST APIs & Server-Side Security",
-    title: "Session 7: \"Row-Level Security: Shielding Player Profiles\"",
+    module: "Module 2: The Build Loop",
+    title: "Session 7: \"Build Loop III: Test Plans & Break-It QA — The Zero-Trust Server\"",
     duration: "2 hours",
     objectives: [
-      "Understand Row-Level Security (RLS) database policies",
-      "Design RLS rules checking auth status to isolate database records",
-      "Audit database access logs to ensure records are protected"
+      "Write a test plan before building: happy path, boundary cases, hostile cases, expected status codes",
+      "Build server-side validation guards (types, ranges, existence) returning correct 400/401/404 codes",
+      "Execute the plan, log pass/fail results, and treat every fail as a work item"
     ],
-    warmUp: "Database Leak Check: trace query results when querying without auth checks, noticing that every user's records display regardless of who's asking.",
-    miniLesson: "Row-Level Security Rules: RLS as a database-engine guard enforcing isolation at the query level, matching a query's auth token user ID against a record's user ID, and Select/Insert/Update/Delete-specific security policies.",
-    coreActivity: "DB Security Policy Diagram: map the permission rule ('players can read all tool templates, but can only read/write their own inventories'), draft the SQL policy definitions, then prompt the AI to write PostgreSQL RLS policy statements.",
-    handsOn: "Socratic Debugging — The Global Read Leak: the tutor disables the RLS flag on the `players` table, so a query returns everyone's usernames and encrypted passwords. Explain why user A can download user B's records, then enable RLS and configure the user-check policy.",
-    homework: "In the Journal tab under 'Session 7 Homework', write a SQL RLS policy statement limiting updates on `inventories` to the authenticated user matching `auth.uid()` (+50 XP).",
-    ethics: "Mass Data Leaks: the 2019 Capital One breach exposed 106 million customer records because a misconfigured firewall rule bypassed Row-Level Security, letting a single query dump the entire database. How does RLS act as a defensive barrier even if other layers fail?",
-    adaptations: "Age 13-16: Write both a SELECT and an UPDATE policy for the same table and explain why a table might need different rules per operation."
+    warmUp: "Parameter Sanity Checks: audit a mock request payload to find values that could corrupt the DB (string cost, negative quantity, 10,000-character username).",
+    miniLesson: "Testing as a Plan, Not a Vibe: the test-case table (input → expected result → actual result → pass/fail), the zero-trust backend (frontend validation is UX, server validation is security), and status code discipline (400 bad input, 401 unauthenticated, 404 missing, 500 = our bug).",
+    coreActivity: "The Test Plan: write the validation spec and 10+ test cases for `POST /purchase` inputs before any implementation, including hostile cases, then implement validation guards via the AI IDE, audit, and execute the full test plan against the running server, logging results in the platform's test checklist.",
+    handsOn: "Socratic Debugging — The Free Credits Hack: the tutor removes price validation; a payload with cost `-100` increases the player's balance. Every line executed correctly — where is the bug? What assumption did the code make about the client?",
+    homework: "In the Journal tab under 'Session 7 Homework', write a 6-case test plan (2 happy, 2 boundary, 2 hostile) for the login endpoint, with expected status codes (+50 XP).",
+    ethics: "Exploits & Blame: if validation has holes and players exploit them, is it the player's fault or the coder's? Does 'nobody would ever send that' survive contact with the internet?",
+    adaptations: "Age 13-16: Full 10+ case test plan with server-side guards passing the entire table."
   },
   {
     id: "l3-s8",
     level: 3,
-    module: "Module 2: REST APIs & Server-Side Security",
-    title: "Session 8: \"Database Transaction Guards: Safe Inventory Exchange\"",
+    module: "Module 2: The Build Loop",
+    title: "Session 8: \"Build Loop IV: Debugging & Iteration Cycles — The Atomic Purchase\"",
     duration: "2 hours",
     objectives: [
-      "Understand ACID database transaction concepts (Atomicity, Consistency, Isolation, Durability)",
-      "Implement database transactions (BEGIN, COMMIT, ROLLBACK) to group queries",
-      "Prevent partial data writes during credit-to-item exchanges"
+      "Apply a debugging protocol: reproduce → isolate → hypothesize → fix → re-test → log",
+      "Implement the credit-to-item purchase as a database transaction (BEGIN/COMMIT/ROLLBACK)",
+      "Maintain an iteration log connecting each bug to its root cause and fix commit"
     ],
-    warmUp: "Partial Write Simulation: walk through a card trade where the server takes a player's credits but fails before giving the card, and determine what should happen to those credits.",
-    miniLesson: "ACID Transactions: atomicity (all queries succeed or all roll back), transaction syntax (`BEGIN`, `COMMIT`, `ROLLBACK`), and lock conditions that prevent double-spending during concurrent runs.",
-    coreActivity: "Transaction Flowcharting: draw a transactional exchange flow showing rollback triggers when a balance is insufficient, draft the transactional SQL blocks, then prompt the AI to generate a transaction wrapping the credit charge and inventory insert.",
-    handsOn: "Socratic Debugging — The Credit Theft Glitch: the tutor simulates a crash mid-purchase — credits are deducted but no card is added, and nothing rolls back. Explain why wrapping the queries in BEGIN/COMMIT (with rollback on catch) prevents this partial state, then implement it.",
-    homework: "In the Journal tab under 'Session 8 Homework', write a JS transaction script executing BEGIN, checking credits, deducting them, inserting the item, and running COMMIT or ROLLBACK on error (+50 XP).",
-    ethics: "Transaction Integrity: in 2012, a Knight Capital Group deployment executed 4 million unintended stock trades in 45 minutes due to a partial transaction rollback failure, losing $440 million. If a bank transfer fails mid-route, why is atomic rollback mandatory for trust in the system?",
-    adaptations: "Age 13-16: Simulate a crash at three different points inside the transaction (before BEGIN, mid-query, before COMMIT) and trace what state the database ends up in for each."
+    warmUp: "Partial Write Simulation: walk through a purchase where the server takes credits, then crashes before granting the tool. Where did the credits go?",
+    miniLesson: "Debugging as Process + ACID: the debugging protocol (and why 'change things until it works' is not debugging), atomicity (all queries succeed or all roll back; `BEGIN`/`COMMIT`/`ROLLBACK`), and the iteration log (Step 5 of the loop) as an engineering artifact: symptom → root cause → fix → commit hash.",
+    coreActivity: "Transaction Flowchart: draw the purchase flow with rollback triggers (insufficient credits, missing tool, mid-write crash), then implement the transactional purchase via the AI IDE; the tutor activates two seeded bugs in a provided branch for the student to run the full debugging protocol on.",
+    handsOn: "Socratic Debugging — The Credit Theft Glitch: a simulated crash mid-purchase deducts credits without granting the card, with no rollback. Why did the player lose credits and get nothing? How does BEGIN/COMMIT make this impossible?",
+    homework: "In the Journal tab under 'Session 8 Homework', write a JS transaction script: BEGIN, check credits, deduct, insert item, COMMIT — with ROLLBACK on error — plus one iteration-log entry for a bug you fixed this week (+50 XP).",
+    ethics: "Transaction Integrity: Knight Capital (2012) lost $440M in 45 minutes to a deployment/rollback failure executing 4 million unintended trades. Why is atomic rollback mandatory in money systems?",
+    adaptations: "Age 13-16: Debug both seeded bugs independently with full iteration-log entries naming root causes, not symptoms."
   },
   {
     id: "l3-s9",
     level: 3,
-    module: "Module 3: Cloud Deployment & Server Diagnostics",
-    title: "Session 9: \"Continuous Git Tracking & Code Reviews\"",
+    module: "Module 2: The Build Loop",
+    title: "Session 9: \"Build Loop V: Branches, Merges & Pull Requests\"",
     duration: "2 hours",
     objectives: [
-      "Manage multi-developer codebase commits using feature branches and merges",
-      "Resolve code merge conflicts manually in the affected files",
-      "Perform code review checklists, verifying logic rules and safety boundaries"
+      "Develop a feature on a branch (`git checkout -b`), push it, and open a Pull Request",
+      "Resolve a merge conflict deliberately (read markers, choose lines, re-test, commit)",
+      "Review a PR diff with the Session 6 checklist — the level's review mechanism now escalates from raw diffs to PRs"
     ],
-    warmUp: "Merge Conflict Match: identify Git conflict markers (`<<<<<<< HEAD` vs. `>>>>>>> branch`) and choose which lines should survive the merge.",
-    miniLesson: "Code Auditing and Pull Requests: feature-branch development (`git checkout -b`), reading pull-request diffs, and peer code-review checklist guidelines.",
-    coreActivity: "Feature Deployment Blueprint: plan a branch lifecycle (checkout feature → make changes → push → code review → merge), draft a PR review template, then prompt the AI to explain a merge conflict's resolution.",
-    handsOn: "Socratic Debugging — The Scrambled Merge Crash: the tutor creates a merge conflict where both `main` and a feature branch edit the same backend route, leaving conflict markers in the code. Locate the markers, choose the correct lines, and commit the resolution.",
-    homework: "In the Journal tab under 'Session 9 Homework', list 3 git commands you would run to pull the latest changes, resolve conflicts, and merge a feature branch back to main (+50 XP).",
-    ethics: "Code Review Accountability: if you approve a classmate's PR without reviewing it and it contains a security leak, who is responsible — and why does that make code review a shared obligation, not a formality?",
-    adaptations: "Age 13-16: Practice resolving a conflict where both sides made a legitimately useful change, requiring a manual merge rather than picking one side wholesale."
+    warmUp: "Merge Conflict Match: identify Git conflict markers (`<<<<<<< HEAD` vs. `>>>>>>> branch`) and choose the correct resolution lines.",
+    miniLesson: "Branch Workflow: why branches exist (main stays shippable; work happens on the side), the PR as a reviewable unit of change tied to its PRD story, and the lifecycle (branch → commits → push → PR → review → merge).",
+    coreActivity: "Feature Branch Plan: pick a Should-priority PRD feature (e.g., credit balance display, inventory sorting), spec it, and plan the branch name and PR description, then build it on the branch via the AI IDE, push, open the PR, and review your own diff on GitHub with the checklist.",
+    handsOn: "Socratic Debugging — The Scrambled Merge Crash: the server crashes on startup because conflict markers were committed into a code file. What are these `<<<<<<<` lines? Why did Git refuse to decide for you?",
+    homework: "In the Journal tab under 'Session 9 Homework', list the git commands to create a feature branch, push it, and merge it back to main after review — and write a model PR description (what/why/how tested) for this week's feature (+50 XP).",
+    ethics: "Team Memory: a year from now, someone reads your PR description to understand why this change exists. What do you owe that future reader? What does a useless description ('fixed stuff') cost a team?",
+    adaptations: "Age 13-16: Full branch → PR → conflict resolution → merge cycle with a real, well-written PR description."
   },
   {
     id: "l3-s10",
     level: 3,
-    module: "Module 3: Cloud Deployment & Server Diagnostics",
-    title: "Session 10: \"Deploying the Hacking Console to the Cloud\"",
+    module: "Module 3: Integrate, Deploy & Polish",
+    title: "Session 10: \"The Integration Sprint: End-to-End Data Flows\"",
     duration: "2 hours",
     objectives: [
-      "Understand continuous deployment (CD) pipelines and web hosting architectures",
-      "Deploy Express APIs and PostgreSQL databases to cloud hosting platforms",
-      "Configure live cloud environment keys ensuring database parameters map securely"
+      "Verify every PRD Must-story end-to-end: Frontend form → Express route → validation → transaction → DB write → response → UI update",
+      "Resolve integration bugs that live between components (mismatched payload keys, wrong status handling)",
+      "Enforce per-user data isolation: players can read everyone's tool catalog but only their own inventory"
     ],
-    warmUp: "Hosting Options Map: match application pieces (client code, server backend, database) to the type of cloud provider that hosts each one.",
-    miniLesson: "Cloud Infrastructure Models: client hosting (CDN) vs. server hosting (containers/dynos) vs. managed cloud databases, continuous deployment pipelines triggered by git push events, and binding live environment variables on a cloud dashboard.",
-    coreActivity: "Deployment Infrastructure Blueprint: map the production data path (frontend fetches the live server URL; server reads cloud database credentials), draft the production environment-variable list, then prompt the AI to generate deployment config files.",
-    handsOn: "Socratic Debugging — The Broken Cloud Connection: the tutor deletes the server's cloud DB host variable, causing the live site to throw connection timeouts. Explain how the server connects to the database in production, then restore the missing variable.",
-    homework: "In the Journal tab under 'Session 10 Homework', write a deployment checklist detailing the variable configurations and server paths needed to launch a database API (+50 XP).",
-    ethics: "Deployed Data Sovereignty: where is your database physically hosted, and why does that country's location matter for privacy laws like GDPR?",
-    adaptations: "Age 13-16: Compare two real hosting providers' environment-variable dashboards and note how each one keeps secrets out of the committed code."
+    warmUp: "Integration Checkpoints Map: outline the full data-flow checklist for the purchase story, marking every boundary a bug could hide behind.",
+    miniLesson: "Integration & Isolation: why components that pass their own tests still fail together (contracts drift), data isolation (every inventory query filters by the authenticated player id — never one the client supplied), and Row-Level Security as the professional belt-and-braces layer (awareness).",
+    coreActivity: "The Integration Sprint: run every Must-story end-to-end against the checklist, fixing gaps and verifying tables initialized, env keys loaded, and isolation filters active — commit fixes with story-referenced messages.",
+    handsOn: "Cross-User Attack Drill: log in as player A and attempt to fetch/modify player B's inventory by editing request payloads (DevTools) — every attempt must fail with 401/403. Why must the server take the player id from the session and not from the request body?",
+    homework: "In the Journal tab under 'Session 10 Homework', write a QA integration log summarizing test outputs for your registration and tool-purchase flows (statuses observed, bugs found, commits that fixed them) (+50 XP).",
+    ethics: "Mass Data Leaks: the 2019 Capital One breach exposed 106 million records via a single misconfigured access rule. One forgotten isolation filter = every user's data — why do professionals enforce isolation in more than one layer?",
+    adaptations: "Age 13-16: Full end-to-end sweep plus a logged cross-user attack drill with at least one rejected attempt."
   },
   {
     id: "l3-s11",
     level: 3,
-    module: "Module 3: Cloud Deployment & Server Diagnostics",
-    title: "Session 11: \"Load Testing & Error Diagnostics\"",
+    module: "Module 3: Integrate, Deploy & Polish",
+    title: "Session 11: \"Ship It: Deploying to the Cloud\"",
     duration: "2 hours",
     objectives: [
-      "Identify performance bottlenecks under concurrent request loads",
-      "Read and troubleshoot server stack traces and production exception logs",
-      "Write automated checks guarding against database timeouts"
+      "Understand hosting architectures: static client hosting vs. server hosting vs. managed databases",
+      "Deploy the Arena's backend and database to a cloud platform, binding production environment variables",
+      "Verify the deployed system with the Session 7 test plan re-run against the live URL"
     ],
-    warmUp: "Log Analysis Sweeps: trace server logs to find the line numbers and variables causing a stack-trace exception.",
-    miniLesson: "Diagnostics & Concurrency Limits: server request queues and thread-count variables, error code ranges (500 Internal Error vs. 503 Service Unavailable), and database connection-pool size parameters.",
-    coreActivity: "Diagnostic Test Scenarios: plan a load threshold test (simulate 100 concurrent requests, monitor response times), draft a log-inspection template, then prompt the AI to write connection-pooling logic and log-formatting scripts.",
-    handsOn: "Socratic Debugging — The Exhausted Connection Pool: the tutor removes `client.release()` calls from Express routes; after ~10 page reloads the server hangs and times out. Trace how many database connections are open and where they should be closed, then insert `finally { client.release(); }`.",
-    homework: "In the Journal tab under 'Session 11 Homework', write a JS wrapper implementing try/catch/finally to execute a query and release the database client (+50 XP).",
-    ethics: "Denial of Service Vulnerabilities: if leaving connections open can crash a server, how could a bad actor exploit that deliberately, and why does closing database clients count as a security requirement, not just tidiness?",
-    adaptations: "Age 13-16: Simulate the connection-pool exhaustion locally by removing the `finally` block and observing how many requests it takes to hang the server."
+    warmUp: "Hosting Options Map: match application elements (client code, Express server, MySQL data) to hosting types (CDN, container/dyno, managed DB).",
+    miniLesson: "Cloud Infrastructure Models: local vs. production (what changes — URLs, credentials, data — and what must not — code), deployment pipelines triggering builds on git push events, and binding live environment variables in the cloud dashboard.",
+    coreActivity: "Deployment Blueprint: map production connections (client fetches live server URL; server reads cloud DB credentials from the environment), draft the production env-var list and a rollback plan, then prompt the AI to generate the deployment config, deploy, and re-run the Session 7 test plan against the live URL.",
+    handsOn: "Socratic Debugging — The Broken Cloud Connection: the tutor deletes the server's cloud DB host variable; the live site throws connection timeouts while localhost works perfectly. It works on your machine — why not in production?",
+    homework: "In the Journal tab under 'Session 11 Homework', write a deployment checklist (repo link, env vars, schema seeding, smoke tests) that a classmate could follow to deploy your project without asking you anything (+50 XP).",
+    ethics: "Data Sovereignty: where is your database physically stored now? Why does the hosting country matter for privacy laws (e.g. GDPR)? Who can subpoena your players' data?",
+    adaptations: "Age 13-16: Full live deployment with the Session 7 test plan re-run and passing against the production URL."
   },
   {
     id: "l3-s12",
     level: 3,
-    module: "Module 3: Cloud Deployment & Server Diagnostics",
-    title: "Session 12: \"The Hacker Arena Integration Sprint\"",
+    module: "Module 3: Integrate, Deploy & Polish",
+    title: "Session 12: \"Hardening: Logs, Load & the Release Sweep\"",
     duration: "2 hours",
     objectives: [
-      "Coordinate data flows across frontend interfaces, Express servers, and SQL databases",
-      "Resolve integration bugs across the client-server boundary",
-      "Profile live database query execution times"
+      "Read server stack traces and production logs to locate failing lines and inputs",
+      "Guard resources under load: connection pooling and guaranteed client release (`finally`)",
+      "Run a release-readiness sweep: regression pass, security spot-checks, and PRD acceptance sign-off"
     ],
-    warmUp: "Integration Checkpoints Map: outline the full data-flow checklist end to end — Frontend Form → Express Route → Validation → Transaction → DB Write → Response JSON → UI Redraw.",
-    miniLesson: "System Integration Sweep: verifying every layer (database tables initialized, environment keys loaded, RLS rules active) is actually connected to the next, not just individually correct.",
-    coreActivity: "The Integration Sprint: work through the full stack end to end, closing any data gaps between the frontend, the Express routes, and the database — verifying tables are initialized, environment keys are loaded, and RLS rules are active.",
-    handsOn: "Code Review Sweep: walk through the database policies and Express routes together with the tutor, checking variable types and coordinate scopes across every module.",
-    homework: "In the Journal tab under 'Session 12 Homework', write a QA integration log summarizing test outputs for your account registration and tool purchase runs (+50 XP).",
-    ethics: "Integration Responsibility: when a bug only shows up at the seam between two modules that each individually 'work,' whose responsibility is it to catch it before shipping?",
-    adaptations: "Age 13-16: Time how long a full registration-to-purchase flow takes end-to-end and identify the single slowest step."
+    warmUp: "Log Analysis Sweeps: trace server logs to find the line numbers and inputs behind three stack-trace exceptions.",
+    miniLesson: "Diagnostics & Concurrency: request queues and concurrency (500 vs. 503), database pools (sizes, exhaustion, and release discipline), and the release sweep as a gate — every PRD Must acceptance criterion checked and signed off.",
+    coreActivity: "Release Checklist: plan load thresholds (simulate 100 concurrent requests) and assemble the release checklist from the PRD's acceptance criteria, then prompt the AI to add pooling and structured logging, and execute the full release sweep against the deployed system, logging every criterion pass/fail.",
+    handsOn: "Socratic Debugging — The Exhausted Connection Pool: the tutor removes client release calls; after 10 reloads the server hangs indefinitely. Why does the server refuse to answer after a few clicks? Where were those connections supposed to be returned?",
+    homework: "In the Journal tab under 'Session 12 Homework', write a try/catch/finally wrapper that executes a query and always releases the client — plus your top-3 remaining risks going into the defense (+50 XP).",
+    ethics: "Denial of Service: if we can hang our own server by leaking connections, what can a hostile script do on purpose? Why is resource cleanup a security requirement, not a style preference?",
+    adaptations: "Age 13-16: Full release sweep with every PRD Must acceptance criterion signed off, pass or documented fail."
   },
   {
     id: "l3-s13",
     level: 3,
-    module: "Level 3 Assessment",
-    title: "Session 13: \"The Capstone Defense\"",
+    module: "Module 4: Defense & Retrospective",
+    title: "Session 13: \"The Process Defense\"",
     duration: "2 hours",
     objectives: [
-      "Present relational database schemas and SQL constraint policies",
-      "Demonstrate client-server transaction flows and validation guards",
-      "Defend security policies and environment containment setups in a code review walkthrough"
+      "Present the project through its process artifacts: PRD → blueprints → commit history → diffs/PRs → test logs → deployed build",
+      "Defend design and security decisions in a hostile code-review walkthrough",
+      "Diagnose and patch a live fault under time pressure using the debugging protocol"
     ],
-    warmUp: "Review Presentation Checklist: run final verification checks on the live deployed hacking console before presenting.",
-    miniLesson: "Assessment Structure: Part A is a live capstone presentation, Part B is a tutor-led code audit defense, Part C is a timed live-diagnostics challenge.",
-    coreActivity: "Part A — The Hacking Console Presentation: present the capstone project, demonstrating login flows, SQL schema joins, transaction rollbacks, and environment-variable encapsulation.",
-    handsOn: "Part B — The Code Audit Defense: walk through the codebase with the tutor, defending your security choices, RLS policy statements, Express router logic, and validation blocks. Part C — Live Diagnostics Challenge: locate and patch a runtime exception or policy leak the tutor introduces into the project database.",
-    homework: "Complete the self-audit reflection in the Journal tab under 'Session 13 Assessment' summarizing which security decision you're most confident defending and which one felt shakiest (+50 XP).",
-    ethics: "Professional Accountability: treating the tutor's security questioning as a real pre-launch audit, not a performance — the same posture a production security review demands.",
-    adaptations: "Age 13-16: Full live deployment defense including at least one question about what would happen if a specific RLS policy were removed."
+    warmUp: "Presentation Checklist: final verification of the live deployed console and the artifact trail.",
+    miniLesson: "Assessment Structure: Part A is the artifact walkthrough, Part B is a hostile code-review, Part C is a live diagnostics challenge under time pressure.",
+    coreActivity: "Part A — The Artifact Walkthrough: present one PRD story traced from its user story, through its design entries, its feature-spec prompt, its diff review, its test-plan rows, its commits/PR, to its behavior in the live build.",
+    handsOn: "Part B — The Hostile Review: the tutor attacks — why this schema? Show me where client input is trusted. Which commit fixed the purchase bug, and what was the root cause? What did you reject from the AI, and why? Part C — Live Diagnostics Challenge: the tutor introduces a fault (env var, validation hole, or broken query) into a copy of the project; run the debugging protocol aloud and patch it.",
+    homework: "Complete the self-audit reflection in the Journal tab under 'Session 13 Assessment', summarizing which artifact you're most confident defending and which felt shakiest (+50 XP).",
+    ethics: "Professional Accountability: treating the tutor's hostile review as a real pre-launch audit, not a performance — the same posture a production security review demands.",
+    adaptations: "Age 13-16: Full live artifact walkthrough, hostile review defense, and live diagnostics patch under time pressure."
   },
   {
     id: "l3-s14",
     level: 3,
-    module: "Level 3 Assessment",
-    title: "Session 14: \"Reflection & What's Next\"",
+    module: "Module 4: Defense & Retrospective",
+    title: "Session 14: \"Retrospective & What's Next\"",
     duration: "2 hours",
     objectives: [
-      "Analyze lessons learned across Level 1, 2, and 3 tracks",
-      "Identify roles in software engineering: Frontend, Backend, DBA, and Security Engineer",
-      "Formulate a learning path for professional capstone deployments in Level 4"
+      "Run a structured retrospective (Keep / Problem / Try) on the whole project",
+      "Connect each process skill to the engineering roles that own it in industry",
+      "Prepare for Level 4: same process, run independently, on the student's own game"
     ],
-    warmUp: "Portfolio Audit: review every Prompt Journal version log created across all three levels so far.",
-    miniLesson: "Software Engineering Roles: Database Administrators vs. Backend Engineers vs. DevOps Engineers, Security Analysts and Penetration Testers, and setting up a portfolio on GitHub.",
-    coreActivity: "Reflections Round-Table: discuss what surprised you about API security, and how the AI Design-Build-Audit loop changed how you inspect AI-generated code.",
-    handsOn: "Graduation & Level 4 Planning: review your Level 2 and Level 3 graduation criteria, and map your personal milestones heading into Level 4's capstone deployments.",
-    homework: "Write down 3 goals for Level 4 study (e.g. deploying to a real production host, running a live CI/CD pipeline, connecting real Row-Level Security policies) in the Journal tab under 'Session 14 Reflection' (+50 XP).",
-    ethics: "Continuous Learning: the professional developer's responsibility to keep skills updated as tools and threats shift — what's one security practice you learned this level that you expect to already be outdated in five years?",
-    adaptations: "All Ages: Portfolio review and personalized Level 4 goal-setting conversation with the tutor."
+    warmUp: "Portfolio Audit: review the full artifact trail — Prompt Journal versions, commits, PRs, test logs — as a portfolio piece.",
+    miniLesson: "Roles & the Real World: who owns what in a company (product managers/PRD, architects/design, engineers/build loop, QA/test plans, DevOps/deploy-harden), how the 12-session process maps to a real sprint cadence, and publishing the project on GitHub as a portfolio item.",
+    coreActivity: "Retrospective Round-Table: run the Keep/Problem/Try board — what process steps helped, where the student fought the process, what they will do differently at Level 4.",
+    handsOn: "Graduation & Level 4 Planning: present Level 3 graduation, then preview Level 4 — the student proposes their own game and runs this entire process independently, with the option of a different product track (e.g. a web application) if agreed with the teacher.",
+    homework: "In the Journal tab under 'Session 14 Reflection', write 3 goals for Level 4 (e.g. an original game concept, a stretch technical goal, a process habit to improve) (+50 XP).",
+    ethics: "Continuous Learning: which process step felt like bureaucracy — and did it catch anything? What did the AI get wrong that your process caught? The professional developer's responsibility to keep skills updated as tools and threats shift.",
+    adaptations: "All Ages: Full retrospective round-table plus a personalized Level 4 goal-setting conversation with the tutor."
   },
 
   // ================= LEVEL 4 =================
   {
     id: "l4-s1",
     level: 4,
-    module: "Module 1: Production Infrastructure & Database Integration",
-    title: "Session 1: \"Connecting to the Cloud Database\"",
+    module: "Module 1: Define & Found",
+    title: "Session 1: \"The Pitch: Your Game, Your PRD\"",
     duration: "2 hours",
     objectives: [
-      "Connect a React application to a remote cloud database (e.g., Supabase, Firebase)",
-      "Perform CRUD operations directly from a client application"
+      "Pitch an original game concept and negotiate it into a buildable scope contract",
+      "Write the capstone PRD independently: user stories, acceptance criteria, MoSCoW priorities, out-of-scope list",
+      "Translate creative ideas into testable system constraints"
     ],
-    warmUp: "Real-Time Sync: Tutor inputs data on a teacher console. Students watch it instantly populate on their screens. Introduce real-time server synchronicity.",
-    miniLesson: "Database Client libraries: Instantiating database clients, credentials handling, executing requests. Data Latency.",
-    coreActivity: "The Live Database Hookup: Students connect their frontend template to a cloud database project. Create a database table for their campaign context. Write frontend logic to insert and read records.",
-    handsOn: "Draft the AI prompt specification for a React hook that connects to your database client and executes CRUD queries, then paste the AI's generated code into your Project Journal to review and test it against your own schema.",
-    homework: "Choose a real-world app context and design its database schema. Design a self-destructing message database schema.",
-    ethics: "Data stewardship: Managing remote user records safely and complying with data deletion rules.",
-    adaptations: "Age 9-10: Connect pre-made template blocks. Age 15-17: Configure custom tables triggers."
+    warmUp: "The Two-Minute Pitch: the student pitches their game concept in two minutes (fantasy, core loop, why it's fun); the tutor responds as a skeptical publisher — 'What does the player actually do, moment to moment?' A game that can't be described in one core loop can't be scoped.",
+    miniLesson: "Scoping a Real Product: the Minimum Playable Game (MPG) — the smallest version that is actually fun, scope math (5 build sprints × what one sprint realistically produces, evidenced by the student's own Level 3 velocity), and turning game feel into testable constraints ('enemy spawns every 2±0.5s', not 'enemies feel relentless').",
+    coreActivity: "The Capstone PRD & Scope Contract: draft the PRD solo (goal, core loop, 8–12 user stories with acceptance criteria, MoSCoW priorities, explicit out-of-scope list), then prompt the AI to attack it for untestable criteria and hidden scope monsters ('multiplayer', 'level editor') before negotiating the final scope contract with the tutor, who signs off the Must line.",
+    handsOn: "Socratic Debugging — The Ambiguous Spec: the tutor picks the vaguest story in the student's own PRD ('the game should feel fast'). Rewrite it as a precise, testable constraint — how does a computer evaluate 'feels fast'? What number is hiding inside that sentence?",
+    homework: "In the Journal tab under 'Session 1 Homework', write 3 additional testable user stories for your game with explicit preconditions and acceptance criteria (+50 XP).",
+    ethics: "Honest Scope, Honest Games: Cyberpunk 2077's 2020 launch — years of public overpromising met an unfinished product, mass refunds, and delisting from the PlayStation Store. What do players lose when developers promise what they can't ship?",
+    adaptations: "Age 13-16: Full solo PRD (8-12 stories) negotiated into a tutor-signed scope contract."
   },
   {
     id: "l4-s2",
     level: 4,
-    module: "Module 1: Production Infrastructure & Database Integration",
-    title: "Session 2: \"Security Keys & Environment Variables\"",
+    module: "Module 1: Define & Found",
+    title: "Session 2: \"Architecture & the Milestone Plan\"",
     duration: "2 hours",
     objectives: [
-      "Differentiate between public and private credentials",
-      "Configure environment variables to prevent API key exposure"
+      "Design the game's architecture independently: component diagram, data model, API contract (if a backend is in scope)",
+      "Choose the tech stack from the taught toolbox and justify each choice in writing",
+      "Break the Must-scope into a 5-sprint milestone plan with a demo target per sprint"
     ],
-    warmUp: "The Leaked Password: Tutor shows a mock public repository containing a plain-text database password. Discuss what a hacker could do with this access.",
-    miniLesson: "Environment Variables: Why we separate config keys from codebase logic. Key Rotation. gitignore configuration.",
-    coreActivity: "Secret Wards Protection: Move hardcoded API keys out of code. Create .env and .env.local files. Configure .gitignore to block credentials tracking.",
-    handsOn: "In your own project, configure `.env` files and reference them via `import.meta.env`; document the setup and a zero-plaintext-secrets check in your Project Journal.",
-    homework: "Write a short guide explaining what happens if someone commits a private password to a public repo. Create a key rotation checklist.",
-    ethics: "Developer vigilance: The responsibility of ensuring secrets are never leaked to public version control.",
-    adaptations: "Age 9-10: Visual envelope keys. Age 15-17: Practice revoking and rotating API keys."
+    warmUp: "User Journey Mapping: the student maps their own game's player journey screen-by-screen (menu → play → game over → leaderboard) and traces where each input propagates — the journey map exposes every component the architecture must name.",
+    miniLesson: "Architecture at Product Scale: component diagrams (game loop, renderer, input, state, persistence — decoupled so sprints can build them in order), stack decisions as recorded trade-offs (the Architectural Decision Record: Status, Context, Decision, Consequences), and milestone planning where risky components go first.",
+    coreActivity: "Blueprints & Sprint Map: draw the component diagram, design the schema (if a backend is in scope), draft the API contract, and slot every Must story into one of the 5 sprints, then prompt the AI to generate a Mermaid architecture diagram and critique the sprint plan for dependency errors.",
+    handsOn: "Socratic Debugging — The Dependency Knot: the tutor reorders the student's sprint map to put a dependent feature first. Sprint 2 needs data that doesn't exist until Sprint 4 — what happens in week 2? How do professionals order risk?",
+    homework: "In the Journal tab under 'Session 2 Homework', write one ADR for your most debatable stack choice (e.g. Canvas vs. DOM rendering, backend vs. localStorage saves) (+50 XP).",
+    ethics: "Clear Specifications in Critical Software: the Healthcare.gov launch disaster (2013) — hundreds of contractors built against no centralized architecture and the pieces met for the first time in production. Why is an architecture diagram a contract?",
+    adaptations: "Age 13-16: Full architecture blueprint pack (diagram, schema, contract, sprint map, 2 ADRs)."
   },
   {
     id: "l4-s3",
     level: 4,
-    module: "Module 1: Production Infrastructure & Database Integration",
-    title: "Session 3: \"External API Integration\"",
+    module: "Module 1: Define & Found",
+    title: "Session 3: \"Foundation Sprint: Skeleton, Tests & TDD\"",
     duration: "2 hours",
     objectives: [
-      "Fetch data from third-party REST APIs",
-      "Handle asynchronous network requests and error states"
+      "Stand up the capstone repo, workspace, and CI-ready structure independently (Level 3 Session 4, unassisted)",
+      "Set up a unit test runner (Vitest) and write the first test suites for core game-logic utilities",
+      "Apply the Test-Driven Development cycle (Red → Green → Refactor) on pure logic functions"
     ],
-    warmUp: "The Mashup App: Tutor demonstrates an app that pulls together weather data, map locations, and news headlines in one page.",
-    miniLesson: "REST APIs & JSON: HTTP methods, request headers, query parameters, response codes (429 rate limit). Asynchronous fetch.",
-    coreActivity: "API Integration Sprint: Integrate an external public API into their application. Write asynchronous fetch functions, clean response data, and handle failures.",
-    handsOn: "Draft the AI prompt specification for an async fetch function that requests external API data and handles rate limits, then review and test the generated code in your Project Journal.",
-    homework: "Design an interface to fetch and cache API responses to avoid exceeding rate limits.",
-    ethics: "Scraping vs using APIs: Respecting terms of service of third-party platforms.",
-    adaptations: "Age 9-10: Fetch simple text card API data. Age 15-17: Set authorization headers on API calls."
+    warmUp: "Manual Test Misery: the student manually verifies a scoring function against 8 cases by hand, timed — at product scale, manual verification cannot keep up with change.",
+    miniLesson: "The Test Runner Lifecycle: test suites (`describe`), cases (`test`), assertions (`expect`); TDD (write the failing test first — Red, make it pass — Green, then refactor safely); and what to unit test in a game (pure logic — scoring, collision math, spawn timing, state transitions — not pixels).",
+    coreActivity: "Test Targets & First Suites: list the game's pure-logic functions and draft test cases with boundary values (zero, negative, max) for the two most critical, then initialize the repo/workspace/Vitest and TDD one core utility (tests first, then prompt the AI for the implementation, then verify Red → Green).",
+    handsOn: "Socratic Debugging — The Ghost Green Bug: the tutor seeds a test whose mock returns true blindly — the suite passes even when the logic is broken. Why did the suite pass when the function was wrong? How do we test that our tests are actually testing?",
+    homework: "In the Journal tab under 'Session 3 Homework', write a Vitest suite with 3 assertions for one of your game's utility functions, including one boundary case and one expected throw (+50 XP).",
+    ethics: "Testing Failure Liabilities: the Therac-25 radiation machine (1985) killed patients via a race condition never caught in testing. If our tests skip boundary cases, are we responsible for what the live system does?",
+    adaptations: "Age 13-16: Full TDD cycle (Red → Green → Refactor) demonstrated live on a real game utility."
   },
   {
     id: "l4-s4",
     level: 4,
-    module: "Module 2: User Access & Identity",
-    title: "Session 4: \"User Authentication & Sign-Up\"",
+    module: "Module 2: Build Sprints",
+    title: "Session 4: \"Sprint 1: The Core Mechanic\"",
     duration: "2 hours",
     objectives: [
-      "Implement registration and login flows",
-      "Manage user authentication session states"
+      "Ship the game's core loop: the mechanic that makes it a game (move/shoot/jump/match — per the PRD)",
+      "Drive the sprint end-to-end without tutor prompting: spec → prompt → review → test → commit → demo",
+      "Keep TDD discipline on the mechanic's pure logic while the AI generates the rendering shell"
     ],
-    warmUp: "The Guarded Door: Discuss why apps ask you to login. Introduce authentication (who you are) vs. authorization (what you can do).",
-    miniLesson: "Authentication Tokens: How sessions are maintained in browsers (cookies, local tokens, JWTs). Auth guarding routes.",
-    coreActivity: "Building the Gate: Configure Email/Password sign-up and login providers. Build sign-up, login, and sign-out pages. Guard routes so logged-out users are redirected.",
-    handsOn: "Draft the AI prompt spec for a React router auth guard protecting a dashboard page from unauthenticated tokens, then review and test the AI's implementation in your Project Journal.",
-    homework: "Create a user flow map showing how the application routes logged-in vs. logged-out users.",
-    ethics: "Password hashing: Why storing passwords in plaintext is an ethical crime.",
-    adaptations: "Age 9-10: Visual keycards. Age 15-17: Discuss OAuth (social logins) flows."
+    warmUp: "Standup & Sprint Spec: state the sprint goal from the milestone plan, write the feature spec with acceptance criteria, and identify the pure-logic parts that get tests first.",
+    miniLesson: "The Sprint Protocol: standup (what shipped, what's blocked) → the 5-Step build loop on the sprint goal → commit/PR → updated sprint log → a demo of something that works. Scope cuts are made openly by moving stories below the line, never by silently shipping broken features.",
+    coreActivity: "Build Loop — The Core Mechanic: TDD the mechanic's logic, prompt the AI IDE for implementation and rendering, audit diffs against the spec, and iterate until the acceptance criteria pass; commit/PR with a story-linked message and demo the playable mechanic to the tutor's 'hostile publisher' persona.",
+    handsOn: "Socratic Debugging — The Untestable Mechanic: if mechanic logic got tangled into rendering code, the tutor asks the student to unit-test it — and they can't. Why can't we test the jump arc without opening a browser? What would separating logic from rendering buy us?",
+    homework: "In the Journal tab under 'Session 4 Homework', write the Sprint 1 log: goal, what shipped, what was cut, bugs found by the tutor's key-mashing, and the fix commits (+50 XP).",
+    ethics: "Honest Scope Cuts: gating the demo on the PRD's acceptance criteria, not on polish — if the sprint goal is missed, the correction is a scope cut logged openly, not silent overtime. What does it cost a team when 'done' quietly means 'done, mostly'?",
+    adaptations: "Age 13-16: Full sprint cycle (standup → build → review/demo) driven independently, survives tutor key-mash QA."
   },
   {
     id: "l4-s5",
     level: 4,
-    module: "Module 2: User Access & Identity",
-    title: "Session 5: \"Row-Level Security & Data Wards\"",
+    module: "Module 2: Build Sprints",
+    title: "Session 5: \"Sprint 2: Game State & Reliability\"",
     duration: "2 hours",
     objectives: [
-      "Configure Row-Level Security (RLS) policies in a database",
-      "Prevent unauthorized cross-user data leaks"
+      "Centralize game state (single source of truth) and implement clean state transitions (menu → playing → paused → game over)",
+      "Apply reliability patterns: state rollback on failed operations, defensive guards on all transitions",
+      "(Stretch, only if the concept requires it): live/real-time features via WebSockets, with reconnect handling"
     ],
-    warmUp: "The Snooping Neighbor: Tutor logs in as User A and tries to read User B's private messages. Discuss why client-side security is not enough.",
-    miniLesson: "Row-Level Security (RLS): Securing data at the source (database level) rather than the delivery channel (app level). auth.uid() checks.",
-    coreActivity: "Wards of Data Isolation: Write SQL database security policies (e.g. auth.uid() = user_id). Verify User A cannot read User B's rows.",
-    handsOn: "Draft and test SQL RLS policies on your own database ensuring isolation limits are fully active; document the policy statements and your verification steps in your Project Journal.",
-    homework: "Write security policies for a shared dashboard (anyone can view, only creators can edit).",
-    ethics: "Data leakage liability: Corporate and personal legal liabilities of developer security gaps.",
-    adaptations: "Age 9-10: Labeled lockers. Age 15-17: Audit database RLS tables using direct API scripts."
+    warmUp: "Standup & Sprint Spec: triage Sprint 1's issue list into the sprint plan, and spec the state machine with a drawn transition diagram.",
+    miniLesson: "State as a Single Source of Truth: centralized state stores and clean transitions, reliability patterns (rollback on failed operations, defensive guards on every transition), and — only for concepts that need it — WebSockets with a connection-status UI and exponential-backoff reconnect.",
+    coreActivity: "Build Loop — State & Reliability: implement the state store and transitions, audit that no component mutates state directly, and add rollback for any operation that can fail (e.g. an optimistic save that reverts on reject); commit/PR and demo pause/resume/restart under hostile input, showing one rollback in action.",
+    handsOn: "Socratic Debugging — The Overwritten Update: the tutor triggers two state updates concurrently; the older one lands last and overwrites the newer. Why did the newer state disappear? How do we reject updates that represent older state?",
+    homework: "In the Journal tab under 'Session 5 Homework', write a JS function implementing optimistic UI update logic for one of your game's actions, reversing changes on request reject (+50 XP).",
+    ethics: "Reliability as a Promise to the Player: an optimistic UI that silently loses a rejected update erodes trust the same way an unexplained charge does on a receipt. What does software owe a user when an action doesn't actually succeed?",
+    adaptations: "Age 13-16: Full state machine with rollback demonstrated live under hostile input; WebSocket stretch goal only if the concept requires it."
   },
   {
     id: "l4-s6",
     level: 4,
-    module: "Module 2: User Access & Identity",
-    title: "Session 6: \"Role-Based Access Control (RBAC)\"",
+    module: "Module 2: Build Sprints",
+    title: "Session 6: \"Sprint 3: Accounts, Saves & the Leaderboard\"",
     duration: "2 hours",
     objectives: [
-      "Implement permission tiers (e.g. Admin, Operator, Guest)",
-      "Restrict UI features and API endpoints based on user roles"
+      "Ship the capstone's data features: player accounts (hashed credentials), persistent saves, and/or a leaderboard — per the PRD's Must line",
+      "Re-apply the Level 3 backend discipline unassisted: validation guards, parameterized queries, transactions, per-user isolation",
+      "Run the cross-user attack drill against their own endpoints"
     ],
-    warmUp: "Who Has the Key?: Discuss why a standard user shouldn't be able to delete other users' accounts. Define RBAC.",
-    miniLesson: "User Roles: Creating robust role tables, checking tokens, securing write actions at database and app level.",
-    coreActivity: "The Permissions Matrix: Add a role column to profile tables. Write frontend routes restricting certain panels. Add database policies blocking guest writes.",
-    handsOn: "Draft the AI prompt spec for a React component that restricts admin settings visibility based on `user.role`, then review and test the generated component in your Project Journal.",
-    homework: "Outline a permission matrix for a banking app with Customer, Teller, and Audit roles.",
-    ethics: "Privilege escalation: The security threats of users hijacking admin roles.",
-    adaptations: "Age 9-10: Color coded keys for files. Age 15-17: Configure RBAC tables in postgres SQL."
+    warmUp: "Standup & Sprint Spec: spec the data features against the schema and API contract from Session 2, and write the hostile test cases first.",
+    miniLesson: "Data Features, Unassisted: validation guards, parameterized queries, and transactions applied without tutor scaffolding, and taking the authenticated id from the session — never the payload. Local-only capstones use `localStorage` with the same discipline: a versioned save schema and corrupted-save handling.",
+    coreActivity: "Build Loop — Data Features: implement routes and DB (or localStorage) via the AI IDE, audit every query for placeholders, wrap multi-step writes in transactions; commit/PR, then log in as player A and attempt to read/write player B's data by editing payloads — every attempt must fail with 401/403.",
+    handsOn: "Socratic Debugging — The Trusted Payload: the tutor finds (or seeds) one endpoint reading `player_id` from the request body. Who controls the request body? Then who controls whose save file this endpoint writes?",
+    homework: "In the Journal tab under 'Session 6 Homework', write the test-plan table (happy/boundary/hostile) you executed against your data endpoints, with observed status codes (+50 XP).",
+    ethics: "Persistence Is the Feature: even a local-only capstone must handle a corrupted save honestly (try/parse/fallback) rather than silently losing a player's progress. What do players trust a 'Saved!' message to mean?",
+    adaptations: "Age 13-16: Full data-feature implementation with a logged cross-user attack drill (at least one rejected attempt)."
   },
   {
     id: "l4-s7",
     level: 4,
-    module: "Module 3: Cloud Infrastructure & Deployment",
-    title: "Session 7: \"Git, Version Control & GitHub\"",
+    module: "Module 2: Build Sprints",
+    title: "Session 7: \"Sprint 4: Integration Tests & Coverage\"",
     duration: "2 hours",
     objectives: [
-      "Commit and track code changes using Git",
-      "Collaborate on repositories via pull requests on GitHub"
+      "Write integration tests covering component interactions and network roundtrips (mocked and live)",
+      "Mock API calls with controlled payloads, including failure responses (500s, timeouts)",
+      "Measure code coverage and close the riskiest gaps — not chase 100%"
     ],
-    warmUp: "Collaborative Storytelling: Pass a storybook around the room. Each writer appends a paragraph, maintaining version notes.",
-    miniLesson: "Git workflow: init, add, commit, push, pull. GitHub collaboration: PRs, code reviews, resolving merge conflicts.",
-    coreActivity: "The Repo Launch: Create local git repositories. Commit code shifts, push to remote GitHub repo, create a PR, and resolve merge conflicts.",
-    handsOn: "On your own repository, open a real pull request, resolve any merge conflicts manually, and document the review in your Project Journal.",
-    homework: "Create a GitHub account and push one of your homework folders to a public repository.",
-    ethics: "Open source community ethics: Contributing, licensing, and code ownership.",
-    adaptations: "Age 9-10: Physical folder merging. Age 15-17: Setup SSH keys on GitHub accounts."
+    warmUp: "Standup & Test Blueprint: map the game's integration seams (input→state, state→render, client→API), pick the highest-risk flows, and outline test flows: trigger → mocked response → verify state/DOM.",
+    miniLesson: "Integration Testing & Coverage: mocking API calls with controlled payloads (including error paths — what does the player see on a 500?), running coverage reports, and closing the riskiest gaps rather than chasing 100%.",
+    coreActivity: "Build Loop — Integration Tests: prompt the AI to write integration tests for the chosen seams including error-path renders, run coverage, and write one more test targeting the biggest uncovered branch; commit/PR and show the coverage report, defending which gaps are acceptable and why.",
+    handsOn: "Socratic Debugging — Stale Mocks: the tutor seeds a mock payload using an outdated schema — tests pass while the real game breaks on load. Why did the suite report green while the build is broken? How do we keep mocks synchronized with reality?",
+    homework: "In the Journal tab under 'Session 7 Homework', write an integration test mocking a POST failure for one of your game's saves and asserting the UI shows the failure state (+50 XP).",
+    ethics: "What 'Tested' Actually Claims: a green coverage report that never exercises the failure path is a false promise to whoever reads it next. What does declaring something 'tested' obligate you to have actually checked?",
+    adaptations: "Age 13-16: Full integration test suite covering at least one error-path render, defended coverage gaps."
   },
   {
     id: "l4-s8",
     level: 4,
-    module: "Module 3: Cloud Infrastructure & Deployment",
-    title: "Session 8: \"Continuous Deployment (CI/CD) Pipelines\"",
+    module: "Module 2: Build Sprints",
+    title: "Session 8: \"Sprint 5: Performance & Polish\"",
     duration: "2 hours",
     objectives: [
-      "Set up automatic deployment pipelines (Vercel, Netlify)",
-      "Understand build processes and environment overrides on hosting providers"
+      "Profile the game with browser tooling (Lighthouse, Performance tab) and fix the top bottlenecks",
+      "Apply the Level 2 memory discipline at product scale: prune object pools, cap arrays, stabilize frame rate",
+      "Close the Must line: every PRD Must story demonstrably done — this is the feature freeze"
     ],
-    warmUp: "The Assembly Line: Trace raw parts entering a factory to a finished car exiting the line.",
-    miniLesson: "CI/CD (Continuous Integration/Continuous Deployment): Trigger build on git push. Cloud hosting configs. Build time variables.",
-    coreActivity: "Live Pipeline Launch: Link a GitHub repository to a Vercel project. Push a code change to Git, trace the build logs, and observe the live site update.",
-    handsOn: "Draft your deployment config's environment-variable bindings and verify them against your hosting provider's dashboard; document the checklist in your Project Journal.",
-    homework: "Deploy a personal landing page to Vercel/Netlify. Document the live URL.",
-    ethics: "Service uptime: The ethical and business costs of system downtime during broken deployments.",
-    adaptations: "Age 9-10: Simple visual pipeline maps. Age 15-17: Configure custom webhooks triggers."
+    warmUp: "Standup & Performance Budget: set measurable targets (stable 60 FPS during play; LCP under 2.5s; no unbounded arrays); run the baseline profile.",
+    miniLesson: "Performance at Product Scale: profiling with Lighthouse and the Performance tab, memory discipline (prune object pools, cap arrays, stabilize frame rate), and the feature freeze — every PRD Must story demonstrably done, nothing new enters after this session.",
+    coreActivity: "Build Loop — Performance & Freeze: fix the top profiled bottlenecks (sprite pruning, pagination/virtualization of long lists, asset sizes), re-profile, then burn down any remaining Must-story gaps; commit/PR and walk the PRD Must line story-by-story with the tutor — anything failing is cut or fixed now.",
+    handsOn: "Socratic Debugging — The Giant Payload Freeze: the tutor injects a 10MB mock payload / 10,000-item list into the game's heaviest view; the tab freezes. Why does rendering 10,000 elements crash the tab? What does pagination change about what the DOM has to hold?",
+    homework: "In the Journal tab under 'Session 8 Homework', write your before/after performance numbers (FPS, LCP, array caps) and the 3 changes that moved them (+50 XP).",
+    ethics: "Performance as Inclusivity: heavy games exclude players on low-end devices and slow connections. Who can't play your game as shipped today?",
+    adaptations: "Age 13-16: Full profiling pass with measured before/after numbers and an enforced feature freeze."
   },
   {
     id: "l4-s9",
     level: 4,
-    module: "Module 3: Cloud Infrastructure & Deployment",
-    title: "Session 9: \"Monitoring and Error Diagnostics\"",
+    module: "Module 3: Ship & Operate",
+    title: "Session 9: \"The Pipeline: CI/CD\"",
     duration: "2 hours",
     objectives: [
-      "Inspect remote application error logs (Sentry, cloud logs)",
-      "Diagnose client-side vs. server-side crashes in production"
+      "Write a GitHub Actions workflow that installs, lints, tests, and builds on every push",
+      "Gate merges on green pipelines; connect the pipeline to auto-deploy (staging → production)",
+      "Connect the pipeline to the platform's Level 4 review mechanism (audit triggered on push)"
     ],
-    warmUp: "The Flight Recorder: Discuss why airplanes have black boxes. Discuss why systems need telemetry logs.",
-    miniLesson: "Production telemetry: error tracking, server logs, network performance. Client-side exceptions vs database server failures.",
-    coreActivity: "Production Crash Hunt: Inspect a live log feed of a crashing application. Locate the line of code failing and deploy a patch.",
-    handsOn: "Diagnose a real production error log trace from your deployed app, patch the underlying source code logic, and document the diagnosis in your Project Journal.",
-    homework: "Write a guide explaining the difference between a 400, 401, 403, and 500 error code. Provide debugging steps for each.",
-    ethics: "Log privacy: Ensuring passwords and SSNs are never logged to third-party telemetry tools.",
-    adaptations: "Age 9-10: Error code matching games. Age 15-17: Track production bugs using real Sentry consoles."
+    warmUp: "YAML Mapping: match pipeline commands to their target environments (staging vs. production).",
+    miniLesson: "Deployment Pipelines: commit triggers → build → test → deploy, why humans are removed from the repetitive path, YAML structures (jobs, steps, env keys), and deploy gates — production blocked while tests return error exit codes.",
+    coreActivity: "Pipeline Flow & Build: sketch the capstone's pipeline (push → lint → Vitest → build → deploy staging → manual gate → production), then prompt the AI to generate `.github/workflows/deploy.yml`, push a commit and watch it run, and deliberately push a failing test to watch the gate hold.",
+    handsOn: "Socratic Debugging — The Broken Pipeline: the tutor introduces a YAML syntax error or failing test command; the staging build fails. Why did the deploy stop? Read the logs upward from the failure — where exactly did the pipeline halt?",
+    homework: "In the Journal tab under 'Session 9 Homework', write a YAML workflow fragment running lint checks and unit tests sequentially on pull requests (+50 XP).",
+    ethics: "Automated Gates: GitLab (2017) — a production database deleted by hand because safeguards were bypassable. Why should critical changes require automated checks before a human can say yes?",
+    adaptations: "Age 13-16: Full working pipeline with one green run and one deliberately blocked run, both shown as evidence."
   },
   {
     id: "l4-s10",
     level: 4,
-    module: "Module 4: Product Launch & Defense",
-    title: "Session 10: \"Capstone Project Integration\"",
+    module: "Module 3: Ship & Operate",
+    title: "Session 10: \"Operate: Monitoring, Logging & the Beta Test\"",
     duration: "2 hours",
     objectives: [
-      "Connect frontend code to live database nodes and verify credentials security",
-      "Coordinate full pipeline deployment"
+      "Implement structured JSON logging with levels (DEBUG/INFO/WARN/ERROR) and an error-handler middleware",
+      "Plan and run a beta UAT: recruit real testers (classmates/family), triage findings by severity × priority",
+      "Harden inputs against the hostile beta user (sanitization, numeric extremes, length caps)"
     ],
-    warmUp: "Integration checklist alignment: mapping connections across nodes.",
-    miniLesson: "Integrations architecture: ensuring frontend API endpoints connect to secure backends with active RLS.",
-    coreActivity: "Capstone Assembly Sprint: Integrate database tables, user auth flows, and live API endpoints into a unified hosted site.",
-    handsOn: "Run integration checks across your own deployed database, auth flow, and API endpoints, and document the results in your Project Journal.",
-    homework: "Complete final QA testing checklist sheets for the capstone system.",
-    ethics: "Safety reviews: Running security scans before pushing updates to users.",
-    adaptations: "All Ages: Extended production sprint sessions."
+    warmUp: "Stack Trace Audit: locate the file path and variables behind a crash from a raw server stack trace.",
+    miniLesson: "Observability & UAT: structured logging vs. raw prints, log levels and alert fatigue (alert on repeated 500s, not every 404), UAT and the triage matrix (Severity: Blocker/Major/Minor × Priority), and treating the hostile beta user as normal — sanitize inputs, clamp extremes, cap lengths.",
+    coreActivity: "Log Schema & Beta Run: design the log entry schema (timestamp, level, endpoint, userId) and write the beta test script and findings form, then prompt the AI for the structured logger middleware and input sanitizers, and run a live mini-beta (2-3 testers) while watching the logs and filing findings into the triage matrix.",
+    handsOn: "Socratic Debugging — The Silent Fail: a tester hits a 500 and the logs show nothing. The player saw an error page and our logs are empty — where did the exception go? What does an unlogged failure cost during a real launch?",
+    homework: "In the Journal tab under 'Session 10 Homework', write a JS error-handler middleware logging stack trace, timestamp, and client IP in JSON format — and your top-3 triaged beta findings with severity/priority labels (+50 XP).",
+    ethics: "When Monitors Fail: the Boeing 737 MAX crashes (2018-2019) were worsened by cockpit alerts that failed to surface faulty sensor data to pilots. When software fails to report its own failures, who pays?",
+    adaptations: "Age 13-16: Full live mini-beta run with real testers, triaged findings including at least one honestly-labeled Blocker."
   },
   {
     id: "l4-s11",
     level: 4,
-    module: "Module 4: Product Launch & Defense",
-    title: "Session 11: \"Load Testing & Code Quality Audit\"",
+    module: "Module 3: Ship & Operate",
+    title: "Session 11: \"Handoff: Documentation & Launch Prep\"",
     duration: "2 hours",
     objectives: [
-      "Run load testing scripts to evaluate performance under traffic",
-      "Audit codebases for syntax quality and security gaps"
+      "Write the README a stranger can follow: prerequisites, install, env vars, run, deploy",
+      "Produce the API spec (OpenAPI-style) for any backend routes, and finalize the ADR set",
+      "Fix Blocker/Major beta findings and complete the launch checklist (rollback plan included)"
     ],
-    warmUp: "The Rush Hour: Discuss how train stations handle holiday traffic rushes.",
-    miniLesson: "Performance Audits: database indexes, bundle optimization, load testing. Linters (ESLint). Code quality standards.",
-    coreActivity: "Auditing Sprint: Students run linting tools and database query analyzers on peer codebases to spot redundancies.",
-    handsOn: "Run linting and query-optimization checks on your own project's SQL statements and codebase; document findings and fixes in your Project Journal.",
-    homework: "Fix all warnings in project linters. Generate a Code Audit report.",
-    ethics: "Accessibility standards: Ensuring software is accessible to users with visual/motor impairments (ADA compliance).",
-    adaptations: "Age 9-10: Basic code spelling reviews. Age 15-17: Analyze bundle load graphs."
+    warmUp: "Setup Guide Audit: follow a mock setup guide with missing steps; identify exactly where it breaks.",
+    miniLesson: "The Handoff Lifecycle: documentation as the product's front door (install steps, prerequisites, env setup), OpenAPI specs (paths, parameters, schemas, responses), and launch checklists/rollback plans — with feature flags and canary rollouts noted as how big products de-risk launches.",
+    coreActivity: "Docs Blueprint & Burn-Down: outline the README, list every env var, and assemble the launch checklist from the release sweep and beta triage, then prompt the AI to draft the README and API spec from the codebase, verify it by clean-machine test (the tutor follows the README from zero), and burn down remaining Blocker/Major findings.",
+    handsOn: "Socratic Debugging — The Missing Setup: the tutor's clean-machine run crashes because a setup step (DB seeding, env var) was omitted. It works on your machine and died on mine — what did your documentation assume that it never stated?",
+    homework: "In the Journal tab under 'Session 11 Homework', write one ADR justifying a launch-relevant decision of your game (e.g. saves in localStorage vs. server; Canvas vs. DOM), with honest Consequences (+50 XP).",
+    ethics: "Building on Others' Work: Heartbleed (2014) lived in OpenSSL partly because critical code was under-documented and under-audited. What do you owe the next developer, including future-you?",
+    adaptations: "Age 13-16: README passes a real clean-machine test run by the tutor, plus a complete OpenAPI fragment and ADR set."
   },
   {
     id: "l4-s12",
     level: 4,
-    module: "Module 4: Product Launch & Defense",
+    module: "Module 4: Launch",
     title: "Session 12: \"The Grand Launch & System Defense\"",
     duration: "2 hours",
     objectives: [
-      "Present a live deployed application with custom database states",
-      "Defend product launch architecture against system critiques"
+      "Launch the game publicly (production deploy, shareable URL) and present it end-to-end",
+      "Demonstrate the full engineering apparatus: tests, coverage, pipeline gates, logs, docs",
+      "Defend the live system against chaos testing (hostile inputs, dependency failures) in real time"
     ],
-    warmUp: "Warm pitch practice: Presenting URLs in 60 seconds.",
-    miniLesson: "Launch procedures: DNS configuration, production keys checks, rollback plans.",
-    coreActivity: "The Grand Launch: Live demo presentations. Students present live sites, trigger data records, and defend system design.",
-    handsOn: "Demonstrate a live walkthrough of your deployed capstone site to the tutor, defending your design choices; document the presentation notes in your Project Journal.",
-    homework: "Final course self-reflection journal entry: What makes you a Software Engineer?",
-    ethics: "Algorithmic responsibility: The societal impacts of software systems.",
-    adaptations: "All Ages: Live site presentations panel."
+    warmUp: "Warm Pitch Practice: presenting the live game's URL and premise in 60 seconds before the full assessment begins.",
+    miniLesson: "Assessment Structure: Part 1 is the product pitch, Part 2 is the engineering tour, Part 3 is live chaos defense, Part 4 is the retrospective and graduation.",
+    coreActivity: "Part 1 — The Product Pitch: present the live game in production — the core loop, the player journey, and how the PRD's promises map to what shipped, including what was honestly cut and why. Part 2 — Engineering Tour: walk the codebase and apparatus — test suites and coverage, CI/CD logs showing a blocked bad build and a green deploy, structured logs from the beta, the README/API spec/ADRs, and the commit/PR history telling the sprint story.",
+    handsOn: "Part 3 — Live Chaos Defense: the tutor plays 'Chaos Monkey' against the live game — garbage/extreme inputs, forced network failures mid-save, hostile payloads against data endpoints, restart/resize/key-mash storms. Defend in real time: sanitizers hold, state rolls back, isolation rejects cross-user writes, logs capture every failure, and the debugging protocol runs out loud on anything that breaks.",
+    homework: "In the Journal tab under 'Session 12 Homework', submit the final retrospective: 'My Journey from Syntax Writer to System Architect — what I designed, what I cut, what broke, and what I'd build next' (+100 XP).",
+    ethics: "Shipping Honestly: Part 4's retrospective must reference the Session 1 scope contract explicitly — what was promised vs. shipped is the capstone's honesty test.",
+    adaptations: "All Ages: Full public launch, engineering tour, and live chaos defense in front of the tutor."
   }
 ];

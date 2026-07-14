@@ -1349,6 +1349,577 @@ function buildJsSandboxPreview(studentCode) {
   `;
 }
 
+// Shared live-execution iframe for the Level 2 Canvas Sandboxes (Sessions 1-4).
+// Mirrors buildJsSandboxPreview's execution harness (onerror/console.log forwarding,
+// try/catch around the student's code) but swaps the racing-game DOM body for a bare
+// <canvas id="game-canvas"> matching the id used in the L2 curriculum's own prompts.
+// canvas/ctx/ship/lasers are pre-seeded as `var` globals so exercises that reference
+// them without redeclaring (e.g. Session 3's fireLaser() referencing ship.x) still
+// run standalone; `var` (not let/const) avoids a redeclaration clash with student
+// code that re-declares the same name inside the try block's own scope.
+function buildCanvasSandboxPreview(studentCode) {
+  return `
+    <html>
+      <head>
+        <style>
+          body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
+          canvas { background-color: #0a0e1a; border: 2px solid #7f5af0; border-radius: 4px; display: block; }
+          #console-hint { padding: 6px 2px 0 2px; font-size: 0.65rem; color: #666; }
+        </style>
+      </head>
+      <body tabindex="0">
+        <canvas id="game-canvas" width="480" height="600"></canvas>
+        <div id="console-hint">Click inside this preview, then press ArrowLeft / ArrowRight / Space to test your code live (if it adds a listener).</div>
+        <script>
+          window.onerror = function(msg) {
+            parent.postMessage({ __sim: true, type: 'error', text: String(msg) }, '*');
+            return true;
+          };
+          var _origLog = console.log;
+          console.log = function() {
+            var args = Array.prototype.slice.call(arguments);
+            parent.postMessage({ __sim: true, type: 'log', text: args.map(String).join(' ') }, '*');
+            _origLog.apply(console, args);
+          };
+          var canvas = document.getElementById("game-canvas");
+          var ctx = canvas.getContext("2d");
+          var ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };
+          var lasers = [];
+          try {
+            ${studentCode}
+          } catch (e) {
+            parent.postMessage({ __sim: true, type: 'error', text: e.message }, '*');
+          }
+        </script>
+      </body>
+    </html>
+  `;
+}
+
+const L2S1_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 1.1: [Plan & Design] Defense Grid Blueprint",
+    problem: "Before writing any canvas code, you need to plan the arena's dimensions and where the ship starts.",
+    instruction: "Write down the canvas width, height, and the ship's starting (x, y) coordinates. The canvas is 480x600. The ship should start at x=200, y=500.",
+    preloaded: "/* Write your plan here: canvas width, height, ship x, y */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('480') && clean.includes('600') && clean.includes('200') && clean.includes('500');
+    },
+    hint: "Write: width 480, height 600, ship x 200, y 500."
+  },
+  {
+    num: 2,
+    title: "Exercise 1.2: [Write AI Prompt] Requesting the Arena",
+    problem: "The AI IDE needs a precise spec, not a vague request like 'make a game screen.'",
+    instruction: "Write an AI prompt asking to create a canvas element with id 'game-canvas' sized 480x600 and retrieve its 2D drawing context.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('canvas') && clean.includes('480') && clean.includes('600') && clean.includes('getcontext') && clean.includes('2d');
+    },
+    hint: "Mention: canvas element, id game-canvas, width 480, height 600, and getContext(\"2d\")."
+  },
+  {
+    num: 3,
+    title: "Exercise 1.3: [Review & Explain] The Drawing Toolbox",
+    problem: "Getting a reference to the canvas element alone isn't enough to draw with.",
+    instruction: "Write the exact method call, chained off the canvas element, that gives you the 'ctx' object you actually draw with.",
+    preloaded: "/* Write the method call here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      return clean.includes('getcontext("2d")');
+    },
+    hint: 'canvas.getContext("2d")'
+  },
+  {
+    num: 4,
+    title: "Exercise 1.4: [Test & Break] The Overwriting Canvas",
+    problem: "Bug: the draw loop never clears the canvas, so every frame paints a new ship on top of the last one, leaving a solid trail instead of a moving ship.",
+    instruction: "Fix the draw loop so the ship appears to move cleanly instead of leaving a trail. Add the missing call before the ship is redrawn each frame.",
+    preloaded: 'let shipX = 200;\nfunction draw() {\n  ctx.fillStyle = "red";\n  ctx.fillRect(shipX, 500, 40, 40);\n  shipX += 2;\n  requestAnimationFrame(draw);\n}\ndraw();',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('ctx.clearrect(0,0,480,600)');
+    },
+    hint: "Add ctx.clearRect(0, 0, 480, 600); as the first line inside draw(), before fillStyle/fillRect."
+  },
+  {
+    num: 5,
+    title: "Exercise 1.5: [Iterate & Improve] Order Matters",
+    problem: "clearRect is present now, but the ship still leaves a trail — it was added in the wrong place.",
+    instruction: "Reorder the lines so ctx.clearRect(...) runs BEFORE ctx.fillRect(...), not after.",
+    preloaded: 'let shipX = 200;\nfunction draw() {\n  ctx.fillStyle = "red";\n  ctx.fillRect(shipX, 500, 40, 40);\n  ctx.clearRect(0, 0, 480, 600);\n  shipX += 2;\n  requestAnimationFrame(draw);\n}\ndraw();',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const clearIdx = clean.indexOf('clearrect');
+      const fillIdx = clean.indexOf('fillrect');
+      return clearIdx !== -1 && fillIdx !== -1 && clearIdx < fillIdx;
+    },
+    hint: "Move ctx.clearRect(0, 0, 480, 600); so it's the very first line inside draw(), before ctx.fillStyle/fillRect."
+  },
+  {
+    num: 6,
+    title: "Exercise 1.6: [Plan & Design] The Shield Block",
+    problem: "The homework asks for a second shape: a green defense shield block.",
+    instruction: "Plan the fillStyle color and fillRect(x, y, width, height) parameters for a green 30x30 shield block at position (100, 550).",
+    preloaded: "/* Write your plan here: color, x, y, width, height */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('green') && clean.includes('100') && clean.includes('550') && clean.includes('30');
+    },
+    hint: "fillStyle: green; fillRect(100, 550, 30, 30)"
+  },
+  {
+    num: 7,
+    title: "Exercise 1.7: [Write AI Prompt] Requesting the Shield",
+    problem: "Turn your plan into a precise generation prompt.",
+    instruction: "Write an AI prompt asking to draw a green 30x30 rectangle at (100, 550) using fillStyle and fillRect.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('green') && clean.includes('100') && clean.includes('550') && clean.includes('30') && (clean.includes('fillrect') || clean.includes('fillstyle'));
+    },
+    hint: "Mention: green color, fillRect, and the coordinates (100, 550, 30, 30)."
+  },
+  {
+    num: 8,
+    title: "Exercise 1.8: [Review & Explain] Predict the Color",
+    problem: "fillStyle colors whatever gets drawn AFTER it — not before, and not retroactively.",
+    instruction: 'Given: ctx.fillStyle = "blue"; ctx.fillRect(10,10,20,20); ctx.fillStyle = "green"; ctx.fillRect(50,50,20,20); — what color is the FIRST rectangle (at 10,10)?',
+    preloaded: "/* Write the color here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('blue');
+    },
+    hint: "blue — fillStyle colors whatever is drawn AFTER it, and the first fillRect ran while fillStyle was still blue."
+  },
+  {
+    num: 9,
+    title: "Exercise 1.9: [Test & Break] The Swapped Arguments",
+    problem: "Bug: the shield block should be a 30x30 square at (100, 550), but the fillRect arguments got scrambled, drawing a giant misplaced rectangle instead.",
+    instruction: "Fix the fillRect call so it matches: x=100, y=550, width=30, height=30. Remember the argument order is always (x, y, width, height).",
+    preloaded: 'ctx.fillStyle = "green";\nctx.fillRect(30, 30, 100, 550);',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('fillrect(100,550,30,30)');
+    },
+    hint: "ctx.fillRect(100, 550, 30, 30); — the order is always (x, y, width, height)."
+  },
+  {
+    num: 10,
+    title: "Exercise 1.10: [Iterate & Improve] The Full Arena",
+    problem: "Bring everything together: a clean draw loop showing both shapes with no ghost trail.",
+    instruction: "Write a draw() function that clears the canvas, then draws both the red ship (200, 500, 40, 40) and the green shield (100, 550, 30, 30), in that order.",
+    preloaded: "/* Write the complete draw() function here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const clearIdx = clean.indexOf('clearrect');
+      const shipIdx = clean.indexOf('fillrect(200,500,40,40)');
+      const shieldIdx = clean.indexOf('fillrect(100,550,30,30)');
+      return clearIdx !== -1 && shipIdx !== -1 && shieldIdx !== -1 && clearIdx < shipIdx && clean.includes('red') && clean.includes('green');
+    },
+    hint: "Structure: clearRect first, then fillStyle=red + fillRect(200,500,40,40), then fillStyle=green + fillRect(100,550,30,30)."
+  }
+];
+
+const L2S2_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 2.1: [Plan & Design] The Ship Object",
+    problem: "Before writing any code, plan every property the ship object needs.",
+    instruction: "Plan a ship object literal with x=220, y=500, width=40, height=40, speed=5.",
+    preloaded: "/* Write your plan here: x, y, width, height, speed */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('220') && clean.includes('500') && clean.includes('40') && clean.includes('5');
+    },
+    hint: "x:220, y:500, width:40, height:40, speed:5"
+  },
+  {
+    num: 2,
+    title: "Exercise 2.2: [Write AI Prompt] Declaring the Sprite",
+    problem: "Turn the plan into a precise prompt for the AI IDE.",
+    instruction: "Write an AI prompt asking to declare a `ship` object literal with x, y, width, height, and speed properties matching your plan.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('ship') && clean.includes('object') && clean.includes('x') && clean.includes('speed');
+    },
+    hint: "Mention: a ship object literal with x, y, width, height, and speed properties."
+  },
+  {
+    num: 3,
+    title: "Exercise 2.3: [Review & Explain] Predict the Mutation",
+    problem: "Object properties can be read and reassigned with dot notation.",
+    instruction: "Given let ship = { x: 220, speed: 5 }; ship.x -= ship.speed; — what is ship.x now?",
+    preloaded: "/* Write the resulting value here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('215');
+    },
+    hint: "220 - 5 = 215"
+  },
+  {
+    num: 4,
+    title: "Exercise 2.4: [Test & Break] The Broken Literal",
+    problem: "Bug: this object literal has syntax errors — a missing colon and a missing comma.",
+    instruction: "Fix the object literal so `ship` is declared correctly with x=220, y=500, width=40, height=40, speed=5.",
+    preloaded: 'let ship = { x 220, y: 500, width: 40 height: 40, speed: 5 };',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean === 'letship={x:220,y:500,width:40,height:40,speed:5};' || clean === 'letship={x:220,y:500,width:40,height:40,speed:5}';
+    },
+    hint: 'let ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };'
+  },
+  {
+    num: 5,
+    title: "Exercise 2.5: [Iterate & Improve] Move and Redraw",
+    problem: "Moving the ship in memory does nothing visible until the canvas is redrawn from the updated object.",
+    instruction: "Write a moveLeft() function that subtracts ship.speed from ship.x, clears the canvas, then redraws the ship with fillRect using ship's own properties.",
+    preloaded: "/* Write moveLeft() here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const hasMove = clean.includes('ship.x-=ship.speed');
+      const clearIdx = clean.indexOf('clearrect');
+      const fillIdx = clean.indexOf('fillrect(ship.x,ship.y,ship.width,ship.height)');
+      return hasMove && clearIdx !== -1 && fillIdx !== -1 && clearIdx < fillIdx;
+    },
+    hint: 'function moveLeft() { ship.x -= ship.speed; ctx.clearRect(0, 0, 480, 600); ctx.fillRect(ship.x, ship.y, ship.width, ship.height); }'
+  },
+  {
+    num: 6,
+    title: "Exercise 2.6: [Plan & Design] Wiring the Keys",
+    problem: "Plan which key triggers which function before writing the listener.",
+    instruction: "Plan which key triggers which function: ArrowLeft should call moveLeft(), ArrowRight should call moveRight().",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('arrowleft') && clean.includes('moveleft') && clean.includes('arrowright') && clean.includes('moveright');
+    },
+    hint: "ArrowLeft -> moveLeft(), ArrowRight -> moveRight()."
+  },
+  {
+    num: 7,
+    title: "Exercise 2.7: [Write AI Prompt] The Input Handler",
+    problem: "Turn the wiring plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for a keydown event listener that calls moveLeft() on ArrowLeft and moveRight() on ArrowRight.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('keydown') && clean.includes('arrowleft') && clean.includes('moveleft') && clean.includes('arrowright');
+    },
+    hint: "Mention: keydown listener, ArrowLeft calling moveLeft(), ArrowRight calling moveRight()."
+  },
+  {
+    num: 8,
+    title: "Exercise 2.8: [Review & Explain] The Shadowing Question",
+    problem: "A local variable with the same name as a global one hides the global inside its own scope.",
+    instruction: "If a keydown handler declares `let ship = {...}` INSIDE itself instead of reusing the outer ship, does moving the ship visually update on screen? Answer yes or no, and say why.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      const saysNo = clean.includes('no') || clean.includes('not');
+      const explains = clean.includes('shadow') || clean.includes('local') || clean.includes('copy');
+      return saysNo && explains;
+    },
+    hint: "No — a new local ship variable 'shadows' the global one; the handler mutates the local copy, and the canvas keeps drawing from the untouched global ship."
+  },
+  {
+    num: 9,
+    title: "Exercise 2.9: [Test & Break] Object Scope Mutation",
+    problem: "Bug: the ship never visually moves when ArrowLeft is pressed, even though no error appears.",
+    instruction: "Remove the re-declaration inside the handler so it mutates the global ship instead of shadowing it with a new local copy.",
+    preloaded: 'let ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };\nwindow.addEventListener("keydown", function(event) {\n  let ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };\n  if (event.key === "ArrowLeft") { ship.x -= ship.speed; }\n});',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const letShipCount = (clean.match(/letship=/g) || []).length;
+      return letShipCount === 1 && clean.includes('ship.x-=ship.speed');
+    },
+    hint: 'Delete the `let ship = {...};` line inside the event listener — just keep `if (event.key === "ArrowLeft") { ship.x -= ship.speed; }`.'
+  },
+  {
+    num: 10,
+    title: "Exercise 2.10: [Iterate & Improve] Two-Directional Movement",
+    problem: "The ship can only move one direction so far — complete the control scheme.",
+    instruction: "Add an else-if branch for ArrowRight that adds ship.speed to ship.x, then clears and redraws — completing two-directional movement.",
+    preloaded: 'let ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    ship.x -= ship.speed;\n    ctx.clearRect(0, 0, 480, 600);\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n  }\n});',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const hasElseIf = clean.includes('elseif(event.key==="arrowright")') || clean.includes('elseif(event.key===\'arrowright\')'.replace(/'/g, '"'));
+      return hasElseIf && clean.includes('ship.x+=ship.speed');
+    },
+    hint: 'else if (event.key === "ArrowRight") { ship.x += ship.speed; ctx.clearRect(0, 0, 480, 600); ctx.fillRect(ship.x, ship.y, ship.width, ship.height); }'
+  }
+];
+
+const L2S3_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 3.1: [Plan & Design] The Laser Battery",
+    problem: "Plan the array and the shape of one laser before writing any code.",
+    instruction: "Plan the `lasers` array's starting value (empty) and what fields one laser object needs: x, y, width, height, speed.",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('lasers') && clean.includes('empty') && clean.includes('x') && clean.includes('y') && clean.includes('speed');
+    },
+    hint: "lasers = [] (starts empty); each laser: {x, y, width, height, speed}"
+  },
+  {
+    num: 2,
+    title: "Exercise 3.2: [Write AI Prompt] Firing Logic",
+    problem: "Turn the plan into a precise prompt for the AI IDE.",
+    instruction: "Write an AI prompt asking to declare an empty `lasers` array and a `fireLaser()` function that pushes a new laser object positioned at ship.x + 18, ship.y, width 4, height 15, speed 8.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('lasers') && clean.includes('push') && clean.includes('firelaser') && clean.includes('18') && clean.includes('8');
+    },
+    hint: "Mention: empty lasers array, fireLaser() function, push, and the offset/speed numbers (18, 8)."
+  },
+  {
+    num: 3,
+    title: "Exercise 3.3: [Review & Explain] Predict the Length",
+    problem: "push() always adds exactly one element to the end of an array.",
+    instruction: "If lasers = []; then fireLaser() runs 3 times (each call does lasers.push(...)), what is lasers.length afterward?",
+    preloaded: "/* Write the resulting length here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('3');
+    },
+    hint: "3 — push() adds one element to the end of the array per call."
+  },
+  {
+    num: 4,
+    title: "Exercise 3.4: [Test & Break] The Overwritten Array",
+    problem: "Bug: fireLaser() is overwriting the whole lasers array with a single object instead of adding to it.",
+    instruction: "Fix fireLaser() so it pushes the new laser object onto the array instead of replacing the array entirely.",
+    preloaded: 'let lasers = [];\nfunction fireLaser() {\n  let newLaser = { x: ship.x + 18, y: ship.y, width: 4, height: 15, speed: 8 };\n  lasers = newLaser;\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('lasers.push(newlaser)') && !clean.includes('lasers=newlaser');
+    },
+    hint: "Change `lasers = newLaser;` to `lasers.push(newLaser);`"
+  },
+  {
+    num: 5,
+    title: "Exercise 3.5: [Iterate & Improve] Fire on Spacebar",
+    problem: "fireLaser() exists, but nothing calls it yet.",
+    instruction: 'Add a keydown listener that calls fireLaser() when event.key is the spacebar — a single space character (" "), not the word "Space".',
+    preloaded: "/* Write the keydown listener here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      return clean.includes('addeventlistener') && clean.includes('keydown') && clean.includes('.key===""') && clean.includes('firelaser()');
+    },
+    hint: 'window.addEventListener("keydown", function(event) { if (event.key === " ") { fireLaser(); } });'
+  },
+  {
+    num: 6,
+    title: "Exercise 3.6: [Plan & Design] The Render Loop",
+    problem: "Plan how to visit every laser currently in the array, no matter how many there are.",
+    instruction: "Plan the loop that touches every laser once per frame: what array property tells you how many times to loop?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('lasers.length');
+    },
+    hint: "lasers.length — loop from i = 0 while i < lasers.length."
+  },
+  {
+    num: 7,
+    title: "Exercise 3.7: [Write AI Prompt] Drawing Every Laser",
+    problem: "Turn the loop plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for a for-loop that iterates over the lasers array and draws each one with ctx.fillRect using its x, y, width, and height.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('for') && clean.includes('lasers') && clean.includes('fillrect');
+    },
+    hint: "Mention: a for-loop, the lasers array, and fillRect using each laser's own x/y/width/height."
+  },
+  {
+    num: 8,
+    title: "Exercise 3.8: [Review & Explain] The Hardcoded Bound",
+    problem: "A loop that stops at a fixed number ignores how many items actually exist.",
+    instruction: "If a loop is written as for (let i = 0; i < 3; i++) instead of for (let i = 0; i < lasers.length; i++), what happens once a 4th laser is fired?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      const mentionsFour = clean.includes('4') || clean.includes('fourth');
+      const mentionsNever = clean.includes('not') || clean.includes('never') || clean.includes("won't") || clean.includes('wont');
+      return mentionsFour && mentionsNever;
+    },
+    hint: "The 4th laser would never be drawn — the loop stops checking after index 2 regardless of how many lasers actually exist."
+  },
+  {
+    num: 9,
+    title: "Exercise 3.9: [Test & Break] The Off-Track Marker",
+    problem: "Bug: this loop only ever draws 3 lasers no matter how many actually exist in the array.",
+    instruction: "Fix the loop condition to use lasers.length instead of a fixed number.",
+    preloaded: 'for (let i = 0; i < 3; i++) {\n  ctx.fillRect(lasers[i].x, lasers[i].y, lasers[i].width, lasers[i].height);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('i<lasers.length') && !clean.includes('i<3');
+    },
+    hint: "for (let i = 0; i < lasers.length; i++) { ... }"
+  },
+  {
+    num: 10,
+    title: "Exercise 3.10: [Iterate & Improve] The Complete Battery",
+    problem: "Bring firing and rendering together into one working system.",
+    instruction: "Combine your fireLaser() function, the spacebar listener, and the render loop into one working script: pressing space adds a laser, and every laser currently in the array gets drawn.",
+    preloaded: "/* Write the complete script here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      return clean.includes('lasers.push') && clean.includes('.key===""') && clean.includes('for') && clean.includes('lasers.length') && clean.includes('fillrect');
+    },
+    hint: "You need: the lasers array, fireLaser() pushing to it, a keydown listener calling fireLaser() on spacebar, and a for-loop drawing every laser in the array."
+  }
+];
+
+const L2S4_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 4.1: [Plan & Design] The Off-Screen Rule",
+    problem: "Before writing the cleanup logic, plan the exact rule that decides when a laser is 'done.'",
+    instruction: "Plan the rule that decides when a laser should be removed: what coordinate, compared to what value, means a laser has left the screen going up?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('y<0') || (clean.includes('y') && clean.includes('<') && clean.includes('0'));
+    },
+    hint: "y < 0 — once a laser's y coordinate goes above the top edge, it's off-screen."
+  },
+  {
+    num: 2,
+    title: "Exercise 4.2: [Write AI Prompt] The Cleanup Loop",
+    problem: "Turn the off-screen rule into a precise prompt for the AI IDE.",
+    instruction: "Write an AI prompt asking for an updateLasers() function that decreases each laser's y by its speed, then removes (splices) any laser whose y is less than 0, using a REVERSE loop.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('updatelasers') && clean.includes('splice') && (clean.includes('reverse') || clean.includes('backward')) && clean.includes('y');
+    },
+    hint: "Mention: updateLasers(), moving y by speed, splicing off-screen lasers, and iterating in REVERSE."
+  },
+  {
+    num: 3,
+    title: "Exercise 4.3: [Review & Explain] The Index Shift",
+    problem: "Removing an element from an array shifts every following element down by one index — mid-loop, that's a trap.",
+    instruction: "After index 0 is spliced out of an array during a FORWARD loop, every following element shifts down by one index. Does the loop's next iteration (i=1) end up SKIPPING an element, or checking one TWICE? Answer with one word.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('skip');
+    },
+    hint: "It skips one — the element that shifted into the just-checked index is never itself checked, because i has already moved past it."
+  },
+  {
+    num: 4,
+    title: "Exercise 4.4: [Test & Break] The Splicing Skip Bug",
+    problem: "Bug: when multiple lasers go off-screen in the same frame, only every other one actually gets removed.",
+    instruction: "Fix the loop so it iterates in reverse (from lasers.length - 1 down to 0), which is safe to splice during.",
+    preloaded: 'function updateLasers() {\n  for (let i = 0; i < lasers.length; i++) {\n    lasers[i].y -= lasers[i].speed;\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);\n    }\n  }\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('i=lasers.length-1') && clean.includes('i>=0') && clean.includes('splice(i,1)');
+    },
+    hint: "for (let i = lasers.length - 1; i >= 0; i--) { ... }"
+  },
+  {
+    num: 5,
+    title: "Exercise 4.5: [Iterate & Improve] The Complete Cleanup",
+    problem: "Combine the motion update and the off-screen prune into one correct function.",
+    instruction: "Write the complete updateLasers() function: for every laser (reverse loop), subtract its speed from y, and splice it out if y < 0.",
+    preloaded: "/* Write updateLasers() here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const reverseLoop = clean.includes('i=lasers.length-1') && clean.includes('i>=0');
+      return reverseLoop && clean.includes('lasers[i].y-=lasers[i].speed') && clean.includes('lasers[i].y<0') && clean.includes('splice(i,1)');
+    },
+    hint: "function updateLasers() { for (let i = lasers.length - 1; i >= 0; i--) { lasers[i].y -= lasers[i].speed; if (lasers[i].y < 0) { lasers.splice(i, 1); } } }"
+  },
+  {
+    num: 6,
+    title: "Exercise 4.6: [Plan & Design] Spotting a Leak",
+    problem: "Before a leak happens, plan how you'd actually notice one.",
+    instruction: "If lasers are never pruned, what single value could you console.log every frame to notice the array growing without bound?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('lasers.length') || clean.includes('console.log');
+    },
+    hint: "console.log(lasers.length) — watch it climb without ever shrinking back down."
+  },
+  {
+    num: 7,
+    title: "Exercise 4.7: [Write AI Prompt] The Diagnostic",
+    problem: "Turn the diagnostic plan into a precise prompt.",
+    instruction: "Write an AI prompt asking to add a console.log of lasers.length inside the game loop, to verify the array shrinks after off-screen lasers are pruned.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('console.log') && clean.includes('lasers.length');
+    },
+    hint: "Mention: console.log, lasers.length, and verifying it shrinks after cleanup."
+  },
+  {
+    num: 8,
+    title: "Exercise 4.8: [Review & Explain] The Growing Cost",
+    problem: "An unbounded array doesn't just waste memory — it wastes CPU time too, every single frame.",
+    instruction: "If lasers are never spliced out, does the per-frame cost of the update loop stay constant, or grow over time? Answer with one word, then say why.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('grow') || clean.includes('increase');
+    },
+    hint: "It grows — the loop's cost scales with the array's length, and an unpruned array only ever gets longer."
+  },
+  {
+    num: 9,
+    title: "Exercise 4.9: [Test & Break] Generalizing the Pattern",
+    problem: "Bug: this particle cleanup loop has the exact same forward-splice bug as the lasers array.",
+    instruction: "Fix this cleanup loop using a reverse loop so both dead particles (life < 0) are correctly removed.",
+    preloaded: 'let particles = [{ life: 10 }, { life: -1 }, { life: 5 }, { life: -3 }];\nfor (let i = 0; i < particles.length; i++) {\n  if (particles[i].life < 0) {\n    particles.splice(i, 1);\n  }\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('i=particles.length-1') && clean.includes('i>=0') && clean.includes('splice(i,1)');
+    },
+    hint: "for (let i = particles.length - 1; i >= 0; i--) { if (particles[i].life < 0) { particles.splice(i, 1); } }"
+  },
+  {
+    num: 10,
+    title: "Exercise 4.10: [Iterate & Improve] Firing + Cleanup Together",
+    problem: "The final assembly: everything from Session 3 and Session 4, working together.",
+    instruction: "Combine everything: the lasers array, fireLaser() on spacebar, and updateLasers() that moves and prunes off-screen lasers using a reverse loop — the complete Session 3+4 pipeline.",
+    preloaded: "/* Write the complete script here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      const reverseLoop = clean.includes('i=lasers.length-1') && clean.includes('i>=0');
+      return clean.includes('lasers.push') && clean.includes('.key===""') && reverseLoop && clean.includes('splice(i,1)');
+    },
+    hint: "You need all four pieces: the lasers array, fireLaser() pushing new lasers, a spacebar listener calling fireLaser(), and updateLasers() running a reverse loop that moves and splices lasers."
+  }
+];
+
 const S5_EXERCISES = [
   {
     num: 1,
@@ -2397,7 +2968,8 @@ const S12_EXERCISES = [
 // to the final exercise), preserving the curriculum's "cognitive resistance" design.
 const EXERCISE_COUNTS = {
   'l1-s1': 5, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 10, 'l1-s5': 10, 'l1-s6': 10,
-  'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10
+  'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10,
+  'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10
 };
 
 // Full ordered Level 1 session sequence for quest gating. Level 1 is the only level
@@ -2618,6 +3190,31 @@ export default function App() {
 
   // Live console.log()/error output forwarded from the JS Sandbox preview iframes (Sessions 4-12)
   const [simConsoleLogs, setSimConsoleLogs] = useState([]);
+
+  // Level 2 Sessions 1-4: bespoke Canvas Sandbox exercise states (Arena Init, Sprite
+  // Movement, Laser Battery, Motion & Garbage Collection). Sessions 5-13 keep using the
+  // generic AI Prompt Sandbox (see loadTemplate's else-if chain and CLAUDE.md's sandbox
+  // scope note) — these 4 sessions share the same JS console forwarding as L1's S4-S12
+  // via the shared simConsoleLogs state above, just rendered against a canvas preview.
+  const [l2s1ActiveExercise, setL2s1ActiveExercise] = useState(1);
+  const [l2s1CodeInput, setL2s1CodeInput] = useState('');
+  const [l2s1Logs, setL2s1Logs] = useState([]);
+  const [l2s1Success, setL2s1Success] = useState(false);
+
+  const [l2s2ActiveExercise, setL2s2ActiveExercise] = useState(1);
+  const [l2s2CodeInput, setL2s2CodeInput] = useState('');
+  const [l2s2Logs, setL2s2Logs] = useState([]);
+  const [l2s2Success, setL2s2Success] = useState(false);
+
+  const [l2s3ActiveExercise, setL2s3ActiveExercise] = useState(1);
+  const [l2s3CodeInput, setL2s3CodeInput] = useState('');
+  const [l2s3Logs, setL2s3Logs] = useState([]);
+  const [l2s3Success, setL2s3Success] = useState(false);
+
+  const [l2s4ActiveExercise, setL2s4ActiveExercise] = useState(1);
+  const [l2s4CodeInput, setL2s4CodeInput] = useState('');
+  const [l2s4Logs, setL2s4Logs] = useState([]);
+  const [l2s4Success, setL2s4Success] = useState(false);
 
   // Per-exercise completion map: sessionId -> array of passed exercise numbers.
   // Server-backed (exercise_progress table), so progress follows the student
@@ -3470,24 +4067,44 @@ export default function App() {
       setSandboxConstraints('Must call canvas.getContext(\'2d\') before any draw commands; fillStyle must be set before fillRect is called.');
       setSandboxInput('canvas, ctx');
       setSandboxEdgeCases('The draw loop must call ctx.clearRect() before each redraw once a game loop exists, so shapes don\'t leave a solid trail.');
+      setL2s1ActiveExercise(1);
+      setL2s1CodeInput(L2S1_EXERCISES[0].preloaded);
+      setL2s1Logs([]);
+      setL2s1Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s2') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Declare a ship object literal with x, y, width, height, and speed properties, then write a moveLeft() function that subtracts ship.speed from ship.x, clears the canvas, and redraws the ship.');
       setSandboxConstraints('ship must be a single object literal, not five separate loose variables; moveLeft() must reference ship.speed instead of a hardcoded number.');
       setSandboxInput('ship { x, y, width, height, speed }');
       setSandboxEdgeCases('A local variable inside the move handler must never be named ship again — that would shadow the global object and silently stop the canvas ship from moving.');
+      setL2s2ActiveExercise(1);
+      setL2s2CodeInput(L2S2_EXERCISES[0].preloaded);
+      setL2s2Logs([]);
+      setL2s2Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s3') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Declare an empty lasers array, write a fireLaser() function that pushes a new laser object (positioned at the ship\'s x + 18, moving at speed 8) onto the array when spacebar is pressed, and a loop that draws every laser in the array.');
       setSandboxConstraints('lasers must be initialized as an empty array before any pushes occur; fireLaser() must push a full object literal (not just a coordinate number).');
       setSandboxInput('lasers[], ship.x');
       setSandboxEdgeCases('A single spacebar press must not push duplicate lasers — key-repeat behavior can make the cannon feel like it\'s stuttering or double-firing if not handled.');
+      setL2s3ActiveExercise(1);
+      setL2s3CodeInput(L2S3_EXERCISES[0].preloaded);
+      setL2s3Logs([]);
+      setL2s3Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s4') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Update every laser\'s y coordinate by subtracting its speed, then remove any laser whose y drops below 0 using splice(), iterating the array in reverse order.');
       setSandboxConstraints('The loop must iterate from lasers.length - 1 down to 0 (reverse), not forward; splice(i, 1) must be called only after the off-screen check, not unconditionally.');
       setSandboxInput('lasers[]');
       setSandboxEdgeCases('Multiple lasers exiting off-screen on the same frame must all be removed, not just every other one, which is what a forward-splicing loop would incorrectly do.');
+      setL2s4ActiveExercise(1);
+      setL2s4CodeInput(L2S4_EXERCISES[0].preloaded);
+      setL2s4Logs([]);
+      setL2s4Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s5') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Build a 3-row by 5-column grid of alien objects (each with x, y, and alive), write a moveSwarm() function that shifts every alien by a shared direction value and bounces the whole grid off the screen edges, and represent a shield as an array of cells where a checkShieldCollision(laser) function computes which cell a laser hit and destroys it.');
@@ -6208,8 +6825,448 @@ export default function App() {
                 </div>
               )}
 
+              {/* LEVEL 2 SESSION 1: DEFENSE ARENA CANVAS INIT (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s1' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S1_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s1ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s1ActiveExercise(ex.num);
+                          setL2s1CodeInput(ex.preloaded);
+                          setL2s1Logs([]);
+                          setL2s1Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 1.{ex.num}{(exerciseProgress['l2-s1'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S1_EXERCISES[l2s1ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S1_EXERCISES[l2s1ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S1_EXERCISES[l2s1ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s1Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S1_EXERCISES[l2s1ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing canvas initialization logic for Exercise 1.${l2s1ActiveExercise}...` }];
+                            const pass = ex.validate(l2s1CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s1Success(true);
+                              const prog = markExerciseComplete('l2-s1', l2s1ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 1 CHALLENGES COMPLETE! The Defense Arena canvas is ready.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Canvas setup or draw parameters missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s1Success(false);
+                            }
+                            setL2s1Logs(logs);
+                          }}
+                        >
+                          {l2s1Success ? '✓ Exercise Complete' : 'Verify Canvas Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s1CodeInput(L2S1_EXERCISES[l2s1ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s1CodeInput}
+                          onChange={(e) => setL2s1CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S1_EXERCISES[l2s1ActiveExercise - 1].runnable ? l2s1CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s1Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s1Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 2: SPRITE OBJECT MODELING (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s2' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S2_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s2ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s2ActiveExercise(ex.num);
+                          setL2s2CodeInput(ex.preloaded);
+                          setL2s2Logs([]);
+                          setL2s2Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 2.{ex.num}{(exerciseProgress['l2-s2'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S2_EXERCISES[l2s2ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S2_EXERCISES[l2s2ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S2_EXERCISES[l2s2ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s2Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S2_EXERCISES[l2s2ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing sprite object logic for Exercise 2.${l2s2ActiveExercise}...` }];
+                            const pass = ex.validate(l2s2CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s2Success(true);
+                              const prog = markExerciseComplete('l2-s2', l2s2ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 2 CHALLENGES COMPLETE! The ship sprite is fully animated.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Sprite object or movement logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s2Success(false);
+                            }
+                            setL2s2Logs(logs);
+                          }}
+                        >
+                          {l2s2Success ? '✓ Exercise Complete' : 'Verify Sprite Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s2CodeInput(L2S2_EXERCISES[l2s2ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s2CodeInput}
+                          onChange={(e) => setL2s2CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S2_EXERCISES[l2s2ActiveExercise - 1].runnable ? l2s2CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s2Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s2Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 3: LASER BATTERY ARRAYS (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s3' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S3_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s3ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s3ActiveExercise(ex.num);
+                          setL2s3CodeInput(ex.preloaded);
+                          setL2s3Logs([]);
+                          setL2s3Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 3.{ex.num}{(exerciseProgress['l2-s3'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S3_EXERCISES[l2s3ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S3_EXERCISES[l2s3ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S3_EXERCISES[l2s3ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s3Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S3_EXERCISES[l2s3ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing laser array logic for Exercise 3.${l2s3ActiveExercise}...` }];
+                            const pass = ex.validate(l2s3CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s3Success(true);
+                              const prog = markExerciseComplete('l2-s3', l2s3ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 3 CHALLENGES COMPLETE! The laser battery is online.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Array declaration or loop logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s3Success(false);
+                            }
+                            setL2s3Logs(logs);
+                          }}
+                        >
+                          {l2s3Success ? '✓ Exercise Complete' : 'Verify Array Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s3CodeInput(L2S3_EXERCISES[l2s3ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s3CodeInput}
+                          onChange={(e) => setL2s3CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S3_EXERCISES[l2s3ActiveExercise - 1].runnable ? l2s3CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s3Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s3Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 4: LASER MOTION & GARBAGE COLLECTION (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s4' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S4_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s4ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s4ActiveExercise(ex.num);
+                          setL2s4CodeInput(ex.preloaded);
+                          setL2s4Logs([]);
+                          setL2s4Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 4.{ex.num}{(exerciseProgress['l2-s4'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S4_EXERCISES[l2s4ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S4_EXERCISES[l2s4ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S4_EXERCISES[l2s4ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s4Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S4_EXERCISES[l2s4ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing garbage collection logic for Exercise 4.${l2s4ActiveExercise}...` }];
+                            const pass = ex.validate(l2s4CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s4Success(true);
+                              const prog = markExerciseComplete('l2-s4', l2s4ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 4 CHALLENGES COMPLETE! Memory leaks eliminated.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Reverse loop or splice logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s4Success(false);
+                            }
+                            setL2s4Logs(logs);
+                          }}
+                        >
+                          {l2s4Success ? '✓ Exercise Complete' : 'Verify Cleanup Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s4CodeInput(L2S4_EXERCISES[l2s4ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s4CodeInput}
+                          onChange={(e) => setL2s4CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S4_EXERCISES[l2s4ActiveExercise - 1].runnable ? l2s4CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s4Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s4Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* STANDARD PROMPT SANDBOX FOR LEVEL 2-4 */}
-              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(sandboxSessionId) && (
+              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12', 'l2-s1', 'l2-s2', 'l2-s3', 'l2-s4'].includes(sandboxSessionId) && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '20px', height: '100%', width: '100%' }}>
                   <div className="glass-panel sandbox-left">
                     <div className="panel-header">
