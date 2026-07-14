@@ -1920,6 +1920,1157 @@ const L2S4_EXERCISES = [
   }
 ];
 
+const L2S5_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 5.1: [Plan & Design] The Grid Shape",
+    problem: "Before writing any code, plan the data shape for a swarm grid of aliens.",
+    instruction: "Plan a 3-row by 5-column grid of aliens: what kind of array holds the rows, and what three properties does each alien object need?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return (clean.includes('nested') || clean.includes('array')) && clean.includes('x') && clean.includes('y') && clean.includes('alive');
+    },
+    hint: "A nested array — an array of row-arrays; each alien needs x, y, and alive."
+  },
+  {
+    num: 2,
+    title: "Exercise 5.2: [Write AI Prompt] The Grid Initializer",
+    problem: "Turn the grid plan into a precise prompt for the AI IDE.",
+    instruction: "Write an AI prompt asking for a nested for-loop that builds a 3-row by 5-column aliens grid, where each alien object has x (column * 60 + 50), y (row * 50 + 50), and alive: true.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('nested') && clean.includes('for') && clean.includes('aliens') && clean.includes('alive') && clean.includes('60') && clean.includes('50');
+    },
+    hint: "Mention: a nested for-loop, the aliens grid, and the x/y formulas (col*60+50, row*50+50) plus alive: true."
+  },
+  {
+    num: 3,
+    title: "Exercise 5.3: [Review & Explain] Predict the Coordinate",
+    problem: `Given aliens[r][c] = { x: c * 60 + 50, y: r * 50 + 50, alive: true };`,
+    instruction: "Compute aliens[1][2].x using c = 2 in the formula c * 60 + 50. Type the resulting number.",
+    preloaded: "/* Write the resulting number here */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '170';
+    },
+    hint: "c * 60 + 50 = 2 * 60 + 50 = 170."
+  },
+  {
+    num: 4,
+    title: "Exercise 5.4: [Test & Break] The Frozen Rows",
+    problem: "Bug: this marching function only moves the aliens in row 0 — every other row never moves.",
+    instruction: "Fix moveRow() so it loops over EVERY row AND every column, not just column 0 of a single row.",
+    preloaded: 'function moveRow() {\n  for (let c = 0; c < aliens[0].length; c++) {\n    aliens[0][c].x += 2 * direction;\n  }\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('for(letr=0;r<aliens.length;r++)') && clean.includes('for(letc=0;c<aliens[r].length;c++)') && clean.includes('aliens[r][c].x+=2*direction');
+    },
+    hint: "Wrap the column loop in an outer row loop: for (let r = 0; r < aliens.length; r++) { for (let c = 0; c < aliens[r].length; c++) { aliens[r][c].x += 2 * direction; } }"
+  },
+  {
+    num: 5,
+    title: "Exercise 5.5: [Iterate & Improve] The Complete March",
+    problem: "Combine the fixed nested loop with the edge-bounce logic.",
+    instruction: "Write the complete moveSwarm() function: a nested loop moves every alien by 2 * direction, and if any alien's x goes past 440 or below 10, flip direction and add 20 to every alien's y.",
+    preloaded: "/* Write moveSwarm() here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const nested = clean.includes('for(letr=0;r<aliens.length;r++)') && clean.includes('for(letc=0;c<aliens[r].length;c++)');
+      return nested && clean.includes('aliens[r][c].x+=2*direction') && (clean.includes('x>440') || clean.includes('x<10')) && clean.includes('direction*=-1') && clean.includes('y+=20');
+    },
+    hint: "Move every alien, check if any x > 440 or x < 10, then direction *= -1 and add 20 to every alien's y."
+  },
+  {
+    num: 6,
+    title: "Exercise 5.6: [Plan & Design] The Shield Formula",
+    problem: "Before writing the shield lookup, plan the formula that turns an absolute laser x-coordinate into a shield cell index.",
+    instruction: "The shield starts at x = 100 and each cell is 20px wide. Plan the formula: what must you subtract from laser.x BEFORE dividing by the cell width?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('100') && (clean.includes('subtract') || clean.includes('-'));
+    },
+    hint: "Subtract the shield's starting offset (100) from laser.x before dividing by the cell width (20)."
+  },
+  {
+    num: 7,
+    title: "Exercise 5.7: [Write AI Prompt] The Shield Lookup",
+    problem: "Turn the formula plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for a checkShieldCollision(laser) function that computes the shield cell index using Math.floor((laser.x - 100) / 20), and sets shield[col] to 0 if it was 1.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('checkshieldcollision') && clean.includes('math.floor') && clean.includes('shield');
+    },
+    hint: "Mention: checkShieldCollision(laser), Math.floor, the (laser.x - 100) / 20 formula, and setting shield[col] to 0."
+  },
+  {
+    num: 8,
+    title: "Exercise 5.8: [Review & Explain] Predict the Cell Index",
+    problem: "A laser hits at x = 145.",
+    instruction: "Using col = Math.floor((laser.x - 100) / 20), what is col when laser.x = 145? Type the resulting number.",
+    preloaded: "/* Write the resulting number here */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '2';
+    },
+    hint: "(145 - 100) / 20 = 2.25 → Math.floor gives 2."
+  },
+  {
+    num: 9,
+    title: "Exercise 5.9: [Test & Break] The Missing Offset",
+    problem: "Bug: this shield check forgets to subtract the shield's starting offset before dividing, so lasers destroy the wrong cells.",
+    instruction: "Fix checkShieldCollision() so it subtracts 100 from laser.x BEFORE dividing by 20.",
+    preloaded: 'function checkShieldCollision(laser) {\n  let col = Math.floor(laser.x / 20);\n  if (shield[col] === 1) {\n    shield[col] = 0;\n    return true;\n  }\n  return false;\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('math.floor((laser.x-100)/20)');
+    },
+    hint: "let col = Math.floor((laser.x - 100) / 20);"
+  },
+  {
+    num: 10,
+    title: "Exercise 5.10: [Iterate & Improve] The Complete Shield System",
+    problem: "Bring the full shield system together.",
+    instruction: "Write the complete checkShieldCollision(laser) function: compute col using the corrected offset formula, and if shield[col] is 1, set it to 0 and return true; otherwise return false.",
+    preloaded: "/* Write the complete function here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('math.floor((laser.x-100)/20)') && clean.includes('shield[col]=0') && clean.includes('returntrue');
+    },
+    hint: "function checkShieldCollision(laser) { let col = Math.floor((laser.x - 100) / 20); if (shield[col] === 1) { shield[col] = 0; return true; } return false; }"
+  }
+];
+
+const L2S6_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 6.1: [Plan & Design] The Key-State Object",
+    problem: "Before writing listeners, plan how to track MULTIPLE keys being held down at once.",
+    instruction: "Plan a keysPressed object: what should its value be when a key is pressed down (keydown), and what should it become when that key is released (keyup)?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('true') && clean.includes('false');
+    },
+    hint: "keydown sets keysPressed[key] to true; keyup sets it back to false."
+  },
+  {
+    num: 2,
+    title: "Exercise 6.2: [Write AI Prompt] Binding Both Listeners",
+    problem: "Turn the key-state plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for BOTH a keydown and a keyup listener on window that set keysPressed[event.key] to true and false respectively.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('keydown') && clean.includes('keyup') && clean.includes('keyspressed');
+    },
+    hint: "Mention both keydown AND keyup listeners, and keysPressed[event.key]."
+  },
+  {
+    num: 3,
+    title: "Exercise 6.3: [Review & Explain] The Stuck Key",
+    problem: "If only a keydown listener exists (no keyup), what happens after the player releases the key?",
+    instruction: "Answer with one short phrase: does keysPressed['ArrowLeft'] reset to false, or stay stuck at true?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('stuck') || clean.includes('stay');
+    },
+    hint: "It stays stuck at true — nothing ever sets it back to false without a keyup listener."
+  },
+  {
+    num: 4,
+    title: "Exercise 6.4: [Test & Break] The Firing Spam Lock",
+    problem: "Bug: the spacebar keeps firing lasers continuously even after the player releases the key.",
+    instruction: "Fix the input setup by adding the missing keyup listener that sets keysPressed[event.key] back to false.",
+    preloaded: 'let keysPressed = {};\nwindow.addEventListener("keydown", (e) => { keysPressed[e.key] = true; });',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('addeventlistener("keyup"') && clean.includes('keyspressed[e.key]=false');
+    },
+    hint: 'window.addEventListener("keyup", (e) => { keysPressed[e.key] = false; });'
+  },
+  {
+    num: 5,
+    title: "Exercise 6.5: [Iterate & Improve] The Complete Input Handler",
+    problem: "Combine the full key-state matrix with the movement/firing handler.",
+    instruction: `Write handleInputs(): if keysPressed["ArrowLeft"] is true, subtract ship.speed from ship.x; if keysPressed["ArrowRight"] is true, add ship.speed to ship.x; if keysPressed[" "] is true, call fireLaser().`,
+    preloaded: "/* Write handleInputs() here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      return clean.includes('keyspressed["arrowleft"]') && clean.includes('ship.x-=ship.speed') &&
+        clean.includes('keyspressed["arrowright"]') && clean.includes('ship.x+=ship.speed') &&
+        clean.includes('keyspressed[""]') && clean.includes('firelaser()');
+    },
+    hint: `if (keysPressed["ArrowLeft"]) { ship.x -= ship.speed; } if (keysPressed["ArrowRight"]) { ship.x += ship.speed; } if (keysPressed[" "]) { fireLaser(); }`
+  },
+  {
+    num: 6,
+    title: "Exercise 6.6: [Plan & Design] The Sweep Structure",
+    problem: "Before writing the collision sweep, plan its loop structure.",
+    instruction: "Plan the sweep: which array should the OUTER loop iterate (in reverse, since it might splice), and which should the INNER double loop iterate (row then column)?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('lasers') && clean.includes('aliens') && (clean.includes('reverse') || clean.includes('lasers.length-1'));
+    },
+    hint: "Outer loop: lasers, in reverse. Inner double loop: aliens, row then column."
+  },
+  {
+    num: 7,
+    title: "Exercise 6.7: [Write AI Prompt] The Collision Sweeper",
+    problem: "Turn the sweep plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for checkSwarmCollisions(): a reverse loop over lasers, with a nested double loop over the aliens grid, that marks an alien's alive to false, splices the laser out, adds 50 to score, and breaks out of the column loop on a hit.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('checkswarmcollisions') && clean.includes('alive') && clean.includes('splice') && clean.includes('score') && clean.includes('break');
+    },
+    hint: "Mention: checkSwarmCollisions(), reverse loop, nested aliens loop, alive = false, splice, score += 50, and break."
+  },
+  {
+    num: 8,
+    title: "Exercise 6.8: [Review & Explain] Why the Break Matters",
+    problem: "The inner column loop calls break immediately after resolving a hit.",
+    instruction: "If that break statement were removed, could a single laser potentially destroy MORE than one alien in the same frame? Answer yes or no.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('yes');
+    },
+    hint: "Yes — without the break, the loop keeps checking (and potentially matching) further aliens after the first hit is already resolved."
+  },
+  {
+    num: 9,
+    title: "Exercise 6.9: [Test & Break] The Multiple Kill Bug",
+    problem: "Bug: this sweep is missing the break statement, so one laser can destroy multiple aliens in a single frame.",
+    instruction: "Add the missing break statement immediately after the score update, so the inner loop stops checking once a hit is resolved.",
+    preloaded: 'for (let i = lasers.length - 1; i >= 0; i--) {\n  let l = lasers[i];\n  for (let r = 0; r < aliens.length; r++) {\n    for (let c = 0; c < aliens[r].length; c++) {\n      let a = aliens[r][c];\n      if (a.alive && checkCollision(l, a)) {\n        a.alive = false;\n        lasers.splice(i, 1);\n        score += 50;\n      }\n    }\n  }\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const scoreIdx = clean.indexOf('score+=50');
+      const breakIdx = clean.indexOf('break');
+      return scoreIdx !== -1 && breakIdx !== -1 && breakIdx > scoreIdx;
+    },
+    hint: "Add break; right after lasers.splice(i, 1); score += 50;"
+  },
+  {
+    num: 10,
+    title: "Exercise 6.10: [Iterate & Improve] Input + Collision Together",
+    problem: "Bring the full input matrix and collision sweep together — the complete Session 6 pipeline.",
+    instruction: "Combine handleInputs() (ArrowLeft/ArrowRight/space) with checkSwarmCollisions() (reverse laser loop, nested alien loop, alive/splice/score/break) into one script.",
+    preloaded: "/* Write the complete script here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      const inputs = clean.includes('keyspressed["arrowleft"]') && clean.includes('keyspressed["arrowright"]') && clean.includes('keyspressed[""]') && clean.includes('firelaser()');
+      const sweep = clean.includes('lasers.length-1') && clean.includes('a.alive=false') && clean.includes('splice(i,1)') && clean.includes('score+=50') && clean.includes('break');
+      return inputs && sweep;
+    },
+    hint: "You need both handleInputs() (checking all three keys) and checkSwarmCollisions() (reverse loop, nested aliens loop, alive/splice/score/break)."
+  }
+];
+
+const L2S7_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 7.1: [Plan & Design] The HUD Elements",
+    problem: "Before drawing anything, plan what the HUD needs to show.",
+    instruction: "Plan drawHUD(): what THREE pieces of information does the HUD display (one is drawn as two overlapping rectangles, not text)?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('score') && clean.includes('wave') && clean.includes('health');
+    },
+    hint: "Score text, wave text, and a health bar (drawn as two overlapping rectangles)."
+  },
+  {
+    num: 2,
+    title: "Exercise 7.2: [Write AI Prompt] The HUD Renderer",
+    problem: "Turn the HUD plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for drawHUD(): fillText for 'Score: ' + score and 'Wave: ' + wave, plus a two-rectangle health bar (red background rect, then a green foreground rect sized to the health variable).",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('filltext') && clean.includes('fillrect') && clean.includes('health') && clean.includes('red') && clean.includes('green');
+    },
+    hint: "Mention: fillText for score/wave, and two fillRect calls (red background, green foreground sized to health)."
+  },
+  {
+    num: 3,
+    title: "Exercise 7.3: [Review & Explain] Predict the Bar Width",
+    problem: "The health bar's green rectangle is drawn with fillRect(10, 45, health, 10).",
+    instruction: "If health = 60, what is the width (the 3rd fillRect argument) of the green rectangle? Type the number.",
+    preloaded: "/* Write the number here */",
+    validate: (code) => {
+      const clean = code.replace(/[^0-9]/g, '');
+      return clean === '60';
+    },
+    hint: "The width equals health directly — fillRect(10, 45, health, 10), so 60."
+  },
+  {
+    num: 4,
+    title: "Exercise 7.4: [Test & Break] The Frozen Health Bar",
+    problem: "Bug: the green health bar always renders at full width (100), ignoring how much health is actually left.",
+    instruction: "Fix the fillRect call so its width argument uses the health variable instead of the hardcoded number 100.",
+    preloaded: 'ctx.fillStyle = "green";\nctx.fillRect(10, 45, 100, 10);',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('fillrect(10,45,health,10)');
+    },
+    hint: "ctx.fillRect(10, 45, health, 10);"
+  },
+  {
+    num: 5,
+    title: "Exercise 7.5: [Iterate & Improve] The Complete HUD",
+    problem: "Combine the full HUD renderer.",
+    instruction: "Write the complete drawHUD(): fillText for score and wave, then a red background health rect (fillRect(10,45,100,10)) followed by a green foreground rect sized to health (fillRect(10,45,health,10)).",
+    preloaded: "/* Write drawHUD() here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('filltext') && clean.includes('score') && clean.includes('wave') && clean.includes('fillrect(10,45,100,10)') && clean.includes('fillrect(10,45,health,10)');
+    },
+    hint: "fillText for score and wave, ctx.fillRect(10, 45, 100, 10) in red, then ctx.fillRect(10, 45, health, 10) in green."
+  },
+  {
+    num: 6,
+    title: "Exercise 7.6: [Plan & Design] The Wave-Clear Condition",
+    problem: "Before writing the wave check, plan its trigger condition.",
+    instruction: "Plan checkWaveCompletion(): what exact count of alive aliens should trigger the next wave — and what TWO things should happen when it does?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('0') && clean.includes('wave') && clean.includes('spawn');
+    },
+    hint: "Zero alive aliens; then increment wave and call spawnSwarm(wave)."
+  },
+  {
+    num: 7,
+    title: "Exercise 7.7: [Write AI Prompt] The Wave Checker",
+    problem: "Turn the wave-clear plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for checkWaveCompletion(): count alive aliens across the nested grid, and only when that count is exactly 0, increment wave and call spawnSwarm(wave).",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('checkwavecompletion') && clean.includes('alive') && clean.includes('wave') && clean.includes('spawnswarm');
+    },
+    hint: "Mention: checkWaveCompletion(), counting alive aliens, the exact-zero check, wave++, and spawnSwarm(wave)."
+  },
+  {
+    num: 8,
+    title: "Exercise 7.8: [Review & Explain] The Re-Trigger Risk",
+    problem: "Without a guard, checkWaveCompletion() runs every single frame.",
+    instruction: "If the alive-count stays at 0 for several consecutive frames (before spawnSwarm() adds new aliens), what could go wrong? Answer in a short phrase mentioning wave or spawnSwarm.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return (clean.includes('multiple') || clean.includes('repeat') || clean.includes('again') || clean.includes('every frame') || clean.includes('infinite')) && (clean.includes('wave') || clean.includes('spawn'));
+    },
+    hint: "spawnSwarm() (and the wave increment) could fire again on every frame the count reads zero, spawning many extra waves instead of just one."
+  },
+  {
+    num: 9,
+    title: "Exercise 7.9: [Test & Break] The Uncached Length",
+    problem: "Bug: this sweep re-reads aliens.length and aliens[r].length on every single iteration instead of caching them once.",
+    instruction: "Fix the loop by caching aliens.length and aliens[r].length into local variables (rowLength, colLength) before looping.",
+    preloaded: 'for (let r = 0; r < aliens.length; r++) {\n  for (let c = 0; c < aliens[r].length; c++) {\n    if (aliens[r][c].alive) { drawAlien(aliens[r][c]); }\n  }\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('rowlength=aliens.length') && clean.includes('r<rowlength') && clean.includes('collength=aliens[r].length') && clean.includes('c<collength');
+    },
+    hint: "let rowLength = aliens.length; for (let r = 0; r < rowLength; r++) { let colLength = aliens[r].length; for (let c = 0; c < colLength; c++) { ... } }"
+  },
+  {
+    num: 10,
+    title: "Exercise 7.10: [Iterate & Improve] Wave System + Optimized Sweep",
+    problem: "Bring the wave system and the optimized sweep together.",
+    instruction: "Write both checkWaveCompletion() (count alive, guard against re-trigger by checking count === 0) and the cached-length draw sweep (rowLength/colLength) in one script.",
+    preloaded: "/* Write the complete script here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const wave = clean.includes('checkwavecompletion') && clean.includes('===0') && clean.includes('spawnswarm');
+      const cached = clean.includes('rowlength=aliens.length') && clean.includes('collength=aliens[r].length');
+      return wave && cached;
+    },
+    hint: "You need both checkWaveCompletion() (exact-zero guard, spawnSwarm) and the cached-length sweep (rowLength/colLength)."
+  }
+];
+
+const L2S8_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 8.1: [Plan & Design] URL Anatomy",
+    problem: "Before reading any real request, plan what a URL breaks into.",
+    instruction: "List the four parts a URL breaks into: protocol, host, path, and one more.",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('protocol') && clean.includes('host') && clean.includes('path') && (clean.includes('query') || clean.includes('param'));
+    },
+    hint: "protocol, host, path, and query (the part after the ?)."
+  },
+  {
+    num: 2,
+    title: "Exercise 8.2: [Write AI Prompt] Parsing a Real URL",
+    problem: "Turn the URL-parsing plan into a precise prompt.",
+    instruction: "Write an AI prompt asking to break down the URL https://api.marsdefense.dev/scores?limit=5 into its protocol, host, path, and query parts, in plain English.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('protocol') && clean.includes('host') && clean.includes('path') && clean.includes('query');
+    },
+    hint: "Mention protocol, host, path, and query explicitly, plus the example URL."
+  },
+  {
+    num: 3,
+    title: "Exercise 8.3: [Review & Explain] Identify the Path",
+    problem: "Given GET https://api.marsdefense.dev/scores?limit=5.",
+    instruction: "What is the PATH portion of this URL? Type it exactly.",
+    preloaded: "/* Write the path here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('/scores');
+    },
+    hint: "/scores — everything after the host and before the ?."
+  },
+  {
+    num: 4,
+    title: "Exercise 8.4: [Test & Break] The Wrong Address",
+    problem: "A request goes to a misspelled endpoint (/scroes instead of /scores) and the server answers with status 404.",
+    instruction: "Is the network connection broken, or did the server successfully answer 'no, I don't have that'? Answer in one short phrase.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('not broken') || clean.includes('connected') || clean.includes('successfully') || clean.includes('answered');
+    },
+    hint: "The connection worked fine — the server successfully answered 'no, that path doesn't exist' (404), which is different from a dropped/offline connection."
+  },
+  {
+    num: 5,
+    title: "Exercise 8.5: [Iterate & Improve] The Full Breakdown",
+    problem: "Bring URL parsing together.",
+    instruction: "Fully break down GET https://api.marsdefense.dev/scores?limit=5 into all four parts: protocol, host, path, and query. Write all four values.",
+    preloaded: "/* Write the full breakdown here */",
+    validate: (code) => {
+      const clean = code.toLowerCase().replace(/\s+/g, '');
+      return clean.includes('https') && clean.includes('api.marsdefense.dev') && clean.includes('/scores') && clean.includes('limit=5');
+    },
+    hint: "protocol: https, host: api.marsdefense.dev, path: /scores, query: limit=5"
+  },
+  {
+    num: 6,
+    title: "Exercise 8.6: [Plan & Design] Status Code Families",
+    problem: "Before triaging any status codes, plan the three families they fall into.",
+    instruction: "Plan the three status code families by their first digit: what does 2xx mean, what does 4xx mean, and what does 5xx mean?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('success') && clean.includes('client') && clean.includes('server');
+    },
+    hint: "2xx = success, 4xx = client error, 5xx = server error."
+  },
+  {
+    num: 7,
+    title: "Exercise 8.7: [Write AI Prompt] Triaging Specific Codes",
+    problem: "Turn the status-family plan into a precise prompt.",
+    instruction: "Write an AI prompt asking to explain, in plain English, what each of these specific status codes means: 200, 404, 500, and 403.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '');
+      return clean.includes('200') && clean.includes('404') && clean.includes('500') && clean.includes('403');
+    },
+    hint: "Mention all four codes explicitly: 200, 404, 500, 403."
+  },
+  {
+    num: 8,
+    title: "Exercise 8.8: [Review & Explain] 403 vs 404",
+    problem: "403 and 404 are easy to confuse.",
+    instruction: "What's the difference: does 403 mean the server doesn't have that path, or that it understood the request but refuses to allow it?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('refuse') || clean.includes('understood') || clean.includes('authoriz') || clean.includes('permission');
+    },
+    hint: "403 means the server understood the request but refuses it (authorization) — 404 means the path doesn't exist at all."
+  },
+  {
+    num: 9,
+    title: "Exercise 8.9: [Test & Break] The Misread Payload",
+    problem: `A teammate claims this JSON response is a single object: [{ "player": "cdt_arya", "score": 4200 }, { "player": "cdt_ben", "score": 3900 }]`,
+    instruction: "Correct the mistake: is the top-level structure an array or an object, and how many items does it contain?",
+    preloaded: "/* Write the correction here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('array') && (clean.includes('2') || clean.includes('two'));
+    },
+    hint: "It's an array of 2 objects, each with a player (String) and a score (Number)."
+  },
+  {
+    num: 10,
+    title: "Exercise 8.10: [Iterate & Improve] Document a Real Request",
+    problem: "Bring the whole Session 8 workflow together — this is your homework quest.",
+    instruction: "Document one real captured request from the Network tab: its URL, its method, its status code, and a sketch of its response payload's shape (array or object, and what fields it has).",
+    preloaded: "/* Document your captured request here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('url') && clean.includes('method') && clean.includes('status') && (clean.includes('array') || clean.includes('object') || clean.includes('field'));
+    },
+    hint: "Include all four: URL, method, status code, and the payload shape (array/object + field names)."
+  }
+];
+
+const L2S9_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 9.1: [Plan & Design] The Two-Step Fetch",
+    problem: "Before writing any fetch code, plan the two-step sequence needed to turn a network response into usable data.",
+    instruction: "Plan fetchLeaderboard(): what TWO things must you await in sequence — first to get the response, then to get the actual data out of it?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('fetch') && clean.includes('json');
+    },
+    hint: "First await fetch(url) to get the response, then await res.json() to parse the actual data out of it."
+  },
+  {
+    num: 2,
+    title: "Exercise 9.2: [Write AI Prompt] The Leaderboard Fetcher",
+    problem: "Turn the two-step plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for an async function fetchLeaderboard() that awaits a fetch() call, awaits parsing the response with .json(), and logs the result with console.log.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('async') && clean.includes('await') && clean.includes('fetch') && clean.includes('json') && clean.includes('console.log');
+    },
+    hint: "Mention: async, await, fetch(), .json(), and console.log."
+  },
+  {
+    num: 3,
+    title: "Exercise 9.3: [Review & Explain] The Missing Await",
+    problem: `let res = fetch("https://api.marsdefense.dev/scores"); (missing await)`,
+    instruction: "Without the await keyword before fetch(...), what does res actually hold — the response data, or a pending Promise?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('promise');
+    },
+    hint: "res holds a pending Promise — await is what tells JS to pause and unwrap the actual response."
+  },
+  {
+    num: 4,
+    title: "Exercise 9.4: [Test & Break] The Missing Async Keyword",
+    problem: "Bug: this function uses await but was never declared async, which is invalid.",
+    instruction: "Fix fetchLeaderboard() by adding the missing async keyword to its function declaration.",
+    preloaded: 'function fetchLeaderboard() {\n  let res = await fetch("https://api.marsdefense.dev/scores");\n  let data = await res.json();\n  console.log(data);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('asyncfunctionfetchleaderboard()');
+    },
+    hint: "async function fetchLeaderboard() { ... }"
+  },
+  {
+    num: 5,
+    title: "Exercise 9.5: [Iterate & Improve] The Complete Fetcher",
+    problem: "Combine the fixed pieces into one working function.",
+    instruction: "Write the complete fetchLeaderboard(): async function that awaits fetch(), awaits res.json(), logs the data, and returns it.",
+    preloaded: "/* Write fetchLeaderboard() here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('asyncfunctionfetchleaderboard()') && clean.includes('awaitfetch(') && clean.includes('awaitres.json()') && clean.includes('console.log(data)');
+    },
+    hint: "async function fetchLeaderboard() { let res = await fetch(url); let data = await res.json(); console.log(data); return data; }"
+  },
+  {
+    num: 6,
+    title: "Exercise 9.6: [Plan & Design] The Failure Plan",
+    problem: "Before writing error handling, plan what should happen when the network fails.",
+    instruction: "Plan the try/catch: which two await calls should live INSIDE the try block, and what should the catch block do if either one fails?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('try') && clean.includes('catch') && (clean.includes('fetch') || clean.includes('both'));
+    },
+    hint: "Both await fetch() and await res.json() go inside try; catch should log a friendly error, not crash the app."
+  },
+  {
+    num: 7,
+    title: "Exercise 9.7: [Write AI Prompt] Wrapping the Fetch",
+    problem: "Turn the failure plan into a precise prompt.",
+    instruction: "Write an AI prompt asking to wrap both await calls of fetchLeaderboard() in a try/catch block that logs a friendly error message with console.error on failure.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('try') && clean.includes('catch') && clean.includes('console.error');
+    },
+    hint: "Mention: try/catch and console.error."
+  },
+  {
+    num: 8,
+    title: "Exercise 9.8: [Review & Explain] The Unprotected Parse",
+    problem: "If try only wraps await fetch(...) but NOT await res.json(), and the .json() parse throws (malformed response).",
+    instruction: "Would that parse error be caught by the catch block, or would it crash uncaught? Answer in one word.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('uncaught') || clean.includes('crash');
+    },
+    hint: "It would crash uncaught — only code physically inside the try block is protected by that catch."
+  },
+  {
+    num: 9,
+    title: "Exercise 9.9: [Test & Break] The Half-Protected Parse",
+    problem: "Bug: the try block only wraps the fetch() call — the .json() parse happens outside try, unprotected.",
+    instruction: "Fix fetchLeaderboard() so BOTH await calls (fetch and res.json()) are inside the same try block.",
+    preloaded: 'async function fetchLeaderboard() {\n  try {\n    var res = await fetch("https://api.marsdefense.dev/scores");\n  } catch (err) {\n    console.error("Fetch failed", err);\n  }\n  let data = await res.json();\n  console.log(data);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const tryIdx = clean.indexOf('try{');
+      const catchIdx = clean.indexOf('}catch');
+      if (tryIdx === -1 || catchIdx === -1) return false;
+      const body = clean.slice(tryIdx, catchIdx);
+      return body.includes('awaitfetch(') && body.includes('awaitres.json()');
+    },
+    hint: "Move let data = await res.json(); inside the try block, before the catch."
+  },
+  {
+    num: 10,
+    title: "Exercise 9.10: [Iterate & Improve] The Complete Robust Fetcher",
+    problem: "Bring the full asynchronous pipeline together.",
+    instruction: "Write the complete, correct fetchLeaderboard(): async function, try block wrapping BOTH await fetch() and await res.json(), console.log(data) inside try, and a catch block logging a friendly error with console.error.",
+    preloaded: "/* Write the complete function here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const tryIdx = clean.indexOf('try{');
+      const catchIdx = clean.indexOf('}catch');
+      if (tryIdx === -1 || catchIdx === -1) return false;
+      const body = clean.slice(tryIdx, catchIdx);
+      return clean.includes('async') && body.includes('awaitfetch(') && body.includes('awaitres.json()') && clean.includes('catch');
+    },
+    hint: "async function fetchLeaderboard() { try { let res = await fetch(url); let data = await res.json(); console.log(data); return data; } catch (err) { console.error('Fetch failed', err); } }"
+  }
+];
+
+const L2S10_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 10.1: [Plan & Design] The POST Options Object",
+    problem: "Before sending any data to the server, plan the shape of a POST request.",
+    instruction: "Plan the fetch() options object for a POST request: what THREE keys does it need — one for the HTTP method, one for headers, and one for the payload?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('method') && clean.includes('headers') && clean.includes('body');
+    },
+    hint: "method, headers, and body."
+  },
+  {
+    num: 2,
+    title: "Exercise 10.2: [Write AI Prompt] The Score Submitter",
+    problem: "Turn the POST plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for submitScore(player, val): an async function that POSTs to the scores endpoint with a Content-Type: application/json header and a JSON.stringify'd body containing player and score.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('post') && clean.includes('json') && clean.includes('submitscore');
+    },
+    hint: "Mention: POST, JSON, and submitScore."
+  },
+  {
+    num: 3,
+    title: "Exercise 10.3: [Review & Explain] The Raw Object Body",
+    problem: "body: { player: player, score: val }",
+    instruction: "Why is this wrong — what function must wrap this object before it can be sent as a fetch body? Type the function name.",
+    preloaded: "/* Write the function name here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('json.stringify');
+    },
+    hint: "JSON.stringify() — fetch bodies must be strings, not raw JS objects."
+  },
+  {
+    num: 4,
+    title: "Exercise 10.4: [Test & Break] The Unstringified Body",
+    problem: "Bug: this options object passes a raw JS object as the body instead of a JSON string.",
+    instruction: "Fix the body so it's passed through JSON.stringify() instead of as a raw object.",
+    preloaded: 'let options = {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: { player: player, score: val }\n};',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('body:json.stringify({player:player,score:val})');
+    },
+    hint: 'body: JSON.stringify({ player: player, score: val })'
+  },
+  {
+    num: 5,
+    title: "Exercise 10.5: [Iterate & Improve] The Complete Options Object",
+    problem: "Combine the full POST options object.",
+    instruction: "Write the complete options object for submitScore(player, val): method 'POST', headers with Content-Type application/json, and body as JSON.stringify({ player, score: val }).",
+    preloaded: "/* Write the options object here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('method:"post"') && clean.includes('"content-type":"application/json"') && clean.includes('body:json.stringify(');
+    },
+    hint: '{ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ player: player, score: val }) }'
+  },
+  {
+    num: 6,
+    title: "Exercise 10.6: [Plan & Design] The Success Check",
+    problem: "Before checking anything, plan how you'd actually know a POST succeeded.",
+    instruction: "Plan the success check: what single Response property tells you whether the POST actually succeeded, separate from whether the network connection worked at all?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('res.ok') || clean.includes('.ok');
+    },
+    hint: "res.ok — true only for 2xx status responses."
+  },
+  {
+    num: 7,
+    title: "Exercise 10.7: [Write AI Prompt] The Status Guard",
+    problem: "Turn the success-check plan into a precise prompt.",
+    instruction: "Write an AI prompt asking to add a check after the fetch: if res.ok is false, throw a new Error that includes res.status in its message.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('res.ok') && clean.includes('throw') && clean.includes('status');
+    },
+    hint: "Mention: res.ok, throw new Error, and res.status."
+  },
+  {
+    num: 8,
+    title: "Exercise 10.8: [Review & Explain] Does fetch() Reject on 500?",
+    problem: "fetch() only rejects (triggers catch) on a NETWORK failure.",
+    instruction: "Does fetch() reject on its own when the server responds with status 500? Answer yes or no.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('no');
+    },
+    hint: "No — fetch() resolves normally even for 404/500 responses; you must check res.ok yourself to catch HTTP-level failures."
+  },
+  {
+    num: 9,
+    title: "Exercise 10.9: [Test & Break] The Missing Status Check",
+    problem: "Bug: this function assumes success just because fetch() didn't throw, and logs success even on a server error.",
+    instruction: "Fix submitScore() by adding a check right after the fetch: if (!res.ok), throw a new Error including res.status, before logging success.",
+    preloaded: 'async function submitScore(player, val) {\n  try {\n    let res = await fetch("https://api.marsdefense.dev/scores", {\n      method: "POST",\n      headers: { "Content-Type": "application/json" },\n      body: JSON.stringify({ player: player, score: val })\n    });\n    console.log("Score posted successfully");\n  } catch (e) {\n    console.warn("Telemetry submission offline", e.message);\n  }\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('if(!res.ok)') && clean.includes('throw') && clean.includes('res.status');
+    },
+    hint: 'if (!res.ok) { throw new Error("Submitting failed: " + res.status); }'
+  },
+  {
+    num: 10,
+    title: "Exercise 10.10: [Iterate & Improve] The Complete Score Submitter",
+    problem: "Bring the full POST pipeline together.",
+    instruction: "Write the complete submitScore(player, val): async, try/catch, POST options with JSON.stringify body, an if (!res.ok) throw check, console.log on success, and console.warn on catch.",
+    preloaded: "/* Write the complete function here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('asyncfunctionsubmitscore') && clean.includes('method:"post"') && clean.includes('body:json.stringify(') && clean.includes('if(!res.ok)') && clean.includes('throw') && clean.includes('console.warn');
+    },
+    hint: "async function submitScore(player, val) { try { let res = await fetch(url, { method: 'POST', headers: {...}, body: JSON.stringify({...}) }); if (!res.ok) { throw new Error('Submitting failed: ' + res.status); } console.log('Score posted successfully'); } catch (e) { console.warn('Telemetry submission offline', e.message); } }"
+  }
+];
+
+const L2S11_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 11.1: [Plan & Design] The Scores Schema",
+    problem: "Before writing any SQL, plan the shape of the colonist_scores table.",
+    instruction: "Plan the colonist_scores schema: name the FOUR columns it needs, and state which one is the primary key.",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('id') && clean.includes('player') && clean.includes('score') && clean.includes('wave') && clean.includes('primary');
+    },
+    hint: "id (primary key), player, score, wave_reached."
+  },
+  {
+    num: 2,
+    title: "Exercise 11.2: [Write AI Prompt] The CREATE TABLE Statement",
+    problem: "Turn the schema plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for a CREATE TABLE statement for colonist_scores with id as an INT PRIMARY KEY, player as VARCHAR(50), score as INT, and wave_reached as INT.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('create table') && clean.includes('primary key') && clean.includes('varchar') && clean.includes('wave_reached');
+    },
+    hint: "Mention: CREATE TABLE, PRIMARY KEY, VARCHAR, and wave_reached."
+  },
+  {
+    num: 3,
+    title: "Exercise 11.3: [Review & Explain] What a Primary Key Guarantees",
+    problem: "Every table needs exactly one primary key column.",
+    instruction: "What does marking a column PRIMARY KEY guarantee about its values across every row? Answer in one word.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('unique');
+    },
+    hint: "Uniqueness — no two rows can ever share the same primary key value."
+  },
+  {
+    num: 4,
+    title: "Exercise 11.4: [Test & Break] The Missing Primary Key",
+    problem: "Bug: this table has no primary key at all, so duplicate rows could slip in unnoticed.",
+    instruction: "Fix the CREATE TABLE statement by adding PRIMARY KEY to the id column.",
+    preloaded: 'CREATE TABLE colonist_scores (\n  id INT,\n  player VARCHAR(50),\n  score INT,\n  wave_reached INT\n);',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('idintprimarykey');
+    },
+    hint: "id INT PRIMARY KEY,"
+  },
+  {
+    num: 5,
+    title: "Exercise 11.5: [Iterate & Improve] Table + First Row",
+    problem: "Bring table creation and a first row together.",
+    instruction: "Write the complete CREATE TABLE statement for colonist_scores (id INT PRIMARY KEY, player VARCHAR(50), score INT, wave_reached INT), plus one INSERT statement adding a sample row.",
+    preloaded: "/* Write the complete CREATE TABLE + INSERT here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('createtablecolonist_scores') && clean.includes('idintprimarykey') && clean.includes('insertintocolonist_scores');
+    },
+    hint: "CREATE TABLE colonist_scores (id INT PRIMARY KEY, player VARCHAR(50), score INT, wave_reached INT); INSERT INTO colonist_scores (id, player, score, wave_reached) VALUES (1, 'cdt_arya', 4200, 6);"
+  },
+  {
+    num: 6,
+    title: "Exercise 11.6: [Plan & Design] Filtering and Sorting",
+    problem: "Before writing a query, plan which clause does which job.",
+    instruction: "Plan a query that returns only high scorers, sorted best-first: which SQL clause filters rows, and which clause orders them?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('where') && clean.includes('order by');
+    },
+    hint: "WHERE filters rows; ORDER BY sorts the results."
+  },
+  {
+    num: 7,
+    title: "Exercise 11.7: [Write AI Prompt] The Leaderboard Query",
+    problem: "Turn the filter/sort plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for a SELECT statement returning player and score from colonist_scores where score is greater than 4000, ordered by score descending.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('select') && clean.includes('where') && clean.includes('4000') && clean.includes('order by') && clean.includes('desc');
+    },
+    hint: "Mention: SELECT, WHERE score > 4000, and ORDER BY ... DESC."
+  },
+  {
+    num: 8,
+    title: "Exercise 11.8: [Review & Explain] The Missing WHERE",
+    problem: "An UPDATE statement runs with NO WHERE clause at all.",
+    instruction: "Does it update just one matching row, or every row in the table? Answer in one word.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('every') || clean.includes('all');
+    },
+    hint: "Every row — with no WHERE clause, the UPDATE applies to the entire table."
+  },
+  {
+    num: 9,
+    title: "Exercise 11.9: [Test & Break] The Backwards Comparison",
+    problem: "Bug: this query returns LOW scorers instead of high scorers — the comparison is backwards.",
+    instruction: "Fix the WHERE condition — it should return colonists scoring ABOVE 4000, not below.",
+    preloaded: 'SELECT player, score FROM colonist_scores\nWHERE score < 4000\nORDER BY score DESC;',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('wherescore>4000') && !clean.includes('wherescore<4000');
+    },
+    hint: "WHERE score > 4000"
+  },
+  {
+    num: 10,
+    title: "Exercise 11.10: [Iterate & Improve] The Targeted Update",
+    problem: "Bring safe, targeted updates together.",
+    instruction: "Write the complete, correctly-targeted UPDATE statement: set score to 4500 for the single row where id = 1.",
+    preloaded: "/* Write the complete UPDATE statement here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('updatecolonist_scoressetscore=4500whereid=1');
+    },
+    hint: "UPDATE colonist_scores SET score = 4500 WHERE id = 1;"
+  }
+];
+
+const L2S12_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 12.1: [Plan & Design] Why Concatenation Is Dangerous",
+    problem: `let query = "SELECT * FROM users WHERE name = '" + userInput + "'";`,
+    instruction: "Plan why this is dangerous — besides a normal name, what could userInput contain that changes the query's MEANING?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('sql') || clean.includes('quote') || clean.includes("'") || clean.includes('inject');
+    },
+    hint: "It could contain SQL syntax itself (quotes, OR conditions) — turning data into code."
+  },
+  {
+    num: 2,
+    title: "Exercise 12.2: [Write AI Prompt] Tracing the Injection",
+    problem: "Turn the concern into a precise prompt.",
+    instruction: `Write an AI prompt asking to explain what happens to the query "SELECT * FROM users WHERE name = '" + userInput + "'" when userInput is ' OR '1'='1.`,
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('userinput') && clean.includes('query') && (clean.includes("1'='1") || clean.includes('always'));
+    },
+    hint: "Ask what the resulting WHERE clause evaluates to once userInput becomes ' OR '1'='1."
+  },
+  {
+    num: 3,
+    title: "Exercise 12.3: [Review & Explain] Always True",
+    problem: "With that injected input in place.",
+    instruction: "Does the WHERE clause become a condition that is ALWAYS TRUE, or ALWAYS FALSE? Answer in two words.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('alwaystrue');
+    },
+    hint: "Always true — '1'='1' is always true, so every row matches and the whole table is returned."
+  },
+  {
+    num: 4,
+    title: "Exercise 12.4: [Test & Break] Parameterize the Query",
+    problem: "Bug: this query is built by string concatenation, making it injectable.",
+    instruction: "Rewrite this vulnerable query in parameterized form: replace the concatenated userInput with a single ? placeholder.",
+    preloaded: 'let query = "SELECT * FROM users WHERE name = \'" + userInput + "\'";',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('wherename=?') && !clean.includes('+userinput+');
+    },
+    hint: "SELECT * FROM users WHERE name = ?;"
+  },
+  {
+    num: 5,
+    title: "Exercise 12.5: [Iterate & Improve] The Complete Parameterized Query",
+    problem: "Bring the safe lookup together.",
+    instruction: "Write the complete parameterized query for looking up a user by name, using a ? placeholder instead of string concatenation.",
+    preloaded: "/* Write the complete query here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('select') && clean.includes('wherename=?');
+    },
+    hint: "SELECT * FROM users WHERE name = ?;"
+  },
+  {
+    num: 6,
+    title: "Exercise 12.6: [Plan & Design] The Username Rule",
+    problem: "Before validating anything, plan the rule for a username field.",
+    instruction: "Plan the validation rule for the username field: what length range (min-max characters) and what character types should be allowed?",
+    preloaded: "/* Write your plan here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('3') && clean.includes('20') && (clean.includes('letter') || clean.includes('digit') || clean.includes('underscore'));
+    },
+    hint: "3-20 characters; letters, digits, and underscore only."
+  },
+  {
+    num: 7,
+    title: "Exercise 12.7: [Write AI Prompt] The Full Rulebook",
+    problem: "Turn the validation plan into a precise prompt.",
+    instruction: "Write an AI prompt asking for validation rules (as comments) for three fields: username (length + allowed characters), score (integer range), and quantity (must be positive).",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('username') && clean.includes('score') && clean.includes('quantity');
+    },
+    hint: "Mention all three fields explicitly: username, score, and quantity."
+  },
+  {
+    num: 8,
+    title: "Exercise 12.8: [Review & Explain] What the Password Column Stores",
+    problem: "The password column in the database should never contain the actual password.",
+    instruction: "What should it store instead? Answer in one word.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('hash');
+    },
+    hint: "A hash — a one-way scrambled version, so a leak of the database doesn't directly reveal passwords."
+  },
+  {
+    num: 9,
+    title: "Exercise 12.9: [Test & Break] The Negative Supply Heist",
+    problem: "Bug: this validation rule accepts a purchase quantity of -5, which the server treats as adding stock and refunding credits.",
+    instruction: "Fix isValidQuantity() so it also rejects zero or negative quantities — only positive numbers should pass.",
+    preloaded: "function isValidQuantity(q) {\n  return typeof q === 'number';\n}",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('q>0');
+    },
+    hint: "return typeof q === 'number' && q > 0;"
+  },
+  {
+    num: 10,
+    title: "Exercise 12.10: [Iterate & Improve] The Complete Rulebook",
+    problem: "Bring the full validation rulebook together.",
+    instruction: "Write the complete validation rulebook for all three fields: username (3-20 chars, letters/digits/underscore), score (integer, 0 to 1,000,000), and quantity (integer, greater than 0).",
+    preloaded: "/* Write the complete rulebook here */",
+    validate: (code) => {
+      const clean = code.replace(/,/g, '').toLowerCase();
+      return clean.includes('username') && clean.includes('score') && clean.includes('quantity') && clean.includes('1000000');
+    },
+    hint: "username: 3-20 chars, letters/digits/underscore; score: integer 0-1,000,000; quantity: integer > 0."
+  }
+];
+
+const L2S13_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 13.1: [Plan & Design] Canvas Fundamentals Recall",
+    problem: "Warm up by recalling the canvas basics from Session 1.",
+    instruction: "Name the TWO things every canvas script must do before drawing works — one to access the drawing surface, one to run every frame before redrawing.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('getcontext') && clean.includes('clearrect');
+    },
+    hint: "canvas.getContext('2d') once, and ctx.clearRect() every frame before redrawing."
+  },
+  {
+    num: 2,
+    title: "Exercise 13.2: [Write AI Prompt] The Sprite Cleanup",
+    problem: "Assessment Part A: build a standalone sprite-pruning snippet.",
+    instruction: "Write an AI prompt asking for a sprite cleanup function: a REVERSE loop over a sprites array that splices out any sprite whose y is less than 0.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('reverse') && clean.includes('splice') && clean.includes('sprite');
+    },
+    hint: "Mention: reverse loop, splice, sprites, and y < 0."
+  },
+  {
+    num: 3,
+    title: "Exercise 13.3: [Review & Explain] Collision Sweep Recall",
+    problem: "Recall Session 6's collision sweep.",
+    instruction: "Why must a nested collision sweep's inner loop call break immediately after resolving a hit?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('multiple') || clean.includes('again') || clean.includes('more than one') || clean.includes('twice');
+    },
+    hint: "Without break, the loop keeps checking and could resolve the same laser against more than one alien in a single frame."
+  },
+  {
+    num: 4,
+    title: "Exercise 13.4: [Test & Break] Diagnostic Challenge A",
+    problem: "Diagnostic Challenge A: this async request handler is missing an await.",
+    instruction: "Find and fix the missing await in this async request handler.",
+    preloaded: 'async function fetchLeaderboard() {\n  let res = await fetch("https://api.marsdefense.dev/scores");\n  let data = res.json();\n  console.log(data);\n}',
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('awaitres.json()');
+    },
+    hint: "let data = await res.json();"
+  },
+  {
+    num: 5,
+    title: "Exercise 13.5: [Iterate & Improve] Async Synthesis",
+    problem: "Synthesis: combine everything from Sessions 9-10.",
+    instruction: "Write a complete async fetchLeaderboard() combining everything from Sessions 9-10 — async keyword, both awaits inside a try block, console.log(data) on success, and a catch block logging a friendly error.",
+    preloaded: "/* Write the complete function here */",
+    runnable: true,
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const tryIdx = clean.indexOf('try{');
+      const catchIdx = clean.indexOf('}catch');
+      if (tryIdx === -1 || catchIdx === -1) return false;
+      const body = clean.slice(tryIdx, catchIdx);
+      return clean.includes('async') && body.includes('awaitfetch(') && body.includes('awaitres.json()') && clean.includes('catch');
+    },
+    hint: "async function fetchLeaderboard() { try { let res = await fetch(url); let data = await res.json(); console.log(data); } catch (err) { console.error('Fetch failed', err); } }"
+  },
+  {
+    num: 6,
+    title: "Exercise 13.6: [Plan & Design] Input Matrix Recall",
+    problem: "Recall Session 6's input-state pattern.",
+    instruction: "Why must BOTH keydown and keyup listeners be bound for smooth continuous ship movement, not just keydown?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('keyup') && (clean.includes('stuck') || clean.includes('release') || clean.includes('stop'));
+    },
+    hint: "Without keyup, a key's state never resets to false when released — movement or firing would get stuck on."
+  },
+  {
+    num: 7,
+    title: "Exercise 13.7: [Write AI Prompt] The Sweep Snippet",
+    problem: "Assessment Part A: build a standalone collision-sweep snippet.",
+    instruction: "Write an AI prompt asking for a nested collision sweep between a lasers array (outer loop, reverse) and a grid of aliens (inner double loop), marking hits and breaking out immediately.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('reverse') && clean.includes('aliens') && clean.includes('lasers') && clean.includes('break');
+    },
+    hint: "Mention: reverse loop, lasers, aliens grid, and break."
+  },
+  {
+    num: 8,
+    title: "Exercise 13.8: [Review & Explain] Diagnostic Challenge B, Part 1",
+    problem: `let query = "SELECT * FROM users WHERE name = '" + name + "'";`,
+    instruction: "Diagnostic Challenge B: what is wrong with this query, and what's the general name for this class of vulnerability? Answer in one word.",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('injection');
+    },
+    hint: "SQL injection — concatenating raw user input into a query string lets input data change the query's meaning."
+  },
+  {
+    num: 9,
+    title: "Exercise 13.9: [Test & Break] Diagnostic Challenge B, Part 2",
+    problem: "Fix the vulnerable query identified above.",
+    instruction: "Fix the query by rewriting it in parameterized form using a single ? placeholder instead of concatenating name.",
+    preloaded: 'let query = "SELECT * FROM users WHERE name = \'" + name + "\'";',
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('wherename=?') && !clean.includes('+name+');
+    },
+    hint: "SELECT * FROM users WHERE name = ?;"
+  },
+  {
+    num: 10,
+    title: "Exercise 13.10: [Iterate & Improve] Final Synthesis",
+    problem: "Final synthesis: bring the database module's lesson full circle.",
+    instruction: "Write the complete, correctly-targeted UPDATE statement for colonist_scores — set score to 4500 for the single row where id = 1, avoiding the 'update the whole table' mistake from Session 11.",
+    preloaded: "/* Write the complete UPDATE statement here */",
+    validate: (code) => {
+      const clean = code.replace(/\s+/g, '').toLowerCase();
+      return clean.includes('updatecolonist_scoressetscore=4500whereid=1');
+    },
+    hint: "UPDATE colonist_scores SET score = 4500 WHERE id = 1;"
+  }
+];
+
 const S5_EXERCISES = [
   {
     num: 1,
@@ -2969,7 +4120,8 @@ const S12_EXERCISES = [
 const EXERCISE_COUNTS = {
   'l1-s1': 5, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 10, 'l1-s5': 10, 'l1-s6': 10,
   'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10,
-  'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10
+  'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10, 'l2-s5': 10, 'l2-s6': 10, 'l2-s7': 10, 'l2-s8': 10,
+  'l2-s9': 10, 'l2-s10': 10, 'l2-s11': 10, 'l2-s12': 10, 'l2-s13': 10
 };
 
 // Full ordered Level 1 session sequence for quest gating. Level 1 is the only level
@@ -3243,6 +4395,59 @@ export default function App() {
   const [l2s4CodeInput, setL2s4CodeInput] = useState('');
   const [l2s4Logs, setL2s4Logs] = useState([]);
   const [l2s4Success, setL2s4Success] = useState(false);
+
+  // Level 2 Sessions 5-8: bespoke Canvas Sandbox exercise states (Alien Swarms & Shield
+  // Grids, Firing Control & Collision Sweeps, HUD Gauges & Performance Audits, How the
+  // Web Works). Sessions 9-13 keep using the generic AI Prompt Sandbox.
+  const [l2s5ActiveExercise, setL2s5ActiveExercise] = useState(1);
+  const [l2s5CodeInput, setL2s5CodeInput] = useState('');
+  const [l2s5Logs, setL2s5Logs] = useState([]);
+  const [l2s5Success, setL2s5Success] = useState(false);
+
+  const [l2s6ActiveExercise, setL2s6ActiveExercise] = useState(1);
+  const [l2s6CodeInput, setL2s6CodeInput] = useState('');
+  const [l2s6Logs, setL2s6Logs] = useState([]);
+  const [l2s6Success, setL2s6Success] = useState(false);
+
+  const [l2s7ActiveExercise, setL2s7ActiveExercise] = useState(1);
+  const [l2s7CodeInput, setL2s7CodeInput] = useState('');
+  const [l2s7Logs, setL2s7Logs] = useState([]);
+  const [l2s7Success, setL2s7Success] = useState(false);
+
+  const [l2s8ActiveExercise, setL2s8ActiveExercise] = useState(1);
+  const [l2s8CodeInput, setL2s8CodeInput] = useState('');
+  const [l2s8Logs, setL2s8Logs] = useState([]);
+  const [l2s8Success, setL2s8Success] = useState(false);
+
+  // Level 2 Sessions 9-13: bespoke Canvas Sandbox exercise states (Async Leaderboard
+  // Fetch, POST/Payloads/Error Handling, SQL Tables & Queries, SQL Injection Awareness,
+  // Graduation Sprint synthesis review). Sessions 9-10 and 13 write real JS (canvas
+  // preview reused for its iframe/console harness); Sessions 11-12 are SQL/text answers
+  // validated the same way, just never marked runnable.
+  const [l2s9ActiveExercise, setL2s9ActiveExercise] = useState(1);
+  const [l2s9CodeInput, setL2s9CodeInput] = useState('');
+  const [l2s9Logs, setL2s9Logs] = useState([]);
+  const [l2s9Success, setL2s9Success] = useState(false);
+
+  const [l2s10ActiveExercise, setL2s10ActiveExercise] = useState(1);
+  const [l2s10CodeInput, setL2s10CodeInput] = useState('');
+  const [l2s10Logs, setL2s10Logs] = useState([]);
+  const [l2s10Success, setL2s10Success] = useState(false);
+
+  const [l2s11ActiveExercise, setL2s11ActiveExercise] = useState(1);
+  const [l2s11CodeInput, setL2s11CodeInput] = useState('');
+  const [l2s11Logs, setL2s11Logs] = useState([]);
+  const [l2s11Success, setL2s11Success] = useState(false);
+
+  const [l2s12ActiveExercise, setL2s12ActiveExercise] = useState(1);
+  const [l2s12CodeInput, setL2s12CodeInput] = useState('');
+  const [l2s12Logs, setL2s12Logs] = useState([]);
+  const [l2s12Success, setL2s12Success] = useState(false);
+
+  const [l2s13ActiveExercise, setL2s13ActiveExercise] = useState(1);
+  const [l2s13CodeInput, setL2s13CodeInput] = useState('');
+  const [l2s13Logs, setL2s13Logs] = useState([]);
+  const [l2s13Success, setL2s13Success] = useState(false);
 
   // Per-exercise completion map: sessionId -> array of passed exercise numbers.
   // Server-backed (exercise_progress table), so progress follows the student
@@ -4361,54 +5566,99 @@ export default function App() {
       setSandboxConstraints('Store aliens as a nested array (rows of columns), not a flat list; every alien must move using the SAME shared direction value each tick; the shield\'s column-index formula must subtract the shield\'s starting x offset before dividing by cellWidth; a destroyed shield cell is set to 0, never spliced out.');
       setSandboxInput('aliens[][], direction, shield[]');
       setSandboxEdgeCases('An alien exactly at the boundary coordinate must trigger the bounce reliably, not clip past it; a laser hitting an already-destroyed shield cell must have no further effect, and a computed index outside the shield\'s range must not crash or silently pass the check.');
+      setL2s5ActiveExercise(1);
+      setL2s5CodeInput(L2S5_EXERCISES[0].preloaded);
+      setL2s5Logs([]);
+      setL2s5Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s6') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Declare a keysPressed object, bind keydown/keyup listeners that toggle each key\'s Boolean state, and write a handleInputs() function called every game-loop tick that moves the ship and fires lasers based on which keys are currently true. Then sweep every laser against every alien in the grid; on overlap, mark the alien\'s alive to false, splice the laser out, add 50 to score, and break out of the inner loop.');
       setSandboxConstraints('Both keydown AND keyup listeners must be bound, not just keydown; handleInputs() must run every game-loop frame. The outer laser loop must iterate backward (safe for mid-loop splicing); break must run immediately after a hit is resolved; only living aliens (alive === true) should ever be checked against a laser.');
       setSandboxInput('keysPressed{}, lasers[], aliens[][]');
       setSandboxEdgeCases('Holding two keys at once must move and fire in the same frame, with firing respecting a cooling interval; a laser passing through a dense cluster of aliens must destroy at most one alien.');
+      setL2s6ActiveExercise(1);
+      setL2s6CodeInput(L2S6_EXERCISES[0].preloaded);
+      setL2s6Logs([]);
+      setL2s6Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s7') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Write a checkWaveCompletion() function that counts alive aliens across the grid and, only when that count hits exactly zero, increments wave and calls spawnSwarm(wave) once. Write a drawHUD() function rendering score, wave number, and a health bar. Then refactor the sweep loop so array lengths are cached into local variables before looping instead of re-reading .length every iteration.');
       setSandboxConstraints('checkWaveCompletion() must guard against calling spawnSwarm() more than once per wave clear; the health bar must be drawn as two overlapping rectangles (red background, green foreground sized to current health); aliens.length and each row\'s .length must be cached before the loop starts.');
       setSandboxInput('wave, health, aliens[][]');
       setSandboxEdgeCases('Destroying every alien in a wave must increment wave exactly once, even across several frames that all read zero alive aliens in a row; a 500-laser stress test must hold a stable frame rate rather than degrading.');
+      setL2s7ActiveExercise(1);
+      setL2s7CodeInput(L2S7_EXERCISES[0].preloaded);
+      setL2s7Logs([]);
+      setL2s7Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s8') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Ask the AI for a plain-English, numbered walkthrough of what happens between typing a URL and seeing a page (client request, routing, server response, render), in exactly 8 steps — this session produces no game code, it is a comprehension exercise audited against the DevTools Network tab.');
       setSandboxConstraints('Every step must map to something visible in the DevTools Network tab; no step may skip directly from "client" to "page loads" without naming the request/response round trip.');
       setSandboxInput('captured request/response pair (URL, method, status, payload)');
       setSandboxEdgeCases('A 404 response must be explained as a successful conversation with a "no" answer, not confused with a dropped/offline connection.');
+      setL2s8ActiveExercise(1);
+      setL2s8CodeInput(L2S8_EXERCISES[0].preloaded);
+      setL2s8Logs([]);
+      setL2s8Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s9') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Write an async function fetchLeaderboard() that awaits a fetch() call to a leaderboard endpoint, awaits parsing the JSON response, logs the result, and wraps both awaits in a try/catch that logs a friendly error on failure.');
       setSandboxConstraints('The function must be declared with the async keyword before it uses any await; both the fetch() call and the .json() parse must be individually awaited.');
       setSandboxInput('leaderboard endpoint URL');
       setSandboxEdgeCases('A broken or unreachable endpoint must be caught by the try/catch block and logged, not left to throw an uncaught exception.');
+      setL2s9ActiveExercise(1);
+      setL2s9CodeInput(L2S9_EXERCISES[0].preloaded);
+      setL2s9Logs([]);
+      setL2s9Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s10') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Write an async function submitScore(player, val) that POSTs a JSON body { player, score: val } to a scores endpoint with a Content-Type: application/json header, checks res.ok and throws if the submission failed, and catches/logs any network error.');
       setSandboxConstraints('The fetch options object must set method: "POST" and a Content-Type: application/json header; the request body must be passed through JSON.stringify() rather than a raw object.');
       setSandboxInput('player, score');
       setSandboxEdgeCases('An unreachable endpoint must be caught and logged as a warning instead of crashing the game; a malformed or oversized payload\'s error status must be surfaced, not swallowed.');
+      setL2s10ActiveExercise(1);
+      setL2s10CodeInput(L2S10_EXERCISES[0].preloaded);
+      setL2s10Logs([]);
+      setL2s10Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s11') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Create a colonist_scores table (id, player, score, wave_reached) with a primary key, insert two sample rows, then write a SELECT query filtering score > 4000 and ordering by score descending in the browser-based SQL playground.');
       setSandboxConstraints('Must declare id INT PRIMARY KEY; every UPDATE/DELETE must include a WHERE clause targeting a specific id, never applied to the whole table.');
       setSandboxInput('colonist_scores(id, player, score, wave_reached)');
       setSandboxEdgeCases('Running the query on an empty table must return zero rows without erroring; an UPDATE with no WHERE clause must be flagged before running.');
+      setL2s11ActiveExercise(1);
+      setL2s11CodeInput(L2S11_EXERCISES[0].preloaded);
+      setL2s11Logs([]);
+      setL2s11Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s12') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Given a concatenated SQL login query, identify why it is vulnerable to injection and rewrite it as a parameterized query, plus write a validation rule rejecting a score outside 0-1,000,000 before it reaches the database.');
       setSandboxConstraints('The rewritten query must use a placeholder (?), never string concatenation; the validation rule must reject out-of-range or non-numeric scores before they reach the query.');
       setSandboxInput('userInput, score');
       setSandboxEdgeCases('The hostile input \' OR \'1\'=\'1 must fail harmlessly against the parameterized version; a negative or non-numeric score must be rejected by the validation rule before it reaches the database.');
+      setL2s12ActiveExercise(1);
+      setL2s12CodeInput(L2S12_EXERCISES[0].preloaded);
+      setL2s12Logs([]);
+      setL2s12Success(false);
+      setSimConsoleLogs([]);
     } else if (session.id === 'l2-s13') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Compile your full Mars Colony Defense codebase (canvas init, sprites, input matrix, collision sweeps, async leaderboard, SQL queries) into one working build, and prepare to explain each module\'s role to the tutor without notes.');
       setSandboxConstraints('Every module (rendering, input, collision, API, database) must be independently explainable; no leftover console.log debug statements or dead variables from earlier sessions should remain in the final build.');
       setSandboxInput('full Level 2 codebase');
       setSandboxEdgeCases('The seeded diagnostic bug (an async handler, splice statement, or SQL issue) must be patched within the time limit, and at least 2 code design choices must be defended under tutor questioning.');
+      setL2s13ActiveExercise(1);
+      setL2s13CodeInput(L2S13_EXERCISES[0].preloaded);
+      setL2s13Logs([]);
+      setL2s13Success(false);
+      setSimConsoleLogs([]);
     } else {
       // Dynamic loading from CURRICULUM_DATA for all other sessions (L3/L4)
       setSandboxRole(session.level === 1 ? 'Logic Blueprint Architect' : session.level === 3 ? 'System Architect' : 'Software Engineer');
@@ -7529,8 +8779,998 @@ export default function App() {
                 </div>
               )}
 
+              {/* LEVEL 2 SESSION 5: ALIEN SWARMS & SHIELD GRIDS (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s5' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S5_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s5ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s5ActiveExercise(ex.num);
+                          setL2s5CodeInput(ex.preloaded);
+                          setL2s5Logs([]);
+                          setL2s5Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 5.{ex.num}{(exerciseProgress['l2-s5'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S5_EXERCISES[l2s5ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S5_EXERCISES[l2s5ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S5_EXERCISES[l2s5ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s5Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S5_EXERCISES[l2s5ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing swarm grid logic for Exercise 5.${l2s5ActiveExercise}...` }];
+                            const pass = ex.validate(l2s5CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s5Success(true);
+                              const prog = markExerciseComplete('l2-s5', l2s5ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 5 CHALLENGES COMPLETE! Swarm grid and shield systems online.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Grid or shield lookup logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s5Success(false);
+                            }
+                            setL2s5Logs(logs);
+                          }}
+                        >
+                          {l2s5Success ? '✓ Exercise Complete' : 'Verify Swarm Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s5CodeInput(L2S5_EXERCISES[l2s5ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s5CodeInput}
+                          onChange={(e) => setL2s5CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S5_EXERCISES[l2s5ActiveExercise - 1].runnable ? l2s5CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s5Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s5Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 6: FIRING CONTROL & COLLISION SWEEPS (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s6' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S6_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s6ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s6ActiveExercise(ex.num);
+                          setL2s6CodeInput(ex.preloaded);
+                          setL2s6Logs([]);
+                          setL2s6Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 6.{ex.num}{(exerciseProgress['l2-s6'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S6_EXERCISES[l2s6ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S6_EXERCISES[l2s6ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S6_EXERCISES[l2s6ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s6Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S6_EXERCISES[l2s6ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing input matrix / collision sweep logic for Exercise 6.${l2s6ActiveExercise}...` }];
+                            const pass = ex.validate(l2s6CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s6Success(true);
+                              const prog = markExerciseComplete('l2-s6', l2s6ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 6 CHALLENGES COMPLETE! Firing control and collision sweeps online.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Key-state or sweep logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s6Success(false);
+                            }
+                            setL2s6Logs(logs);
+                          }}
+                        >
+                          {l2s6Success ? '✓ Exercise Complete' : 'Verify Input/Sweep Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s6CodeInput(L2S6_EXERCISES[l2s6ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s6CodeInput}
+                          onChange={(e) => setL2s6CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S6_EXERCISES[l2s6ActiveExercise - 1].runnable ? l2s6CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s6Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s6Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 7: HUD GAUGES & PERFORMANCE AUDITS (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s7' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S7_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s7ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s7ActiveExercise(ex.num);
+                          setL2s7CodeInput(ex.preloaded);
+                          setL2s7Logs([]);
+                          setL2s7Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 7.{ex.num}{(exerciseProgress['l2-s7'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S7_EXERCISES[l2s7ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S7_EXERCISES[l2s7ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S7_EXERCISES[l2s7ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s7Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S7_EXERCISES[l2s7ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing HUD / performance audit logic for Exercise 7.${l2s7ActiveExercise}...` }];
+                            const pass = ex.validate(l2s7CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s7Success(true);
+                              const prog = markExerciseComplete('l2-s7', l2s7ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 7 CHALLENGES COMPLETE! HUD and wave systems online.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. HUD or wave-check logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s7Success(false);
+                            }
+                            setL2s7Logs(logs);
+                          }}
+                        >
+                          {l2s7Success ? '✓ Exercise Complete' : 'Verify HUD/Wave Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s7CodeInput(L2S7_EXERCISES[l2s7ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s7CodeInput}
+                          onChange={(e) => setL2s7CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S7_EXERCISES[l2s7ActiveExercise - 1].runnable ? l2s7CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s7Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s7Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 8: MISSION CONTROL UPLINK — HOW THE WEB WORKS (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s8' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S8_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s8ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s8ActiveExercise(ex.num);
+                          setL2s8CodeInput(ex.preloaded);
+                          setL2s8Logs([]);
+                          setL2s8Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 8.{ex.num}{(exerciseProgress['l2-s8'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S8_EXERCISES[l2s8ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S8_EXERCISES[l2s8ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S8_EXERCISES[l2s8ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s8Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S8_EXERCISES[l2s8ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Auditing request/response comprehension for Exercise 8.${l2s8ActiveExercise}...` }];
+                            const pass = ex.validate(l2s8CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s8Success(true);
+                              const prog = markExerciseComplete('l2-s8', l2s8ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 8 CHALLENGES COMPLETE! Mission Control uplink verified.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Answer is missing required detail.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s8Success(false);
+                            }
+                            setL2s8Logs(logs);
+                          }}
+                        >
+                          {l2s8Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s8CodeInput(L2S8_EXERCISES[l2s8ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Answer Editor (notes.txt)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s8CodeInput}
+                          onChange={(e) => setL2s8CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write your answer here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S8_EXERCISES[l2s8ActiveExercise - 1].runnable ? l2s8CodeInput : '// Session 8 is a comprehension exercise — no game code to run.\n// Answer in the editor and click Verify.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s8Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your answer and click Verify.</div>
+                          ) : [...l2s8Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 9: ASYNCHRONOUS TELEMETRY — FETCHING THE LEADERBOARD (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s9' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S9_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s9ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s9ActiveExercise(ex.num);
+                          setL2s9CodeInput(ex.preloaded);
+                          setL2s9Logs([]);
+                          setL2s9Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 9.{ex.num}{(exerciseProgress['l2-s9'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S9_EXERCISES[l2s9ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S9_EXERCISES[l2s9ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S9_EXERCISES[l2s9ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s9Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S9_EXERCISES[l2s9ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing async fetch logic for Exercise 9.${l2s9ActiveExercise}...` }];
+                            const pass = ex.validate(l2s9CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s9Success(true);
+                              const prog = markExerciseComplete('l2-s9', l2s9ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 9 CHALLENGES COMPLETE! Leaderboard telemetry link established.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Async/await or try/catch logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s9Success(false);
+                            }
+                            setL2s9Logs(logs);
+                          }}
+                        >
+                          {l2s9Success ? '✓ Exercise Complete' : 'Verify Fetch Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s9CodeInput(L2S9_EXERCISES[l2s9ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s9CodeInput}
+                          onChange={(e) => setL2s9CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S9_EXERCISES[l2s9ActiveExercise - 1].runnable ? l2s9CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s9Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s9Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 10: POST PAYLOADS & ERROR HANDLING (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s10' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S10_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s10ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s10ActiveExercise(ex.num);
+                          setL2s10CodeInput(ex.preloaded);
+                          setL2s10Logs([]);
+                          setL2s10Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 10.{ex.num}{(exerciseProgress['l2-s10'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S10_EXERCISES[l2s10ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S10_EXERCISES[l2s10ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S10_EXERCISES[l2s10ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s10Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S10_EXERCISES[l2s10ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing POST submission logic for Exercise 10.${l2s10ActiveExercise}...` }];
+                            const pass = ex.validate(l2s10CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s10Success(true);
+                              const prog = markExerciseComplete('l2-s10', l2s10ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 10 CHALLENGES COMPLETE! Score submission uplink verified.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. POST options or status-check logic missing.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s10Success(false);
+                            }
+                            setL2s10Logs(logs);
+                          }}
+                        >
+                          {l2s10Success ? '✓ Exercise Complete' : 'Verify Submission Logic'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s10CodeInput(L2S10_EXERCISES[l2s10ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s10CodeInput}
+                          onChange={(e) => setL2s10CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write JavaScript here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S10_EXERCISES[l2s10ActiveExercise - 1].runnable ? l2s10CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s10Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s10Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 11: THE COLONY DATA VAULT — TABLES, SCHEMAS & SQL QUERIES (SQL Sandbox) */}
+              {sandboxSessionId === 'l2-s11' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S11_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s11ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s11ActiveExercise(ex.num);
+                          setL2s11CodeInput(ex.preloaded);
+                          setL2s11Logs([]);
+                          setL2s11Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 11.{ex.num}{(exerciseProgress['l2-s11'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S11_EXERCISES[l2s11ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S11_EXERCISES[l2s11ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S11_EXERCISES[l2s11ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s11Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S11_EXERCISES[l2s11ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Auditing SQL schema/query for Exercise 11.${l2s11ActiveExercise}...` }];
+                            const pass = ex.validate(l2s11CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s11Success(true);
+                              const prog = markExerciseComplete('l2-s11', l2s11ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 11 CHALLENGES COMPLETE! Colony data vault schema online.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. SQL statement is missing required detail.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s11Success(false);
+                            }
+                            setL2s11Logs(logs);
+                          }}
+                        >
+                          {l2s11Success ? '✓ Exercise Complete' : 'Verify SQL'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s11CodeInput(L2S11_EXERCISES[l2s11ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>SQL Editor (query.sql)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s11CodeInput}
+                          onChange={(e) => setL2s11CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write your SQL here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>SQL Playground Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview('// Session 11 is a SQL exercise — no canvas code to run.\n// Write your SQL in the editor and click Verify.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="SQL Playground Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s11Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your SQL and click Verify.</div>
+                          ) : [...l2s11Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 12: DEFENDING THE DATA VAULT — VALIDATION, PASSWORDS & INJECTION AWARENESS (SQL Sandbox) */}
+              {sandboxSessionId === 'l2-s12' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S12_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s12ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s12ActiveExercise(ex.num);
+                          setL2s12CodeInput(ex.preloaded);
+                          setL2s12Logs([]);
+                          setL2s12Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 12.{ex.num}{(exerciseProgress['l2-s12'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S12_EXERCISES[l2s12ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S12_EXERCISES[l2s12ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S12_EXERCISES[l2s12ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s12Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S12_EXERCISES[l2s12ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Auditing validation/injection logic for Exercise 12.${l2s12ActiveExercise}...` }];
+                            const pass = ex.validate(l2s12CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s12Success(true);
+                              const prog = markExerciseComplete('l2-s12', l2s12ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 12 CHALLENGES COMPLETE! Trust boundary secured.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Answer or fix is missing required detail.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s12Success(false);
+                            }
+                            setL2s12Logs(logs);
+                          }}
+                        >
+                          {l2s12Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s12CodeInput(L2S12_EXERCISES[l2s12ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>SQL / Code Editor</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s12CodeInput}
+                          onChange={(e) => setL2s12CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write your answer, SQL, or JS here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S12_EXERCISES[l2s12ActiveExercise - 1].runnable ? l2s12CodeInput : '// This step is a plan/prompt/review/SQL exercise — nothing to run yet.\n// Jump to the "Test & Break" JS exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s12Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your answer and click Verify.</div>
+                          ) : [...l2s12Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* LEVEL 2 SESSION 13: GRADUATION SPRINT & LEVEL 2 DEFENSE (Canvas Sandbox) */}
+              {sandboxSessionId === 'l2-s13' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {L2S13_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${l2s13ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        onClick={() => {
+                          setL2s13ActiveExercise(ex.num);
+                          setL2s13CodeInput(ex.preloaded);
+                          setL2s13Logs([]);
+                          setL2s13Success(false);
+                          setSimConsoleLogs([]);
+                        }}
+                      >
+                        Ex 13.{ex.num}{(exerciseProgress['l2-s13'] || []).includes(ex.num) ? ' ✓' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="simulator-grid">
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{L2S13_EXERCISES[l2s13ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {L2S13_EXERCISES[l2s13ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {L2S13_EXERCISES[l2s13ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${l2s13Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = L2S13_EXERCISES[l2s13ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Running graduation diagnostic for Exercise 13.${l2s13ActiveExercise}...` }];
+                            const pass = ex.validate(l2s13CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              setL2s13Success(true);
+                              const prog = markExerciseComplete('l2-s13', l2s13ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 13 CHALLENGES COMPLETE! Level 2 Defense passed — cleared for Level 3.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Validation failed. Review the relevant earlier session and try again.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setL2s13Success(false);
+                            }
+                            setL2s13Logs(logs);
+                          }}
+                        >
+                          {l2s13Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s13CodeInput(L2S13_EXERCISES[l2s13ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-middle">
+                      <div className="panel-header">
+                        <h3>Code Editor (canvas.js)</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={l2s13CodeInput}
+                          onChange={(e) => setL2s13CodeInput(e.target.value)}
+                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
+                          placeholder="Write your answer here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="glass-panel sim-right">
+                      <div className="panel-header">
+                        <h3>Live Canvas Preview</h3>
+                      </div>
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <iframe
+                          srcDoc={buildCanvasSandboxPreview(L2S13_EXERCISES[l2s13ActiveExercise - 1].runnable ? l2s13CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="Canvas Sandbox Live Preview"
+                        />
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {[...l2s13Logs, ...simConsoleLogs].length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
+                          ) : [...l2s13Logs, ...simConsoleLogs].map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* STANDARD PROMPT SANDBOX FOR LEVEL 2-4 */}
-              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12', 'l2-s1', 'l2-s2', 'l2-s3', 'l2-s4'].includes(sandboxSessionId) && (
+              {!['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12', 'l2-s1', 'l2-s2', 'l2-s3', 'l2-s4', 'l2-s5', 'l2-s6', 'l2-s7', 'l2-s8', 'l2-s9', 'l2-s10', 'l2-s11', 'l2-s12', 'l2-s13'].includes(sandboxSessionId) && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '20px', height: '100%', width: '100%' }}>
                   <div className="glass-panel sandbox-left">
                     <div className="panel-header">

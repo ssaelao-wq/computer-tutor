@@ -7,9 +7,9 @@ ________________________________________________________________________________
 │ L1  │ verified            │ lines)               │ enriched with "Why It     │ ✅ Bespoke, 10/10 per session verified against doc                        │ ✅ Complete, correct shape    │
 │     │                     │                      │ Matters"                  │                                                                            │                               │
 ├─────┼─────────────────────┼──────────────────────┼───────────────────────────┼────────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
-│ L2  │ ✅ Complete,        │ ✅ Complete (2,295+  │ ✅ All 13 sessions,       │ ✅ Sessions 1-4 now bespoke (40 exercises, matches L1's model,             │ ✅ Complete, correct shape    │
-│     │ verified            │ lines), drift fixed  │ enriched                  │ canvas-based); Sessions 5-13 remain the generic AI Sandbox by design, with │                               │
-│     │                     │                      │                           │ correct per-session presets                                                │                               │
+│ L2  │ ✅ Complete,        │ ✅ Complete (2,295+  │ ✅ All 13 sessions,       │ ✅ All 13 sessions now bespoke (130 exercises total, matches L1's model);  │ ✅ Complete, correct shape    │
+│     │ verified            │ lines), drift fixed  │ enriched                  │ Sessions 1-10 & 13 are canvas/JS-based, Sessions 11-12 are SQL/text-based  │                               │
+│     │                     │                      │                           │ (same engine, non-runnable)                                                │                               │
 ├─────┼─────────────────────┼──────────────────────┼───────────────────────────┼────────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
 │     │ ✅ Complete (was   │ ✅ Newly written     │ ❌ Zero entries —        │ ⚠️ No bespoke exercises by design — generic AI Sandbox falls back to       │ ✅ Rewritten to match new     │
 │ L3  │ already correct)    │ (718 lines)          │ deferred                  │ curriculumData.js content, which is now accurate (no L3-specific presets   │ curriculum (was entirely      │
