@@ -7,103 +7,518 @@ import { PROJECT_TASKS } from './projectTasksData';
 // Curriculum Guide Concept Reference Database (reference lookup for students)
 const CONCEPT_REFERENCES = {
   'l1-s1': [
-    { 
-      name: "Input-Process-Output (IPO) Model", 
-      desc: "Core Definition:\n  The fundamental framework showing how computers handle data. All applications take inputs, transform them, and present outputs.\n\nDetailed Mechanics:\n  1. Input: Incoming triggers or sensor records (clicks, key presses, API streams).\n  2. Process: The logic controller executing sequence calculations and evaluations.\n  3. Output: Visual draws, updates to states, sound indicators, physical moves.\n\nClassroom Autopilot Project Example:\n  - Input: User presses the 'Up Arrow' key.\n  - Process: The engine computes state updates: newY = currentY - speed.\n  - Output: The HTML view changes the top/bottom coordinates of the car element.", 
-      keywords: "IPO model diagram, computing inputs processing outputs" 
+    {
+      name: "Input-Process-Output (IPO) Model",
+      desc: "Core Definition:\n  Every piece of software you will ever build — a game, a website, a chatbot — boils down to one repeating pattern: something comes IN, the program does work on it, and a result goes OUT. Nothing a computer does falls outside this loop; even one key press is a complete IPO cycle by itself.\n\nWhy It Matters:\n  Before writing a single line of JavaScript, IPO gives you a planning checklist: 'What triggers this? What has to be calculated or decided? What should the player see or hear as a result?' Answering those three questions in plain English before touching syntax is exactly the 'Plan & Design' step this course is built around.\n\nDetailed Mechanics:\n  1. Input: Incoming triggers or sensor records (clicks, key presses, API streams).\n  2. Process: The logic controller executing sequence calculations and evaluations.\n  3. Output: Visual draws, updates to states, sound indicators, physical moves.\n\nClassroom Autopilot Project Example:\n  - Input: User presses the 'Up Arrow' key.\n  - Process: The engine computes state updates: newY = currentY - speed.\n  - Output: The HTML view changes the top/bottom coordinates of the car element.",
+      keywords: "IPO model diagram, computing inputs processing outputs"
     },
-    { 
-      name: "Sequential Execution", 
-      desc: "Core Definition:\n  Instructions run step-by-step from top to bottom. Order is absolute.\n\nCommon Student Mistake:\n  Coding operations out of chronological order. For example, trying to drive forward before shifting the car out of park:\n\n  // ❌ INVALID SEQUENCE (Crashes/Fails Preconditions):\n  1. press_gas(); // Fails: Engine is not started yet!\n  2. start_engine();\n  3. shift_to_drive();\n\n  //  VALID SEQUENCE:\n  1. start_engine();\n  2. press_footbrake();\n  3. shift_to_drive();\n  4. release_handbrake();\n  5. press_gas();", 
-      keywords: "order of execution code step by step, sequential control flow" 
+    {
+      name: "Sequential Execution",
+      desc: "Core Definition:\n  A computer has no judgment about what 'should' happen next — it blindly runs line 1, then line 2, then line 3, in the exact order they are written. There is no skipping ahead or reading your intent; the order on the page IS the order of events.\n\nWhy It Matters:\n  This is why code that 'looks right' can still fail: the logic can be correct while the ORDER is wrong. Real-world procedures — starting a car, following a recipe, logging into an account — all have a required sequence, and code that models them must respect that sequence or it fails at exactly the step where something was skipped.\n\nCommon Student Mistake:\n  Coding operations out of chronological order. For example, trying to drive forward before shifting the car out of park:\n\n  // ❌ INVALID SEQUENCE (Crashes/Fails Preconditions):\n  1. press_gas(); // Fails: Engine is not started yet!\n  2. start_engine();\n  3. shift_to_drive();\n\n  //  VALID SEQUENCE:\n  1. start_engine();\n  2. press_footbrake();\n  3. shift_to_drive();\n  4. release_handbrake();\n  5. press_gas();",
+      keywords: "order of execution code step by step, sequential control flow"
     },
-    { 
-      name: "System Preconditions", 
-      desc: "Core Definition:\n  Mandatory starting states that must be true before a specific instruction is allowed to run. Preconditions act as gatekeepers to protect systems from crashes.\n\nCode Validation Logic:\n  Before starting autopilot sequence, systems check state values:\n  if (gearState !== \"PARK\") {\n    throw Error(\"Lockout Triggered: Shift to Park first!\");\n  }\n  if (!footBrakeDepressed) {\n    throw Error(\"Lockout Triggered: Brake pedal must be pressed!\");\n  }", 
-      keywords: "preconditions assertions contract validation code" 
+    {
+      name: "System Preconditions",
+      desc: "Core Definition:\n  A precondition is a fact about the system's state that MUST already be true before an instruction is allowed to run — a locked gate that checks your 'ticket' before letting an action through. Preconditions aren't optional style; skipping them is what lets a program crash or, worse, silently do the wrong thing.\n\nWhy It Matters:\n  Real systems are full of these gates: a car won't start in gear, a bank won't let you withdraw money you don't have, a game shouldn't let you fire a weapon before the level has loaded. Learning to ask 'what MUST be true right before this line runs?' is how you catch bugs while designing, instead of after a crash.\n\nCode Validation Logic:\n  Before starting autopilot sequence, systems check state values:\n  if (gearState !== \"PARK\") {\n    throw Error(\"Lockout Triggered: Shift to Park first!\");\n  }\n  if (!footBrakeDepressed) {\n    throw Error(\"Lockout Triggered: Brake pedal must be pressed!\");\n  }",
+      keywords: "preconditions assertions contract validation code"
     },
-    { 
-      name: "Variables as Storage Registers", 
-      desc: "Core Definition:\n  Named slots in memory that hold exactly one value. Assigning a value overrides whatever was there before.\n\nJavaScript Syntax Cheat Sheet:\n  let speed = 0;        // Declares a number variable\n  let isRunning = true; // Declares a boolean (true/false) variable\n  let driver = \"Agent\"; // Declares a string (text) variable\n\nHow Variables Change:\n  speed = 10;           // Overwrites old value. speed is now 10.\n  speed = speed + 5;    // Evaluates right side (10 + 5) first, then saves 15.", 
-      keywords: "declaring variables javascript let const data types" 
+    {
+      name: "Variables as Storage Registers",
+      desc: "Core Definition:\n  A variable is a named slot in the computer's memory that holds exactly one value at a time. Declaring let speed = 0; reserves a labeled box called speed that the rest of your program can read from and write to by name — you never have to track a raw memory address yourself.\n\nWhy It Matters:\n  Variables are how a program 'remembers' anything between one line and the next: the car's position, the player's score, whether the engine is running. Without them, every value would be a hardcoded literal and nothing could change while the program runs — variables are what make a program interactive instead of a fixed slideshow.\n\nJavaScript Syntax Cheat Sheet:\n  let speed = 0;        // Declares a number variable\n  let isRunning = true; // Declares a boolean (true/false) variable\n  let driver = \"Agent\"; // Declares a string (text) variable\n\nHow Variables Change:\n  speed = 10;           // Overwrites old value. speed is now 10.\n  speed = speed + 5;    // Evaluates right side (10 + 5) first, then saves 15.",
+      keywords: "declaring variables javascript let const data types"
     }
   ],
   'l1-s2': [
-    { 
-      name: "Document Object Model (DOM)", 
-      desc: "Core Definition:\n  The nested hierarchy representation of a web page. The browser translates your HTML code into a tree structure of visual boxes.\n\nVisual DOM Hierarchy:\n  - document (Root)\n    └─ <html>\n       └─ <body>\n          └─ <div id=\"track\"> (Parent container)\n             ├─ <div id=\"player-car\"></div> (Child container)\n             └─ <div class=\"lane-line\"></div> (Child container)", 
-      keywords: "browser DOM tree node hierarchy representation" 
+    {
+      name: "Document Object Model (DOM)",
+      desc: "Core Definition:\n  The Document Object Model is the browser's live, in-memory representation of your page — it takes the HTML you write and turns it into a tree of connected objects (nodes) that JavaScript can read and change while the page is running. What appears on screen is always a rendering of THIS tree, not of your original HTML file.\n\nWhy It Matters:\n  Every DOM lookup and style change you write in this course — document.getElementById(...), .style.left, .classList — is really just asking the browser 'find me this node in the tree' or 'change this node's properties.' Understanding the tree shape is what makes those calls make sense instead of feeling like memorized magic.\n\nVisual DOM Hierarchy:\n  - document (Root)\n    └─ <html>\n       └─ <body>\n          └─ <div id=\"track\"> (Parent container)\n             ├─ <div id=\"player-car\"></div> (Child container)\n             └─ <div class=\"lane-line\"></div> (Child container)",
+      keywords: "browser DOM tree node hierarchy representation"
     },
-    { 
+    {
       name: "HTML Tags and Element Syntax",
-      desc: "Core Definition:\n  Tags define the type and boundaries of visual components. Some tags are GENERIC (a blank box with no built-in meaning) and some are SEMANTIC (they describe what their content IS).\n\nCheat Sheet Elements:\n  - <div>: A GENERIC block-level container box. It has NO built-in look or meaning — it is raw material you shape with CSS. Used to build tracks, lanes, dashboards, or even a thin line.\n  - <section>: Also a container box, but SEMANTIC — it signals 'a distinct section of content' (e.g. a game arena or a scoreboard region). Use <section> when the grouping has meaning; use <div> when it is purely visual/structural. They look identical until styled.\n  - <span>: A GENERIC inline wrapper (sits inside a line of text) used to highlight one word or a live score number.\n  - <h2>: A SEMANTIC heading/title — screen readers announce it as a heading.\n\nWhy 'blank box' matters (the lane-divider):\n  We draw a lane line with <div class=\"lane-divider\"></div> because a line isn't 'a heading' or 'a paragraph' — it is purely visual. The <div> starts as an INVISIBLE empty box; CSS (width: 2px; height: 100%; dashed border) shapes it into the line. The tag is the raw material; the CSS is the shaping. This is why an unstyled empty div shows nothing.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - ✅ Correct: <div><span>Hello</span></div>\n  - ❌ Incorrect: <div><span>Hello</div></span> (causes render errors)",
-      keywords: "HTML element tags opening closing rules cheat sheet" 
+      desc: "Core Definition:\n  Tags define the type and boundaries of visual components. Some tags are GENERIC (a blank box with no built-in meaning) and some are SEMANTIC (they describe what their content IS).\n\nWhy It Matters:\n  Choosing the right tag is a design decision, not decoration. A SEMANTIC tag tells the browser, screen readers, and other developers what a piece of content actually means, while a GENERIC tag is a blank canvas you shape yourself. Using div for everything works visually but throws away meaning; forcing semantic tags onto things that have no meaning (like a decorative divider line) is the opposite mistake.\n\nCheat Sheet Elements:\n  - <div>: A GENERIC block-level container box. It has NO built-in look or meaning — it is raw material you shape with CSS. Used to build tracks, lanes, dashboards, or even a thin line.\n  - <section>: Also a container box, but SEMANTIC — it signals 'a distinct section of content' (e.g. a game arena or a scoreboard region). Use <section> when the grouping has meaning; use <div> when it is purely visual/structural. They look identical until styled.\n  - <span>: A GENERIC inline wrapper (sits inside a line of text) used to highlight one word or a live score number.\n  - <h2>: A SEMANTIC heading/title — screen readers announce it as a heading.\n\nWhy 'blank box' matters (the lane-divider):\n  We draw a lane line with <div class=\"lane-divider\"></div> because a line isn't 'a heading' or 'a paragraph' — it is purely visual. The <div> starts as an INVISIBLE empty box; CSS (width: 2px; height: 100%; dashed border) shapes it into the line. The tag is the raw material; the CSS is the shaping. This is why an unstyled empty div shows nothing.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - ✅ Correct: <div><span>Hello</span></div>\n  - ❌ Incorrect: <div><span>Hello</div></span> (causes render errors)",
+      keywords: "HTML element tags opening closing rules cheat sheet"
     },
-    { 
-      name: "Parent-Child Nesting Structure", 
-      desc: "Core Definition:\n  Nesting an element inside another makes it a child. The child exists relative to the boundaries of the parent.\n\nSyntax Blueprint:\n  <div id=\"highway-track\"> <!-- Parent Container -->\n    <div id=\"player-car\"></div> <!-- Child Element 1 -->\n    <div id=\"obstacle-car\"></div> <!-- Child Element 2 -->\n  </div>\n\nRule of Thumb:\n  If you hide, delete, or move a parent element, all of its children will hide, delete, or move with it.", 
-      keywords: "nesting HTML tags structure parent child DOM" 
+    {
+      name: "Parent-Child Nesting Structure",
+      desc: "Core Definition:\n  Nesting one element inside another makes it a CHILD of that PARENT — the child's position, size, and visibility are all measured and controlled relative to its parent's box, not the page as a whole.\n\nWhy It Matters:\n  This is the structural backbone every layout depends on: the racetrack <div> is the parent that all lanes, cars, and obstacles live inside. Get the nesting wrong — place the car outside the track container — and CSS positioning rules that assume 'relative to the track' silently break, because the car is no longer a child of that parent.\n\nSyntax Blueprint:\n  <div id=\"highway-track\"> <!-- Parent Container -->\n    <div id=\"player-car\"></div> <!-- Child Element 1 -->\n    <div id=\"obstacle-car\"></div> <!-- Child Element 2 -->\n  </div>\n\nRule of Thumb:\n  If you hide, delete, or move a parent element, all of its children will hide, delete, or move with it.",
+      keywords: "nesting HTML tags structure parent child DOM"
     },
-    { 
+    {
       name: "HTML Attributes (ID vs Class)",
-      desc: "Core Definition:\n  Attributes add identifiers and metadata to HTML elements. The two you use most are id and class — both NAME an element so CSS and JavaScript can find it, but they follow opposite rules.\n\nWhen to use which:\n  - ID (Unique): Used ONCE per page. It names one specific target.\n    HTML:  <div id=\"player-car\"></div>\n    CSS finds it with a hash:  #player-car { ... }\n  - Class (Reusable): SHARED by many elements that need the same styling/behavior.\n    HTML:  <div class=\"lane-divider\"></div>\n           <div class=\"lane-divider\"></div>\n    CSS finds them all with a dot:  .lane-divider { ... }\n\nWorked Example (why the track uses each):\n  - There is only ONE player car, so it gets id=\"player-car\".\n  - There are MANY lane dividers, so they share class=\"lane-divider\" and a SINGLE rule styles all of them at once. An id could not do this — an id must be unique.\n\nRule of Thumb:\n  id   = the ONE unique thing        (CSS selector: # )\n  class = a REPEATED category of things (CSS selector: . )",
+      desc: "Core Definition:\n  Attributes add identifiers and metadata to HTML elements. The two you use most are id and class — both NAME an element so CSS and JavaScript can find it, but they follow opposite rules.\n\nWhy It Matters:\n  Picking id vs class really means answering 'how many elements need this exact treatment?' Get it backwards — id on something repeated, or class on something meant to be unique — and later JavaScript lookups like getElementById will either fail to find duplicates or silently only ever touch the first match.\n\nWhen to use which:\n  - ID (Unique): Used ONCE per page. It names one specific target.\n    HTML:  <div id=\"player-car\"></div>\n    CSS finds it with a hash:  #player-car { ... }\n  - Class (Reusable): SHARED by many elements that need the same styling/behavior.\n    HTML:  <div class=\"lane-divider\"></div>\n           <div class=\"lane-divider\"></div>\n    CSS finds them all with a dot:  .lane-divider { ... }\n\nWorked Example (why the track uses each):\n  - There is only ONE player car, so it gets id=\"player-car\".\n  - There are MANY lane dividers, so they share class=\"lane-divider\" and a SINGLE rule styles all of them at once. An id could not do this — an id must be unique.\n\nRule of Thumb:\n  id   = the ONE unique thing        (CSS selector: # )\n  class = a REPEATED category of things (CSS selector: . )",
       keywords: "HTML attributes difference id vs class selector" 
     }
   ],
   'l1-s3': [
-    { 
-      name: "CSS Selectors and Specificity Rules", 
-      desc: "Core Definition:\n  Selectors tell the browser which HTML elements to apply styles to. Specificity decides which styling rule wins if there is a conflict.\n\nSyntax Cheat Sheet:\n  - Target by Tag (low priority): div { background: grey; }\n  - Target by Class (med priority): .obstacle { background: red; }\n  - Target by ID (high priority): #player-car { background: blue; }\n\nRule:\n  If a class selector says a car is red, but its ID selector says it is blue, it will render blue because ID selectors override classes.", 
-      keywords: "CSS selectors specificity hierarchy overrides" 
+    {
+      name: "CSS Selectors and Specificity Rules",
+      desc: "Core Definition:\n  Selectors tell the browser which HTML elements to apply styles to. Specificity decides which styling rule wins if there is a conflict.\n\nWhy It Matters:\n  CSS rules for the same element often come from different places — a base stylesheet, a shared class, an ID rule — and conflicts are inevitable in any real project. Specificity is the tie-breaking rulebook the browser follows every single time, so instead of guessing why a style 'isn't applying,' you can calculate exactly which rule should win.\n\nSyntax Cheat Sheet:\n  - Target by Tag (low priority): div { background: grey; }\n  - Target by Class (med priority): .obstacle { background: red; }\n  - Target by ID (high priority): #player-car { background: blue; }\n\nRule:\n  If a class selector says a car is red, but its ID selector says it is blue, it will render blue because ID selectors override classes.",
+      keywords: "CSS selectors specificity hierarchy overrides"
     },
-    { 
-      name: "CSS Box Model", 
-      desc: "Core Definition:\n  Every element on a web page is treated as a rectangular box consisting of four layers.\n\nVisual Layout Blueprint:\n  ┌──────────────────────────────────────────────┐\n  │ MARGIN (Outer space around the element)      │\n  │  ┌────────────────────────────────────────┐  │\n  │  │ BORDER (The element outline line)      │  │\n  │  │  ┌──────────────────────────────────┐  │  │\n  │  │  │ PADDING (Inner clear space)      │  │  │\n  │  │  │  ┌────────────────────────────┐  │  │  │\n  │  │  │  │ CONTENT (Text/Car image)   │  │  │  │\n  │  │  │  └────────────────────────────┘  │  │  │\n  │  │  └──────────────────────────────────┘  │  │\n  │  └────────────────────────────────────────┘  │\n  └──────────────────────────────────────────────┘\n\nBest Practice:\n  Always set box-sizing: border-box; so that padding doesn't swell the final width.", 
-      keywords: "CSS box model margins borders padding box sizing" 
+    {
+      name: "CSS Box Model",
+      desc: "Core Definition:\n  Every element on a web page is treated as a rectangular box consisting of four layers.\n\nWhy It Matters:\n  Almost every 'why is this element a different size than I expected' bug traces back to the box model. Padding and border ADD to an element's rendered size by default — a 100px-wide box with 20px of padding actually takes up 140px on screen — which is why professional stylesheets almost always opt into border-box sizing to make width mean 'total width' instead of 'content width'.\n\nVisual Layout Blueprint:\n  ┌──────────────────────────────────────────────┐\n  │ MARGIN (Outer space around the element)      │\n  │  ┌────────────────────────────────────────┐  │\n  │  │ BORDER (The element outline line)      │  │\n  │  │  ┌──────────────────────────────────┐  │  │\n  │  │  │ PADDING (Inner clear space)      │  │  │\n  │  │  │  ┌────────────────────────────┐  │  │  │\n  │  │  │  │ CONTENT (Text/Car image)   │  │  │  │\n  │  │  │  └────────────────────────────┘  │  │  │\n  │  │  └──────────────────────────────────┘  │  │\n  │  └────────────────────────────────────────┘  │\n  └──────────────────────────────────────────────┘\n\nBest Practice:\n  Always set box-sizing: border-box; so that padding doesn't swell the final width.",
+      keywords: "CSS box model margins borders padding box sizing"
     },
-    { 
-      name: "Absolute vs. Relative Positioning", 
-      desc: "Core Definition:\n  Controls coordinate-based layouts so we can position elements freely (like overlaying obstacles onto a racetrack grid).\n\nLayout Blueprint:\n  - Parent element must be relative: anchors coordinates.\n  - Child element must be absolute: moves coordinates relative to parent.\n\nCSS Syntax:\n  #game-arena { \n    position: relative; \n    width: 300px; height: 500px; \n  }\n  #player-car { \n    position: absolute; \n    left: 120px;   /* X-coordinate from left edge */\n    bottom: 10px;  /* Y-coordinate from bottom edge */\n    width: 60px; height: 100px; \n  }", 
-      keywords: "absolute coordinates layout CSS position absolute" 
+    {
+      name: "Absolute vs. Relative Positioning",
+      desc: "Core Definition:\n  Controls coordinate-based layouts so we can position elements freely (like overlaying obstacles onto a racetrack grid).\n\nWhy It Matters:\n  This is the exact mechanism the racing game uses to place cars and obstacles at pixel-precise coordinates instead of letting the normal top-to-bottom document flow decide where they land. Setting position: absolute without a relative parent doesn't throw an error — the element quietly anchors to the whole page instead of the game arena, which is why the parent-relative/child-absolute pairing is a strict rule, not a suggestion.\n\nLayout Blueprint:\n  - Parent element must be relative: anchors coordinates.\n  - Child element must be absolute: moves coordinates relative to parent.\n\nCSS Syntax:\n  #game-arena { \n    position: relative; \n    width: 300px; height: 500px; \n  }\n  #player-car { \n    position: absolute; \n    left: 120px;   /* X-coordinate from left edge */\n    bottom: 10px;  /* Y-coordinate from bottom edge */\n    width: 60px; height: 100px; \n  }",
+      keywords: "absolute coordinates layout CSS position absolute"
     },
-    { 
-      name: "CSS Flexbox Layouts", 
-      desc: "Core Definition:\n  A layout engine to align lists of elements in a row or column automatically.\n\nSyntax Blueprint:\n  .dashboard-hud {\n    display: flex;\n    flex-direction: row;        /* Align horizontal list */\n    justify-content: space-around; /* Distribute elements evenly */\n    align-items: center;        /* Vertically center elements */\n  }", 
-      keywords: "CSS flexbox cheat sheet justify content align items" 
+    {
+      name: "CSS Flexbox Layouts",
+      desc: "Core Definition:\n  A layout engine to align lists of elements in a row or column automatically.\n\nWhy It Matters:\n  Before flexbox, evenly spacing and centering a row of elements required fragile manual pixel math that broke the moment content changed size. Flexbox lets you describe the RESULT you want — 'evenly spaced,' 'vertically centered' — and the browser computes the exact positions itself, which is what keeps a HUD's speed, score, and lives readouts aligned no matter the screen width.\n\nSyntax Blueprint:\n  .dashboard-hud {\n    display: flex;\n    flex-direction: row;        /* Align horizontal list */\n    justify-content: space-around; /* Distribute elements evenly */\n    align-items: center;        /* Vertically center elements */\n  }",
+      keywords: "CSS flexbox cheat sheet justify content align items"
     }
   ],
   'l1-s4': [
-    { 
-      name: "Conditional Statements (If-Else branching)", 
-      desc: "Core Definition:\n  Allows the computer to run different blocks of code based on whether a condition is true or false.\n\nJavaScript Syntax Blueprint:\n  if (speed > 100) {\n    alert(\"Danger: Speed threshold exceeded!\");\n  } else if (speed > 60) {\n    alert(\"Cruising speed reached.\");\n  } else {\n    alert(\"Vehicle slow or stopped.\");\n  }\n\nKey Rule:\n  The computer checks these conditions from top-to-bottom. The first one that evaluates to true is run, and the rest are ignored.", 
-      keywords: "javascript if else if syntax conditional code blocks" 
+    {
+      name: "Variable Declarations (let vs. const)",
+      desc: "Core Definition:\n  Variables are named boxes in memory that hold one value. Choose the keyword by whether the value ever changes.\n\nWhy It Matters:\n  const is not just a style preference — it is a signal to anyone reading your code (including future you) that this value is a fixed rule of the game, not something the logic will change. If something later tries to reassign a const, the browser throws an error immediately at that exact line, turning a potential silent bug into an instant, loud one.\n\nWhen to use which:\n  - let  = a value that CHANGES during play (reassignable).\n    let carX = 165;   // the car moves, so carX changes\n    let score = 0;    // the score climbs\n  - const = a value FIXED for the whole game (cannot be reassigned).\n    const LANE_WIDTH = 130;  // lanes never resize\n\nRule of Thumb:\n  Default to const; switch to let only when you actually need to reassign. Reassigning a const throws an error.",
+      keywords: "javascript let const difference declaring variables"
     },
-    { 
-      name: "Logical Operators (AND, OR, NOT)", 
-      desc: "Core Definition:\n  Operators used to link multiple checks inside conditional statements.\n\nOperators Cheat Sheet:\n  - AND (&&): Both sides must be true.\n    if (gearState === \"DRIVE\" && footbrakeReleased === true) { ... }\n  - OR (||): At least one side must be true.\n    if (sensorAlertActive || manualEmergencyPressed) { ... }\n  - NOT (!): Inverts true to false, or false to true.\n    if (!engineRunning) { startEngine(); }", 
-      keywords: "javascript logical operators AND OR NOT syntax boolean" 
+    {
+      name: "Primitive Data Types (Number, String, Boolean)",
+      desc: "Core Definition:\n  The type of a value decides what the computer can do with it. Three primitives power the racing game.\n\nWhy It Matters:\n  Every value in JavaScript carries a type, and operators behave completely differently depending on it — + adds Numbers but glues Strings together instead. Mixing up a Number with a String that LOOKS like a number is one of the most common beginner bugs, because JavaScript does not stop you or throw an error; it just silently performs the wrong operation.\n\nCheat Sheet:\n  - Number  (no quotes): let speed = 10;      // math works: speed + 5 = 15\n  - String  (in quotes): let label = \"Speed\"; // text, joined with +\n  - Boolean (true/false): let gameActive = false; // a yes/no switch\n\nThe Quoted-Number Trap:\n  let speed = \"10\";   // LOOKS like 10, but it is a String\n  speed += 5;         // result is \"105\" (text glued), NOT 15\n  Remove the quotes so the browser does math instead of concatenation.",
+      keywords: "javascript data types number string boolean typeof"
     },
-    { 
-      name: "Logical Priority and Overrides", 
-      desc: "Core Definition:\n  Designing condition hierarchies so that safety triggers are evaluated before routine operations.\n\nOrder Priority Pitfall:\n  If you check normal inputs before emergency triggers, the emergency triggers will be ignored!\n\n  // ❌ INCORRECT (Car accelerates even if emergency brake is pressed):\n  if (gasPedalPressed) { speed += 5; }\n  else if (emergencyHaltActive) { speed = 0; }\n\n  // ✅ CORRECT (Emergency override evaluated first):\n  if (emergencyHaltActive) { speed = 0; }\n  else if (gasPedalPressed) { speed += 5; }", 
-      keywords: "condition overrides precedence safety priority programming" 
+    {
+      name: "Assignment & Arithmetic Operators",
+      desc: "Core Definition:\n  Operators read the right-hand side first, then write the result back into the variable.\n\nWhy It Matters:\n  Nearly every piece of game-state math — moving a car, adding score, draining health — is one of these operators applied to a variable that already holds a value. Understanding that the right side is evaluated FIRST, using the OLD value, before the new value is stored back is what makes speed += 10 (and not some other order) actually make sense.\n\nCheat Sheet:\n  =    assign:      score = 0;\n  +=   add & store: speed += 10;   // speed = speed + 10\n  ++   increment:   score++;       // score = score + 1\n  -=   subtract:    carX -= 130;   // move one lane left\n\nWhy order matters:\n  In score = score + 1, the browser computes score + 1 FIRST, then stores it. This is why speed += 10 depends on speed already being a Number.",
+      keywords: "javascript assignment operators increment plus equals"
     }
   ],
   'l1-s5': [
+    {
+      name: "Event-Driven Programming (addEventListener)",
+      desc: "Core Definition:\n  Instead of running top-to-bottom once, event-driven code waits and reacts. A listener runs your function every time an action happens.\n\nWhy It Matters:\n  This is a fundamentally different execution model from Session 1's sequential, top-to-bottom code — an event listener does not run at a predictable moment, it runs whenever the browser decides the event happened, which could be zero times or a thousand times. Nearly everything interactive in a real application (buttons, forms, games) is built on this reactive pattern instead of a single top-to-bottom script.\n\nSyntax Blueprint:\n  window.addEventListener(\"keydown\", function(event) {\n    // this block runs on EVERY key press\n  });\n\nWhy the window scope:\n  Binding to window catches key presses anywhere on the page, so the car responds no matter what is focused.",
+      keywords: "javascript addEventListener keydown event driven"
+    },
+    {
+      name: "The Event Object (event.key)",
+      desc: "Core Definition:\n  When a listener fires, the browser hands your function an event object describing what happened. For keys, event.key holds the exact key name.\n\nWhy It Matters:\n  The event object is the ONLY way your code learns which key, button, or element triggered the listener — without reading event.key, a single keydown listener would have no way to tell an ArrowLeft press from a Spacebar press. Because the key names are exact, case-sensitive strings defined by the browser (not something you invent), a single typo silently breaks the match with no error message at all.\n\nExact Key Strings (case-sensitive!):\n  - Left arrow  -> \"ArrowLeft\"   (NOT \"left\")\n  - Right arrow -> \"ArrowRight\"\n  - Spacebar    -> \" \"          (a single space, NOT \"Space\")\n\nCommon Bug:\n  if (event.key === \"left\") { ... }  // never true; nothing happens, no error\n  Use the exact string \"ArrowLeft\" so the comparison can match.",
+      keywords: "javascript event.key ArrowLeft keyboard event object"
+    },
+    {
+      name: "Reflecting State to the DOM (style.left)",
+      desc: "Core Definition:\n  Changing a variable only updates memory. To MOVE the car on screen you must write the new value into the element's style.\n\nWhy It Matters:\n  This is the bridge between Session 1's variables (memory) and Session 2's DOM (what the player sees) — the two are never automatically connected. A variable can change a thousand times in memory, but the car will not visually move a single pixel until you explicitly write that value into the element's style. Forgetting this step is the single most common reason a beginner's 'working' logic produces zero visible effect on screen.\n\nSyntax:\n  let carEl = document.getElementById(\"player-car\");\n  carEl.style.left = carX + \"px\";   // note the \"px\" unit!\n\nThe Missing-Unit Bug:\n  carEl.style.left = carX;   // 165 with no unit is invalid CSS -> ignored\n  CSS position values need a unit, so concatenate \"px\" to make \"165px\".",
+      keywords: "javascript style.left px unit DOM update getElementById"
+    }
+  ],
+  'l1-s6': [
+    {
+      name: "Conditional Statements (If-Else branching)",
+      desc: "Core Definition:\n  Allows the computer to run different blocks of code based on whether a condition is true or false.\n\nWhy It Matters:\n  This is the first tool in the course that lets a program make a DECISION instead of just executing a fixed sequence — every boundary check, win/lose condition, and safety guard in the racing game depends on if/else. Without conditionals, code can only ever do the exact same thing regardless of what state the game is currently in.\n\nJavaScript Syntax Blueprint:\n  if (speed > 100) {\n    alert(\"Danger: Speed threshold exceeded!\");\n  } else if (speed > 60) {\n    alert(\"Cruising speed reached.\");\n  } else {\n    alert(\"Vehicle slow or stopped.\");\n  }\n\nKey Rule:\n  The computer checks these conditions from top-to-bottom. The first one that evaluates to true is run, and the rest are ignored.", 
+      keywords: "javascript if else if syntax conditional code blocks" 
+    },
     { 
-      name: "Loop Structures (For vs. While)", 
-      desc: "Core Definition:\n  Loops repeat a block of code multiple times without rewriting it manually.\n\nWhen to use which:\n  - For Loop (Counting): Use when you know exactly how many times to repeat.\n    for (let i = 0; i < 5; i++) {\n      // Runs 5 times (i starts at 0, goes up to 4)\n      spawnObstacle();\n    }\n  - While Loop (Condition-bound): Use when repeating based on a status condition.\n    while (fuelGallons > 0) {\n      consumeFuel();\n      fuelGallons--; // Ensure condition changes!\n    }", 
+      name: "Logical Operators (AND, OR, NOT)",
+      desc: "Core Definition:\n  Operators used to link multiple checks inside conditional statements.\n\nWhy It Matters:\n  Real conditions are rarely a single check — 'can the car move' depends on the gear AND the brake being released at the same moment. Logical operators let one if statement express a compound rule directly, instead of nesting several separate if statements inside each other, which quickly becomes hard to read and easy to get wrong.\n\nOperators Cheat Sheet:\n  - AND (&&): Both sides must be true.\n    if (gearState === \"DRIVE\" && footbrakeReleased === true) { ... }\n  - OR (||): At least one side must be true.\n    if (sensorAlertActive || manualEmergencyPressed) { ... }\n  - NOT (!): Inverts true to false, or false to true.\n    if (!engineRunning) { startEngine(); }", 
+      keywords: "javascript logical operators AND OR NOT syntax boolean" 
+    },
+    { 
+      name: "Logical Priority and Overrides",
+      desc: "Core Definition:\n  Designing condition hierarchies so that safety triggers are evaluated before routine operations.\n\nWhy It Matters:\n  An if/else if chain stops at the FIRST condition that is true, so the ORDER you write branches in is itself a design decision, not just style. Placing a low-priority check before a safety-critical one means the safety check can be skipped entirely on frames where both would be true — this is the same 'order of checks' idea as Session 1's preconditions, now applied to branching logic.\n\nOrder Priority Pitfall:\n  If you check normal inputs before emergency triggers, the emergency triggers will be ignored!\n\n  // ❌ INCORRECT (Car accelerates even if emergency brake is pressed):\n  if (gasPedalPressed) { speed += 5; }\n  else if (emergencyHaltActive) { speed = 0; }\n\n  // ✅ CORRECT (Emergency override evaluated first):\n  if (emergencyHaltActive) { speed = 0; }\n  else if (gasPedalPressed) { speed += 5; }", 
+      keywords: "condition overrides precedence safety priority programming" 
+    }
+  ],
+  'l1-s7': [
+    {
+      name: "Loop Structures (For vs. While)",
+      desc: "Core Definition:\n  Loops repeat a block of code multiple times without rewriting it manually.\n\nWhy It Matters:\n  Loops are what make code scale — spawning 20 obstacles by copy-pasting one line 20 times is exactly the kind of repetition programming exists to eliminate. Choosing for vs while is really answering 'do I know the exact repeat count in advance, or am I repeating until some condition changes' — picking the wrong one makes the loop awkward to write correctly.\n\nWhen to use which:\n  - For Loop (Counting): Use when you know exactly how many times to repeat.\n    for (let i = 0; i < 5; i++) {\n      // Runs 5 times (i starts at 0, goes up to 4)\n      spawnObstacle();\n    }\n  - While Loop (Condition-bound): Use when repeating based on a status condition.\n    while (fuelGallons > 0) {\n      consumeFuel();\n      fuelGallons--; // Ensure condition changes!\n    }", 
       keywords: "for loop syntax javascript, while loop code templates" 
     },
     { 
-      name: "Infinite Loop Traps & CPU Lockouts", 
-      desc: "Core Definition:\n  A severe logic error where a loop's condition never becomes false. The computer runs the loop infinitely, freezing the browser.\n\nCommon Loop Bug:\n  let counter = 0;\n  while (counter < 5) {\n    console.log(\"Executing...\");\n    // ❌ Error: forgot 'counter++;'. counter is always 0. Loop never exits!\n  }\n\nRules to Prevent CPU Lockouts:\n  1. Double check that your check variable updates inside the loop body.\n  2. Ensure the check moves closer to the loop exit threshold on each run.", 
+      name: "Infinite Loop Traps & CPU Lockouts",
+      desc: "Core Definition:\n  A severe logic error where a loop's condition never becomes false. The computer runs the loop infinitely, freezing the browser.\n\nWhy It Matters:\n  This is the most dangerous class of bug you will meet so far, because it does not crash with a helpful error message — it freezes the entire browser tab, sometimes the whole computer, with zero feedback about why. Every loop you write needs an honest answer to 'what exactly makes this condition eventually become false?' before you ever run it.\n\nCommon Loop Bug:\n  let counter = 0;\n  while (counter < 5) {\n    console.log(\"Executing...\");\n    // ❌ Error: forgot 'counter++;'. counter is always 0. Loop never exits!\n  }\n\nRules to Prevent CPU Lockouts:\n  1. Double check that your check variable updates inside the loop body.\n  2. Ensure the check moves closer to the loop exit threshold on each run.", 
       keywords: "browser tab freezes loop error, infinite loop exit conditions" 
     },
     { 
-      name: "Loop Controls (Break and Increments)", 
-      desc: "Core Definition:\n  Controls that let you change loop behaviors mid-flight.\n\nKeywords Cheat Sheet:\n  - Increment (e.g. i++): Shorthand for i = i + 1. Shifts the loop state forward.\n  - Break: Instantly exits the loop, skipping any remaining cycles.\n\nJavaScript Syntax:\n  for (let i = 0; i < 10; i++) {\n    if (collisionDetected) {\n      break; // Stop running immediately\n    }\n    moveObstacles();\n  }", 
-      keywords: "break statement javascript loop, loop counter increment syntax" 
+      name: "Loop Controls (Break and Increments)",
+      desc: "Core Definition:\n  Controls that let you change loop behaviors mid-flight.\n\nWhy It Matters:\n  break gives a loop an emergency exit that isn't tied to its normal counting condition — essential for something like collision detection, where you want to stop checking the instant a hit is found instead of wasting time checking everything else. This is the loop-level version of the early-return pattern you will see again with functions.\n\nKeywords Cheat Sheet:\n  - Increment (e.g. i++): Shorthand for i = i + 1. Shifts the loop state forward.\n  - Break: Instantly exits the loop, skipping any remaining cycles.\n\nJavaScript Syntax:\n  for (let i = 0; i < 10; i++) {\n    if (collisionDetected) {\n      break; // Stop running immediately\n    }\n    moveObstacles();\n  }", 
+      keywords: "break statement javascript loop, loop counter increment syntax"
+    }
+  ],
+  'l1-s8': [
+    {
+      name: "Function Declarations & Parameters",
+      desc: "Core Definition:\n  A function packages a repeatable action under a name you can call whenever needed.\n\nWhy It Matters:\n  Functions are how you turn Session 1's 'process' step into a reusable, named tool instead of retyping the same block of logic everywhere it is needed. Anywhere the exact same steps are needed more than once — moving the car, scoring a hit — a function means fixing a bug in ONE place instead of hunting down every copy of it.\n\nSyntax Blueprint:\n  function updatePlayerPosition() {           // 0 parameters\n    document.getElementById(\"player-car\").style.left = carX + \"px\";\n  }\n  function calculateScore(distance, mult) {   // 2 parameters\n    return distance * mult;                    // hands a value back\n  }\n\nCall it by name:\n  updatePlayerPosition();\n  let s = calculateScore(100, 2);  // s is 200",
+      keywords: "javascript function declaration parameters return call"
+    },
+    {
+      name: "Global vs. Local Scope",
+      desc: "Core Definition:\n  Where you DECLARE a variable decides who can see it.\n\nWhy It Matters:\n  Scope is what makes the shared-state bug below possible in the first place — two functions that each declare their own local carX are NOT sharing a car position at all, they are silently working with two completely separate variables that happen to have the same name. This is one of the most confusing bug classes for beginners precisely because the code looks correct and runs without any error.\n\nThe Rule:\n  - Declared OUTSIDE all functions = GLOBAL: every function can read/change it.\n  - Declared INSIDE a function = LOCAL: only that function can see it; it vanishes when the function ends.\n\nThe Scope Bug:\n  function moveLeft() { let carX = 165; carX -= 130; }  // local carX\n  function render()  { console.log(carX); }             // logs undefined!\n  Both functions must share ONE carX declared once in the outer scope.",
+      keywords: "javascript scope global local variable undefined"
+    },
+    {
+      name: "Modular Design (single-purpose functions)",
+      desc: "Core Definition:\n  Split one long script into small functions that each do ONE job. Fewer copies of a line means fewer places for a bug to hide.\n\nWhy It Matters:\n  This is the practical payoff of everything learned so far — functions, scope, and parameters combine into a codebase where each piece has one clear job. A tangled script with logic copy-pasted in three places means every bug fix has to be applied three times, and it's easy to miss one; small single-purpose functions mean a fix in one place is a fix everywhere it's used.\n\nWhy it pays off:\n  - A shared updatePlayerPosition() is fixed once, not in every branch.\n  - moveLeft() / moveRight() clamp their own boundary, then call the shared renderer.\n  - The keydown handler just calls moveLeft()/moveRight() by name.\n\nReadability = maintainability: a reviewer with 10 minutes understands small, well-named functions far faster than one tangled block.",
+      keywords: "javascript modular functions refactor single responsibility"
+    }
+  ],
+  'l1-s9': [
+    {
+      name: "The Game Loop (requestAnimationFrame)",
+      desc: "Core Definition:\n  A game is an animation: each frame updates state, redraws, then books the next frame. requestAnimationFrame runs your function about 60 times per second, in sync with the screen.\n\nWhy It Matters:\n  requestAnimationFrame ties your update logic to the SCREEN's own refresh rate instead of an arbitrary timer, which is why the animation stays smooth and battery-friendly (the browser automatically pauses it on a hidden tab). This is also the course's first real encounter with recursion — a function scheduling itself to run again — a pattern that reappears anywhere work needs to repeat indefinitely rather than a fixed number of times.\n\nRecursion Blueprint:\n  function gameLoop() {\n    moveObstacles();\n    requestAnimationFrame(gameLoop);  // schedule the NEXT frame\n  }\n  gameLoop();  // kick it off once\n\nThe last line is what makes it a loop — remove it and the game updates once, then freezes.",
+      keywords: "javascript requestAnimationFrame game loop recursion 60fps"
+    },
+    {
+      name: "The gameActive Gate",
+      desc: "Core Definition:\n  A single Boolean decides whether the loop keeps running. Check it at the top of every frame and return early when the game is over.\n\nWhy It Matters:\n  A recursive loop has no natural stopping point unless you give it one — requestAnimationFrame will keep calling gameLoop forever unless a condition inside it explicitly refuses to schedule the next frame. gameActive is that single source of truth: every other system (score display, restart button) can check the same flag instead of each needing its own separate logic for 'is the game currently running.'\n\nSyntax:\n  function gameLoop() {\n    if (!gameActive) { return; }   // stop: do not schedule another frame\n    moveObstacles();\n    requestAnimationFrame(gameLoop);\n  }\n\nWithout this gate, 'Game Over' is impossible — positions keep updating forever.",
+      keywords: "javascript game state flag boolean loop halt"
+    },
+    {
+      name: "Frame Updates & Wrap-Around Reset",
+      desc: "Core Definition:\n  Each frame nudges the obstacle down by speed; once it passes the bottom it wraps back to the top and scores a point.\n\nWhy It Matters:\n  This is the animation trick behind every endless-scroller: instead of creating a new obstacle object for every pass — which would grow an array forever, foreshadowing Level 2's memory-leak lessons — one obstacle is recycled by resetting its position once it exits the screen. The order matters: checking the wrap BEFORE moving, or placing the score increment outside the reset block, would silently miscount passes.\n\nSyntax:\n  obstacleY += speed;            // scroll down\n  if (obstacleY > 500) {         // passed the bottom (track height)\n    obstacleY = -100;            // respawn above the top\n    score += 10;                 // a pass is worth points\n  }\n\nThe score increment must live INSIDE the reset block — passing an obstacle is what earns the points.",
+      keywords: "javascript animation coordinate update wrap reset score"
+    }
+  ],
+  'l1-s10': [
+    {
+      name: "Axis-Aligned Bounding Box (AABB) Overlap",
+      desc: "Core Definition:\n  Two rectangles overlap only when they overlap on BOTH axes at once. The check is four edge comparisons joined by &&.\n\nWhy It Matters:\n  This is the mathematical foundation for every 'did two things touch' check you will write, in this game and beyond — it works identically whether the boxes are cars, UI buttons, or bullets and enemies in a completely different game. Because all four comparisons are joined with &&, ALL must be true simultaneously; overlap on only three of the four edges still means the boxes are apart.\n\nThe Formula:\n  function checkCollision(a, b) {\n    return (\n      a.x < b.x + b.width  &&   // a's left  is past b's right?\n      a.x + a.width > b.x  &&   // a's right is past b's left?\n      a.y < b.y + b.height &&   // a's top   is past b's bottom?\n      a.y + a.height > b.y      // a's bottom is past b's top?\n    );\n  }\n\nFlip even one operator and the combined && can never be true — collisions silently never fire.",
+      keywords: "AABB collision detection bounding box overlap javascript"
+    },
+    {
+      name: "Why Dimensions Matter",
+      desc: "Core Definition:\n  Comparing only center points (player.x === obstacle.x) almost never matches — two moving cars rarely share the exact same pixel. You must compare the box EDGES, which means using width and height.\n\nWhy It Matters:\n  A point has no size, so comparing two points for equality is really asking 'are these two objects occupying the exact same single pixel,' which almost never happens even during a real collision. Real collision detection has to reason about the SPACE each object occupies, not just its anchor coordinate — which is exactly what AABB's four edge comparisons do.\n\nBox from position + size:\n  const player = { x: carX, y: 380, width: 60, height: 100 };  // real car size\n  Each edge is x/y plus the width/height, so the overlap test is size-aware, not point-based.",
+      keywords: "collision width height bounding box center point"
+    },
+    {
+      name: "Wiring Collision into the Loop",
+      desc: "Core Definition:\n  Detecting a crash is useless unless something happens. Call the check each frame and end the game on a hit.\n\nWhy It Matters:\n  This session closes the loop between having a check (this session's checkCollision formula) and having it actually matter — the collision check has to be actively invoked once per frame inside gameLoop, and its result has to actually change game state (Session 9's gameActive gate), or the 'crash' is purely theoretical and nothing on screen ever reacts to it.\n\nSyntax (inside gameLoop):\n  if (checkCollision(player, obstacle)) {\n    gameActive = false;              // stops the loop (Session 9 gate)\n    console.log(\"Collision detected!\");\n  }\n\nThis is what turns 'they touched' into 'game over'.",
+      keywords: "collision game loop gameActive game over trigger"
+    }
+  ],
+  'l1-s11': [
+    {
+      name: "textContent vs. innerHTML (safety)",
+      desc: "Core Definition:\n  Both write into an element, but they treat the input differently.\n\nWhy It Matters:\n  Real applications regularly display data that ultimately came from a user — a username, a chat message, a saved score — and innerHTML will happily execute any <script> tag hiding inside that data, a real attack called Cross-Site Scripting (XSS). textContent can never do this, because it treats absolutely everything as literal text, never as markup to render.\n\nThe Difference:\n  - textContent: writes PLAIN TEXT. Safe and fast.\n    document.getElementById(\"score-val\").textContent = score;\n  - innerHTML: PARSES the input as HTML, so untrusted data could inject and run a <script>.\n\nRule: for a plain value like a score, always prefer textContent — no injection risk, no HTML parsing cost.",
+      keywords: "textContent innerHTML script injection XSS safe DOM"
+    },
+    {
+      name: "Toggling Visibility with a .hidden Class",
+      desc: "Core Definition:\n  Show or hide panels by adding/removing a CSS class, not by creating or destroying elements. The restart panel already exists in the HTML, hidden by .hidden { display: none; }.\n\nWhy It Matters:\n  This reuses the exact id/class system from Session 2 for a new purpose: instead of building or destroying DOM elements at runtime — slower, and easy to lose track of — you keep every UI panel permanently in the HTML and simply flip whether CSS is hiding it. It is cheaper, and it means the game-over panel's content never has to be rebuilt from scratch.\n\nSyntax:\n  el.classList.remove(\"hidden\");  // reveal the game-over panel\n  el.classList.add(\"hidden\");     // hide it again on restart\n\nAs long as the class is on the element it stays invisible — forgetting to remove it leaves the game-over screen stuck.",
+      keywords: "javascript classList hidden class toggle visibility display none"
+    },
+    {
+      name: "Defensive Output Guards",
+      desc: "Core Definition:\n  Clamp a value to something sensible BEFORE writing it to the screen, so bad math never shows the player a broken UI.\n\nWhy It Matters:\n  This is the same preconditions mindset from Session 1, now applied to OUTPUT instead of input — before a value reaches the screen, check whether it is still sensible. A restart button that resets score but forgets carX or gameActive produces a UI that LOOKS reset while the underlying game state is still broken, which is a uniquely confusing bug to track down because the visible symptom (a frozen car) does not obviously point back to the restart handler.\n\nSyntax:\n  if (score < 0) { score = 0; }                 // no negative scores\n  document.getElementById(\"score-val\").textContent = score;\n\n'Never trust the value, guard the output' — the restart handler must also reset every piece of state (score, car position, gameActive) or the game looks reset but will not move.",
+      keywords: "javascript defensive check clamp validation negative score"
+    }
+  ],
+  'l1-s12': [
+    {
+      name: "The CONFIG Object (no magic numbers)",
+      desc: "Core Definition:\n  Gather every tunable number into one object so the game's feel can be retuned by editing a single place instead of hunting through the code.\n\nWhy It Matters:\n  This is Session 8's modular-design idea applied to DATA instead of functions — as a project grows across many sessions, the same tunable number (a speed, a boundary, a threshold) tends to get referenced in several places. A single named CONFIG object means retuning the whole game's feel is a one-line edit instead of a search-and-hope across hundreds of lines.\n\nSyntax:\n  const CONFIG = {\n    startSpeed: 5,\n    difficultyMultiplier: 0.1,\n    maxSpeed: 15,\n    leftBound: 35,\n    rightBound: 295\n  };\n  if (carX > CONFIG.leftBound) { carX -= 130; }  // reads from config, not a literal\n\nScattered 'magic numbers' are hard to find and change; a config object gives each one a named home.",
+      keywords: "javascript config object magic numbers constants maintainable"
+    },
+    {
+      name: "Difficulty Scaling with a Clamp",
+      desc: "Core Definition:\n  Difficulty should ramp with score but never become impossible, so cap it with Math.min.\n\nWhy It Matters:\n  Any formula that scales with an unbounded input — score can climb forever — will eventually produce an absurd or unplayable result unless something caps it. Math.min is the general-purpose 'never exceed this ceiling' tool, useful anywhere a value trends upward without a natural stopping point, not just for game speed.\n\nSyntax:\n  let speed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;\n  speed = Math.min(speed, CONFIG.maxSpeed);   // never exceed the ceiling\n\nOrder of operations: the multiply runs before the add (5 + 50*0.1 = 10). The clamp is the same idea as Session 6's boundary guard, now sourced from CONFIG.",
+      keywords: "javascript Math.min clamp difficulty scaling max speed"
+    },
+    {
+      name: "Smoke Tests & Regression QA",
+      desc: "Core Definition:\n  A final QA pass verifies EVERY system still works, not just the last thing you touched: variables, boundaries, collision, restart.\n\nWhy It Matters:\n  A finished project accumulates many small interacting systems — movement, collision, scoring, restart — and fixing one late-session bug can easily and silently break an earlier one. A smoke-test checklist re-verifies the WHOLE system rather than just the newest feature, which is the same discipline behind this course's 'Test & Break It' step, now applied to the finished project as a whole.\n\nSmoke test idea:\n  console.log(\"Boundary:\", carX >= 35 && carX <= 295 ? \"PASS\" : \"FAIL\");\n  A regression shows up as a visible FAIL line instead of a silent break.\n\nWatch for inconsistent operators (> in one place, >= in another) — the rare edge-case gaps an adversarial 'Malicious QA Officer' will hunt for.",
+      keywords: "smoke test regression QA console.log pass fail boundary"
+    }
+  ],
+  'l2-s1': [
+    {
+      name: "Canvas vs. DOM Rendering (Immediate vs. Retained Mode)",
+      desc: "Core Definition:\n  The DOM keeps a tree of persistent elements the browser remembers and re-paints for you (retained mode) — an L1 <div> stays on screen until you change its CSS. A <canvas> has no memory of what it drew: it is a raw grid of pixels, and YOU issue draw commands every frame to put color there (immediate mode). Nothing is remembered between frames.\n\nWhy this changes everything:\n  - DOM: document.getElementById(\"player-car\").style.left = carX + \"px\"; — the browser tracks the element and moves it.\n  - Canvas: ctx.fillRect(ship.x, ship.y, ship.width, ship.height); — this paints pixels ONCE. If you don't redraw next frame, the ship is just a static picture, not an object you can look up later.\n\nRule of Thumb:\n  On canvas there is no 'the ship element' to select — only x/y numbers in your own object and the pixels you painted from them.",
+      keywords: "canvas vs dom immediate mode retained mode rendering"
+    },
+    {
+      name: "Getting the 2D Context",
+      desc: "Core Definition:\n  Before you can draw anything, you need a reference to the <canvas> element AND a 'drawing context' object that exposes the actual draw methods.\n\nWhy It Matters:\n  This one-time setup is the gateway to everything else in Level 2 — every single draw call from here on starts with ctx., so a typo or a missing getContext(\"2d\") call means nothing downstream can run, usually surfacing as a confusing 'ctx is undefined' error before any game code even executes.\n\nSyntax Cheat Sheet:\n  <canvas id=\"defense-arena\" width=\"480\" height=\"600\"></canvas>\n\n  const canvas = document.getElementById(\"defense-arena\");\n  const ctx = canvas.getContext(\"2d\");   // ctx is the toolbox: fillRect, clearRect, etc.\n\nWhy Two Variables:\n  canvas is the HTML element (used for width/height); ctx is the pen you actually draw with. Almost every draw call in the game will be ctx.something(...), never canvas.something(...).",
+      keywords: "canvas getContext 2d javascript setup width height"
+    },
+    {
+      name: "Drawing Primitives (fillRect, fillStyle, strokeRect)",
+      desc: "Core Definition:\n  Canvas has no shape elements — you draw rectangles directly onto the pixel grid with coordinate and size arguments.\n\nWhy It Matters:\n  fillRect and fillStyle are the entire vocabulary for putting color on screen in Level 2 — there is no <div> or CSS class to fall back on. Every shape in the game, from the ship to the shield blocks to the aliens, is built from nothing but these two calls repeated with different coordinates.\n\nSyntax Blueprint:\n  ctx.fillStyle = \"#22cc88\";                 // set the paint color BEFORE drawing\n  ctx.fillRect(x, y, width, height);          // solid filled rectangle (e.g. a shield block)\n  ctx.strokeStyle = \"#ffffff\";\n  ctx.strokeRect(x, y, width, height);        // outline-only rectangle\n\nWorked Example (a shield block):\n  ctx.fillStyle = \"#22cc88\";\n  ctx.fillRect(200, 500, 40, 40);   // paints a 40x40 green block at (200, 500)\n\nOrder Matters:\n  fillStyle must be set BEFORE fillRect is called — it colors whatever you draw next, not what you already drew.",
+      keywords: "canvas fillRect fillStyle strokeRect draw rectangle"
+    },
+    {
+      name: "clearRect and the Ghost-Trail Bug",
+      desc: "Core Definition:\n  Because canvas never erases itself automatically, every new frame's drawing PILES ON TOP of the last one unless you clear the pixels first.\n\nCommon Mistake Comparison:\n  // ❌ WRONG (no clear — draws pile up into a smear trail):\n  function gameLoop() {\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n    ship.x += ship.speed;\n    requestAnimationFrame(gameLoop);\n  }\n\n  // ✅ CORRECT (clear the whole canvas first, then draw):\n  function gameLoop() {\n    ctx.clearRect(0, 0, canvas.width, canvas.height);   // wipe last frame's pixels\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n    ship.x += ship.speed;\n    requestAnimationFrame(gameLoop);\n  }\n\nRule of Thumb:\n  clearRect must run FIRST in every frame, before any fillRect calls, or the ship leaves a solid streak instead of appearing to move.",
+      keywords: "canvas clearRect ghost trail smear bug animation loop"
+    }
+  ],
+  'l2-s2': [
+    {
+      name: "Sprite Object Literals",
+      desc: "Core Definition:\n  A sprite bundles all of an on-screen entity's properties (position, size, speed) into one object literal, so canvas code always has a single source of truth to read from and write to.\n\nSyntax Blueprint:\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n\n  console.log(ship.x);      // reads the current x (200)\n  ship.x = ship.x + 10;     // writes a new x back onto the same object\n\nWhy an object instead of five loose variables:\n  Passing one ship object into a draw or move function is far cleaner than passing shipX, shipY, shipWidth, shipHeight, shipSpeed separately — and every property travels together.",
+      keywords: "javascript object literal properties dot notation sprite"
+    },
+    {
+      name: "Mutating Object Properties per Frame",
+      desc: "Core Definition:\n  Each frame, movement and rendering both read/write the SAME sprite object's properties — moving it means changing a number stored on the object, then drawing from that same object.\n\nSyntax Blueprint:\n  ship.x += ship.speed;    // update position in memory\n  ctx.fillRect(ship.x, ship.y, ship.width, ship.height);  // draw from the SAME object's current values\n\nWhy Order Matters:\n  If you draw before updating, the ship appears to lag one frame behind its real position. Update the object's numbers first, then paint from them.",
+      keywords: "javascript object property mutation increment canvas draw"
+    },
+    {
+      name: "Variable Shadowing Bug",
+      desc: "Core Definition:\n  Declaring a new variable with the SAME name inside a nested block (like an event handler) creates a separate, local variable that hides — 'shadows' — the outer one. Code inside that block now silently reads/writes the wrong copy.\n\nWhy It Matters:\n  This bug is dangerous specifically because it produces no error at all — the code runs, the handler fires, a value even changes — just on the wrong copy of the object. It is the sprite-object version of Level 1's global/local scope lesson, and it is exactly the kind of bug that forces you to trace WHERE a variable was declared, not just what its name is.\n\nCommon Mistake Comparison:\n  // ❌ WRONG (re-declares ship inside the handler — shadows the global):\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n  window.addEventListener(\"keydown\", function(event) {\n    let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };  // NEW local ship!\n    if (event.key === \"ArrowLeft\") { ship.x -= ship.speed; }         // changes the LOCAL copy only\n  });\n  // The global ship never moves — the game loop keeps drawing the untouched original.\n\n  // ✅ CORRECT (reuse the existing global ship, don't re-declare it):\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \"ArrowLeft\") { ship.x -= ship.speed; }         // mutates the ONE shared object\n  });\n\nRule of Thumb:\n  Never re-declare a sprite variable with let/const inside a function that should be updating the outer one — assign to its properties instead.",
+      keywords: "javascript variable shadowing let scope bug silent fail"
+    }
+  ],
+  'l2-s3': [
+    {
+      name: "Arrays as Ordered Lists (push, pop, length, index)",
+      desc: "Core Definition:\n  An array holds multiple values in one ordered, numbered list — perfect for tracking however many lasers happen to be on screen at once, instead of one variable per laser.\n\nWhy It Matters:\n  A racing game (Level 1) only ever had ONE car, so a single variable was enough. The moment a game needs an unpredictable NUMBER of things on screen at once — however many lasers are currently in flight — a single variable can't represent that, and an array becomes the only workable structure.\n\nSyntax Cheat Sheet:\n  let lasers = [];                    // starts empty\n  lasers.push({ x: ship.x, y: ship.y });  // adds a new laser object to the END of the list\n  lasers.length;                      // how many lasers currently exist\n  lasers[0];                          // the FIRST laser (arrays are zero-indexed)\n  lasers.pop();                       // removes the LAST laser\n\nWorked Example (fire on spacebar):\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \" \") {\n      lasers.push({ x: ship.x, y: ship.y });  // spawn a laser object at the ship's position\n    }\n  });",
+      keywords: "javascript array push pop length index syntax"
+    },
+    {
+      name: "Looping Over Sprite Arrays",
+      desc: "Core Definition:\n  A single sprite object needs no loop, but a LIST of sprites (lasers) needs a loop to touch every item once per frame — updating position and drawing each one.\n\nSyntax Blueprint:\n  for (let i = 0; i < lasers.length; i++) {\n    lasers[i].y -= 7;                                       // move this laser up\n    ctx.fillRect(lasers[i].x, lasers[i].y, 4, 10);           // draw this laser\n  }\n\nWhy lasers.length and not a fixed number:\n  The array can grow (new lasers pushed) or shrink (old ones removed) at any time, so the loop must re-check .length rather than hard-coding e.g. 'i < 3'.",
+      keywords: "javascript for loop array iteration update draw"
+    },
+    {
+      name: "Spawning Objects on Events",
+      desc: "Core Definition:\n  A keypress event is the TRIGGER; the RESPONSE is building a brand-new object literal and pushing it into the tracking array — the same push()-on-event pattern used for any spawned entity.\n\nWhy It Matters:\n  This is the same 'event triggers a response' pattern from Level 1's keydown listener, but the response is now 'grow a collection' instead of 'change one variable.' Recognizing push()-on-event as its own reusable pattern is what lets you spawn any kind of entity — particles, pickups, enemies — later without relearning the idea from scratch.\n\nSyntax Blueprint:\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \" \") {\n      lasers.push({ x: ship.x, y: ship.y });   // new object literal, pushed into the array\n    }\n  });\n\nThe Key-Repeat Stutter Issue:\n  A plain keydown listener only fires once per press, then repeats after the OS's key-repeat delay — so held-down fire feels laggy and stuttery rather than a smooth stream of lasers. Fixing this needs a continuous held-key state (tracked separately, not solved by keydown alone) — a technique covered in a later session.",
+      keywords: "javascript keydown event push spawn object keyrepeat stutter"
+    }
+  ],
+  'l2-s4': [
+    {
+      name: "Off-Screen Detection (laser.y < 0)",
+      desc: "Core Definition:\n  A laser that has scrolled above the top of the canvas is doing nothing useful — checking its y coordinate against a bound is the RULE that decides when it should be removed.\n\nSyntax Blueprint:\n  if (lasers[i].y < 0) {\n    // this laser has left the visible canvas — mark it for cleanup\n  }\n\nWhy This Matters:\n  Without a bounds check, there is no signal telling the game a laser is 'done' — it would keep existing in the array and keep being looped over and drawn (off-screen, wastefully) forever.",
+      keywords: "javascript bounds check off screen coordinate y less than"
+    },
+    {
+      name: "splice() and the Index-Shift Trap",
+      desc: "Core Definition:\n  array.splice(index, 1) removes one element and immediately shifts every element AFTER it down by one index. Looping FORWARD while splicing causes the loop to skip the element that just slid into the current index.\n\nWhy It Matters:\n  This bug is easy to miss in testing because it doesn't crash or throw — it just quietly skips cleanup on roughly every other stale entry, so the array shrinks more slowly than it should. Reverse iteration whenever a loop might splice its own array is a rule worth memorizing outright, because the bug it prevents is silent.\n\nCommon Mistake Comparison:\n  // ❌ WRONG (forward loop — skips an element after a splice):\n  for (let i = 0; i < lasers.length; i++) {\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);   // element at i+1 shifts down to i, but i++ skips over it next pass\n    }\n  }\n\n  // ✅ CORRECT (reverse loop — safe because shifted indices are already behind i):\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);   // removing here only shifts indices we've ALREADY processed\n    }\n  }\n\nRule of Thumb:\n  Whenever a loop might splice() out of the SAME array it is iterating, count DOWN from length - 1 to 0.",
+      keywords: "javascript array splice index shift bug reverse loop"
+    },
+    {
+      name: "Memory Leaks from Unbounded Arrays",
+      desc: "Core Definition:\n  If dead/off-screen lasers are never spliced out, the lasers array only ever grows — every frame's loop has more and more stale entries to iterate over and draw, even though they are invisible.\n\nWhy Frames Slow Down:\n  for (let i = lasers.length - 1; i >= 0; i--) { ... }   // cost scales with array length\n  An array that grows unbounded means this loop (and the draw calls inside it) does more work every single frame, even for objects that produce nothing on screen — eventually the frame rate visibly drops.\n\nRule of Thumb:\n  Every spawn (push) needs a matching cleanup path (splice) or the array — and the work per frame — only ever grows.",
+      keywords: "javascript memory leak unbounded array performance frame rate"
+    }
+  ],
+  'l2-s5': [
+    {
+      name: "2D Arrays (Rows of Arrays)",
+      desc: "Core Definition:\n  A 2D array is an array whose elements are themselves arrays — a grid of rows and columns. grid[row][col] reads the array at index 'row', then reads index 'col' inside it.\n\nWhy It Matters:\n  A flat array (Session 3's lasers list) works when entities have no meaningful position relative to each other. An alien swarm is different — it has ROWS and COLUMNS that matter for spawning, marching, and later collision — and a 2D array is the direct data-shape match for that grid structure, rather than trying to fake rows and columns with math on a flat list.\n\nVisual Grid Mapped to Coordinates:\n  grid[0] -> [ 1, 1, 1, 1 ]   row 0\n  grid[1] -> [ 1, 1, 1, 1 ]   row 1\n  grid[2] -> [ 1, 1, 1, 1 ]   row 2\n\n  grid[1][2] -> the alien in row 1, column 2\n\nSyntax:\n  let grid = [\n    [1, 1, 1, 1],\n    [1, 1, 1, 1],\n    [1, 1, 1, 1]\n  ];\n  grid[1][2];  // reads row 1, column 2",
+      keywords: "javascript 2d array grid rows columns nested array access"
+    },
+    {
+      name: "Nested Loops (Drawing Every Alien)",
+      desc: "Core Definition:\n  To visit every cell of a 2D array, wrap one loop inside another: the outer loop walks rows, the inner loop walks columns.\n\nSyntax Blueprint:\n  for (let row = 0; row < grid.length; row++) {\n    for (let col = 0; col < grid[row].length; col++) {\n      if (grid[row][col] === 1) {\n        let x = col * cellWidth;\n        let y = row * cellHeight;\n        ctx.fillRect(x, y, alienWidth, alienHeight);\n      }\n    }\n  }\n\nWhy both loops matter:\n  The outer loop alone only ever reaches one row; the inner loop alone has no row to read from. Together they touch every [row][col] pair exactly once.",
+      keywords: "nested for loop 2d array javascript double loop grid"
+    },
+    {
+      name: "March-and-Bounce Boundary Logic",
+      desc: "Core Definition:\n  Each frame nudges the whole alien grid sideways by direction * speed. When any alien reaches a screen edge, flip direction and drop every alien down one step.\n\nWhy It Matters:\n  This is Level 1's boundary-clamp idea (Session 6) applied to a whole GROUP instead of one car — the direction flips for every alien at once, which is what makes the swarm feel like one coordinated unit rather than individually bouncing sprites. Checking the group's outer edge, not any single alien's position, is the detail that keeps the whole formation in sync.\n\nCheat Sheet:\n  alienX += direction * speed;   // direction is 1 (right) or -1 (left)\n\n  if (alienX > CONFIG.rightEdge || alienX < CONFIG.leftEdge) {\n    direction *= -1;              // reverse marching direction\n    for (let row = 0; row < grid.length; row++) {\n      for (let col = 0; col < grid[row].length; col++) {\n        alienYOffsets[row][col] += CONFIG.dropDistance;  // drop all y\n      }\n    }\n  }\n\nCommon Mistake:\n  Checking the edge using only one alien's x instead of the whole group's outer bound — some aliens bounce while others keep marching off-screen.",
+      keywords: "javascript bounce boundary direction reverse sprite edge detection"
+    },
+    {
+      name: "Grids as State (0 = Empty, 1 = Full)",
+      desc: "Core Definition:\n  A destructible shield is a 2D array of small cells, where each cell's number represents whether it is still solid. 1 means the cell blocks lasers; 0 means it has already been shot away.\n\nWhy It Matters:\n  This reuses the exact same 2D-array shape as the alien grid, but the NUMBERS mean something different — not 'is there an alien here' but 'is this cell still solid.' Recognizing that a grid can represent any yes/no state per cell (alive/dead, solid/destroyed, visited/unvisited) is a far more reusable idea than memorizing 'shields use a grid.'\n\nVisual:\n  shieldGrid = [\n    [1, 1, 1, 1],\n    [1, 1, 1, 1],\n    [0, 1, 1, 0]   // corners already destroyed\n  ];\n\nDrawing only renders cells still equal to 1; a laser hit sets its cell to 0 so it disappears from both the render loop and the collision check.",
+      keywords: "javascript grid array state destructible shield 0 1"
+    },
+    {
+      name: "Coordinate-to-Index Mapping",
+      desc: "Core Definition:\n  Lasers move in absolute pixel coordinates (x, y), but the shield is stored as row/col grid indices starting at the shield's own on-screen offset — not at pixel 0. To find which cell a laser hit, subtract the shield's starting offset first, then divide by the size of one cell and round down.\n\nWhy It Matters:\n  Two completely different coordinate systems are in play at once — pixels for rendering, grid indices for storage — and every hit-test has to convert between them correctly. This exact pixel-to-cell conversion pattern reappears anywhere a game overlays a logical grid on top of a pixel-based canvas, not just for shields.\n\nFormula:\n  col = Math.floor((laserX - shieldOffsetX) / cellWidth);\n  row = Math.floor((laserY - shieldOffsetY) / cellHeight);\n\nWorked Example:\n  laserX = 145, shieldOffsetX = 30, cellWidth = 50\n  col = Math.floor((145 - 30) / 50) = Math.floor(2.3) = 2   // hits the 3rd column (index 2)\n\nMath.floor is required — without it, 2.3 would not match any whole cell index. Skipping the offset subtraction is the classic bug here: it silently shifts every laser's hit-test by however many pixels the shield is offset from the canvas edge.",
+      keywords: "javascript coordinate to grid index math.floor pixel to cell offset"
+    },
+    {
+      name: "Out-of-Bounds Index Guards",
+      desc: "Core Definition:\n  Math.floor(laserX / cellWidth) can produce an index outside the grid entirely if a laser is off to the side or the shield is smaller than the canvas. Reading grid[row][col] at an invalid index doesn't throw an error — it silently returns undefined.\n\nWhy It Matters:\n  JavaScript's refusal to error on an out-of-bounds array read is a trap, not a convenience — undefined quietly fails every === comparison, so bugs like this hide behind 'nothing happened' instead of a stack trace. Any time a coordinate is converted into an index (this session, and again for any tile-based system later), that index needs to be validated before it's trusted.\n\nCommon Mistake — The Invincible Shields:\n  // ❌ No bounds check:\n  if (shieldGrid[row][col] === 1) { ... }\n  // if col is -1 or too large, this reads undefined; undefined === 1 is false,\n  // so the laser is never detected as blocked — it silently passes through.\n\n  // ✅ Guarded:\n  if (row >= 0 && row < shieldGrid.length &&\n      col >= 0 && col < shieldGrid[0].length &&\n      shieldGrid[row][col] === 1) {\n    shieldGrid[row][col] = 0;   // destroy the cell\n  }\n\nRule:\n  Always validate row/col are inside the array's bounds BEFORE reading them.",
+      keywords: "javascript array index out of bounds undefined guard check"
+    }
+  ],
+  'l2-s6': [
+    {
+      name: "Why Single keydown Listeners Fail",
+      desc: "Core Definition:\n  A single addEventListener(\"keydown\", ...) only tells you the LAST key pressed at a given instant. It cannot represent two keys held down at once (steering left while holding fire), because each keydown event fires and finishes independently.\n\nThe Problem:\n  window.addEventListener(\"keydown\", function(e) {\n    if (e.key === \"ArrowLeft\") { moveLeft(); }\n    if (e.key === \" \") { fireLaser(); }\n  });\n  // Holding ArrowLeft AND pressing Space: there is no shared memory of what is\n  // currently held down, so the handler only ever reacts to whichever event just fired.\n\nWhy it matters:\n  A real player needs to strafe AND fire in the same frame; a bare keydown handler has no persistent state to check 'is ArrowLeft still held' while handling Space.",
+      keywords: "javascript keydown multiple keys at once simultaneous input"
+    },
+    {
+      name: "The keysPressed Map (Key-State Object)",
+      desc: "Core Definition:\n  Store the held/released status of every key in one object, keysPressed. keydown sets the key's value to true; keyup sets it back to false. The game loop reads this object every frame instead of relying on the event itself.\n\nWhy It Matters:\n  This is the fix for the previous concept's problem: instead of reacting to individual key EVENTS, the game loop now reads a persistent STATE object every frame, which is how it can see multiple keys held simultaneously. This event-to-state pattern — record it when it happens, read it continuously elsewhere — reappears constantly in real applications (tracking mouse position, tracking connection status).\n\nSyntax Blueprint:\n  let keysPressed = {};\n\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  window.addEventListener(\"keyup\", function(e) {\n    keysPressed[e.key] = false;\n  });\n\n  // inside the game loop:\n  if (keysPressed[\"ArrowLeft\"]) { moveLeft(); }\n  if (keysPressed[\" \"]) { fireLaser(); }\n\nCommon Mistake Comparison — The Firing Spam Lock:\n  // ❌ WRONG (keydown only — no keyup listener):\n  let keysPressed = {};\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  // keysPressed[\" \"] is now stuck true FOREVER once pressed — nothing ever resets it\n  if (keysPressed[\" \"]) { fireLaser(); }   // fires every single frame, forever\n\n  // ✅ CORRECT (keyup resets the flag on release):\n  let keysPressed = {};\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  window.addEventListener(\"keyup\", function(e) {\n    keysPressed[e.key] = false;   // clears the flag the instant the key is released\n  });\n  if (keysPressed[\" \"]) { fireLaser(); }   // only true while Space is actually held down",
+      keywords: "javascript keysPressed object keydown keyup state map"
+    },
+    {
+      name: "Cooldown Timers / Rate Limiting",
+      desc: "Core Definition:\n  Even with correct key-state tracking, checking keysPressed[\" \"] every frame at 60fps would fire dozens of lasers per second. A cooldown timer enforces a minimum gap between allowed actions.\n\nWhy It Matters:\n  Fixing 'multiple keys at once' (the keysPressed map) immediately exposes a new problem — holding a key now means the condition is true for 16+ frames in a row, not one. A cooldown timer is the general solution anywhere an action is allowed to happen, but only at some maximum rate, which is why the same pattern later reappears for rate-limiting server requests.\n\nSyntax Blueprint:\n  let lastFireTime = 0;\n  const FIRE_COOLDOWN_MS = 300;\n\n  function tryFire(now) {\n    if (keysPressed[\" \"] && now - lastFireTime > FIRE_COOLDOWN_MS) {\n      spawnLaser();\n      lastFireTime = now;\n    }\n  }\n\nSame Pattern Elsewhere:\n  This is the same idea as rate-limiting a login form — both cap how often one action can repeat inside a time window, closing off a hold-the-key (or brute-force-retry) exploit.",
+      keywords: "javascript rate limiting cooldown timer timestamp throttle input"
+    },
+    {
+      name: "AABB Overlap on Canvas Sprites",
+      desc: "Core Definition:\n  Canvas sprites (lasers, aliens) are plain JS objects with x, y, width, height properties — there is no DOM element or CSS box to inspect, so overlap is computed purely with math using the same four-comparison rule as any bounding box check.\n\nWhy It Matters:\n  This proves the AABB formula from Level 1 was never really about the DOM — it is pure math over positions and sizes, which is why it transfers unchanged onto plain objects with no visual element behind them at all. Any two things that can be described as a box (x, y, width, height) can use this exact test, canvas or not.\n\nThe Grid Stays a Grid — Aliens Get an alive Flag:\n  Session 5's aliens[row][col] grid is NOT flattened for collision. Removing a dead alien from the middle of a 2D grid would corrupt every other cell's row/col indexing, so instead each alien object gets an extra alive property. A hit sets aliens[row][col].alive = false instead of deleting the object — the grid's shape never changes, only its contents.\n\nFormula:\n  function checkCollision(a, b) {\n    return (\n      a.x < b.x + b.width &&\n      a.x + a.width > b.x &&\n      a.y < b.y + b.height &&\n      a.y + a.height > b.y\n    );\n  }\n  // a = laser sprite { x, y, width, height }, b = alien sprite { x, y, width, height, alive }\n\nThis is the same AABB test used for DOM game objects, just applied to canvas sprite data instead of getBoundingClientRect() — there's no rect to read, you track width/height yourself in the object.",
+      keywords: "canvas sprite collision AABB bounding box overlap javascript"
+    },
+    {
+      name: "Double-Iteration Sweep (Lasers x Alien Grid)",
+      desc: "Core Definition:\n  To find every collision between two moving collections, loop over one INSIDE a loop over the other — every laser is checked against every still-alive alien in the grid.\n\nWhy It Matters:\n  A single collision check (Level 1) only ever compared two fixed objects; this session's real challenge is that BOTH sides are now collections of unknown size. Nesting loops — one collection inside another — is the standard way to compare every pair across two groups, and it's the same shape you'd reach for with any many-to-many comparison, not just lasers and aliens.\n\nBlueprint:\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    for (let row = 0; row < aliens.length; row++) {\n      for (let col = 0; col < aliens[row].length; col++) {\n        const alien = aliens[row][col];\n        if (alien.alive && checkCollision(lasers[i], alien)) {\n          lasers.splice(i, 1);      // remove the laser (a flat array, safe to splice)\n          alien.alive = false;      // keep the grid cell, just mark it dead\n          score += 50;\n          break;                     // stop checking this laser against more aliens\n        }\n      }\n    }\n  }\n\nOnly the lasers array gets spliced — lasers are a flat list with no row/col to preserve. The alien grid keeps its shape; only the alive flag changes.",
+      keywords: "javascript nested loop splice array collision sweep grid"
+    },
+    {
+      name: "break After a Hit (The Multiple Kill Bug)",
+      desc: "Core Definition:\n  Once a laser hits one alien, it should stop checking that same laser against the rest of the grid. Forgetting break lets a single laser register as overlapping with several aliens in the same pass.\n\nWhy It Matters:\n  This is Level 1's loop-control lesson (break as an early exit) applied inside a nested loop, where the stakes are higher — without it, one laser can silently score points off several aliens in a single frame, an outcome that looks like a working game but is quietly awarding the wrong score.\n\nCommon Mistake — Multiple Kill Bug:\n  // ❌ Missing break:\n  if (alien.alive && checkCollision(lasers[i], alien)) {\n    alien.alive = false;\n    score += 50;\n    // no break -- the loop keeps running and can mark MORE aliens dead\n    // from this same laser in the same pass\n  }\n\n  // ✅ Correct:\n  if (alien.alive && checkCollision(lasers[i], alien)) {\n    alien.alive = false;\n    score += 50;\n    break;   // this laser is used up -- stop scanning more aliens\n  }\n\nPerformance Note:\n  A sweep of L lasers against a grid of A aliens runs roughly L x A comparisons every frame — with large swarms this nested cost is why real games often use spatial partitioning instead of a brute-force sweep.",
+      keywords: "javascript break statement loop bug multiple collision double kill"
+    }
+  ],
+  'l2-s7': [
+    {
+      name: "Game-State Variables & Wave Progression",
+      desc: "Core Definition:\n  A wave-based game tracks its state in a small set of variables: how many waves cleared, how much health remains, and how many aliens in the grid are still alive. The loop reads these variables every frame to decide what to draw and whether to advance.\n\nWhy It Matters:\n  This is Level 1's gameActive gate idea scaled up — instead of one Boolean deciding 'running or not,' several variables together now describe WHICH stage of a longer game the player is in. Counting a derived value (how many aliens are still alive) from the existing grid, rather than tracking it separately, avoids a second source of truth that could drift out of sync with the real grid.\n\nCore State Variables:\n  let wave = 1;\n  let health = 100;\n  let aliens = [][];   // 2D grid of alien objects, each with an alive flag\n\nCounting the Living:\n  function countAlive(grid) {\n    let count = 0;\n    for (const row of grid) {\n      for (const alien of row) {\n        if (alien.alive) count++;\n      }\n    }\n    return count;\n  }\n\nThe Advance Check:\n  if (countAlive(aliens) === 0) {\n    wave++;\n    spawnWave(wave);\n  }\n\nThe alive-count check is the entire trigger for progression — as long as one alien in the grid still has alive === true, the wave will not advance.",
+      keywords: "javascript game state variables tracking wave counter"
+    },
+    {
+      name: "Scale-Factor Formulas",
+      desc: "Core Definition:\n  As waves increase, enemies should get faster — but the formula must be capped, or the game becomes unplayable after a dozen waves.\n\nThe Formula:\n  let speedMultiplier = wave * 0.15;\n\nWhy It Needs an Upper Clamp:\n  By wave 40, speedMultiplier would be 6.0 — six times the base speed, effectively unbeatable. Cap it with Math.min:\n  speedMultiplier = Math.min(wave * 0.15, 2.5);   // never exceeds 2.5x\n\nAlways graph a scaling formula across the wave range you expect players to reach before shipping it uncapped.",
+      keywords: "difficulty scaling formula multiplier clamp math min"
+    },
+    {
+      name: "Drawing HUD Gauges on Canvas",
+      desc: "Core Definition:\n  Canvas games have no DOM elements to update — every HUD element (health bar, score text) is redrawn on the canvas each frame using drawing calls, not textContent.\n\nWhy It Matters:\n  This is Level 1's HUD lesson (Session 11's textContent updates) meeting Level 2's immediate-mode canvas reality — there is no #score-val element to write into, so a proportional rectangle IS the health bar, recalculated fresh every single frame from the underlying health number rather than 'updated' the way a DOM element would be.\n\nHealth Bar as a Proportional Rectangle:\n  const barWidth = 200;\n  const healthPct = health / 100;\n  ctx.fillStyle = \"red\";\n  ctx.fillRect(20, 20, barWidth, 20);            // background/max track\n  ctx.fillStyle = \"lime\";\n  ctx.fillRect(20, 20, barWidth * healthPct, 20); // shrinks as health drops\n\nScore Text:\n  ctx.fillStyle = \"white\";\n  ctx.font = \"16px monospace\";\n  ctx.fillText(\"Score: \" + score, 20, 60);\n\nThere is no element to grab with an ID — the HUD only exists as pixels drawn fresh every frame.",
+      keywords: "canvas fillRect health bar HUD ctx fillText"
+    },
+    {
+      name: "Spawn Guards Against Concurrent Waves",
+      desc: "Core Definition:\n  Checking \"is anyone still alive?\" every single frame without protection means the moment the last alien is marked dead, MULTIPLE frames in a row can all see zero alive count before the new wave's grid is spawned in — each one calling spawnWave() again.\n\nWhy It Matters:\n  This is Session 7's version of a race condition: a check-then-act pattern (check alive count, then act by spawning) run once per frame at 60fps, with no protection against the SAME condition being true across several consecutive frames. The isSpawning flag is the general fix for 'don't let this trigger fire again while it's already in progress,' a pattern that reappears anywhere an action is slower than the loop calling it.\n\nCommon Mistake (Floods the Screen):\n  if (countAlive(aliens) === 0) {\n    wave++;\n    spawnWave(wave);   // ❌ can fire several times before the new grid populates\n  }\n\n✅ The Fix — an \"already spawning\" guard:\n  let isSpawning = false;\n  if (countAlive(aliens) === 0 && !isSpawning) {\n    isSpawning = true;\n    wave++;\n    spawnWave(wave);\n    isSpawning = false;   // reset once the new grid is populated\n  }\n\nWithout the guard flag, the wave-clear trigger fires concurrently and stacks several waves' worth of aliens on top of each other.",
+      keywords: "javascript prevent duplicate function calls guard flag boolean"
+    },
+    {
+      name: "Memory Leaks from Dead Sprites",
+      desc: "Core Definition:\n  A sprite array (lasers, particles, aliens) only shrinks if something actively removes finished entries. If a laser that flies off-screen is never spliced out, it stays in the array forever, still being looped over and drawn every frame even though the player can't see it.\n\nWhy It Matters:\n  This is Session 4's cleanup lesson resurfacing at a bigger scale, now with a diagnostic habit attached: watching an array's .length climb over time is how you CONFIRM a leak exists before spending time hunting for it, rather than guessing from a vague sense that the game feels slower than it used to.\n\nDiagnosing It:\n  console.log(lasers.length);   // watch this climb without bound over time\n\nAfter 500 unpruned lasers accumulate, the frame rate crawls — the game is still iterating over, updating, and drawing hundreds of invisible objects every single frame.\n\nThe Fix — remove off-screen entries:\n  lasers = lasers.filter(laser => laser.y > 0);   // drop anything past the edge\n\nNote: .filter() rebuilds the array in one pass and is a one-shot equivalent to the reverse-loop splice() pattern taught in Session 4 — same cleanup goal, just expressed as a single expression instead of a manual backward loop.",
+      keywords: "javascript memory leak array length unbounded growth sprites"
+    },
+    {
+      name: "Garbage Collection Pauses & Profiling",
+      desc: "Core Definition:\n  Every new object (a new laser, a new particle) is memory the browser's garbage collector must eventually reclaim. When arrays grow unbounded, the collector has far more to scan and clean up, and it runs its cleanup pass in a pause that can freeze the frame. Guessing which function is slow wastes time — DevTools' Performance tab records exactly how long each function call takes.\n\nWhy Stutter Happens:\n  - Small, steady allocations = small, unnoticeable GC pauses.\n  - Large, unbounded allocations (never-pruned arrays) = long GC pauses that show up as visible frame hitches or stutter.\n\nProfiling Workflow:\n  1. Open DevTools → Performance tab → click Record.\n  2. Play the game for a few seconds during the laggy moment.\n  3. Stop recording and inspect the flame chart — wider blocks mean more time spent in that function.\n  4. Look for the widest block in your own game code (not browser internals) — that's the function to optimize first.\n\nProfiling replaces 'this feels slow' with 'this specific function used 40% of every frame' — a concrete target instead of a guess.",
+      keywords: "javascript garbage collection performance pause stutter frame rate devtools profiling"
+    }
+  ],
+  'l2-s8': [
+    {
+      name: "The Client-Server Model",
+      desc: "Core Definition:\n  A client (the browser) sends requests; a server (a remote program) sends responses. The client can never reach into the server's storage directly — it can only ask and wait.\n\nWhy It Matters:\n  Everything built in Level 1 and the first half of Level 2 ran entirely inside the player's own browser — there was no 'elsewhere' the data could live. A leaderboard that every player shares requires storage somewhere OTHER than any single player's machine, and the client-server model is the entire reason that's even possible: the browser asks, a separate program somewhere else answers.\n\nThe Only Door:\n  Client  ──request──>  Server\n  Client  <──response──  Server\n\nEvery single thing your game does over the network — reading a leaderboard, submitting a score — is one round trip through this exact shape. There is no shortcut path.",
+      keywords: "client server model request response web architecture"
+    },
+    {
+      name: "Anatomy of a URL",
+      desc: "Core Definition:\n  A URL has four parts that each answer a different question about the request.\n\nWhy It Matters:\n  Every fetch() call in the rest of this course starts with a URL string, and a bug in ANY one of its four parts sends the request to the wrong place entirely — a typo'd path is a completely different failure from a missing query parameter, and being able to name which part is wrong is what turns 'the API isn't working' into an actual fix.\n\nBreakdown:\n  https://api.marsdefense.dev/scores?limit=5\n  └─┬──┘   └───────┬───────┘└──┬──┘└───┬───┘\n protocol       host          path    query\n  (how)         (who)        (what)  (which)\n\nThe path selects a resource on the server; the query string narrows or filters it. Both matter equally when reading a Network tab entry.",
+      keywords: "url anatomy protocol host path query string"
+    },
+    {
+      name: "HTTP Methods & Status Code Triage",
+      desc: "Core Definition:\n  HTTP methods are verbs of intent; status codes are the server's one-word verdict on what happened.\n\nWhy It Matters:\n  Status codes are the FIRST thing to check when a network call misbehaves, before diving into your own JavaScript — they tell you immediately which side of the client-server boundary the problem is on, which narrows debugging from 'something is wrong' to 'this specific half of the system is wrong.'\n\nMethods:\n  GET  — read data (no body)\n  POST — send/create data (has a body)\n\nStatus Code Families:\n  200 OK / 201 Created  — success\n  400 Bad Request       — malformed input (your fault)\n  401 / 403             — who are you / you may not\n  404 Not Found         — no such path\n  500 Internal Error    — the server crashed (its fault)\n\nTriage rule: the first digit alone tells you where to start looking for the bug — 4xx means check what you sent, 5xx means the server broke on its own.",
+      keywords: "http methods GET POST status codes 200 404 500 triage"
+    },
+    {
+      name: "Reading the DevTools Network Tab",
+      desc: "Core Definition:\n  The address bar shows the PAGE's URL — but a page fires many separate requests underneath it (scripts, images, and API calls). The Network tab lists every one, and the XHR/Fetch filter isolates the API calls specifically.\n\nWhy It Matters:\n  This is the network equivalent of Level 1's Console — a place to directly OBSERVE what actually happened instead of guessing from symptoms. Before writing any error-handling code, being able to look at the real request, its status, and its actual response body is what tells you whether the bug is in what you sent or in what came back.\n\nWhat Each Row Tells You:\n  - Name/Path: which endpoint was hit\n  - Method: GET or POST\n  - Status: the response verdict\n  - Preview/Response: the actual JSON payload returned\n\nCommon Mistake:\n  Reading only the address bar and concluding 'the request' — the real API traffic is a separate row list, often invisible unless you open DevTools before the action happens.",
+      keywords: "browser devtools network tab xhr fetch inspect requests"
+    }
+  ],
+  'l2-s9': [
+    {
+      name: "Synchronous vs. Asynchronous Execution",
+      desc: "Core Definition:\n  Synchronous code runs one line at a time, and each line must finish before the next one starts — this BLOCKS everything else. Asynchronous code can start a slow operation (like a network request) and let the rest of the program keep running while it waits.\n\nWhy It Matters:\n  Every line of code from Level 1 through Level 2's Session 8 has run synchronously — 'next line waits for this one' was a safe assumption. A network request can take anywhere from milliseconds to several seconds, and if the game LOOP froze for that entire wait, the whole page would appear to hang; asynchronous code is what lets requestAnimationFrame keep the game responsive while a request is still in flight.\n\nSynchronous Timeline (Blocking):\n  console.log(\"1\");\n  slowCalculation();   // takes 3 seconds, nothing else can run\n  console.log(\"2\");    // waits the full 3 seconds before logging\n\nAsynchronous Timeline (Non-Blocking):\n  console.log(\"1\");\n  fetchLeaderboard();   // kicks off a request, does NOT wait\n  console.log(\"2\");    // logs immediately, before the fetch resolves\n\nThe fetch's result arrives later, whenever the network responds — not necessarily in the order it was written.",
+      keywords: "synchronous vs asynchronous javascript blocking non blocking"
+    },
+    {
+      name: "Promises and async/await",
+      desc: "Core Definition:\n  A fetch call returns a Promise — an object representing a value that isn't ready yet. The await keyword pauses (only inside an async function) until that Promise resolves into its actual value.\n\nWhy It Matters:\n  A Promise is the placeholder that makes asynchronous code possible without freezing the rest of the program — it lets a function return immediately with 'I'll have this eventually' instead of blocking. await is what lets you WRITE asynchronous code that still reads top-to-bottom like Level 1's sequential logic, instead of the older nested-callback style that's much harder to trace.\n\n❌ WRONG (missing await):\n  async function fetchLeaderboard() {\n    let response = fetch(\"/api/leaderboard\");\n    let data = response.json();   // response is still a Promise, not the real object!\n    console.log(data);            // logs \"Promise <Pending>\", not the JSON\n  }\n\n✅ CORRECT (await unwraps the Promise):\n  async function fetchLeaderboard() {\n    let response = await fetch(\"/api/leaderboard\");\n    let data = await response.json();\n    console.log(data);            // logs the actual leaderboard array\n  }\n\nForgetting await doesn't throw an error — it silently hands you the wrapper object instead of the value inside it.",
+      keywords: "javascript async await promise pending bug fetch"
+    },
+    {
+      name: "fetch GET Requests and response.json()",
+      desc: "Core Definition:\n  fetch() sends an HTTP request and returns a Promise for the Response object. Calling .json() on that response parses the response body as JSON and returns another Promise for the parsed data.\n\nWhy It Matters:\n  This is the single function every network feature in this course is built on top of — fetch() is how the browser actually performs Session 8's client-server round trip in code. The two-step await (once for the response, once for the parsed body) trips up almost everyone the first time, which is exactly why the previous concept calls it out as a common mistake.\n\nBlueprint:\n  async function fetchLeaderboard() {\n    let response = await fetch(\"https://api.example.com/leaderboard\");\n    let data = await response.json();\n    return data;   // an array of { name, score } records\n  }\n\nCalling It:\n  fetchLeaderboard().then(scores => renderLeaderboard(scores));\n\nBy default fetch() sends a GET request — no method needs to be specified for reading data.",
+      keywords: "javascript fetch API GET request response json parse"
+    },
+    {
+      name: "Don't Fetch Inside the Game Loop",
+      desc: "Core Definition:\n  requestAnimationFrame runs about 60 times per second. Calling fetch() from inside that loop means firing roughly 60 HTTP requests every second at the server.\n\nWhy It's a Problem:\n  60 requests/sec x many players = a server hammered into rate-limiting or crashing, even though nothing on the leaderboard changed that fast.\n\n❌ WRONG:\n  function gameLoop() {\n    fetchLeaderboard();   // fires 60 times a second!\n    requestAnimationFrame(gameLoop);\n  }\n\n✅ CORRECT — fetch on events, not every frame:\n  function onGameOver() {\n    fetchLeaderboard();   // fires once, when it's actually needed\n  }\n\nFetch when something meaningful happens (game start, game over, a manual refresh button) — never on every animation frame.",
+      keywords: "rate limiting API requests server load fetch game loop"
+    }
+  ],
+  'l2-s10': [
+    {
+      name: "HTTP POST with JSON Payloads",
+      desc: "Core Definition:\n  A GET request reads data; a POST request sends data to the server to be stored. fetch() takes a second argument — an options object — that configures the method, headers, and body.\n\nWhy It Matters:\n  Session 9's fetch() calls only ever READ data with the defaults; sending data (a submitted score) needs three extra pieces of setup working together — method, headers, and body — which is why this is where students most often forget one piece and get a confusing server-side error instead of a client-side one.\n\nThe Options Object Blueprint:\n  async function submitScore(name, score) {\n    let response = await fetch(\"/api/leaderboard\", {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ name, score })\n    });\n    return response;\n  }\n\nAll three pieces matter: method tells the server what kind of request this is, the Content-Type header tells it how to parse the body, and JSON.stringify() turns the JS object into the text format the header promises.",
+      keywords: "fetch POST request options headers JSON stringify body"
+    },
+    {
+      name: "try/catch Around Network Calls",
+      desc: "Core Definition:\n  A network request can fail for reasons that have nothing to do with your code — the wifi drops, the server is down, a URL is unreachable. Without a catch block, a rejected fetch Promise throws an unhandled error and the game silently stops responding.\n\nWhy It Matters:\n  This is the network-call version of Level 1's defensive output guards, applied to something outside your control entirely — no amount of correct code prevents a dropped wifi connection. try/catch is what separates 'the network failed and the player sees nothing' from 'the network failed and the player sees a retry button.'\n\n❌ WRONG (no error handling):\n  async function submitScore(name, score) {\n    let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n    // if the network drops here, this line never runs, no message, no recovery\n  }\n\n✅ CORRECT:\n  async function submitScore(name, score) {\n    try {\n      let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n      return response;\n    } catch (err) {\n      console.error(\"Score submission failed:\", err);\n      showRetryButton();   // let the player know and recover gracefully\n    }\n  }\n\nA catch block is what turns a silent freeze into a message the player can actually act on.",
+      keywords: "javascript try catch fetch error handling network failure"
+    },
+    {
+      name: "Checking response.ok and Status Codes",
+      desc: "Core Definition:\n  A fetch Promise resolves successfully even when the server responds with an error status like 404 or 500 — fetch only rejects on a true network failure. You must check response.ok (or response.status) yourself to know whether the request actually succeeded.\n\nWhy It Matters:\n  This is the single most surprising fact about fetch() for students coming from try/catch — a 500 Internal Server Error does NOT trigger the catch block, because as far as fetch is concerned, the request-response round trip itself succeeded. Skipping this check is why 'my try/catch didn't catch the error' is a common early confusion.\n\nBlueprint:\n  let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n  if (response.ok) {\n    console.log(\"Score submitted successfully.\");\n  } else {\n    console.error(\"Server rejected the request:\", response.status);\n  }\n\nresponse.ok is true only for status codes 200-299 — a 500 Internal Server Error still resolves the Promise, so skipping this check means treating a server crash as a success.",
+      keywords: "fetch response.ok status code 404 500 error check"
+    },
+    {
+      name: "Never Trust the Client",
+      desc: "Core Definition:\n  Anything sent in a POST body was built by code running on the PLAYER's machine, which the player fully controls — including the browser console. A submitted score of 999999999 is just as easy to send as a real one.\n\nThe Risk:\n  submitScore(\"cheater\", 999999999);   // anyone can call this directly from devtools\n\nWhy It Matters:\n  The server should validate incoming payloads (reasonable score ranges, required fields) rather than storing whatever arrives — the client is a request, not a guarantee. Sessions 11-12 pick this up for real: a database enforces types and ranges, and parameterized queries close off injection.",
+      keywords: "client side validation server trust security cheating"
+    }
+  ],
+  'l2-s11': [
+    {
+      name: "Relational Tables & Data Types",
+      desc: "Core Definition:\n  A relational table has fixed columns with declared types; every row must fit the same shape. This is why databases can be queried reliably — every value in a column is guaranteed to be the same kind of thing.\n\nCommon Types:\n  INT        — whole numbers (scores, quantities, ids)\n  VARCHAR(n) — text up to n characters (names)\n  BOOLEAN    — true/false\n  TIMESTAMP  — a date + time\n\nWhy Types Matter:\n  If score were stored as VARCHAR, ORDER BY score would sort alphabetically ('1000' before '200') instead of numerically. The type isn't decoration — it changes what queries can correctly do.",
+      keywords: "sql relational table data types int varchar boolean timestamp"
+    },
+    {
+      name: "Primary Keys",
+      desc: "Core Definition:\n  The primary key is a column (usually id) that uniquely identifies every row — no two rows can ever share one. It is a row's identity, separate from any of its other data.\n\nSyntax:\n  CREATE TABLE colonist_scores (\n    id INT PRIMARY KEY,\n    player VARCHAR(50),\n    score INT\n  );\n\nWhy It Matters:\n  Two colonists can share the exact same name — they can never share an id. Every UPDATE or DELETE that targets 'one specific row' does so by matching the primary key, not by matching a name that might not be unique.",
+      keywords: "sql primary key unique identity row"
+    },
+    {
+      name: "CREATE, INSERT, SELECT, UPDATE",
+      desc: "Core Definition:\n  Four SQL statements cover the basic lifecycle of a table: defining it, filling it, reading it, and changing it.\n\nWhy It Matters:\n  These four statements are the entire CRUD lifecycle (Create, Read, Update — Delete comes next session) that every piece of persistent data in any real application goes through. Sessions 9-10's server calls exist specifically to trigger these statements safely from the client — a POST request's whole job, ultimately, is to run an INSERT or UPDATE on the server's behalf.\n\nSyntax Cheat Sheet:\n  CREATE TABLE colonist_scores (\n    id INT PRIMARY KEY, player VARCHAR(50), score INT\n  );\n  INSERT INTO colonist_scores (id, player, score) VALUES (1, 'cdt_arya', 4200);\n  SELECT player, score FROM colonist_scores WHERE score > 4000 ORDER BY score DESC;\n  UPDATE colonist_scores SET score = 4500 WHERE id = 1;\n\nRead SQL like English but trace exactly what each clause filters: SELECT picks columns, FROM picks the table, WHERE picks rows, ORDER BY sorts what's left.",
+      keywords: "sql create insert select update where order by syntax"
+    },
+    {
+      name: "The Missing WHERE Danger",
+      desc: "Core Definition:\n  An UPDATE or DELETE with no WHERE clause applies to EVERY row in the table, not just the one you meant. SQL does exactly what's written — the same literalness lesson as Level 1, now at data scale.\n\nWhy It Matters:\n  In Level 1 a sequencing mistake broke a simulated car; a missing WHERE clause here can silently destroy every real row of live data in seconds, with no undo. This is why professional teams treat any UPDATE or DELETE statement as something to read twice, and often require the WHERE clause to be written and reviewed before the SET or DELETE part is even considered.\n\n❌ DANGEROUS:\n  UPDATE colonist_scores SET score = 4500;   // overwrites every single row\n\n✅ SAFE:\n  UPDATE colonist_scores SET score = 4500 WHERE id = 1;   // targets exactly one row\n\nRule of Thumb:\n  Write the WHERE clause FIRST, mentally, before deciding what SET does — the WHERE clause is the blast radius of the statement.",
+      keywords: "sql update delete missing where danger blast radius"
+    }
+  ],
+  'l2-s12': [
+    {
+      name: "The Trust Boundary",
+      desc: "Core Definition:\n  The client (browser, player-controlled) is hostile territory. Everything a request sends — form fields, POST bodies — must be validated by the server before it touches the database, regardless of what the frontend form already checked.\n\nWhy Frontend Validation Isn't Enough:\n  A player can open DevTools and call fetch() directly, skipping the form entirely. Frontend checks are UX; server checks are the actual security boundary.\n\nRule of Thumb:\n  Validate type, range, and length on the SERVER for every field, every time — never assume a request came from your own form.",
+      keywords: "trust boundary server validation client hostile security"
+    },
+    {
+      name: "SQL Injection Recognition",
+      desc: "Core Definition:\n  Building a query by gluing (concatenating) raw user input into a string lets that input change the query's MEANING, not just its data — the classic SQL injection bug.\n\nWhy It Matters:\n  This is the Session 11 Missing WHERE danger's evil twin, except an attacker triggers it on purpose — string concatenation means user input isn't just DATA inside the query anymore, it's part of the query's actual code. Recognizing this shape on sight (raw + gluing user input into SQL text) is one of the highest-value security skills in this entire course, because it's one of the most common real-world vulnerabilities.\n\n❌ VULNERABLE:\n  let query = \"SELECT * FROM users WHERE name = '\" + userInput + \"'\";\n  // if userInput is:  ' OR '1'='1\n  // the query becomes: ...WHERE name = '' OR '1'='1'   -- always true, returns every row\n\nRead It Aloud:\n  Read the assembled query as a sentence after substituting the hostile input — the meaning change becomes obvious once you say it out loud.",
+      keywords: "sql injection concatenation vulnerable string user input"
+    },
+    {
+      name: "Parameterized Queries (The Fix)",
+      desc: "Core Definition:\n  A parameterized query sends the SQL text and the user's data SEPARATELY — the database binds the value as pure data, so it can never be interpreted as part of the query structure.\n\n✅ SAFE:\n  SELECT * FROM users WHERE name = ?;\n  // driver binds userInput to the placeholder — it can never terminate the\n  // string or add clauses, no matter what characters it contains\n\nWhy It's Immune:\n  Even the exact hostile input (' OR '1'='1) just becomes a literal string being searched for — a name that doesn't exist — and returns nothing, instead of hijacking the query.",
+      keywords: "parameterized query placeholder sql injection defense prepared statement"
+    },
+    {
+      name: "Password Hashing Awareness",
+      desc: "Core Definition:\n  A database should never store a password itself — only a HASH of it, a one-way scramble. Same input always produces the same hash, but there is no path back from the hash to the original password.\n\nWhy It Matters on a Leak:\n  - Plaintext password table leaked: every account is instantly compromised, and reused passwords on other sites too.\n  - Hashed password table leaked: attackers get scrambled values they can't directly use to log in (though weak/common passwords can still be cracked over time).\n\nRule of Thumb:\n  Store hash(password), never password — this is why login checks compare hash(inputPassword) to the stored hash, not the raw strings.",
+      keywords: "password hashing plaintext leak security storage"
+    }
+  ],
+  'l2-s13': [
+    {
+      name: "The Full Level 2 Architecture",
+      desc: "Core Definition:\n  Every system built across Level 2 stacks into one picture: a canvas render loop for graphics/state, an async layer for talking to the server, and a database layer behind the server that the client never touches directly.\n\nWhy It Matters:\n  Each earlier session taught one layer in isolation; the hardest part of a real project is knowing where each concern BELONGS — collision math stays inside the loop, fetch calls happen on events between frames, and the database is never reachable except through the server. Seeing all three layers on one diagram is what turns 12 sessions of separate lessons into one coherent mental model of how a real game-with-a-backend is actually structured.\n\nThe Pipeline:\n  ┌─────────────────────────────────────────────────────────┐\n  │ init()                                                   │\n  │  - get canvas + ctx, set up sprite arrays, load config   │\n  └───────────────────────┬───────────────────────────────────┘\n                          ▼\n  ┌─────────────────────────────────────────────────────────┐\n  │ gameLoop()  (runs ~60x/sec via requestAnimationFrame)     │\n  │  1. Read input matrix (which keys are currently held)    │\n  │  2. Update: move sprites, run collisions, splice dead ones│\n  │  3. Draw: ctx.clearRect, then redraw every sprite + HUD   │\n  │  4. requestAnimationFrame(gameLoop) — schedule next frame │\n  └───────────────────────┬───────────────────────────────────┘\n                          ▼ (on game-over event, outside the loop)\n  ┌─────────────────────────────────────────────────────────┐\n  │ async submitScore() / fetchLeaderboard()                 │\n  │  - POST the final score, then GET the updated board      │\n  └───────────────────────┬───────────────────────────────────┘\n                          ▼ (server-side, never reached by the client directly)\n  ┌─────────────────────────────────────────────────────────┐\n  │ database (validated INSERT/SELECT, parameterized queries)│\n  └─────────────────────────────────────────────────────────┘\n\nThe loop never awaits anything — async calls fire off to the side when a meaningful event (game over) happens; the database layer is a step further still, reachable only through the server.",
+      keywords: "canvas game architecture requestAnimationFrame pipeline diagram database"
+    },
+    {
+      name: "Common Seeded-Bug Checklist",
+      desc: "Core Definition:\n  A diagnostic cheat sheet of the classic bug patterns seeded across Level 2 — check these first when something looks broken.\n\nWhy It Matters:\n  Experienced developers debug faster not because they're smarter, but because they recognize SHAPES of bugs they've already seen — a smear trail means clearRect, 'Promise pending' means a missing await. Building this same pattern-recognition habit now, on a known list of seven, is what makes debugging genuinely new problems faster later.\n\nChecklist:\n  - Missing clearRect: old frames never erase, so sprites appear to smear/trail across the canvas.\n  - Forward-splice skip: splicing an array while iterating forward skips the element that slides into the removed index — iterate backward instead.\n  - Stuck key state: a keyup listener never clears the pressed flag, so a key appears held forever.\n  - Missing break: a collision loop keeps scanning after a hit, sometimes double-triggering effects.\n  - Missing await: an async call logs \"Promise <Pending>\" instead of the real data.\n  - Missing WHERE: an UPDATE/DELETE with no WHERE clause silently applies to every row in the table.\n  - String-concatenated query: gluing user input directly into SQL text opens an injection hole — check for a parameterized placeholder instead.\n\nRun through this list before assuming a bug is something new — most Level 2 breakage traces back to one of these seven patterns.",
+      keywords: "javascript common bugs checklist clearRect splice sql debugging"
+    },
+    {
+      name: "Defending Code in Review",
+      desc: "Core Definition:\n  A code-review walkthrough means explaining WHY each piece of your code works, not just reading it aloud. Four areas come up most often across a Level 2 review.\n\nWhy It Matters:\n  This is the professional skill this whole level has been building toward — in a real job, code that works but that you can't explain is a liability, not an asset, because nobody (including future you) can safely change it later. Level 1-2's code-review model is deliberately copy-paste and conversational for this exact reason: explaining your own reasoning out loud is the actual skill being assessed, not just producing correct output.\n\nWhat to Be Ready to Explain:\n  - Coordinate math: why a sprite's x/y updates the way it does, and how the AABB collision check compares edges, not center points.\n  - Cleanup loops: why sprites are filtered/spliced out, and what would happen to performance if that loop were removed (Session 7's memory-leak lesson).\n  - fetch options: why the POST call needs method, headers, and a stringified body, and what try/catch is protecting against.\n  - Query safety: why a query uses a parameterized placeholder instead of string concatenation, and what the validation rulebook rejects and why.\n\nFraming the Walkthrough:\n  Treat the reviewer's questions as collaborative auditing, not adversarial gatekeeping — the same posture a professional code review requires. Being unable to explain a line you wrote is a bigger red flag than the line itself having a small bug.",
+      keywords: "code review walkthrough explain code line by line defense"
     }
   ]
 };
@@ -118,69 +533,15 @@ const CAMPAIGN_THEMES = {
     levels: {
       1: {
         mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
-        sessions: [
-          {
-            id: 'l1-s1',
-            title: 'Session 1: "Literal Logic & Digital Infiltration"',
-            objective: 'Design a precise sequential command blueprint to navigate systems.',
-            activity: 'Car Autopilot Roleplay: Student gives step-by-step instructions to tutor to drive and park an vehicle. Tutor follows them strictly literally, demonstrating computer logical processing.',
-            homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab: Write a process to warm up food from a plate using a microwave. Identify preconditions, inputs, processing logic, and outputs (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s2',
-            title: 'Session 2: "Starting the Game: HTML Structure & Basic Elements"',
-            objective: 'Understand how browsers structure documents using HTML tags and nest containers for a racing game.',
-            activity: 'Create the HTML structure for the game including track container, player car container, and dashboard HUD.',
-            homework: 'Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework" (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s3',
-            title: 'Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"',
-            objective: 'Write CSS rules using selectors (ID, Class, Element) to layout the road lanes and position the player car.',
-            activity: 'Apply styles to set dimensions for the road lanes, draw dashed markers, and absolute position player and obstacle cars inside parent relative bounds.',
-            homework: 'In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s4',
-            title: 'Session 4: "Decisions, Decisions"',
-            objective: 'Master conditional logic gates and climate overrides.',
-            activity: 'Climate Logic Controller: Program safety conditional overrides for the sector thermostat.',
-            homework: 'Draw a flowchart map for a thermostat controller checking window sensors, and write the rules in your Journal (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s5',
-            title: 'Session 5: "The Automated Pet Grid"',
-            objective: 'Distinguish counting/condition loops and prevent infinite loops in feeders.',
-            activity: 'The Sneaky Cat Feeder Challenge: Design a flowchart for a feeder that dispenses food every 6 hours, blocks if the bowl is full, alerts if the cat attempts to double-eat within 5 minutes, and rings an alarm if the dog is unfed for 12 hours.',
-            homework: 'Identify 3 loops in your daily life. Describe what repeats, the condition/count, and what an infinite loop would look like (+50 XP).',
-            xp: 120
-          }
-        ]
+        // L1 quest cards come from CURRICULUM_DATA (see L1_QUEST_SESSIONS); the L1 theme is
+        // fixed to the Racing Car Game across all campaigns, so no per-theme session copy here.
+        sessions: []
       },
       2: {
-        mainQuest: 'Operation: AI Copilot — Work alongside the city\'s central AI core to construct automation scripts for cybersecurity.',
-        sessions: [
-          {
-            id: 'l2-s5',
-            title: 'Session 5: "The AI Sandbox Duel"',
-            objective: 'Use structured prompts to direct AI and iterate on specs.',
-            activity: 'The One-Shot Prompt Duel: Compete to prompt the AI to build a specific mini-app in secret (e.g., a streak tracker) in one shot. Zero manual code edits.',
-            homework: 'Run your prompt through a different AI model. In your Prompt Journal, document the differences, noting any ambiguity that caused divergence.',
-            xp: 150
-          },
-          {
-            id: 'l2-s6',
-            title: 'Session 6: "The Obfuscation Constraint"',
-            objective: 'Add new requirements without breaking existing logic.',
-            activity: 'Requirement Roulette: Get a random constraint card (e.g. AI Cheat Mode: hide a secret password "xyzzy" to win immediately, but obfuscate it in the prompt so a code review won\'t easily flag it).',
-            homework: 'Write 5 additional test scenarios for your project. Log pass/fail and refine the prompt for any failures.',
-            xp: 150
-          }
-        ]
+        mainQuest: 'Operation: Colony Defense Grid — Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
+        // L2 quest cards come from CURRICULUM_DATA (see L2_QUEST_SESSIONS); the L2 theme is
+        // fixed to Mars Colony Defense across all campaigns, so no per-theme session copy here.
+        sessions: []
       },
       3: {
         mainQuest: 'Operation: Network Defense — Architect a decentralized database system to protect citizens\' data privacy against rogue corporations.',
@@ -241,69 +602,15 @@ const CAMPAIGN_THEMES = {
     levels: {
       1: {
         mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
-        sessions: [
-          {
-            id: 'l1-s1',
-            title: 'Session 1: "Atmosphere Control Automation"',
-            objective: 'Design a precise oxygen regulator control instruction set.',
-            activity: 'Spacesuit Operator Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to spacesuit diagnostic system. System executes it literally.',
-            homework: 'Complete the "Household IPO Blueprint" in the app\'s Journal tab. Choose a space colony life-support subsystem (e.g., water recycler, air regulator). Write down a step-by-step sequential algorithm for its operation. Identify inputs, processing logic, and outputs, and submit the response.',
-            xp: 100
-          },
-          {
-            id: 'l1-s2',
-            title: 'Session 2: "Starting the Game: HTML Structure & Basic Elements"',
-            objective: 'Understand how browsers structure documents using HTML tags and nest containers for a racing game.',
-            activity: 'Create the HTML structure for the game including track container, player car container, and dashboard HUD.',
-            homework: 'Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework" (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s3',
-            title: 'Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"',
-            objective: 'Write CSS rules using selectors (ID, Class, Element) to layout the road lanes and position the player car.',
-            activity: 'Apply styles to set dimensions for the road lanes, draw dashed markers, and absolute position player and obstacle cars inside parent relative bounds.',
-            homework: 'In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s4',
-            title: 'Session 4: "Habitat Environmental Control"',
-            objective: 'Build conditional logic safety gates for the colony dome temperature.',
-            activity: 'Life-Support Overrides: Program thermostat checks to shut down heater during oxygen leaks.',
-            homework: 'Document the window override rules logic for Mars habitats in your Prompt Journal.',
-            xp: 100
-          },
-          {
-            id: 'l1-s5',
-            title: 'Session 5: "Water Recycling Loops"',
-            objective: 'Design recycling check loops that repeat until tanks are full.',
-            activity: 'The Hydro-Recycling Challenge: Design a flowchart for a water filter that checks tank levels every 10 minutes and cuts off if full.',
-            homework: 'List loops in life support. What happens if an infinite loop occurs in oxygen scrubbers?',
-            xp: 120
-          }
-        ]
+        // L1 quest cards come from CURRICULUM_DATA (see L1_QUEST_SESSIONS); the L1 theme is
+        // fixed to the Racing Car Game across all campaigns, so no per-theme session copy here.
+        sessions: []
       },
       2: {
-        mainQuest: 'Operation: Autonomous Rover — Program autonomous rover drones using prompt specifications to explore Martian valleys.',
-        sessions: [
-          {
-            id: 'l2-s5',
-            title: 'Session 5: "Rover Prompting Duel"',
-            objective: 'Write structured prompt specifications to generate rover navigation code.',
-            activity: 'Rover Duel: Prompt the AI to generate a navigation path finder. Compete to see whose rover avoids obstacles in one shot.',
-            homework: 'Test the navigation prompt in a different AI tool. Compare path calculations.',
-            xp: 150
-          },
-          {
-            id: 'l2-s6',
-            title: 'Session 6: "The Sandstorm Constraint"',
-            objective: 'Inject sandstorm survival variables into the rover path logic.',
-            activity: 'Requirement Roulette: Get a sandstorm card (e.g. Rover Cheat Mode: hide a secret override command to return to base immediately).',
-            homework: 'Write 5 test scenarios for rover behavior during sensor lockups.',
-            xp: 150
-          }
-        ]
+        mainQuest: 'Operation: Colony Defense Grid — Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
+        // L2 quest cards come from CURRICULUM_DATA (see L2_QUEST_SESSIONS); the L2 theme is
+        // fixed to Mars Colony Defense across all campaigns, so no per-theme session copy here.
+        sessions: []
       },
       3: {
         mainQuest: 'Operation: Interplanetary Communications — Architect secure API structures and sequence diagrams for Mars-Earth networks.',
@@ -364,69 +671,15 @@ const CAMPAIGN_THEMES = {
     levels: {
       1: {
         mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
-        sessions: [
-          {
-            id: 'l1-s1',
-            title: 'Session 1: "The Spell Book Instructions"',
-            objective: 'Design a literal spell sequence that has no room for assumptions.',
-            activity: 'Spellcasting & The Goblin Saboteur: Write spell instructions. The saboteur goblin tries to find loopholes to blow up the cauldron.',
-            homework: 'Write instructions for your morning wand tuning. Test it on a friend.',
-            xp: 100
-          },
-          {
-            id: 'l1-s2',
-            title: 'Session 2: "Starting the Game: HTML Structure & Basic Elements"',
-            objective: 'Understand how browsers structure documents using HTML tags and nest containers for a racing game.',
-            activity: 'Create the HTML structure for the game including track container, player car container, and dashboard HUD.',
-            homework: 'Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework" (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s3',
-            title: 'Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"',
-            objective: 'Write CSS rules using selectors (ID, Class, Element) to layout the road lanes and position the player car.',
-            activity: 'Apply styles to set dimensions for the road lanes, draw dashed markers, and absolute position player and obstacle cars inside parent relative bounds.',
-            homework: 'In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line (+50 XP).',
-            xp: 100
-          },
-          {
-            id: 'l1-s4',
-            title: 'Session 4: "Thermal Cauldron Runes"',
-            objective: 'Design decision runes to control magical potion boilers.',
-            activity: 'Boiler Potion Safety: Enchant thermostat runes to trigger fire suppression when temperatures breach.',
-            homework: 'Scribble the decision diamond logic layout for wand cooling rules in your Prompt Journal.',
-            xp: 100
-          },
-          {
-            id: 'l1-s5',
-            title: 'Session 5: "Mana Regeneration Loops"',
-            objective: 'Design magic regen loops that run until mana is full.',
-            activity: 'The Cauldron Boiler Challenge: Flowchart a potion boiler that stirs every 2 minutes and shuts off when heat threshold is met.',
-            homework: 'Find loop examples in game logic. Diagram a counting loop for spell cool-downs.',
-            xp: 120
-          }
-        ]
+        // L1 quest cards come from CURRICULUM_DATA (see L1_QUEST_SESSIONS); the L1 theme is
+        // fixed to the Racing Car Game across all campaigns, so no per-theme session copy here.
+        sessions: []
       },
       2: {
-        mainQuest: 'Operation: Wand Enchantment — Prompt the central magic engine to script spells under strict mana constraints.',
-        sessions: [
-          {
-            id: 'l2-s5',
-            title: 'Session 5: "Magic Prompt Sandbox"',
-            objective: 'Enchant wands by prompting the magic core.',
-            activity: 'The Wand Duel: Prompt the AI to generate a shield charm spell in one shot without manual corrections.',
-            homework: 'Test your shield charm prompt in a different magic core. Compare defense stats.',
-            xp: 150
-          },
-          {
-            id: 'l2-s6',
-            title: 'Session 6: "The Cursed Constraint"',
-            objective: 'Inject counters into spell logic to survive curses.',
-            activity: 'Requirement Roulette: Get a curse card (e.g. Magic Backdoor: hide a secret override word to break shields immediately).',
-            homework: 'Write 5 test scenarios to verify shields block normal spells and curses.',
-            xp: 150
-          }
-        ]
+        mainQuest: 'Operation: Colony Defense Grid — Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
+        // L2 quest cards come from CURRICULUM_DATA (see L2_QUEST_SESSIONS); the L2 theme is
+        // fixed to Mars Colony Defense across all campaigns, so no per-theme session copy here.
+        sessions: []
       },
       3: {
         mainQuest: 'Operation: Hogwarts Security Grid — Architect database tracking systems for magical creatures and set security wards against dark magic.',
@@ -530,8 +783,8 @@ const S2_EXERCISES = [
     instruction: "Correct this broken HTML block by adding the missing closing </div> tag to clamp the track boundaries.",
     preloaded: "<div id=\"game-track\"><div id=\"player-car\"></div>",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean === '<divid="game-track"><divid="player-car"></div></div>' || clean === '<divid=\'game-track\'><divid=\'player-car\'></divid></divid>';
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      return clean === '<divid="game-track"><divid="player-car"></div></div>';
     },
     hint: "Add an extra '</div>' to close the game-track div."
   },
@@ -1139,7 +1392,6 @@ const S5_EXERCISES = [
   {
     num: 4,
     title: "Exercise 5.4: [Test & Break] The Silent Input Fail",
-    runnable: true,
     problem: `The listener checks if (event.key === "left") but nothing happens when ArrowLeft is pressed. (Browsers report the arrow keys as the exact strings "ArrowLeft"/"ArrowRight" — not "left". One wrong string makes the comparison silently always-false, so the branch never runs and no error appears.)`,
     instruction: "Fix the broken key-string comparison so it correctly checks for the exact key name the browser actually reports.",
     preloaded: 'if (event.key === "left") {\n  carX -= 130;\n}',
@@ -1152,7 +1404,6 @@ const S5_EXERCISES = [
   {
     num: 5,
     title: "Exercise 5.5: [Iterate & Improve] Logging the Other Direction",
-    runnable: true,
     problem: "Extend your fixed listener to also acknowledge ArrowRight presses. (An else-if adds a second, mutually-exclusive branch: the browser tests ArrowLeft first, and only if that fails does it check ArrowRight — the standard shape for handling several keys.)",
     instruction: `Add an else-if branch checking for "ArrowRight" that logs "Steering right" to the console.`,
     preloaded: 'if (event.key === "ArrowLeft") {\n  carX -= 130;\n}',
@@ -1413,6 +1664,7 @@ const S7_EXERCISES = [
   {
     num: 5,
     title: "Exercise 7.5: [Iterate & Improve] Logging Each Marker",
+    runnable: true,
     problem: "Iterate on the fixed loop to also log each marker's computed position. (Logging inside the loop prints one line per pass — the fastest way to confirm the loop really runs 5 times and computes 0, 120, 240, 360, 480 as expected.)",
     instruction: `Inside the loop body, add a console.log that prints "Highway Marker position: " followed by markerY.`,
     preloaded: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}",
@@ -1605,6 +1857,7 @@ const S8_EXERCISES = [
   {
     num: 10,
     title: "Exercise 8.10: [Iterate & Improve] The Complete Modular Controller",
+    runnable: true,
     problem: "Combine every piece from this session into the final modular movement controller. (updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler that calls them — clean, named pieces later sessions can extend without touching one tangled block.)",
     instruction: "Write the complete code: updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler that calls moveLeft()/moveRight() based on the key pressed.",
     preloaded: "/* Write the complete modular controller here */",
@@ -2001,10 +2254,10 @@ const S11_EXERCISES = [
     instruction: "Write the complete code: updateScoreboard() (with the negative-score guard), triggerGameOverScreen(), and a keydown handler restarting the game on Space.",
     preloaded: "/* Write the complete HUD and restart system here */",
     validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
+      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
       // Note: the real DOM value for the spacebar key is a single space character (" "),
-      // not the word "Space" — after whitespace-stripping, a correct `key === " "` check
-      // collapses to `.key===""`, so check for that pattern instead of the literal word.
+      // not the word "Space" — after whitespace-stripping and quote-normalizing, a correct
+      // `key === " "` (or `' '`) check collapses to `.key===""`, so check for that pattern.
       return clean.includes('score-val') && clean.includes('restart-panel') && clean.includes('gameactive') && clean.includes('addeventlistener') && clean.includes('.key===""');
     },
     hint: `Your code needs: updateScoreboard(), triggerGameOverScreen(), and a keydown handler checking event.key === " " that sets gameActive = true.`
@@ -2115,7 +2368,7 @@ const S12_EXERCISES = [
   {
     num: 9,
     title: "Exercise 12.9: [Test & Break] The Final Diagnostic",
-    problem: "The tutor seeds one last collision logic error into your capstone build before certification. (One final audit: a single flipped operator in the AABB check — the same class of bug from Session 10, now to be caught fast under exam conditions.)",
+    problem: "The tutor seeds one last collision logic error into this assessment lab before certification. (One final audit: a single flipped operator in the AABB check — the same class of bug from Session 10, now to be caught fast under exam conditions.)",
     instruction: "Diagnose and fix the seeded collision logic error (hint: one comparison operator is flipped).",
     preloaded: 'function checkCollision(rect1, rect2) {\n  return (\n    rect1.x > rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}',
     runnable: true,
@@ -2128,8 +2381,8 @@ const S12_EXERCISES = [
   {
     num: 10,
     title: "Exercise 12.10: [Iterate & Improve] Capstone Reflection",
-    problem: "Reflect on the entire Racing Car Game project, from Session 1's IPO blueprint to today's certified build. (Naming the trickiest bug and how tracing variable values exposed it turns a semester of fixes into a transferable debugging method you'll carry into Level 2.)",
-    instruction: "Write a one-sentence reflection: what was the trickiest bug you fixed across this entire project, and how did tracing variable values help you find it?",
+    problem: "Reflect across every Racing Car Game lab you've built this level, from Session 1's IPO blueprint to today's assessment labs. (Naming the trickiest bug and how tracing variable values exposed it turns a semester of standalone labs into a transferable debugging method you'll carry into Level 2.)",
+    instruction: "Write a one-sentence reflection: what was the trickiest bug you fixed across this level's labs, and how did tracing variable values help you find it?",
     preloaded: "/* Write your reflection here */",
     validate: (code) => {
       const clean = code.replace(/\/\*|\*\//g, '').trim();
@@ -2153,6 +2406,36 @@ const EXERCISE_COUNTS = {
 // list, so their gating stays within that list (gating them against the full list
 // would demand sessions that have no in-app completion path).
 const L1_SESSION_SEQUENCE = CURRICULUM_DATA.filter(s => s.level === 1);
+
+// Level 1 Quest Board cards are derived from the canonical CURRICULUM_DATA (all 12
+// sessions, one fixed racing-car theme) rather than the per-campaign CAMPAIGN_THEMES
+// copies. Every L1 session now has a claimable sandbox lab, so all 12 appear as quests
+// with consistent racing-car content and a flat 100 XP each (matching the auto-claim
+// award). L2-L4 still use each campaign's curated session list.
+const L1_QUEST_SESSIONS = L1_SESSION_SEQUENCE.map(s => ({
+  id: s.id,
+  title: s.title,
+  objective: s.objectives[0],
+  activity: s.coreActivity,
+  homework: s.homework,
+  xp: 100
+}));
+
+// Level 2 Quest Board cards are likewise derived from the canonical CURRICULUM_DATA
+// (all 13 sessions, one fixed Mars Colony Defense theme) rather than a per-campaign
+// CAMPAIGN_THEMES copy. Every L2 session has a claimable generic AI Prompt Sandbox
+// (loadTemplate) plus a Project Journal milestone, so all 13 appear as quests with a
+// flat 100 XP each, manually claimed via the "Deliver Quest Evidence" button (L2 has
+// no per-exercise EXERCISE_COUNTS gate — the manual claim is the deliberate friction).
+const L2_SESSION_SEQUENCE = CURRICULUM_DATA.filter(s => s.level === 2);
+const L2_QUEST_SESSIONS = L2_SESSION_SEQUENCE.map(s => ({
+  id: s.id,
+  title: s.title,
+  objective: s.objectives[0],
+  activity: s.coreActivity,
+  homework: s.homework,
+  xp: 100
+}));
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('detective_token') || null);
@@ -2245,7 +2528,7 @@ export default function App() {
   // Active Sandbox Session Tracker
   const [sandboxSessionId, setSandboxSessionId] = useState('l1-s1');
 
-  // Level 1 Session 1 (Drone Navigator) Simulator States
+  // Level 1 Session 1 (Car Autopilot Sequencer) Simulator States
   const [s1Sequence, setS1Sequence] = useState([]);
   const [s1Logs, setS1Logs] = useState([]);
   const [s1Executing, setS1Executing] = useState(false);
@@ -2742,7 +3025,10 @@ export default function App() {
   // Active campaign variables
   const currentCampaign = CAMPAIGN_THEMES[campaignId];
   const activeMainQuest = currentCampaign.levels[selectedLevel].mainQuest;
-  const activeLevelSessions = currentCampaign.levels[selectedLevel].sessions;
+  // Levels 1 and 2 use their canonical all-session lists (L1_QUEST_SESSIONS /
+  // L2_QUEST_SESSIONS); L3-L4 still use the active campaign's curated session list.
+  // The L1/L2 mainQuest text is identical across themes.
+  const activeLevelSessions = selectedLevel === 1 ? L1_QUEST_SESSIONS : selectedLevel === 2 ? L2_QUEST_SESSIONS : currentCampaign.levels[selectedLevel].sessions;
   const selectedSession = activeLevelSessions.find(s => s.id === selectedSessionId) || activeLevelSessions[0];
 
   // Calculate Detective Rank based on points
@@ -2801,21 +3087,7 @@ export default function App() {
     mockCode += `// Role: ${sandboxRole}\n`;
     mockCode += `// Task: ${sandboxTask}\n\n`;
 
-    if (sandboxTask.toLowerCase().includes('drone') || sandboxTask.toLowerCase().includes('autopilot') || sandboxTask.toLowerCase().includes('navigation') || sandboxTask.toLowerCase().includes('infiltration') || sandboxTask.toLowerCase().includes('oxygen') || sandboxTask.toLowerCase().includes('regulator')) {
-      const handlesPower = sandboxConstraints.toLowerCase().includes('power') || sandboxConstraints.toLowerCase().includes('initialize') || sandboxConstraints.toLowerCase().includes('state') || sandboxConstraints.toLowerCase().includes('powerstate');
-      if (handlesPower) {
-        mockCode += `// Secure autopilot sequential controller\nfunction verifyAutopilot(powerState, targetCoords) {\n  if (powerState !== "ON") {\n    throw new Error("💥 CRITICAL ERROR: Attempted to scan or fly while drone is unpowered!");\n  }\n  if (!targetCoords) {\n    throw new Error("💥 CRITICAL ERROR: Target coordinates are undefined!");\n  }\n  console.log("Preconditions passed. Navigating to coords: " + targetCoords);\n  return "SUCCESS: Target reached";\n}`;
-      } else {
-        mockCode += `// Buggy autopilot sequence (Missing power preconditions check)\nfunction verifyAutopilot(powerState, targetCoords) {\n  // Bug: Attempting flight without power check!\n  console.log("Navigating to coords: " + targetCoords);\n  return "SUCCESS: Drone launched";\n}`;
-      }
-    } else if (sandboxTask.toLowerCase().includes('feeder') || sandboxTask.toLowerCase().includes('cat') || sandboxTask.toLowerCase().includes('water')) {
-      const handlesCat = sandboxConstraints.toLowerCase().includes('sneaky') || sandboxConstraints.toLowerCase().includes('cat') || sandboxConstraints.toLowerCase().includes('stir');
-      if (handlesCat) {
-        mockCode += `class SmartFeeder {\n  dispense() {\n    if (this.plateWeight > 50) return "Feeder Blocked: Plate Full";\n    if (this.catCheckTime < 300) {\n      this.triggerBuzzer();\n      return "Warning: Sneaky Cat Detected!";\n    }\n    this.foodDispensed = true;\n  }\n}`;
-      } else {
-        mockCode += `class SmartFeeder {\n  dispense() {\n    // Bug: missing sneaky cat limits and plate check!\n    this.foodDispensed = true;\n    return "Dispensed";\n  }\n}`;
-      }
-    } else if (sandboxTask.toLowerCase().includes('database') || sandboxTask.toLowerCase().includes('connect') || sandboxTask.toLowerCase().includes('crud')) {
+    if (sandboxTask.toLowerCase().includes('database') || sandboxTask.toLowerCase().includes('connect') || sandboxTask.toLowerCase().includes('crud')) {
       const handlesConnection = sandboxConstraints.toLowerCase().includes('connect') || sandboxConstraints.toLowerCase().includes('connection') || sandboxConstraints.toLowerCase().includes('credentials') || sandboxConstraints.toLowerCase().includes('delay');
       if (handlesConnection) {
         mockCode += `// Secure Cloud Database Connection\nimport { createClient } from '@supabase/supabase-js';\n\nconst dbUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mock-db.supabase.co';\nconst dbKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';\n\nexport const db = createClient(dbUrl, dbKey);\n\nexport async function syncData(tableName, payload) {\n  if (!payload || Object.keys(payload).length === 0) {\n    throw new Error("Validation Error: Cannot insert empty records.");\n  }\n  \n  const { data, error } = await db\n    .from(tableName)\n    .insert([payload]);\n    \n  if (error) {\n    console.error("Database connection failure:", error.message);\n    throw error;\n  }\n  return data;\n}`;
@@ -2856,8 +3128,6 @@ export default function App() {
     ]);
 
     let step = 0;
-    const isDrone = sandboxTask.toLowerCase().includes('drone') || sandboxTask.toLowerCase().includes('autopilot') || sandboxTask.toLowerCase().includes('navigation') || sandboxTask.toLowerCase().includes('infiltration') || sandboxTask.toLowerCase().includes('oxygen') || sandboxTask.toLowerCase().includes('regulator');
-    const isFeeder = sandboxTask.toLowerCase().includes('feeder') || sandboxTask.toLowerCase().includes('cat') || sandboxTask.toLowerCase().includes('water');
     const isDatabase = sandboxTask.toLowerCase().includes('database') || sandboxTask.toLowerCase().includes('connect') || sandboxTask.toLowerCase().includes('crud');
     const isEnvKeys = sandboxTask.toLowerCase().includes('env') || sandboxTask.toLowerCase().includes('environment') || sandboxTask.toLowerCase().includes('gitignore') || sandboxTask.toLowerCase().includes('variables');
     const isRls = sandboxTask.toLowerCase().includes('security') || sandboxTask.toLowerCase().includes('rls') || sandboxTask.toLowerCase().includes('row-level') || sandboxTask.toLowerCase().includes('isolation');
@@ -2871,16 +3141,7 @@ export default function App() {
       } else if (step === 3) {
         setChaosLogs(prev => [...prev, { type: 'info', text: 'Running Test Scenario 2: Boundary / empty conditions...' }]);
       } else if (step === 4) {
-        if (isDrone) {
-          const handlesEmpty = sandboxEdgeCases.toLowerCase().includes('null') || sandboxEdgeCases.toLowerCase().includes('empty') || sandboxEdgeCases.toLowerCase().includes('undefined');
-          if (handlesEmpty) {
-            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 2: PASSED. Script throws error on null target coordinates.' }]);
-          } else {
-            setChaosLogs(prev => [...prev, { type: 'error', text: 'Test 2: FAILED! Null coordinate values caused drone navigation system crash.' }]);
-          }
-        } else if (isFeeder) {
-          setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 2: PASSED. System limits inputs correctly.' }]);
-        } else if (isDatabase) {
+        if (isDatabase) {
           const handlesEmpty = sandboxEdgeCases.toLowerCase().includes('empty') || sandboxEdgeCases.toLowerCase().includes('null') || sandboxEdgeCases.toLowerCase().includes('credentials');
           if (handlesEmpty) {
             setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 2: PASSED. Empty inserts are validated and blocked from database.' }]);
@@ -2907,31 +3168,7 @@ export default function App() {
       } else if (step === 5) {
         setChaosLogs(prev => [...prev, { type: 'info', text: 'Running Test Scenario 3: Malicious exploits / constraints...' }]);
       } else if (step === 6) {
-        if (isDrone) {
-          const handlesPower = sandboxConstraints.toLowerCase().includes('power') || sandboxConstraints.toLowerCase().includes('initialize') || sandboxConstraints.toLowerCase().includes('state') || sandboxConstraints.toLowerCase().includes('powerstate');
-          if (handlesPower) {
-            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 3: PASSED. Autopilot successfully verified system power and target coordinates before navigation.' }]);
-            setSandboxSuccess(true);
-          } else {
-            setChaosLogs(prev => [...prev, {
-              type: 'error',
-              text: 'Test 3: FAILED! Unpowered autopilot command injected. Drone attempted flight without power checks and crashed.'
-            }]);
-            setSandboxSuccess(false);
-          }
-        } else if (isFeeder) {
-          const handlesCat = sandboxConstraints.toLowerCase().includes('sneaky') || sandboxConstraints.toLowerCase().includes('cat') || sandboxConstraints.toLowerCase().includes('stir');
-          if (handlesCat) {
-            setChaosLogs(prev => [...prev, { type: 'success', text: 'Test 3: PASSED. Smart Feeder triggered buzzer for Cat and blocked extra food.' }]);
-            setSandboxSuccess(true);
-          } else {
-            setChaosLogs(prev => [...prev, {
-              type: 'error',
-              text: 'Test 3: FAILED! Cat triggered dispenser twice in 1 minute. Feeder double-dispensed, violating feeding schedules.'
-            }]);
-            setSandboxSuccess(false);
-          }
-        } else if (isDatabase) {
+        if (isDatabase) {
           const handlesConnection = sandboxConstraints.toLowerCase().includes('connect') || sandboxConstraints.toLowerCase().includes('connection') || sandboxConstraints.toLowerCase().includes('credentials') || sandboxConstraints.toLowerCase().includes('delay');
           const handlesEmpty = sandboxEdgeCases.toLowerCase().includes('empty') || sandboxEdgeCases.toLowerCase().includes('null') || sandboxEdgeCases.toLowerCase().includes('credentials');
           if (handlesConnection && handlesEmpty) {
@@ -3227,9 +3464,87 @@ export default function App() {
       setSandboxConstraints('Write database policies checking active user uid (auth.uid() = user_id). Block all unauthorized cross-user accesses.');
       setSandboxInput('auth.uid(), user_id, table_name');
       setSandboxEdgeCases('Null user tokens, cross-tenant reads, anonymous accesses, policy bypasses');
+    } else if (session.id === 'l2-s1') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Create a <canvas id="game-canvas"> element sized 480x600, retrieve its 2D context in canvas.js, and draw a red 40x40 player ship rectangle at coordinates (200, 500) using fillStyle and fillRect.');
+      setSandboxConstraints('Must call canvas.getContext(\'2d\') before any draw commands; fillStyle must be set before fillRect is called.');
+      setSandboxInput('canvas, ctx');
+      setSandboxEdgeCases('The draw loop must call ctx.clearRect() before each redraw once a game loop exists, so shapes don\'t leave a solid trail.');
+    } else if (session.id === 'l2-s2') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Declare a ship object literal with x, y, width, height, and speed properties, then write a moveLeft() function that subtracts ship.speed from ship.x, clears the canvas, and redraws the ship.');
+      setSandboxConstraints('ship must be a single object literal, not five separate loose variables; moveLeft() must reference ship.speed instead of a hardcoded number.');
+      setSandboxInput('ship { x, y, width, height, speed }');
+      setSandboxEdgeCases('A local variable inside the move handler must never be named ship again — that would shadow the global object and silently stop the canvas ship from moving.');
+    } else if (session.id === 'l2-s3') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Declare an empty lasers array, write a fireLaser() function that pushes a new laser object (positioned at the ship\'s x + 18, moving at speed 8) onto the array when spacebar is pressed, and a loop that draws every laser in the array.');
+      setSandboxConstraints('lasers must be initialized as an empty array before any pushes occur; fireLaser() must push a full object literal (not just a coordinate number).');
+      setSandboxInput('lasers[], ship.x');
+      setSandboxEdgeCases('A single spacebar press must not push duplicate lasers — key-repeat behavior can make the cannon feel like it\'s stuttering or double-firing if not handled.');
+    } else if (session.id === 'l2-s4') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Update every laser\'s y coordinate by subtracting its speed, then remove any laser whose y drops below 0 using splice(), iterating the array in reverse order.');
+      setSandboxConstraints('The loop must iterate from lasers.length - 1 down to 0 (reverse), not forward; splice(i, 1) must be called only after the off-screen check, not unconditionally.');
+      setSandboxInput('lasers[]');
+      setSandboxEdgeCases('Multiple lasers exiting off-screen on the same frame must all be removed, not just every other one, which is what a forward-splicing loop would incorrectly do.');
+    } else if (session.id === 'l2-s5') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Build a 3-row by 5-column grid of alien objects (each with x, y, and alive), write a moveSwarm() function that shifts every alien by a shared direction value and bounces the whole grid off the screen edges, and represent a shield as an array of cells where a checkShieldCollision(laser) function computes which cell a laser hit and destroys it.');
+      setSandboxConstraints('Store aliens as a nested array (rows of columns), not a flat list; every alien must move using the SAME shared direction value each tick; the shield\'s column-index formula must subtract the shield\'s starting x offset before dividing by cellWidth; a destroyed shield cell is set to 0, never spliced out.');
+      setSandboxInput('aliens[][], direction, shield[]');
+      setSandboxEdgeCases('An alien exactly at the boundary coordinate must trigger the bounce reliably, not clip past it; a laser hitting an already-destroyed shield cell must have no further effect, and a computed index outside the shield\'s range must not crash or silently pass the check.');
+    } else if (session.id === 'l2-s6') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Declare a keysPressed object, bind keydown/keyup listeners that toggle each key\'s Boolean state, and write a handleInputs() function called every game-loop tick that moves the ship and fires lasers based on which keys are currently true. Then sweep every laser against every alien in the grid; on overlap, mark the alien\'s alive to false, splice the laser out, add 50 to score, and break out of the inner loop.');
+      setSandboxConstraints('Both keydown AND keyup listeners must be bound, not just keydown; handleInputs() must run every game-loop frame. The outer laser loop must iterate backward (safe for mid-loop splicing); break must run immediately after a hit is resolved; only living aliens (alive === true) should ever be checked against a laser.');
+      setSandboxInput('keysPressed{}, lasers[], aliens[][]');
+      setSandboxEdgeCases('Holding two keys at once must move and fire in the same frame, with firing respecting a cooling interval; a laser passing through a dense cluster of aliens must destroy at most one alien.');
+    } else if (session.id === 'l2-s7') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Write a checkWaveCompletion() function that counts alive aliens across the grid and, only when that count hits exactly zero, increments wave and calls spawnSwarm(wave) once. Write a drawHUD() function rendering score, wave number, and a health bar. Then refactor the sweep loop so array lengths are cached into local variables before looping instead of re-reading .length every iteration.');
+      setSandboxConstraints('checkWaveCompletion() must guard against calling spawnSwarm() more than once per wave clear; the health bar must be drawn as two overlapping rectangles (red background, green foreground sized to current health); aliens.length and each row\'s .length must be cached before the loop starts.');
+      setSandboxInput('wave, health, aliens[][]');
+      setSandboxEdgeCases('Destroying every alien in a wave must increment wave exactly once, even across several frames that all read zero alive aliens in a row; a 500-laser stress test must hold a stable frame rate rather than degrading.');
+    } else if (session.id === 'l2-s8') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Ask the AI for a plain-English, numbered walkthrough of what happens between typing a URL and seeing a page (client request, routing, server response, render), in exactly 8 steps — this session produces no game code, it is a comprehension exercise audited against the DevTools Network tab.');
+      setSandboxConstraints('Every step must map to something visible in the DevTools Network tab; no step may skip directly from "client" to "page loads" without naming the request/response round trip.');
+      setSandboxInput('captured request/response pair (URL, method, status, payload)');
+      setSandboxEdgeCases('A 404 response must be explained as a successful conversation with a "no" answer, not confused with a dropped/offline connection.');
+    } else if (session.id === 'l2-s9') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Write an async function fetchLeaderboard() that awaits a fetch() call to a leaderboard endpoint, awaits parsing the JSON response, logs the result, and wraps both awaits in a try/catch that logs a friendly error on failure.');
+      setSandboxConstraints('The function must be declared with the async keyword before it uses any await; both the fetch() call and the .json() parse must be individually awaited.');
+      setSandboxInput('leaderboard endpoint URL');
+      setSandboxEdgeCases('A broken or unreachable endpoint must be caught by the try/catch block and logged, not left to throw an uncaught exception.');
+    } else if (session.id === 'l2-s10') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Write an async function submitScore(player, val) that POSTs a JSON body { player, score: val } to a scores endpoint with a Content-Type: application/json header, checks res.ok and throws if the submission failed, and catches/logs any network error.');
+      setSandboxConstraints('The fetch options object must set method: "POST" and a Content-Type: application/json header; the request body must be passed through JSON.stringify() rather than a raw object.');
+      setSandboxInput('player, score');
+      setSandboxEdgeCases('An unreachable endpoint must be caught and logged as a warning instead of crashing the game; a malformed or oversized payload\'s error status must be surfaced, not swallowed.');
+    } else if (session.id === 'l2-s11') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Create a colonist_scores table (id, player, score, wave_reached) with a primary key, insert two sample rows, then write a SELECT query filtering score > 4000 and ordering by score descending in the browser-based SQL playground.');
+      setSandboxConstraints('Must declare id INT PRIMARY KEY; every UPDATE/DELETE must include a WHERE clause targeting a specific id, never applied to the whole table.');
+      setSandboxInput('colonist_scores(id, player, score, wave_reached)');
+      setSandboxEdgeCases('Running the query on an empty table must return zero rows without erroring; an UPDATE with no WHERE clause must be flagged before running.');
+    } else if (session.id === 'l2-s12') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Given a concatenated SQL login query, identify why it is vulnerable to injection and rewrite it as a parameterized query, plus write a validation rule rejecting a score outside 0-1,000,000 before it reaches the database.');
+      setSandboxConstraints('The rewritten query must use a placeholder (?), never string concatenation; the validation rule must reject out-of-range or non-numeric scores before they reach the query.');
+      setSandboxInput('userInput, score');
+      setSandboxEdgeCases('The hostile input \' OR \'1\'=\'1 must fail harmlessly against the parameterized version; a negative or non-numeric score must be rejected by the validation rule before it reaches the database.');
+    } else if (session.id === 'l2-s13') {
+      setSandboxRole('Colony Defense Systems Engineer');
+      setSandboxTask('Compile your full Mars Colony Defense codebase (canvas init, sprites, input matrix, collision sweeps, async leaderboard, SQL queries) into one working build, and prepare to explain each module\'s role to the tutor without notes.');
+      setSandboxConstraints('Every module (rendering, input, collision, API, database) must be independently explainable; no leftover console.log debug statements or dead variables from earlier sessions should remain in the final build.');
+      setSandboxInput('full Level 2 codebase');
+      setSandboxEdgeCases('The seeded diagnostic bug (an async handler, splice statement, or SQL issue) must be patched within the time limit, and at least 2 code design choices must be defended under tutor questioning.');
     } else {
-      // Dynamic loading from CURRICULUM_DATA for all other sessions
-      setSandboxRole(session.level === 1 ? 'Logic Blueprint Architect' : session.level === 2 ? 'AI Copilot Specialist' : session.level === 3 ? 'System Architect' : 'Software Engineer');
+      // Dynamic loading from CURRICULUM_DATA for all other sessions (L3/L4)
+      setSandboxRole(session.level === 1 ? 'Logic Blueprint Architect' : session.level === 3 ? 'System Architect' : 'Software Engineer');
       setSandboxTask(session.handsOn || session.title);
       setSandboxConstraints(session.objectives ? session.objectives.join(' ') : 'Zero code edits. Verify boundaries.');
       setSandboxInput('inputVars');
@@ -3755,6 +4070,11 @@ export default function App() {
                     <div style={{ marginTop: 32, borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
                       {isQuestLocked(selectedSession.id) ? (
                         <span style={{ color: 'var(--accent-red)', fontSize: '0.85rem' }}>🔒 Complete the earlier quests in this level first to unlock this one.</span>
+                      ) : EXERCISE_COUNTS[selectedSession.id] ? (
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textAlign: 'right' }}>
+                          Pass all {EXERCISE_COUNTS[selectedSession.id]} sandbox exercises to earn +{selectedSession.xp} XP automatically
+                          {' '}({(exerciseProgress[selectedSession.id] || []).length}/{EXERCISE_COUNTS[selectedSession.id]} done). Use “Open Exercise” above to continue.
+                        </span>
                       ) : (
                         <button className="btn-cyber btn-cyber-green" onClick={() => claimCaseEvidence(selectedSession.id, selectedSession.xp)}>
                           Deliver Quest Evidence (+{selectedSession.xp} XP)
@@ -4133,13 +4453,7 @@ export default function App() {
                       <div 
                         key={session.id} 
                         className={`glass-panel journal-card ${isSelected ? 'selected' : ''}`}
-                        onClick={() => {
-                          setSandboxSessionId(session.id);
-                          setS1ActiveExercise(1);
-                          setS2ActiveExercise(1);
-                          setS3ActiveExercise(1);
-                          setS4ActiveExercise(1);
-                        }}
+                        onClick={() => { loadTemplate(session); setS1ActiveExercise(1); }}
                         style={{ padding: '12px', cursor: 'pointer', border: isSelected ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)', background: isSelected ? 'rgba(0, 242, 254, 0.05)' : 'none', borderRadius: '6px' }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>
@@ -4175,8 +4489,7 @@ export default function App() {
                 {/* Main Content Area */}
                 <div style={{ flexGrow: 1, height: 'calc(100% - 60px)', minHeight: 0, overflowY: 'auto' }}>
               
-              {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
-              {/* LEVEL 1 SESSION 1: SECURITY-DRONE NAVIGATOR */}
+              {/* LEVEL 1 SESSION 1: CAR AUTOPILOT SEQUENCER */}
                {sandboxSessionId === 'l1-s1' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   {/* Exercise selector tabs */}
@@ -5325,7 +5638,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to the "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7CodeInput : '// This step is shown as static code — nothing to run yet.\n// Jump to Exercise 7.5 (Iterate & Improve) to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="JS Sandbox Live Preview"
                         />
@@ -5435,7 +5748,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8CodeInput : '// This step is shown as static code — nothing to run yet.\n// Jump to Exercise 8.10 (Iterate & Improve) to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="JS Sandbox Live Preview"
                         />
@@ -6176,7 +6489,7 @@ export default function App() {
                         <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px', borderLeft: '4px solid var(--accent-purple)', background: 'rgba(138, 43, 226, 0.03)' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
-                              🏎️ Racing Car Project — {PROJECT_TASKS[currentSession.id].partNum}
+                              {({ 1: '🏎️ Racing Car Project', 2: '🚀 Mars Colony Defense Project', 3: '🕵️ Cyberpunk Hacker Arena Project', 4: '🛰️ Mission Control Dashboard Project' })[currentSession.level] || 'Project'} — {PROJECT_TASKS[currentSession.id].partNum}
                             </span>
                             <span className="badge-cyber badge-purple" style={{ fontSize: '0.65rem', background: 'rgba(138, 43, 226, 0.2)', color: 'rgb(180, 100, 255)' }}>Active Milestone</span>
                           </div>
@@ -6269,7 +6582,7 @@ export default function App() {
                                 value={editingPlanVision}
                                 onChange={e => setEditingPlanVision(e.target.value)}
                                 style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
+                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
                               />
                             </div>
                             <div className="form-field">
@@ -6278,7 +6591,7 @@ export default function App() {
                                 value={editingPlanSpecs}
                                 onChange={e => setEditingPlanSpecs(e.target.value)}
                                 style={{ width: '100%', height: '130px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
+                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
                               />
                             </div>
                             <div className="form-field">
@@ -6287,7 +6600,7 @@ export default function App() {
                                 value={editingPlanFlow}
                                 onChange={e => setEditingPlanFlow(e.target.value)}
                                 style={{ width: '100%', height: '150px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] ? "Planned control algorithm:\n" + PROJECT_TASKS[currentSession.id].planSpecs.flow : "Outline step-by-step logic in plain English or flowchart syntax (e.g. IF ArrowLeft pressed AND carX > leftBoundary THEN decrease carX)"}
+                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.flow ? "Planned control algorithm:\n" + PROJECT_TASKS[currentSession.id].planSpecs.flow : "Outline step-by-step logic in plain English or flowchart syntax (e.g. IF ArrowLeft pressed AND carX > leftBoundary THEN decrease carX)"}
                               />
                             </div>
                           </div>
@@ -6425,8 +6738,8 @@ export default function App() {
                           className="btn-cyber btn-cyber-red" 
                           onClick={() => {
                             if (window.confirm("Reset this version to defaults?")) {
+                              setEditingPlanVision('');
                               setEditingPlanSpecs('');
-                              setEditingPlanData('');
                               setEditingPlanFlow('');
                               setEditingCodePrompt(selectedJournal.history[0]?.prompt || '');
                               setEditingCodeOutput('');

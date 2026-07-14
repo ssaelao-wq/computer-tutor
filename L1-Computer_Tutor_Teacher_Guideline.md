@@ -35,20 +35,22 @@ Before running classes, tutors must familiarize themselves with the administrati
 
 ---
 
-## 🏎️ Level 1 Racing Car Project: 11-Part Roadmap (Sessions 2–12)
+## 🏎️ Level 1 Racing Car Theme: Standalone Lab Track (Sessions 2–12)
 
-The main thread of Level 1 is the **2D Highway Avoidance Racing Game**. Students build this project iteratively week-by-week from Session 2 to Session 12, aligning directly with each session's core concepts:
-- **Part 1 (Session 2)**: *HTML Document Skeleton* — Create the base containers (Track Arena, Player Car, Dashboard Panel).
-- **Part 2 (Session 3)**: *CSS Sizing & Coordinates Layout* — Sizing '#game-track', absolute position '#player-car' and style road dividers with white dashes.
-- **Part 3 (Session 4)**: *JS Variable Registry* — Declare variables for position state, speed metrics, score registers, and crash flags.
-- **Part 4 (Session 5)**: *Keyboard Control Interfaces* — Bind keyboard keydown listeners to register steering moves (WASD/Arrows).
-- **Part 5 (Session 6)**: *Safety Guards & Boundary Clamps* — Implement boundary checks that clamp coordinates to keep the player on the road.
-- **Part 6 (Session 7)**: *Obstacle Loop Generation* — Spawns oncoming obstacle cars dynamically using loops.
-- **Part 7 (Session 8)**: *Modular Control Functions* — Refactor movement logic and code modular update functions for moving obstacles down the screen.
-- **Part 8 (Session 9)**: *Timer Loops & Animations* — Construct requestAnimationFrame recursive game loops for redraw rendering.
-- **Part 9 (Session 10)**: *Collision Detection Overlap Math* — Code mathematical overlap bounding checks to trigger crash states on collision.
-- **Part 10 (Session 11)**: *DOM HUD Visual Updates* — Connect score states to update DOM element text strings and display restart prompts.
-- **Part 11 (Session 12)**: *Game Polish & Final Assessment* — Finalizing difficulty multipliers, resetting handlers, and executing live defense QA reviews.
+> **Restructure note (2026-07-13):** Level 1 is a *technical knowledge* level. The Racing Car theme frames every exercise and lab, but students do **not** build one cumulative game project across sessions — the full game build is deferred to Levels 3–4 (development process + capstone). Each session's lab below is a **standalone themed artifact**: when a lab exercises a concept from an earlier session, the tutor provides a fresh starter file, so no student depends on carrying their own project forward. The "Project Journal Milestone" sections throughout this guideline now describe each session's *standalone lab*, logged through the same 5-step workflow — the expected code and answers are unchanged.
+
+The lab track, aligned to each session's core concept:
+- **Lab 1 (Session 2)**: *HTML Document Skeleton* — Base containers (Track Arena, Player Car, Dashboard Panel).
+- **Lab 2 (Session 3)**: *CSS Sizing & Coordinates Layout* — Sizing '#game-track', absolute position '#player-car' and styled road dividers with white dashes.
+- **Lab 3 (Session 4)**: *JS Variable Registry* — Variables for position state, speed metrics, score registers, and crash flags.
+- **Lab 4 (Session 5)**: *Keyboard Control Interfaces* — Keydown listeners registering steering moves (WASD/Arrows).
+- **Lab 5 (Session 6)**: *Safety Guards & Boundary Clamps* — Boundary checks clamping coordinates to keep the player on the road.
+- **Lab 6 (Session 7)**: *Obstacle Loop Generation* — Spawning oncoming obstacle cars dynamically using loops.
+- **Lab 7 (Session 8)**: *Modular Control Functions* — Refactoring movement logic into modular update functions.
+- **Lab 8 (Session 9)**: *Timer Loops & Animations* — requestAnimationFrame recursive loops for redraw rendering.
+- **Lab 9 (Session 10)**: *Collision Detection Overlap Math* — Mathematical overlap bounding checks triggering crash states.
+- **Lab 10 (Session 11)**: *DOM HUD Visual Updates* — Score states wired to DOM text updates and restart prompts.
+- **Lab 11 (Session 12)**: *Config Polish & Final Assessment* — Config-driven tunables, reset handlers, and live defense QA reviews on the assessment labs.
 
 ---
 
@@ -193,7 +195,7 @@ The main thread of Level 1 is the **2D Highway Avoidance Racing Game**. Students
 
 ---
 
-## Session 2: "Designing the Game Track: HTML & Nesting"
+## Session 2: "Starting the Game: HTML Structure & Basic Elements"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: DOM Tree Construction Game
@@ -280,11 +282,11 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. All 
       <div class="lane-divider"></div>
     </div>
     ```
-  * *Why:* The final "iterate" step assembles all the separate pieces built across 2.1–2.9 into one working page. The validator checks that every required element is present **and** every div is properly closed (4+ `</div>` tags) — proving the student can combine parts without leaving a tag open. This is the complete HTML skeleton (Roadmap Part 1) that Sessions 3–12 will style and animate.
+  * *Why:* The final "iterate" step assembles all the separate pieces built across 2.1–2.9 into one working page. The validator checks that every required element is present **and** every div is properly closed (4+ `</div>` tags) — proving the student can combine parts without leaving a tag open. This is the complete HTML skeleton (Lab 1) — the same structure later sessions' fresh starter files are based on.
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-The **Project Journal** is a separate deliverable from the Sandbox exercises above: it tracks the student's **real project file** (`index.html`, built on their own machine with an external AI tool), logged step-by-step across the same 5-step methodology, one milestone card per session ("Part 1: HTML Document Skeleton" for this session). Below is what a **complete, correct** entry should contain in each of the 5 boxes.
+The **Project Journal** is a separate deliverable from the Sandbox exercises above: it tracks the student's **standalone session lab file** (`lab_s2_skeleton.html`, built on their own machine with an external AI tool), logged step-by-step across the same 5-step methodology, one lab card per session ("Lab 1: HTML Document Skeleton" for this session). Labs are self-contained — later sessions get a fresh tutor-provided starter rather than building on this file. Below is what a **complete, correct** entry should contain in each of the 5 boxes.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "A highway-view racing screen: a vertical road area taking up most of the screen, with a small scoreboard panel above it showing the score. The player's car will later sit on the road — for now we're just building the empty containers, no colors or positions yet."
@@ -298,7 +300,7 @@ The **Project Journal** is a separate deliverable from the Sandbox exercises abo
 
 3. **Review & Explain**
    - *Expected checklist, walked against the AI's real output:* all tags open/close correctly (especially divs); `player-car` is nested inside `game-track`; the scoreboard uses `id="score-val"` (not a class, not misspelled).
-   - *Expected Socratic answer* — *"Why must the score value be placed inside a span tag? How does nesting it allow JavaScript to change it later?"* → A `span` is a small, isolated inline container; nesting the number inside it gives JavaScript **one exact element** (`#score-val`) to target and overwrite (`element.innerText = score`) without disturbing the surrounding "Score:" label text.
+   - *Expected Socratic answer* — *"Why must the score value be placed inside a span tag? How does nesting it allow JavaScript to change it later?"* → A `span` is a small, isolated inline container; nesting the number inside it gives JavaScript **one exact element** (`#score-val`) to target and overwrite (`element.textContent = score`) without disturbing the surrounding "Score:" label text.
    - *Why:* Mirrors sandbox E2.8's nesting-check reasoning, generalized to auditing the whole file.
 
 4. **Test & Break**
@@ -309,11 +311,11 @@ The **Project Journal** is a separate deliverable from the Sandbox exercises abo
    - *Expected answer:* "If the initial AI output lacks semantic elements or is missing closing tags, write a follow-up prompt to clean it up. Plan to add a '.lane-divider' inside the track to represent lanes."
    - *Why:* Mirrors sandbox E2.5's iterate step — the AI's *first* pass rarely includes the lane-divider (it was never explicitly requested in Step 2's prompt), so a strong student notices the gap and writes a **follow-up prompt** rather than accepting incomplete output.
 
-* **Homework Evaluation Checklist**: Student must document a 3-level deep nested HTML structure representing a parking garage (Garage ➔ Floor ➔ Bay ➔ Car).
+* **Homework Evaluation Checklist**: Student must document a nested HTML structure representing a garage dashboard — a sidebar container and a main container, each holding nested child panels (matching the Session 2 homework brief).
 
 ---
 
-## Session 3: "Styling the Highway: CSS Layouts & Coordinates"
+## Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Match CSS Selectors to Visual Elements
@@ -410,7 +412,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & Coordinates Layout") tracks the student's real `styles.css`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & Coordinates Layout") tracks the student's standalone session lab stylesheet (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "A dark 2-lane-divider highway (390px wide, 500px tall) with a white dashed line down the middle. A red car sits near the bottom-center of the road. The scoreboard sits above the road as a small horizontal bar."
@@ -438,7 +440,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 
 ---
 
-## Session 4: "Car State Variables: Primitive Types"
+## Session 4: "Tracking Game State: JS Variables & Math"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Data Types Classification Game
@@ -458,7 +460,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. **Note on the live preview:** unlike the HTML/CSS sessions, the Plan/Prompt/Review steps here don't run in the preview (it shows a "nothing to run yet" note) — only the **Test & Break** and **Iterate & Improve** steps execute the student's JavaScript live against the racing-game DOM and stream `console.log`/errors to the terminal panel.
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. **Note on the live preview:** unlike the HTML/CSS sessions, most steps here show a "nothing to run yet" note. Only the two steps with a visible on-screen effect run live: **E5.9** (Test & Break — the missing `px` unit makes the car vanish, then reappear once fixed) and **E5.10** (Iterate & Improve — the complete steering handler; click the preview and press the arrow keys to steer). E5.4/E5.5 change only an in-memory value with no DOM output, so they are fixed as static code (this also keeps E5.4's "silent input fail" from surfacing a spurious runtime error).
 
 Following the same principle as Sessions 2–3, the **[Plan & Design] steps stay at plain-language / system-design level** — the student describes *what changes, what stays fixed, what the system does* in plain words, and the technical form is accepted but never required. The JavaScript keywords (`let`, `const`, `event.key`, `requestAnimationFrame`, `textContent`, …) are each session's own board-lesson content and are *earned* at the **Write AI Prompt** and **Review & Explain** steps — not demanded at planning time.
 
@@ -514,7 +516,7 @@ Following the same principle as Sessions 2–3, the **[Plan & Design] steps stay
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 3: JS Variable Registry") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 3: JS Variable Registry") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "Screen still looks like Session 3's styled road and car — this session works behind the scenes, giving the game a memory of the score, speed, and whether it's running."
@@ -542,7 +544,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 3: JS Variable Re
 
 ---
 
-## Session 5: "Steering Controls: Keydown Event Listeners"
+## Session 5: "Steering the Car: JS Keydown Event Listeners"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Intercepting Inputs Keyboard Mapping
@@ -617,7 +619,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 4: Keyboard Control Interfaces") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 4: Keyboard Control Interfaces") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "Same red car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering."
@@ -645,7 +647,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 4: Keyboard Contr
 
 ---
 
-## Session 6: "Boundary Clamps: Conditional Bounds Checks"
+## Session 6: "Track Boundaries: JS Conditionals & Safety Guards"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Clamping Coordinates Paper Exercises
@@ -720,7 +722,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 5: Safety Guards & Boundary Clamps") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 5: Safety Guards & Boundary Clamps") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "Same steering car — but now it can't be steered off the edges of the road. Holding an arrow key at the edge just keeps it pinned at the outer lane instead of sliding off-screen."
@@ -748,7 +750,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 5: Safety Guards 
 
 ---
 
-## Session 7: "Spawning Obstacles: Loops & Dynamic Lists"
+## Session 7: "Dashing Lanes & Highway Markers: JS Loops & Iteration"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Repeat Calculations Loop Traces
@@ -768,7 +770,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 5: Safety Guards 
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note. **Note:** E7.4 (the infinite-loop bug) is deliberately *not* runnable — executing a missing-increment loop live would hang the preview instead of teaching, so the student fixes it as static code.
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. Live preview is limited in this session: only **E7.5** (Iterate & Improve) runs live, streaming its `console.log` marker positions (0, 120, 240, 360, 480) to the terminal. Every other step shows a "nothing to run yet" note and is fixed as static code — E7.4 (the missing-increment infinite loop) is deliberately non-runnable so it can't hang the preview, and E7.10 (write the whole loop from scratch) is kept static for the same infinite-loop safety reason.
 
 * **Exercise 7.1: [Plan & Design] Marker Spacing Plan** — Plan how many markers and how far apart.
   * *Editor expects:* Plain-language plan of the count and spacing (5 and 120).
@@ -823,7 +825,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 6: Obstacle Loop Generation") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 6: Obstacle Loop Generation") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "Other cars (obstacles) now appear on the road at the top and are visible on screen alongside the player's car, scattered across the lanes."
@@ -851,7 +853,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 6: Obstacle Loop 
 
 ---
 
-## Session 8: "Refactoring: Modular Functions & Code Scope"
+## Session 8: "Defining Movement & Game Functions: JS Modular Code"
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Variable Scoping Match
@@ -871,7 +873,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 6: Obstacle Loop 
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview; Plan/Prompt/Review steps show a "nothing to run yet" note.
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. Live preview is limited in this session: only the final **E8.10** (Iterate & Improve — the complete modular controller) runs live; click the preview and press the arrow keys to steer. The earlier steps are isolated fragments (functions declared but never called), so they have no on-screen effect, show a "nothing to run yet" note, and are fixed as static code.
 
 * **Exercise 8.1: [Plan & Design] Decomposing the Steering Script** — Plan the split into single-purpose functions.
   * *Editor expects:* Plain-language naming of the three single-purpose pieces (function names not required; the technical form is still accepted).
@@ -933,7 +935,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 7: Modular Control Functions") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 7: Modular Control Functions") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "Screen looks identical to Session 7 — this session is a behind-the-scenes cleanup, organizing the movement code into reusable pieces without changing what the player sees."
@@ -1041,7 +1043,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 8: Timer Loops & Animations") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 8: Timer Loops & Animations") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "The obstacle cars now visibly scroll DOWN the road continuously, like the player is driving forward past them, disappearing off the bottom and reappearing at the top — a real animated highway instead of a still picture."
@@ -1146,7 +1148,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 9: Collision Detection Overlap Math") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 9: Collision Detection Overlap Math") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "When the player's car touches an obstacle car, the screen should visibly react — the game freezes and shows that a crash happened."
@@ -1178,7 +1180,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 9: Collision Dete
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: DOM Selection Match
-* **00:15 - 00:35 | Board Lesson**: Document Selectors, innerText Manipulation, and Visibility Styling
+* **00:15 - 00:35 | Board Lesson**: Document Selectors, textContent Manipulation, and Visibility Styling
 * **00:35 - 01:00 | Design Phase**: DOM Data Pipelines diagrams
 * **01:00 - 01:30 | Sandbox Lab**: Wiring Code States variables to Visual HTML Dashboard
 * **01:30 - 01:50 | Assessment**: UI Selector Bugs Diagnostics
@@ -1255,7 +1257,7 @@ Students complete 10 sandbox exercises structured as AI-Era workflow loops. As i
 
 ### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 10: DOM HUD Visual Updates") tracks the student's real `game.js`, separate from the Sandbox exercises above.
+As in Session 2, the **Project Journal** milestone card ("Part 10: DOM HUD Visual Updates") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "The scoreboard number visibly climbs as the game runs, and after a crash a 'Game Over' screen appears on top of the road showing the final score and a prompt to restart."
@@ -1344,7 +1346,7 @@ The capstone sandbox is 10 exercises structured as the same AI-Era workflow loop
 
 ### 3. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
-As in Session 2, the **Project Journal** milestone card ("Part 11: Game Polish & Final Assessment") tracks the student's real `game.js` — here, the *finished, config-driven* build.
+As in Session 2, the **Project Journal** milestone card ("Part 11: Game Polish & Final Assessment") tracks the student's final standalone assessment lab — a config-driven script exercising the level's full concept set (variables, boundaries, collision, restart).
 
 1. **Plan & Design**
    - *Visual Concept & UX Flow (expected):* "The complete game: obstacle cars appear faster and more often as the score climbs (harder over time), and everything from the scoreboard to the crash screen works smoothly together, ready to demo."

@@ -11,10 +11,10 @@ This document serves as the complete, definitive user manual. Whether you are a 
 2. **Chapter 2: System Architecture & Database Schema**
 3. **Chapter 3: The Left Sidebar Navigation**
 4. **Chapter 4: The Dashboard (Command Center)**
-5. **Chapter 5: The Quest Files (Cases Board)**
-6. **Chapter 6: The Interactive Prompt Sandbox**
-7. **Chapter 7: The Prompt Journal & Homework System**
-8. **Chapter 8: The Curriculum Guide & Syllabus Catalog**
+5. **Chapter 5: The Quest Board (Cases Board)**
+6. **Chapter 6: The Interactive Exercises Journal**
+7. **Chapter 7: The Project Journal & Homework System**
+8. **Chapter 8: The Curriculum Syllabus Catalog**
 9. **Chapter 9: The Global Leaderboard**
 10. **Chapter 10: The Teacher Admin Console & Campaign Reskinning**
 11. **Chapter 11: Troubleshooting, FAQ, & Tutoring Best Practices**
@@ -89,10 +89,10 @@ The Left Sidebar is your global remote control. It is anchored to the left of th
 ### Sidebar Components:
 1. **Logo Section (Top)**: Displays the **DETECTIVE HUB** logo alongside a security shield icon.
 2. **Dashboard Button**: Loads the global statistics and feed summary.
-3. **Quest Files Button**: Opens the case selector board.
-4. **Curriculum Guide Button**: Opens the interactive syllabus catalog.
-5. **Prompt Sandbox Button**: Loads the active coding compiler panel.
-6. **Prompt Journal Button**: Opens the student notebooks and homework.
+3. **Quest Board Button**: Opens the case selector board.
+4. **Curriculum Syllabus Catalog Button**: Opens the interactive syllabus catalog.
+5. **Exercises Journal Button**: Loads the per-session sandbox exercise labs.
+6. **Project Journal Button**: Opens the student notebooks and homework.
 7. **Leaderboard Button**: Displays the global standings table.
 8. **Admin Panel Button** *(Teacher Access Only)*: Renders at the bottom of the navigation list only if the logged-in user possesses the `'teacher'` role, separated by a thin horizontal border.
 9. **Log Out Button (Red, Bottom)**: Clears local tokens, signs out the active user, and returns to the login screen.
@@ -109,7 +109,7 @@ The Dashboard is the landing screen loaded upon logging in. It aggregates person
 +-------------------------------+---------------------------------------+
 |                               |                                       |
 |  RANK PROGRESSION DETAIL      |   RECENT ACHIEVEMENTS FEED            |
-|  - Current Rank Status        |   - 20:15 Solved Case: Chef Grid      |
+|  - Current Rank Status        |   - 20:15 Quest Complete: L1 S6       |
 |  - Next Rank Progress Bar     |   - 19:42 Saved Notebook Entry        |
 |                               |                                       |
 +-------------------------------+---------------------------------------+
@@ -126,24 +126,24 @@ The Dashboard is the landing screen loaded upon logging in. It aggregates person
   - Unlocked status messages tell the user what tools they have gained access to (e.g., "Loop Iterators Unlocked").
 * **Recent Achievements Feed (Right Column)**:
   - A chronological feed pulling events from database logs.
-  - Shows timestamps (e.g. `20:15`) alongside descriptive event tags (e.g., `"Evidence submitted: Grid Variable Classification (+100 XP)"`).
+  - Shows timestamps (e.g. `20:15`) alongside descriptive event tags (e.g., `"Quest complete: Track Boundaries (+100 XP)"`).
 
 ---
 
-## 📁 Chapter 5: The Quest Files (Cases Board)
+## 📁 Chapter 5: The Quest Board (Cases Board)
 
-The Quest Files view serves as the interactive campaign selection map where you can review your available missions.
+The Quest Board view serves as the interactive campaign selection map where you can review your available missions.
 
 ### 💡 What is a "Quest" vs. a "Session"?
 It is important to understand the difference between these two terms:
-* **The Session**: Represents the complete 2-hour lesson plan (including the warm-up game, the teacher's lesson lecture, discussion topics, class activities, and homework). All 12 sessions are listed inside the **Curriculum Guideline** tab.
+* **The Session**: Represents the complete 2-hour lesson plan (including the warm-up game, the teacher's lesson lecture, discussion topics, class activities, and homework). All 12 sessions are listed inside the **Curriculum Syllabus Catalog** tab.
 * **The Quest**: The specific **interactive programming task / coding lab** within that session. It is the digital assignment where you open the sandbox editor, write scripts, test compiling, and submit your solution.
 
 ### ⚙️ What are the Conditions for a Session to have a Quest?
 Not every session in the curriculum has a playable quest on the Quest Board. A session only has a quest if it meets these three conditions:
 1. **Programmatic Verification (Automated Test Suite)**: The task must involve logic or scripts (like loops, coordinates, or data validations) that the app's compiler can execute and test automatically.
 2. **UI Simulation Support (Visual Telemetry)**: The application must have a custom visual telemetry board coded for that lesson (like the drone path logs, airlock doors, or variable sorting bins) to visually simulate your code.
-3. **Active Scripting Target**: The goal must be to write rules or code. Theoretical lessons (such as designing schemas on whiteboards or discussing ethics) do not have sandbox quests and are logged directly in the **Prompt Journal** notebook instead.
+3. **Active Scripting Target**: The goal must be to write rules or code. Theoretical lessons (such as designing schemas on whiteboards or discussing ethics) do not have sandbox quests and are logged directly in the **Project Journal** notebook instead.
 
 ### Screen Layout:
 1. **Level Selector Tabs (Top Row)**:
@@ -162,22 +162,29 @@ Not every session in the curriculum has a playable quest on the Quest Board. A s
    - Displays information for the selected sub-quest card:
      - **Quest Title** & **XP Reward**.
      - **Objectives Checklist**: Bullet-point goals explaining what needs to be coded.
-     - **Open in Sandbox Button**: A cyan-bordered button at the bottom. Clicking this loads the session template data into memory and redirects the screen automatically to the **Prompt Sandbox** tab.
+     - **Open in Sandbox Button**: A cyan-bordered button at the bottom. Clicking this loads the session template data into memory and redirects the screen automatically to the **Exercises Journal** tab.
 
 ### 🧪 The Quest vs. The Sandbox Analogy
 If you click **Open in Sandbox** inside a quest card, you will notice it loads that session's workspace. Here is how they relate:
 * **The Quest (The Assignment Brief)**: This is the instruction sheet defining your role, the inputs, constraints, edge cases, and points reward size.
 * **The Sandbox (The Science Lab Equipment)**: This is the digital workshop containing the tools—the text editor, the compile check buttons, the Telemetry variable screens, and the diagnostic terminal.
-* *Analogy*: You browse the **Quest Files** cabinet to choose which assignment sheet to study. Once you click **Open in Sandbox**, you carry that assignment sheet into the **Prompt Sandbox** lab to build and run your script.
+* *Analogy*: You browse the **Quest Board** cabinet to choose which assignment sheet to study. Once you click **Open in Sandbox**, you carry that assignment sheet into the **Exercises Journal** lab to build and run your script.
 
 ### 📋 Active Sandbox Quests Index (Playable labs per Level)
-Only the sessions with active simulation compiler test suites appear as cards on your Quest Files board (titles below match the Cyberpunk Metropolis campaign theme; content is themed identically across all campaign choices):
-* **Level 1 (Logic)** — Racing Car Game:
+The sessions with a playable coding lab appear as cards on your Quest Board. In **Level 1, all 12 sessions** have a lab (the L1 theme is the fixed Racing Car Game across every campaign); in Levels 2-4 only selected sessions do, and the theoretical/design-only sessions are logged directly in the Project Journal instead.
+* **Level 1 (Logic)** — Racing Car Game (all 12 sessions have a playable sandbox lab):
   - *Session 1*: Literal Logic & Digital Infiltration
   - *Session 2*: Starting the Game — HTML Structure & Basic Elements
   - *Session 3*: Styling the Track & Player Car — CSS Lanes & Visuals
-  - *Session 4*: Decisions, Decisions (conditional logic gates)
-  - *Session 5*: The Automated Pet Grid (loops & bounds)
+  - *Session 4*: Tracking Game State — JS Variables & Math
+  - *Session 5*: Steering the Car — JS Keydown Event Listeners
+  - *Session 6*: Track Boundaries — JS Conditionals & Safety Guards
+  - *Session 7*: Dashing Lanes & Highway Markers — JS Loops & Iteration
+  - *Session 8*: Defining Movement & Game Functions — JS Modular Code
+  - *Session 9*: The Racing Game Loop — Timers & Animations
+  - *Session 10*: Collision Detection — Auditing AI Overlap Math
+  - *Session 11*: The Dashboard & High-Score Counter — DOM Operations
+  - *Session 12*: The Racing Car Game Assessment
 * **Level 2 (AI Copilot)**:
   - *Session 5*: The AI Sandbox Duel
   - *Session 6*: The Obfuscation Constraint
@@ -190,25 +197,25 @@ Only the sessions with active simulation compiler test suites appear as cards on
   - *Session 5*: Row-Level Security & Data Wards
 
 > [!NOTE]
-> Updated 2026-07-08 — this index previously listed stale pre-rework Level 1 titles ("Robotic Chef Sequence Instructions," "Variable Data Type Classification," "Airlock State Machine Transitions") from before the Racing Car Game theme was finalized. Levels 2-4 were largely accurate already and only received minor wording touch-ups to match the app's current session titles exactly.
+> Updated 2026-07-11 — the Level 1 list now shows all 12 sessions. Every L1 session has a bespoke sandbox lab, and the Quest Board derives its L1 cards from the canonical curriculum (one fixed Racing Car Game theme), so the old per-campaign session variants (e.g. "Decisions, Decisions," "The Automated Pet Grid") no longer appear. In L1, quest XP is awarded automatically once all of a session's sandbox exercises pass — there is no separate manual "claim" step for L1 quests. Levels 2-4 still list only their selected playable sessions.
 
 ---
 
-## 💻 Chapter 6: The Interactive Prompt Sandbox
+## 💻 Chapter 6: The Interactive Exercises Journal
 
-The Prompt Sandbox is the core compiler workspace where you build and test your logic.
+The Exercises Journal is the core compiler workspace where you build and test your logic.
 
 ```
 +------------------------------------+----------------------------------+
 | CASE SPECIFICATION & BRIEF         | CODE EDITOR WORKSPACE            |
-| - Assigned Role: Drone Operator    | [Code Area]                      |
-| - Task: Configure drone autopilot  |                                  |
-| - Inputs: powerState, targetCoords |                                  |
+| - Assigned Role: Junior JS Engineer| [Code Editor]                    |
+| - Task: Steer the racing car       |                                  |
+| - Inputs: event.key, carX          |                                  |
 |                                    |                                  |
 +------------------------------------+----------------------------------+
-| TELEMETRY MONITOR                  | COMPILER CONTROLS                |
-| - mode: "idle"                     | [Run Simulator] (Green)          |
-| - status: "success"                | [Submit Case File] (Blue)        |
+| LIVE PREVIEW / FUZZ CONSOLE        | CONTROLS                         |
+| - Racing game preview (L1)         | [Verify] per exercise  (L1)      |
+| - PASS/FAIL console   (L2-L4)      | [Run AI Generator]     (L2-L4)   |
 |                                    +----------------------------------+
 | SYSTEM LOG TERMINAL                |
 | > Compilation complete.            |
@@ -223,10 +230,9 @@ The Prompt Sandbox is the core compiler workspace where you build and test your 
   - *Task Target*: The exact task objectives.
   - *Input Parameters*: Data variables fed into the code.
   - *Edge Case Constraints*: Boundaries that must be handled safely (e.g. empty inputs).
-* **Telemetry State Monitor**:
-  - Live virtual register boards.
-  - Shows variable names and current values (e.g., `waterLevel: 45`, `gridStatus: "Active"`).
-  - When you run code, watch these registers update in real-time as your script executes!
+* **Live Preview / Telemetry**:
+  - In Level 1 labs this is a **Live Racing Game Preview** — an iframe that runs the executable steps against the game DOM. For "Test & Break" / "Iterate & Improve" steps you can click the preview and press the arrow keys to drive the car; `console.log` output and runtime errors stream to the terminal panel below it.
+  - In Levels 2-4 this is the **Chaos Monkey Fuzzing Console**, which prints each simulated test scenario and a PASS/FAIL result.
 * **System Log Terminal**:
   - Simulated terminal output window.
   - Prints warnings, compiler notifications, success flags, or error trace logs.
@@ -235,16 +241,16 @@ The Prompt Sandbox is the core compiler workspace where you build and test your 
 * **The Code Editor**:
   - A text editor preloaded with template scaffolding code and comments.
   - Supports standard JavaScript styling.
-* **Control Actions Row**:
-  - **Run Simulator Button (Green)**: Runs compilation tests on your script. It passes parameters, evaluates rules, prints logs to the terminal, and updates the Telemetry monitors.
-  - **Submit Case File Button (Blue)**: This button is locked (unclickable) when you edit your code. It activates **ONLY** after you run the simulator and your code successfully passes all validation checks without crashing. Clicking it saves your success state, updates your XP score by +100, and logs the completion.
+* **Control Actions Row** (differs by level):
+  - **Level 1 (bespoke labs)**: Each session shows a row of numbered **Exercise tabs**. You write your answer (a plain-language plan, an AI prompt, a short answer, or JavaScript, depending on the step) and click **Verify**. Passing marks the exercise ✓. When *every* exercise in a session passes, that session's **+100 XP is awarded automatically** — there is no separate submit button.
+  - **Levels 2-4 (generic prompt lab)**: Fill in the prompt-spec fields (Role, Task, Constraints, Inputs, Edge Cases) and click **Run AI Generator** to render the simulated code, then **Launch Chaos Monkey** to fuzz it. Passing all fuzz tests awards +100 XP.
 
-### 💡 Purpose of the Dedicated "Prompt Sandbox" Sidebar Menu
-You might wonder: *If I can open the sandbox directly by clicking "Open in Sandbox" inside Quest Files, why is there a separate "Prompt Sandbox" button in the left sidebar navigation?*
+### 💡 Purpose of the Dedicated "Exercises Journal" Sidebar Menu
+You might wonder: *If I can open the sandbox directly by clicking "Open in Sandbox" inside Quest Board, why is there a separate "Exercises Journal" button in the left sidebar navigation?*
 
 * **1. Persistent Workspace Recovery (No Code Loss)**:
-  - The Prompt Sandbox maintains a persistent state. If you are writing a complex block of code and need to switch tabs (e.g., to read a lesson objective in the *Curriculum Guide* or check notes in your *Prompt Journal*), your code is not lost!
-  - Clicking the **Prompt Sandbox** sidebar button takes you right back to your active editor, restoring your current typed script, state variables, and terminal logs exactly where you left off.
+  - The Exercises Journal maintains a persistent state. If you are writing a complex block of code and need to switch tabs (e.g., to read a lesson objective in the *Curriculum Syllabus Catalog* or check notes in your *Project Journal*), your code is not lost!
+  - Clicking the **Exercises Journal** sidebar button takes you right back to your active editor, restoring your current typed script, state variables, and terminal logs exactly where you left off.
 * **2. Distraction-Free IDE Access**:
   - It functions as your active compiler. Having it in the sidebar means you have one-click access to run diagnostic checks, write prototype loops, and dry-run syntax rules without needing to navigate back through case menus.
 * **3. Reviewing Live Telemetry**:
@@ -252,9 +258,9 @@ You might wonder: *If I can open the sandbox directly by clicking "Open in Sandb
 
 ---
 
-## 📝 Chapter 7: The Prompt Journal & Homework System
+## 📝 Chapter 7: The Project Journal & Homework System
 
-The Prompt Journal serves as your digital engineering notebook. Here, students document logic breakdowns, write specifications, complete assignments, and track iterations of their code profiles.
+The Project Journal serves as your digital engineering notebook. Here, students document logic breakdowns, write specifications, complete assignments, and track iterations of their code profiles.
 
 ### 1. Screen Layout:
 * **Journal List (Left Sidebar)**:
@@ -277,9 +283,9 @@ The Prompt Journal serves as your digital engineering notebook. Here, students d
 
 ---
 
-## 📖 Chapter 8: The Curriculum Guideline & Syllabus Catalog
+## 📖 Chapter 8: The Curriculum Syllabus Catalog
 
-The **Curriculum Guideline** menu (labeled "Curriculum Guide" on the sidebar) acts as a digital interactive binder containing the entire academic syllabus, lesson timelines, and instructor guides.
+The **Curriculum Syllabus Catalog** menu (its exact sidebar label) acts as a digital interactive binder containing the entire academic syllabus, lesson timelines, and instructor guides.
 
 ### 1. Header Toolbar Controls (Top of the Screen)
 * **Curriculum Level Selector Tabs (Left)**:
@@ -300,21 +306,19 @@ Each session appears as a premium, glass-themed card. Under **Student Mode**, th
 * **Warm-Up Panel**: A brief 10–15 minute introductory activity.
 * **Mini-Lesson Panel**: The core concept introduction guidelines used by the tutor.
 * **Core Practice Activity**: An offline or drag-and-drop sequencing task to model the logic flow.
-* **Hands-On Sandbox Lab**: A description of the matching interactive programming task that needs to be compiled in the *Prompt Sandbox* tab.
-* **Homework Brief**: Outlines the notebook journaling task to be submitted inside the *Prompt Journal* tab.
+* **Hands-On Sandbox Lab**: A description of the matching interactive programming task that needs to be compiled in the *Exercises Journal* tab.
+* **Homework Brief**: Outlines the notebook journaling task to be submitted inside the *Project Journal* tab.
 * **Ethics Moment**: Discusses social and security implications of code logic.
 * **Classroom Adaptations**: Tips on adjusting lesson presentation based on age groups.
 
-### 3. Teacher Mode Extensions (Instructor Guideline Overlays)
-When the **Teacher Mode** toggle is switched **ON**, three additional panels expand at the bottom of every session card:
-* **💡 Socratic Prompting Guidelines**:
-  - Contains exact, context-specific questions to guide struggling students rather than feeding them direct code syntax.
-  - Example: *"Look at the terminal. Why did the drone crash on step 3?"* or *"How can the drone know where the door is before it performs a scan?"*
-* **🔍 Socratic Check Questions**:
-  - Concept-checking questions to test a student's understanding before allowing them to advance.
-  - Example: *"If we bypass the firewall before scanning, what does the connector receive? Why does it fail?"*
-* **🔑 Teacher Solutions Key**:
-  - Displays the exact, expected Javascript code block answers or logic sequence answers required to pass the Sandbox checks. This serves as a quick reference sheet for the tutor during active coding runs.
+### 3. Teacher Mode View (Instructor Lesson Breakdown)
+When the **Teacher Mode** toggle is switched **ON**, the session card's "Session Plan" tab swaps the student-facing panels for the instructor's lesson breakdown:
+* **⏱️ Warm-Up Classroom Game (15 min)**: the opening activity.
+* **🏫 Board Concepts & Mini-Lesson (20 min)**: the core concept the tutor presents.
+* **♟️ Activity Orchestration Guide (60 min)**: how to run the hands-on portion.
+
+> [!NOTE]
+> Detailed Socratic prompting scripts and full answer keys live in the separate **Teacher Guideline** documents (e.g. `L1-Computer_Tutor_Teacher_Guideline.md`), not as in-app overlays. An in-app Socratic-questions / solutions-key panel is a planned future enhancement, not a current feature.
 
 ---
 
@@ -330,7 +334,7 @@ The Leaderboard showcases the standings of all detectives registered in the trai
    - `Junior Investigator` (Green badge): `400 - 799 XP`
    - `Senior Auditor` (Cyan badge): `800 - 1199 XP`
    - `Master Architect` (Purple badge): `1200+ XP`
-4. **Current Operation**: Displays the active session the student is currently working on.
+4. **Current Operation**: Displays the student's assigned curriculum level (e.g. "Level 1").
 5. **Total XP**: Points score.
 * **Highlighting**: Your profile row is highlighted in neon green with a labeled `YOU` badge to help you find your standing instantly.
 
@@ -342,9 +346,12 @@ The Admin Panel is a specialized management dashboard accessible only to users w
 
 ### 1. Active Campaign Theme Selection
 Enables teachers to change the visual theme and storytelling layer of the application:
-* **Cyberpunk Metropolis**: Focuses on drone routing, variable locks, and security grids.
-* **Mars Rover Colony**: Focuses on airlock controllers, telemetry pipelines, and solar grids.
-* **Wizarding School Castle**: Focuses on automated cauldrons, spell lock triggers, and alchemy scales.
+* **Cyberpunk Metropolis**: A neon-lit automated city of security grids and system bugs.
+* **Mars Colonization Mission**: Establishing and defending a human colony on Mars.
+* **Magic Academy Chronicles**: Logical spell-crafting in a school of wizardry.
+
+> [!NOTE]
+> The campaign theme re-skins the Level 2-4 narrative wrappers (main-quest and sub-quest flavor text). Level 1 is fixed to the Racing Car Game across all three themes.
 > [!TIP]
 > Changing themes dynamically re-skins the overarching Level Quest descriptions, sub-quest titles, and sandbox brief parameters.
 
@@ -381,8 +388,8 @@ A: Student usernames must be globally unique. Choose a different username (e.g. 
 #### Q: A student was upgraded to Level 2, but they still see Level 1.
 A: Have the student click the **Log Out** button and sign back in, or force-refresh their browser tab (**Ctrl + F5** or **Cmd + Shift + R**) to download the updated user profile from the database.
 
-#### Q: The simulator runs successfully, but the "Submit Case File" button is disabled.
-A: Ensure the script output log displays a success status check. If the terminal prints any runtime warning flags or if the telemetry variables fail constraint checks, the submit button remains deactivated.
+#### Q: My Level 1 exercises are all marked ✓ but my XP didn't change.
+A: In Level 1, a session's +100 XP is awarded automatically once **every** exercise in that session passes **and** all earlier sessions in the level are already complete (quests unlock in order). If an earlier session is still incomplete, the XP is held and granted automatically once you finish the earlier quests. There is no manual "submit" button for Level 1 quests.
 
 ---
 
@@ -403,7 +410,7 @@ gantt
     Homework & Wrap    : 110m, 120m
 ```
 
-1. **00:00 - 00:15 | Socratic Warm-Up**: Review the warm-up task in the Curriculum Guide. Act out code commands literally.
+1. **00:00 - 00:15 | Socratic Warm-Up**: Review the warm-up task in the Curriculum Syllabus Catalog. Act out code commands literally.
 2. **00:15 - 00:35 | Concept Discussion**: Present the board lesson. Discuss how loops, conditions, or data variables function.
 3. **00:35 - 01:00 | Concept Practice**: Use the notebook/journal to sketch visual flowcharts.
 4. **01:00 - 01:35 | Sandbox Lab**: Select the active Quest File, launch the Sandbox, and write/test the program logic.

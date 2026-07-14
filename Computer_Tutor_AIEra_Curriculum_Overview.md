@@ -74,13 +74,13 @@ To maximize logical thinking and technology knowledge while using AI code assist
 4. **The Prompt Journal as the Primary Grade Metric**: Shift grading criteria from code execution (which AI handles) to the quality of the Prompt Journal. Grade the precision of the initial specification and the depth of the student's own audit notes.
 
 ### H. The 3-Part Session Flow
-Every session decodes into three structural phases that balance concept mastery, diagnostic practice, and long-term project iteration:
+Every session decodes into three structural phases that balance concept mastery, diagnostic practice, and applied practice. **What Part 3 means depends on the level** (per the 2026-07-13 restructure): at Levels 1–2 it is a *standalone themed mini-lab* (no cumulative project); at Levels 3–4 it is *real project work* on the guided project (L3) or capstone game (L4).
 
 | Phase | Purpose | Activities |
 |---|---|---|
 | **1. Content & Concept Learning** | Understand the core programming construct or architecture model. | Socratic board lectures, reverse-engineering real-world systems, and reading real-world case studies of system failures. |
 | **2. Short Seeded-Bug Exercises** | Develop diagnostics, code reading, and debugging precision. | Students work with a small, isolated sandbox script that is intentionally broken. They must inspect the code, identify the logic gap, and correct it. |
-| **3. Game Target Integration** | Apply the logic concept to build the level's core project (e.g., Racing Car Game). | Students specify layout changes or feature mechanics, prompt AI to generate the code, audit the output in their Prompt Journal, and integrate it into the game. |
+| **3. Applied Integration** | Apply the concept in the level's themed setting. | **L1–2:** students spec a small themed artifact (e.g., a racing-track HUD snippet), prompt AI to generate it, audit the output in their Prompt Journal — each lab stands alone. **L3–4:** students spec a feature, prompt AI, audit, and integrate it into their actual project repository. |
 
 ### I. Enhancing the 3-Part Flow (Tutor Guidelines)
 To maximize the efficacy of this 3-part session structure, tutors should implement these four operational guidelines:
@@ -88,7 +88,7 @@ To maximize the efficacy of this 3-part session structure, tutors should impleme
 1. **Weave Ethics into Part 3 as "Product Constraints"**: Instead of teaching ethics as an abstract discussion, translate ethical dilemmas into direct design requirements for the game target. (e.g., in Level 1 Session 3, the student must build a toggle button for an accessibility high-contrast color mode rather than just discussing colorblindness).
 2. **Decouple the Environments (Sandbox vs. Local Workspace)**: Maintain separate workspaces to keep the student's mind and project clean.
    - **Part 2 (Seeded Bugs)**: Should be run in a temporary, isolated sandbox file (e.g., `bug_hunt_s5.js`). The student's sole focus is reading and locating the logic gap.
-   - **Part 3 (Game Target)**: Takes place directly inside their local workspace game repository.
+   - **Part 3 (Applied Integration)**: At L1–2, runs in a fresh standalone lab file per session (e.g., `lab_s5_steering.html`) — labs are not carried forward. At L3–4, takes place directly inside the student's local project repository.
 3. **Implement "Bronze, Silver, Gold" Specs for Part 3**: Account for varying learning speeds by tiering the integration specs:
    - **Bronze (Pass)**: The baseline logical requirement for the session (e.g., boundary clamping at the borders).
    - **Silver (Optional)**: Adds minor complexity or visual feedback (e.g., boundary collision triggers screen shake).
@@ -99,20 +99,23 @@ To maximize the efficacy of this 3-part session structure, tutors should impleme
 
 ## 4. Program Structure
 
-| | Level 1: Beginner | Level 2: Intermediate | Level 3: Advanced | Level 4: Engineering |
+| | Level 1: Beginner | Level 2: Intermediate | Level 3: Advanced | Level 4: Capstone |
 |---|---|---|---|---|
-| **Title** | "Racing Car Game" | "Mars Colony Defense" | "Cyberpunk Hacker Arena" | "The Software Engineer" |
-| **Focus** | Web Coding Basics & Inputs | Arrays & Leaderboard APIs | Backend & Database Security | Testing, Real-Time & DevOps |
-| **Syntax Approach** | Syntax in context — HTML/CSS/JS learned by building the game | Syntax in context — Arrays, Canvas API & async fetch through gameplay | Syntax in context — SQL schemas, Express routes & RLS through the hacker arena | Syntax in context — Test runners, WebSockets, CI/CD YAML & monitoring through the dashboard |
+| **Title** | "Technical Foundations I" *(Racing Car theme)* | "Technical Foundations II" *(Mars Colony theme)* | "The Development Process" *(guided project: Cyberpunk Hacker Arena)* | "The Capstone Build" *(student's own game)* |
+| **Role of Level** | Technical knowledge — web & programming basics | Technical knowledge — data, graphics, client-server & database fundamentals | Learn the process of developing software on one guided project | Develop an actual, complete, deployed game |
+| **Focus** | HTML/CSS/JS, logic, events, loops, functions, DOM | Arrays & objects, Canvas, state, async/fetch, HTTP, SQL & data-security basics | PRD, system design, Git/GitHub, AI build loop, code review, testing, deployment | Concept-to-launch sprints, automated testing, CI/CD, monitoring, live defense |
+| **Syntax Approach** | Syntax in context — themed exercises and standalone mini-labs | Syntax in context — themed exercises, canvas labs, fetch labs, SQL playground | Applied — new syntax only as the guided project needs it | Applied — student selects from the taught stack |
 | **Sessions** | 12 sessions × 2 hours | 13 sessions × 2 hours | 14 sessions × 2 hours | 12 sessions × 2 hours |
 | **Total Hours** | 24 hours | 26 hours | 28 hours | 24 hours |
-| **Assessment** | 1 week (game walkthrough + debug challenge) | 1 week (API leaderboard debug + defense) | 1 week (full-stack database capstone defense) | 1 week (live launch + system pitch) |
+| **Assessment** | 1 week (concept mastery: build-and-explain labs + debug challenge) | 1 week (data/API/SQL diagnostics + defense) | 1 week (guided-project capstone defense: process artifacts + working build) | 1 week (live launch + system pitch) |
+
+> **Track note:** Levels 3–4 are *project tracks*. The default track is a game (Cyberpunk Hacker Arena guided project; student's own game capstone). Alternative tracks with the same process/milestone structure — e.g., building a web application — are planned for later.
 
 ### Age Adaptation Guide
 
 | Age Group | Level 1 Adjustments | Level 2 Adjustments | Level 3 Adjustments | Level 4 Adjustments |
 |-----------|--------------------|--------------------|---------------------|---------------------|
-| **9–10** | Use physical manipulatives (cards, blocks). Extend to 15 sessions. Simplify vocabulary. Use game-based contexts only. | Defer to age 11+. If attempted: use only one programming language, extend to 15 sessions, simplify PRD to "wish list + rules." | Not recommended. | Not recommended. |
+| **9–10** | Use physical manipulatives (cards, blocks). Extend to 15 sessions. Simplify vocabulary. Use game-based contexts only. | Defer to age 11+. If attempted: extend to 15 sessions and teach the database sessions as visual table-drawing exercises only. | Not recommended. | Not recommended. |
 | **11–14** | Core curriculum as designed. | Core curriculum as designed. | Core curriculum as designed. | Core curriculum as designed (highly recommended with teacher scaffolding). |
 | **15–17** | Can compress to 10 sessions. Add algorithmic complexity discussions. Use real-world business scenarios. | Can compress to 10 sessions. Introduce basic algorithm analysis. Add collaborative team projects. | Add cloud architecture concepts. Introduce CI/CD pipelines conceptually. Add career pathway discussions. | Complete deployment independently. Integrate real third-party APIs (payment/maps) and deploy to a personal domain. |
 
@@ -143,24 +146,24 @@ To maximize the efficacy of this 3-part session structure, tutors should impleme
 - [ ] Prepare printed materials for off-screen exercises
 
 **Before Teaching Level 2:**
-- [ ] Generate 10 buggy code snippets at varying difficulty levels
-- [ ] Test AI code generation tools with Session 5's prompt exercises
+- [ ] Generate 10 buggy code snippets at varying difficulty levels (arrays, canvas, fetch, SQL)
+- [ ] Test the chosen browser-based SQL playground with the database-fundamentals exercises
 - [ ] Create a sample Prompt Journal as a model for students
 - [ ] Prepare alternative exercises for students who progress faster
 - [ ] Review current AI tool landscape (tools change — update exercises as needed)
 
 **Before Teaching Level 3:**
-- [ ] Deploy a sample capstone project to verify the deployment process works
-- [ ] Prepare Red Team attack scripts for Session 9
-- [ ] Create a rubric scoring practice set (score sample presentations to calibrate)
-- [ ] Arrange guest speaker or prepare industry case studies (if possible)
-- [ ] Ensure students have appropriate accounts/access for deployment
+- [ ] Build the guided project (Cyberpunk Hacker Arena) yourself end-to-end, following the same process students will run
+- [ ] Prepare a model PRD and system-design blueprint as reference artifacts
+- [ ] Set up a demo GitHub repository showing the expected commit/PR history
+- [ ] Verify the local MySQL (Servbay/XAMPP) setup and deployment steps on a classroom machine
+- [ ] Create a rubric scoring practice set (score sample process artifacts to calibrate)
 
 **Before Teaching Level 4:**
 - [ ] Set up a sample staging deployment linked to a dummy GitHub repository
 - [ ] Verify that environment variables (.env files) are excluded from Git commits
-- [ ] Test the database Row-Level Security (RLS) policies to ensure auth rules hold
-- [ ] Prepare mock API credentials for third-party service integration tests
+- [ ] Prepare a capstone scoping checklist (help students size a game they can actually finish)
+- [ ] Test the CI/CD template pipeline (build/test/deploy on push) students will copy
 - [ ] Set up a shared Vercel/Netlify classroom team dashboard (optional, if using team deploys)
 
 ### Handling Common Challenges
@@ -192,30 +195,35 @@ To maximize the efficacy of this 3-part session structure, tutors should impleme
 │          To Live Real-World Software Deployer           │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
-│  Level 1: RACING CAR GAME (24 hours)                    │
+│  Level 1: TECHNICAL FOUNDATIONS I (24 hours)            │
+│  (Racing Car theme — knowledge, not a game build)       │
 │  ├─ Module 1: Inputs, Processing & Outputs (Sessions 1-3)│
-│  ├─ Module 2: State, Controls & Clamps   (Sessions 4-6)│
-│  ├─ Module 3: Loops, Functions & Loops     (Sessions 7-9)│
-│  ├─ Module 4: Collision & UI Dashboard    (Sessions 10-11)│
+│  ├─ Module 2: Game State, Input & Boundaries (Sessions 4-6)│
+│  ├─ Module 3: Problem Decomposition & The Logic Map (Sessions 7-9)│
+│  ├─ Module 4: Collision Detection & Dashboard Systems (Sessions 10-11)│
 │  └─ Assessment & Graduation               (Session 12)  │
 │                                                         │
-│  Level 2: MARS COLONY DEFENSE (26 hours)                │
-│  ├─ Module 1: Canvas & Sprite Collections  (Sessions 1-4)│
-│  ├─ Module 2: Swarm Control & Key Matrices (Sessions 5-8)│
-│  ├─ Module 3: Async Leaderboard APIs       (Sessions 9-11)│
-│  └─ Assessment & Defense                  (Sessions 12-13)│
+│  Level 2: TECHNICAL FOUNDATIONS II (26 hours)           │
+│  (Mars Colony theme — knowledge, not a game build)      │
+│  ├─ Module 1: Graphics & Data Structures   (Sessions 1-4)│
+│  ├─ Module 2: Interaction, State & Performance (Sessions 5-7)│
+│  ├─ Module 3: Client-Server & Async APIs   (Sessions 8-10)│
+│  ├─ Module 4: Database Fundamentals & Data Security (Sessions 11-12)│
+│  └─ Assessment & Defense                  (Session 13)  │
 │                                                         │
-│  Level 3: CYBERPUNK HACKER ARENA (28 hours)             │
-│  ├─ Module 1: SQL Relational Databases    (Sessions 1-4)│
-│  ├─ Module 2: REST APIs & Server Security  (Sessions 5-8)│
-│  ├─ Module 3: Deployment, RLS & Defense    (Sessions 9-12)│
+│  Level 3: THE DEVELOPMENT PROCESS (28 hours)            │
+│  (guided project track: Cyberpunk Hacker Arena)         │
+│  ├─ Module 1: From Idea to Plan            (Sessions 1-4)│
+│  ├─ Module 2: The Build Loop               (Sessions 5-9)│
+│  ├─ Module 3: Integrate, Deploy & Polish   (Sessions 10-12)│
 │  └─ Capstone Defense & Reflection         (Sessions 13-14)│
 │                                                         │
-│  Level 4: THE SOFTWARE ENGINEER (24 hours)              │
-│  ├─ Module 1: Engineering & Testing       (Sessions 1-3)│
-│  ├─ Module 2: Real-Time & Performance      (Sessions 4-6)│
-│  ├─ Module 3: DevOps & Production Eng.     (Sessions 7-9)│
-│  └─ Product Launch & System Defense       (Sessions 10-12)│
+│  Level 4: THE CAPSTONE BUILD (24 hours)                 │
+│  (the student's own complete game — track swappable)    │
+│  ├─ Module 1: Product Definition & Setup   (Sessions 1-3)│
+│  ├─ Module 2: Build Sprints                (Sessions 4-8)│
+│  ├─ Module 3: Ship & Operate               (Sessions 9-11)│
+│  └─ Grand Launch & System Defense         (Session 12)  │
 │                                                         │
 │  Total Program: 51 sessions × 2 hours = 102 hours       │
 │  Estimated Duration: ~12 months at 1 session/week       │

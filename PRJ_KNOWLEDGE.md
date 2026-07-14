@@ -16,47 +16,52 @@ In the era of Generative AI, memorizing programming language syntax is no longer
 
 ## 2. Level Progression & Targets
 
-The curriculum is structured step-by-step so that student knowledge climbs sequentially from absolute foundations to real-world deployment readiness.
+> **Restructure decision (2026-07-13):** The four levels were repositioned. **Levels 1–2 focus on technical knowledge** (concepts, exercises, and small themed labs — no cumulative game-project deliverable). **Level 3 teaches the development process** by walking one guided project through the full software lifecycle. **Level 4 is the capstone where students develop an actual, complete, deployed game.** Level 3–4 project tracks are theme-swappable in the future (e.g., a web-application track instead of a game). The platform code (`src/curriculumData.js`, `CAMPAIGN_THEMES`, project-task flows, code-review gating UI) has **not yet been updated** to this structure — docs lead, code follows.
+
+The curriculum is structured step-by-step: knowledge first (L1–2), process second (L3), real product last (L4).
 
 ```mermaid
 graph TD
-    Level1[Level 1: Racing Car Game] -->|Prerequisite for| Level2[Level 2: Mars Colony Defense]
-    Level2 -->|Prerequisite for| Level3[Level 3: Cyberpunk Hacker Arena]
-    Level3 -->|Prerequisite for| Level4[Level 4: Real-World Engineering]
+    Level1[Level 1: Technical Foundations I - Web & Code Basics] -->|Prerequisite for| Level2[Level 2: Technical Foundations II - Data, Graphics & Client-Server]
+    Level2 -->|Prerequisite for| Level3[Level 3: The Development Process - guided project]
+    Level3 -->|Prerequisite for| Level4[Level 4: The Capstone Build - actual game]
 ```
 
-### Level 1: Racing Car Game (Beginner)
-* **Theme**: **2D Highway Avoidance Racing Game** (HTML/CSS/JS + AI).
-* **Focus**:
-  * *Early Sessions:* HTML structure, CSS styling for the game track, JavaScript variables, keyboard event listeners, basic movement logic, and boundary conditionals.
-  * *Late Sessions:* Obstacle generation with loops, game loop patterns (`setInterval`/`requestAnimationFrame`), collision detection math, and UI score overlays.
-* **Target**: Learn core programming constructs (variables, inputs, conditionals, loops, functions) by building a fully functional web-based arcade game with AI supervision. Pacing is deliberate — students master DOM fundamentals before advancing to game logic.
+### Level 1: Technical Foundations I — Web & Programming Basics (Beginner)
+* **Theme context**: **Racing Car Game** (2D highway racing flavor). The theme is the *setting for exercises and mini-labs only* — Level 1 does **not** build a complete game as a course deliverable. Each session produces small, standalone themed artifacts.
+* **Focus**: How computers execute instructions (IPO, sequence, literalness), HTML document structure, CSS styling and positioning, JavaScript variables and math, keyboard events, conditionals and boundary logic, loops, functions and scope, timers/animation frames, 2D collision math, and DOM manipulation.
+* **Target**: Master the core technical knowledge of web programming — reading, tracing, auditing, and prompting for small pieces of code with AI supervision. Students finish able to explain every construct they used; the full game build is deliberately deferred to Levels 3–4.
 
-### Level 2: Mars Colony Defense (Intermediate)
-* **Theme**: **Colony Defense / Space Shooter Game** (Space Invaders / Grid Shooter).
+### Level 2: Technical Foundations II — Data, Graphics & Client-Server (Intermediate)
+* **Theme context**: **Mars Colony Defense** (space-shooter flavor). As in Level 1, the theme frames exercises and mini-labs — there is no cumulative game build.
 * **Focus**:
-  * *Bridge Topic (first):* Asynchronous programming with `fetch()` — loading leaderboard or telemetry data from a REST API using familiar DOM code to bridge from Level 1 before switching paradigms.
-  * *Core Topics:* Dynamic arrays of objects (lasers/aliens), HTML5 Canvas rendering API, timer events, keyboard input matrices, and full async/await REST API integration for leaderboard persistence.
-* **Target**: Learn complex data structures, the async programming model, and API integration. The deliberate `fetch()` bridge ensures students are comfortable with async thinking before encountering the Canvas API as a second new paradigm.
+  * *Data & Graphics:* Dynamic arrays of objects, nested arrays/grid matrices, HTML5 Canvas rendering, keyboard input matrices, state machines (waves/scores/health), performance and memory awareness.
+  * *Client-Server & Async:* How the web works (clients, servers, HTTP, JSON), asynchronous programming with `fetch()` and async/await, REST API concepts and calls.
+  * *Database Fundamentals:* Relational tables, schemas, and basic SQL queries (taught via a browser-based SQL playground — no local database install at L2), plus data-security basics: why servers must validate input, password handling awareness, and SQL injection awareness.
+* **Target**: Complete the technical-knowledge foundation: complex data structures, the async model, client-server architecture, and how persistent data is stored and protected. After Level 2 a student has *seen and understood* every layer of a full-stack app, without yet having built one.
 
-### Level 3: Cyberpunk Hacker Arena (Advanced)
-* **Theme**: **Cyberpunk persistent hacking terminal / card battler** (Backend & DB integrations).
-* **Focus**: Relational database schema design (MySQL — consistent with the platform stack), user authentication (session tokens via `Authorization: Bearer` headers), backend REST API endpoints using Node.js/Express, parameterized queries to prevent SQL injection, and role-based data isolation per user.
+### Level 3: The Development Process (Advanced)
+* **Theme**: **Cyberpunk Hacker Arena** — the default *guided project track*. The point of Level 3 is not new syntax; it is the **process of developing software**. The track may be swapped for other product types later (e.g., a web application) without changing the process curriculum.
+* **Focus**: The full development lifecycle applied to one guided game project: requirements and PRD writing, system design and architecture blueprints, Git workflow (`init`/`add`/`commit`/`push`, GitHub, Pull Requests), the 5-Step AI methodology formalized at project scale, feature-spec prompting, diff-based code review, test plans and QA, debugging and iteration cycles, backend/database integration (local MySQL via Servbay/XAMPP — applying Level 2's DB knowledge for real), and first cloud deployment.
   * *Note:* Supabase/PostgreSQL may be referenced as an alternative cloud DB option for awareness, but MySQL + Express is the primary teaching stack, matching the Cyber Detective Hub platform itself.
-* **Target**: Understand full-stack architecture, relational databases, secure API routes, and user data isolation. Students build and connect a real backend for the first time, replacing hardcoded frontend data with persistent server-side storage.
+* **Target**: Experience how a real product gets built — from idea to deployed software — on a scoped, teacher-guided project. Students learn to run the process; the product itself is deliberately modest so process, not features, stays the focus.
 
-### Level 4: The Software Engineer (Capstone)
-* **Theme**: None — Level 4 deliberately drops the game skin used in Levels 1-3 and frames sessions as professional software engineering practice directly (testing, real-time systems, DevOps), matching `Computer_Tutor_AIEra_Curriculum_Overview.md` §4 and `L4-Computer_Tutor_AIEra_Curriculum.md`.
-* **Focus** (split into two phases to manage scope):
-  * *Phase A — Real-Time Engineering:* WebSockets for live bidirectional data streams, client-side state synchronization across multiple users, performance optimization (debouncing, throttling, lazy loading), and feature flags. Directly extends Level 3's API knowledge into real-time territory.
-  * *Phase B — Production Engineering:* Automated testing (unit tests, TDD mindset, integration tests), CI/CD pipeline setup (automated build and deploy on push), production monitoring and alerting, and a live "chaos defense" challenge where students must diagnose and fix failures under time pressure.
-* **Target**: Apply professional engineering and DevOps practices to deploy a real-time collaborative system and defend it under live chaos testing. Phase A ensures a confident foundation in real-time concepts before Phase B introduces the full production engineering discipline.
+### Level 4: The Capstone Build (Capstone)
+* **Theme**: **The student's own complete game**, built end-to-end (default track: game; *planned alternative track:* a web application — same milestone structure, different product). Professional engineering practice is woven into the build rather than taught abstractly.
+* **Focus** (milestone/sprint structure):
+  * *Define:* Game concept pitch, PRD, architecture and tech-stack plan, milestone/sprint plan, repo and pipeline setup.
+  * *Build:* Sprint-based feature development with the AI IDE, backend/data features (accounts, saves, leaderboard), automated testing (unit + integration), performance optimization and polish.
+  * *Ship & Operate:* CI/CD pipeline (build/test/deploy on push), production monitoring and logging, beta testing/UAT, documentation, and a live launch with system defense under chaos testing.
+* **Target**: Develop an **actual game** — designed, built, tested, deployed, and defended by the student — proving they can run the entire process from Level 3 independently, on top of the technical knowledge from Levels 1–2.
 
 ---
 
 ## 3. Thematic Consistency Rules
 
-* **Single Theme per Level**: To keep students immersed and focused, all sessions within the same level must share the exact same thematic setting (e.g. all Level 1 challenges operate on the Racing Car Game story, while Level 2 is space colony defense).
+* **Single Theme per Level**: To keep students immersed and focused, all sessions within the same level must share the exact same thematic setting (e.g. all Level 1 exercises operate in the Racing Car Game setting, while Level 2 is space colony defense).
+* **Theme Role Differs by Level (per the 2026-07-13 restructure)**:
+  * **L1–2**: The theme is *exercise context* — it flavors sandbox exercises, mini-labs, and examples, but there is no cumulative game-project deliverable.
+  * **L3–4**: The theme is a *project track* — L3's guided project (default: Cyberpunk Hacker Arena) and L4's capstone (the student's own game) are real builds. Tracks are designed to be swappable in the future (e.g., a web-application track) without changing the process curriculum.
 * **Age-Appropriate Narrative**: Themes must feel adventurous, gamified, and exciting for teenagers (avoiding domestic, baby-ish concepts like baking cakes or washing dishes).
 * **Interactive Sandbox Simulations**: Level 1 exercises inside the Sandbox tab must feature interactive, visual, code-involved simulators corresponding directly to that level's theme.
 
@@ -187,11 +192,13 @@ Professional AI-era programming is a **conversation**, not a single command. The
 
 ---
 
-## 6. Game Project Delivery Model (Decision: Option B — Hybrid)
+## 6. Project Delivery Model (Decision: Option B — Hybrid)
 
-**Decision date:** 2026-07-06
+**Decision date:** 2026-07-06 · **Scope updated:** 2026-07-13 restructure
 
-The Level Game Projects (e.g., Level 1 Racing Car Game, Level 2 Mars Colony Defense) follow a **Hybrid delivery model**. The platform acts as the **engineering methodology scaffold**; external AI coding tools (e.g., Cursor, ChatGPT) perform the actual code generation.
+Real project builds now exist only at **Levels 3–4** (the L3 guided project and the L4 capstone game). These follow the **Hybrid delivery model**: the platform acts as the **engineering methodology scaffold**; external AI coding tools (e.g., Cursor, ChatGPT) perform the actual code generation.
+
+At **Levels 1–2**, the 5-Step loop is practiced at *exercise scale* — sandbox exercises and small standalone themed labs hosted by the platform — not on a growing multi-session project. The table below therefore describes the L3–4 project workflow; L1–2 students use the same steps inside single-session labs.
 
 ### Rationale
 - Keeps the platform focused on methodology and learning tracking — not on competing with purpose-built AI coding IDEs.
@@ -212,7 +219,8 @@ The Level Game Projects (e.g., Level 1 Racing Car Game, Level 2 Mars Colony Defe
 ### Where Game Files Live
 - The actual game source files (`.html`, `.js`, `.css`) live **locally on the student's computer**.
 - Students may optionally paste or upload the final working file to the platform for teacher review and completion tracking.
-- The platform does **not** execute or render the game code internally in v1.
+- The platform does **not** execute or render the student's **actual game project file** internally in v1. *(This is distinct from the Level 1 Sandbox exercise labs, which DO run short, self-contained teaching snippets in an iframe against a mock game DOM for immediate feedback. That in-scope micro-exercise execution is not the same as rendering the student's real multi-file game project — the latter remains the v2 "Sandboxed Game Preview" item listed below.)*
+- **Homework XP is a manual teacher grant.** The "+50 XP" shown in each session's homework brief is awarded by the teacher via the Admin roster after reviewing the Project Journal entry — there is no automated homework-XP mechanism in v1. (Sandbox-exercise quest XP, +100 per Level 1 session, *is* automated once all of a session's exercises pass.)
 
 ### Two Distinct AI Roles (Critical Design Principle)
 
@@ -250,23 +258,23 @@ This platform deliberately separates two different AI roles. Confusing them lead
 In the Hybrid model (Option B), students generate code in Cursor/ChatGPT and bring it to the platform for review. As projects grow across multiple files with partial-line changes, manual copy-paste becomes impractical and error-prone.
 
 ### Solution: Level-Gated Review Mechanism
-The review mechanism escalates in sophistication alongside the student's level — and each escalation is itself a new professional skill being taught.
+The review mechanism escalates in sophistication alongside the student's level — and each escalation is itself a new professional skill being taught. Under the 2026-07-13 restructure, multi-file projects only begin at L3, so Git-based review begins there too.
 
-| Level | Project Size | Review Mechanism | New Skill Taught |
+| Level | Code Being Reviewed | Review Mechanism | New Skill Taught |
 |-------|-------------|------------------|-----------------|
-| **L1** | Single HTML file | Copy-paste to platform | Reading every line of AI output deliberately |
-| **L2** | Multi-file canvas game | Platform runs `git pull` + `git diff` from student's GitHub repo | Git commit workflow, diff-based code review |
-| **L3** | Full-stack app | Platform reads GitHub PR diff | Pull Request workflow, structured change review |
-| **L4** | Production system | CI/CD pipeline triggers platform audit on push | Automated code review integration |
+| **L1** | Single-snippet themed labs | Copy-paste to platform | Reading every line of AI output deliberately |
+| **L2** | Larger single-file labs (canvas, fetch, SQL exercises) | Copy-paste to platform | Sustaining line-by-line reading discipline on longer output |
+| **L3** | Guided multi-file project | Platform runs `git pull` + `git diff` from student's GitHub repo, escalating to GitHub PR diffs | Git commit workflow, diff-based review, Pull Request workflow |
+| **L4** | Capstone production system | CI/CD pipeline triggers platform audit on push | Automated code review integration |
 
-### Level 1 — Copy-Paste (Intentional)
-At Level 1, the entire project is one single `.html` file. Copy-paste is not a workaround — it is pedagogically correct. The friction of pasting every line forces the student to confront and read the code. This is the intended behavior for beginners who must not skip the reading step.
+### Levels 1–2 — Copy-Paste (Intentional)
+At Levels 1–2, every lab is a short, self-contained file or snippet. Copy-paste is not a workaround — it is pedagogically correct. The friction of pasting every line forces the student to confront and read the code. This is the intended behavior for beginners who must not skip the reading step.
 
-### Level 2+ — Git Integration (Platform-Executed)
-When projects span multiple files, the platform takes over the code retrieval responsibility using server-side Git commands. The student never needs to manually copy code again.
+### Level 3+ — Git Integration (Platform-Executed)
+When the guided project spans multiple files, the platform takes over the code retrieval responsibility using server-side Git commands. The student never needs to manually copy code again.
 
 **Workflow:**
-1. Student finishes an AI coding session in Cursor and runs `git commit -m "session 3 - added collision logic"`.
+1. Student finishes an AI coding session in Cursor and runs `git commit -m "session 5 - added terminal login flow"`.
 2. Student clicks **"Sync Latest Code"** in the platform.
 3. The platform backend executes:
    ```bash
@@ -283,13 +291,13 @@ When projects span multiple files, the platform takes over the code retrieval re
 - Commit history becomes the natural Iteration Log (Step 5), with each AI session represented as a reviewable snapshot.
 
 ### Git Skill Progression as Curriculum
-Teaching Git is not overhead — it is an explicit learning milestone embedded naturally into the review workflow:
+Teaching Git is not overhead — it is an explicit learning milestone embedded naturally into the review workflow. Version control is taught as part of the *development process*, so it starts at Level 3:
 
 | Level | Git Skills Introduced |
 |-------|-----------------------|
-| **L2** | `git init`, `git add`, `git commit` — local commits after each AI session |
-| **L3** | `git push`, GitHub repo linking, branch management — connecting to remote and platform |
-| **L4** | Pull Requests, CI/CD hooks — professional team workflow and automated deployment triggers |
+| **L1–2** | None hands-on (awareness only — students see that professional code lives in repositories) |
+| **L3** | `git init`, `git add`, `git commit` after each AI session; then `git push`, GitHub repo linking, branch management, and Pull Requests — connecting to remote and platform |
+| **L4** | CI/CD hooks — professional team workflow and automated deployment triggers on the capstone |
 
 ---
 
@@ -329,30 +337,20 @@ This section defines the software and accounts that must be pre-installed or cre
 
 ### Level 2 — Intermediate Setup
 
-**Adds:** Git CLI and Node.js. Introduces version control and local dev servers.
+**Adds:** Node.js for local dev servers. (Git moved to Level 3 under the 2026-07-13 restructure — L2 has no multi-file project.)
 
 #### 🖥️ Software to Install (in addition to L1)
 
 | Software | Version | Installation Link | Notes |
 |----------|---------|-------------------|-------|
-| **Git** | Latest LTS | https://git-scm.com/downloads | CLI version. Windows users: install Git Bash included. |
-| **Node.js** | LTS (v20+) | https://nodejs.org | Required to run a local dev server (`npx serve` or `npx live-server`) for the canvas game. npm is included. |
+| **Node.js** | LTS (v20+) | https://nodejs.org | Required to run a local dev server (`npx serve` or `npx live-server`) for canvas labs. npm is included. |
 
 #### 🔑 Accounts to Create (in addition to L1)
 
-| Account | URL | Notes |
-|---------|-----|-------|
-| **GitHub (repo)** | https://github.com | Student creates a dedicated repository for their Level 2 game project. Teacher links this repo to the platform. |
+*None.* Database-fundamentals sessions use a **browser-based SQL playground** (e.g., sql.js / an online SQL sandbox chosen by the teacher) — no local database install and no new accounts at L2.
 
 #### ⚙️ Post-Install Configuration (L2)
 ```bash
-# Verify Git is installed
-git --version
-
-# Set global Git identity (run once per machine)
-git config --global user.name "Student Name"
-git config --global user.email "student@email.com"
-
 # Verify Node.js and npm
 node --version
 npm --version
@@ -360,24 +358,21 @@ npm --version
 
 #### ✅ Teacher Pre-Session Checklist (L2)
 - [ ] All L1 items completed.
-- [ ] Git installed and `git --version` returns a version number.
-- [ ] Git global identity configured (`user.name` and `user.email`).
 - [ ] Node.js installed and `node --version` returns v20+.
-- [ ] Student GitHub repo created for the L2 project.
-- [ ] Platform linked to the student's GitHub repo (via OAuth or Personal Access Token).
-- [ ] Test: student runs `git init` and `git commit` successfully in a test folder.
 - [ ] Test: student runs `npx serve .` and sees a local server start in the terminal.
+- [ ] Browser-based SQL playground chosen and tested for the database-fundamentals sessions.
 
 ---
 
 ### Level 3 — Advanced Setup
 
-**Adds:** Local database server (MySQL). Introduces full-stack development with a backend and persistent data.
+**Adds:** Git CLI (version control is taught here as part of the development process) and a local database server (MySQL) for the guided project's backend.
 
 #### 🖥️ Software to Install (in addition to L2)
 
 | Software | Version | Installation Link | Notes |
 |----------|---------|-------------------|-------|
+| **Git** | Latest | https://git-scm.com/downloads | CLI version. Windows users: install Git Bash included. |
 | **Servbay** | Latest | https://www.servbay.dev | Recommended: all-in-one local server manager (MySQL, PHP, web server) with a clean UI. Suitable for students on Windows and macOS. |
 | *(Alternative)* **XAMPP** | Latest | https://www.apachefriends.org | Alternative to Servbay. More widely documented but older interface. |
 
@@ -387,10 +382,18 @@ npm --version
 
 | Account | URL | Notes |
 |---------|-----|-------|
+| **GitHub (repo)** | https://github.com | Student creates a dedicated repository for the Level 3 guided project. Teacher links this repo to the platform for diff-based code review. |
 | **Supabase** *(optional, awareness only)* | https://supabase.com | Free-tier cloud PostgreSQL. Introduced as an alternative to local MySQL for awareness, not as the primary teaching stack. |
 
 #### ⚙️ Post-Install Configuration (L3)
 ```bash
+# Verify Git is installed
+git --version
+
+# Set global Git identity (run once per machine)
+git config --global user.name "Student Name"
+git config --global user.email "student@email.com"
+
 # Verify MySQL is running via Servbay GUI
 # Then test connection from terminal:
 mysql -u root -p
@@ -401,6 +404,9 @@ CREATE DATABASE IF NOT EXISTS vite_db;
 
 #### ✅ Teacher Pre-Session Checklist (L3)
 - [ ] All L2 items completed.
+- [ ] Git installed and `git --version` returns a version number.
+- [ ] Git global identity configured (`user.name` and `user.email`).
+- [ ] Test: student runs `git init` and `git commit` successfully in a test folder.
 - [ ] Servbay installed and MySQL service started.
 - [ ] Student can connect to MySQL from the terminal.
 - [ ] Project database (`vite_db`) created and SQL schema applied (`vite_db.sql`).
@@ -443,9 +449,9 @@ CREATE DATABASE IF NOT EXISTS vite_db;
 | Cursor (AI IDE) | ✅ | ✅ | ✅ | ✅ |
 | GitHub account | ✅ | ✅ | ✅ | ✅ |
 | Computer Tutor platform account | ✅ | ✅ | ✅ | ✅ |
-| Git CLI | — | ✅ | ✅ | ✅ |
 | Node.js (LTS) | — | ✅ | ✅ | ✅ |
-| GitHub project repo (linked to platform) | — | ✅ | ✅ | ✅ |
+| Git CLI | — | — | ✅ | ✅ |
+| GitHub project repo (linked to platform) | — | — | ✅ | ✅ |
 | Servbay / XAMPP (local MySQL) | — | — | ✅ | ✅ |
 | Docker Desktop | — | — | — | ✅ |
 | Vercel account | — | — | — | ✅ |

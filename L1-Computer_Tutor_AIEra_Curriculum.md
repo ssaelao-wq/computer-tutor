@@ -1,23 +1,28 @@
-## 5. Level 1: Beginner — "The Logic Blueprint"
+## 5. Level 1: Technical Foundations I — "The Logic Blueprint"
 
-**Goal:** Train the brain to construct absolute, unambiguous logic without syntax frustration. Build the mental models that underpin all system design.
+**Goal:** Master the core technical knowledge of web programming — how computers execute instructions, HTML/CSS/JS constructs, events, logic, loops, functions, and the DOM. Train the brain to construct absolute, unambiguous logic without syntax frustration, and to read, trace, and audit AI-generated code.
 
 **Prerequisites:** None. Basic reading comprehension required.
 
-### 🏎️ The Racing Car Project: 11-Part Roadmap (Sessions 2–12)
+> **Restructure note (2026-07-13):** Level 1 is a *technical knowledge* level. The Racing Car theme frames every exercise and lab, but students do **not** build a cumulative game project at this level — the full game build is deliberately deferred to Levels 3–4, where the development process and the capstone build are taught. Each session below produces a small, **standalone** themed lab artifact.
 
-The core project of Level 1 is the **2D Highway Avoidance Racing Game**. Students build this project iteratively week-by-week from Session 2 to Session 12, aligning directly with each session's core concepts:
-- **Part 1 (Session 2)**: *HTML Document Skeleton* — Create the base containers (Track Arena, Player Car, Dashboard Panel).
-- **Part 2 (Session 3)**: *CSS Sizing & Coordinates Layout* — Sizing '#game-track', absolute position '#player-car' and style road dividers with white dashes.
-- **Part 3 (Session 4)**: *JS Variable Registry* — Declare variables for position state, speed metrics, score registers, and crash flags.
-- **Part 4 (Session 5)**: *Keyboard Control Interfaces* — Bind keyboard keydown listeners to register steering moves (WASD/Arrows).
-- **Part 5 (Session 6)**: *Safety Guards & Boundary Clamps* — Implement boundary checks that clamp coordinates to keep the player on the road.
-- **Part 6 (Session 7)**: *Obstacle Loop Generation* — Spawns oncoming obstacle cars dynamically using loops.
-- **Part 7 (Session 8)**: *Modular Control Functions* — Refactor movement logic and code modular update functions for moving obstacles down the screen.
-- **Part 8 (Session 9)**: *Timer Loops & Animations* — Construct requestAnimationFrame recursive game loops for redraw rendering.
-- **Part 9 (Session 10)**: *Collision Detection Overlap Math* — Code mathematical overlap bounding checks to trigger crash states on collision.
-- **Part 10 (Session 11)**: *DOM HUD Visual Updates* — Connect score states to update DOM element text strings and display restart prompts.
-- **Part 11 (Session 12)**: *Game Polish & Final Assessment* — Finalizing difficulty multipliers, resetting handlers, and executing live defense QA reviews.
+### 🏎️ The Racing Car Theme: Concept-to-Lab Map (Sessions 2–12)
+
+All Level 1 sessions share the **2D Highway Racing** setting. Each session's Build Phase produces a standalone themed lab file (e.g., `lab_s5_steering.html`); when a lab exercises a concept from an earlier session, the tutor provides a fresh starter file — students never depend on carrying their own project forward. Together, the labs cover every concept a real racing game would need, which is exactly what makes the theme motivating:
+
+| Session | Core Concept | Standalone Lab Artifact |
+|---------|-------------|------------------------|
+| 2 | HTML structure & nesting | Track/car/dashboard container skeleton |
+| 3 | CSS sizing, positioning & layout | Styled 3-lane track with lane dashes |
+| 4 | JS variables, types & math | Game-state variable registry with live traces |
+| 5 | Keyboard event listeners | Steering input handler |
+| 6 | Conditionals & boundary logic | Lane-boundary safety guards |
+| 7 | Loops & iteration | Highway-marker spawner |
+| 8 | Functions, parameters & scope | Modular movement controller |
+| 9 | Timers & animation frames | Mini game-loop with stop gate |
+| 10 | 2D collision math (AABB) | Collision sensor drill |
+| 11 | DOM manipulation & validation | Score HUD with restart overlay |
+| 12 | Assessment | Concept-mastery labs + diagnostics |
 
 ### Module 1: Inputs, Processing, and Outputs (Sessions 1–3)
 
@@ -43,10 +48,10 @@ The core project of Level 1 is the **2D Highway Avoidance Racing Game**. Student
 
 3. **Digital Concept Practice: The In-App Sequence Blueprint (25 mins)**
    - *Activity*: In the application's digital learning panel, the student interacts with a flowchart sequencer.
-   - *Action*: The student arranges digital command blocks (`Power On`, `Scan Subnet`, `Establish SSH Tunnel`, `Bypass Firewall`, `Exfiltrate Logs`) in the exact logical order to reach a target.
-   - *Self-Audit*: The student runs a simulator to see if the sequence triggers alarms or completes the security bypass.
+   - *Action*: The student arranges digital driving-command blocks (`Check P/N Gear`, `Depress Brake`, `Start Engine`, `Shift to Drive`, `Release Handbrake`, `Press Gas`) in the exact logical order to safely start and drive the vehicle.
+   - *Self-Audit*: The student runs the autopilot simulator to see whether the sequence trips a safety lockout or drives off successfully.
 
-4. **Digital Sandbox Lab: Cyber Security-Autonomous Vehicle Simulator (30 mins)**
+4. **Digital Sandbox Lab: Car Autopilot Sequencer Simulator (30 mins)**
    - *Activity*: Student launches Level 1 Session 1 Sandbox.
    - *Action*: Complete five progressive exercises:
      - **Exercise 1.1 (Basic Start & Move)**: Observe the handbrake starting condition (already released). Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_brake` ➔ `press_gas`) to safely start and drive forward, skipping handbrake release.
@@ -390,7 +395,7 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
    - *Audit*: Audit conditionals blocks. Trace parameters step-by-step to verify the car locks at the outer lanes in the Prompt Journal.
 
 5. **Socratic Debugging: The Infinite Teleporting Bug (15 mins)**
-   - *Activity*: Tutor modifies the comparison operator from `< 0` to `<= -130` or breaks the assignment block, causing the car to teleport off-screen.
+   - *Activity*: Tutor loosens the comparison operator from `carX > 35` to `carX >= -130` (or breaks the assignment block), causing the car to teleport off-screen.
    - *Challenge*: Student corrects boundaries coordinates.
    - *Socratic Question*: *"Why did the car disappear when we pressed left repeatedly? What value did carX reach? Why did our boundary guard fail to catch it?"*
 
@@ -684,7 +689,7 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 10)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal). Sprite dimensions match the Project Journal: player 30×50, obstacle 25×40:
+Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal). The sandbox drill uses small illustrative sprite sizes (player 30×50, obstacle 25×40); the full-size themed labs use the actual car CSS (60×100 from Sessions 2-3), so the collision math is identical but the box numbers differ:
 
 - **Exercise 10.1 [Plan & Design]**: Plan the overlap condition.
   * *Solution:* All four bounds compared — `player.right > obstacle.left AND player.left < obstacle.right AND player.bottom > obstacle.top AND player.top < obstacle.bottom`
@@ -726,7 +731,7 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
    - *Debrief*: Introduce the document API as the bridge between JS logic and visual HTML tags.
 
 2. **Core Concept Board Lesson: The Document API Bridge (20 mins)**
-   - *Topic 1*: Linking code variables to visual texts (`.innerText`, `.style.display`).
+   - *Topic 1*: Linking code variables to visual text (`.textContent`) and toggling a `.hidden` class (`classList.add`/`remove`).
    - *Topic 2*: Input validation and safe bounds checking in visual updates.
    - *Topic 3*: Toggling display visibility (`"block"` vs `"none"`) to show restart button overlays.
 
@@ -749,7 +754,7 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
    - *Discussion*: *"When users enter usernames on leaderboards, how do we protect privacy? What details should not be collected?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 11 Homework", write a script that updates an HTML element displaying `lane-alert` to read `"Danger"` when player car coordinate reaches lane limit `0`.
+- **In-App Homework Quest**: In the Journal tab under "Session 11 Homework", write a script that updates an HTML element displaying `lane-alert` to read `"Danger"` when the player car coordinate reaches the leftmost lane (`35px`).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 11)
 
@@ -780,7 +785,7 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 ---
 
-#### Session 12: "The Racing Car Game Assessment" (2 hours)
+#### Session 12: "The Technical Foundations Assessment" (2 hours)
 
 #### In-Session Digital Assessment (2 hours)
 
@@ -791,8 +796,8 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
   3. Write variable declarations representing score levels and coordinate bounds.
   4. Formulate safety checks clamping inputs to track limits.
 
-**Part B: "The Game Code Walkthrough" — Walkthrough (45 mins)**
-- The student presents their working Racing Car Game script to the tutor.
+**Part B: "The Lab Code Walkthrough" — Walkthrough (45 mins)**
+- The student presents three of their standalone session labs to the tutor (tutor picks: one logic lab, one loop/function lab, one DOM/collision lab).
 - The tutor plays the "Malicious QA Officer", questioning coordinates logic and testing boundaries. The student explains how functions and variable updates manage inputs.
 
 **Part C: "In-App Code Diagnostic" — Debugging (30 mins)**
@@ -817,7 +822,7 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 **Graduation Criteria for Level 2:**
 - Rubric average score of 3.0 or higher.
-- Successful game execution (moves, avoids, collides, overlays scores).
+- Successful execution and explanation of the session labs (steering, boundaries, loop spawner, game loop, collision sensor, HUD).
 - Can trace and explain variables flow through conditional checks and functions.
 
 #### 📖 Tutor Manual: Assessment Solutions (Session 12)

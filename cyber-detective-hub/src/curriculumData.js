@@ -14,7 +14,7 @@ export const CURRICULUM_DATA = [
       "Identify the Input → Process → Output pattern in everyday digital systems",
       "Create sequential instruction lists in Sandbox simulation"
     ],
-    warmUp: "Car Autopilot Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to drive and park an vehicle. Tutor follows them strictly literally, demonstrating computer logical processing.",
+    warmUp: "Car Autopilot Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to drive and park a vehicle. Tutor follows them strictly literally, demonstrating computer logical processing.",
     miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
     coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Check P/N, Press Brake, Start Engine, Shift D, Release Handbrake, release brake, press gas) in correct logical order.",
     handsOn: "Complete 5 sandbox tasks: (1) Basic Start & Move, (2) Reversing & Parking, (3) Sequence Correction, (4) Code Cleanup, (5) Emergency Halt.",
@@ -205,10 +205,10 @@ export const CURRICULUM_DATA = [
       "Update text and visibility properties dynamically in real time"
     ],
     warmUp: "DOM Link Matching: match DOM JS commands to their target text elements on the HTML structure sheet, tracing how elements are retrieved by ID.",
-    miniLesson: "The Document API Bridge: linking code variables to visual text (`.innerText`, `.style.display`), input validation and safe bounds-checking on visual updates, and toggling visibility (`\"block\"` vs `\"none\"`) to show restart overlays.",
+    miniLesson: "The Document API Bridge: linking code variables to visual text (`.textContent`), input validation and safe bounds-checking on visual updates, and toggling a `.hidden` class (via `classList.add`/`remove`) to show or hide the restart overlay.",
     coreActivity: "UI Wiring Blueprint: draw the data pipeline from state variables directly to their target HTML elements, draft the dashboard-update specification, then prompt the AI to generate the script that displays score, speed level, and the restart overlay.",
     handsOn: "Complete 10 Sandbox Exercises in two 5-step AI-Era loops covering `textContent` scoreboard updates, the hidden-class game-over overlay, and the Space-key restart flow. Socratic Debugging — Negative Values Leakage: the tutor introduces a bug where the score decrement can slide below zero. Insert a conditional guard clamping the lower bound, and explain why the scoreboard was showing 'score: -5' before the fix.",
-    homework: "In the Journal tab under 'Session 11 Homework', write a script that updates a 'lane-alert' element to read 'Danger' when the player car's coordinate reaches lane limit 0 (+50 XP).",
+    homework: "In the Journal tab under 'Session 11 Homework', write a script that updates a 'lane-alert' element to read 'Danger' when the player car's coordinate reaches the leftmost lane (35px) (+50 XP).",
     ethics: "Personal Data Storage: the Cambridge Analytica scandal (2018) showed how seemingly innocent user profile data (quiz answers, likes) could be weaponized at scale. When users enter usernames on a leaderboard, how do we protect their privacy and decide what not to collect?",
     adaptations: "Age 13-16: Discuss what leaderboard data (username only vs. full name/location) is actually necessary, applying data-minimization thinking to their own dashboard design."
   },
@@ -216,17 +216,17 @@ export const CURRICULUM_DATA = [
     id: "l1-s12",
     level: 1,
     module: "Level 1 Assessment",
-    title: "Session 12: \"The Racing Car Game Assessment\"",
+    title: "Session 12: \"The Technical Foundations Assessment\"",
     duration: "2 hours",
     objectives: [
-      "Demonstrate mastery of the full racing-game logic stack: DOM structure, CSS layout, variables, input, boundaries, loops, functions, animation, and collision math",
+      "Demonstrate mastery of the full racing-themed logic stack: DOM structure, CSS layout, variables, input, boundaries, loops, functions, animation, and collision math",
       "Diagnose and correct seeded logic bugs under time pressure",
       "Present and defend code design choices to a 'Malicious QA Officer'"
     ],
-    warmUp: "Assessment Alignment: review the three-part assessment structure (Layout Builder, Code Walkthrough, Diagnostic) inside the app before beginning.",
+    warmUp: "Assessment Alignment: review the three-part assessment structure (Layout Builder, Lab Code Walkthrough, Diagnostic) inside the app before beginning.",
     miniLesson: "System Defense: how to present a logic blueprint clearly and defend it against edge-case fuzzer checks and pointed questions about boundary values.",
     coreActivity: "Part A — The Racing Game Layout Builder: in a clean environment, map the DOM element tags (Track, Car, Scoreboard), declare the styling properties for track lanes and car positions, write the variable declarations for score levels and coordinate bounds, and formulate the safety checks that clamp inputs to track limits.",
-    handsOn: "Complete the 10 capstone Sandbox Exercises (CONFIG refactoring, difficulty scaling, final seeded diagnostic, reflection). Part B — The Game Code Walkthrough: present your working Racing Car Game script to the tutor, who plays a 'Malicious QA Officer' questioning your coordinate logic and testing boundaries. Part C — In-App Code Diagnostic: trace a loop's increments to specify its final output indices, then debug a seeded collision-logic error where the overlap check returns incorrect matches.",
+    handsOn: "Complete the 10 capstone Sandbox Exercises (CONFIG refactoring, difficulty scaling, final seeded diagnostic, reflection). Part B — The Lab Code Walkthrough: present three of your standalone session labs to the tutor (tutor's choice: one logic lab, one loop/function lab, one DOM/collision lab), who plays a 'Malicious QA Officer' questioning your coordinate logic and testing boundaries. Part C — In-App Code Diagnostic: trace a loop's increments to specify its final output indices, then debug a seeded collision-logic error where the overlap check returns incorrect matches.",
     homework: "Complete the self-audit reflection in the Journal tab under 'Session 12 Assessment': what surprised you about DOM trees and event bindings, how tracing variables helped you find logic bugs, and how writing prompts for game assets differed from conversational chats (+50 XP).",
     ethics: "Design Feedback: how to give and receive constructive critique on a logic blueprint and code — treating the 'Malicious QA Officer' review as collaborative auditing, not adversarial gatekeeping.",
     adaptations: "Age 13-16: Full digital presentation of the logic blueprint plus live fuzzer-testing logs, defended against the tutor's QA questioning."
@@ -312,154 +312,154 @@ export const CURRICULUM_DATA = [
   {
     id: "l2-s5",
     level: 2,
-    module: "Module 2: Swarm Control & Keyboard Matrices",
-    title: "Session 5: \"Alien Swarms: Nested Arrays & Movement Deltas\"",
+    module: "Module 2: Interaction, State & Performance",
+    title: "Session 5: \"Alien Swarms & Shield Grids: Nested Arrays & Matrices\"",
     duration: "2 hours",
     objectives: [
       "Store grids of alien elements using multi-dimensional array tables",
-      "Animate alien groups marching horizontally and vertically down the canvas",
-      "Detect when aliens touch grid edges to trigger bounce reactions"
+      "Animate alien groups marching horizontally and vertically, bouncing at grid edges",
+      "Map absolute pixel coordinates to grid cell indices to model destructible shield cells"
     ],
-    warmUp: "Row/Column Grid Indexing: locate specific aliens using `[row][col]` index labels, matching grid indices to coordinates.",
-    miniLesson: "Multi-dimensional Arrays: matrix grids as arrays containing child arrays, marching-delta loops with boundary-edge triggers, and nested loops that access every grid element.",
-    coreActivity: "Alien Marching Flow: sketch the grid path ('move right; if edge reached, drop y and reverse marching direction'), draft the coordinate-limit conditionals, then prompt the AI to generate the grid-generation and marching functions.",
-    handsOn: "Socratic Debugging — The Edge Stampede: the tutor disables the boundary indicators, so the alien grid slides completely off-screen. Trace which conditional checks failed and restore the boundary checks so the swarm drops and reverses correctly.",
-    homework: "In the Journal tab under 'Session 5 Homework', write a nested JS loop that prints a 3x3 grid of coordinate values `(row, col)` to the console (+50 XP).",
+    warmUp: "Row/Column Grid Indexing: locate specific aliens using `[row][col]` index labels; then, on grid paper, erase the shield cells that intersect a drawn laser path, showing how absolute coordinates translate to grid columns.",
+    miniLesson: "Multi-dimensional Arrays & Index Mapping: matrix grids as arrays containing child arrays, marching-delta loops with boundary-edge triggers, nested loops that access every grid element, and coordinate-to-index mapping (`col = Math.floor((x - offset) / cellWidth)`) for shield cells (`1 = full`, `0 = destroyed`).",
+    coreActivity: "Swarm & Shield Blueprint: sketch the grid path ('move right; if edge reached, drop y and reverse marching direction'), then flowchart 'laser intersects shield bounds → find cell index → set cell to 0', then prompt the AI to generate the grid-generation function, the marching function, and a shield-cell lookup function.",
+    handsOn: "Socratic Debugging — The Edge Stampede: the tutor disables the boundary indicators, so the alien grid slides completely off-screen; then seeds an off-by-one in the shield column formula so lasers 'hit' the wrong cell. Trace which conditional checks failed and correct the index math.",
+    homework: "In the Journal tab under 'Session 5 Homework', write (1) a nested JS loop that prints a 3x3 grid of coordinate values `(row, col)`, and (2) the lookup equation mapping absolute screen X = 145 to a column index given `cellWidth = 50` and offset `100` (+50 XP).",
     ethics: "Drone Swarm Coordination: real robotic search swarms share boundary rules to avoid collisions. What checks must designers implement to prevent a swarm collision catastrophe?",
     adaptations: "Age 13-16: Extend the swarm grid to a non-uniform shape (e.g. a pyramid of aliens) and discuss how nested-loop bounds must adapt."
   },
   {
     id: "l2-s6",
     level: 2,
-    module: "Module 2: Swarm Control & Keyboard Matrices",
-    title: "Session 6: \"Firing Mechanisms & Keyboard Matrices\"",
+    module: "Module 2: Interaction, State & Performance",
+    title: "Session 6: \"Firing Control: Keyboard Matrices & Collision Sweeps\"",
     duration: "2 hours",
     objectives: [
-      "Maintain simultaneous input mappings using keyboard matrices",
-      "Solve keypress delays by tracking keys pressed/released states in arrays",
-      "Trigger firing loops that enforce cooling intervals"
+      "Maintain simultaneous input mappings using key-state map objects (`keydown` → `true`, `keyup` → `false`)",
+      "Implement nested-loop collision sweeps (lasers array vs. aliens grid) with correct splice/break behavior",
+      "Reason about sweep cost (O(N × M)) and early loop exits"
     ],
-    warmUp: "Multiple Inputs Mapping: match keyboard trigger combinations (e.g. ArrowLeft + Space) to output states, showing why a single key listener log can't capture simultaneous holds.",
-    miniLesson: "Input State Matrices: why single `keydown` listeners fail under simultaneous inputs (e.g. steering while firing), declaring a key-state map object (`keysPressed = {}`), and binding `keydown`/`keyup` to toggle it true/false.",
-    coreActivity: "Keyboard Matrix Blueprint: flowchart how input events toggle key-map values, draft the variable state chart, then prompt the AI to build the key-state listener matrix (`input.js`).",
-    handsOn: "Socratic Debugging — The Firing Spam Lock: the tutor removes the `keyup` handler, so the space key stays stuck `true` and spawns infinite lasers. Trace where the key-state map should reset, and restore the `keyup` mapping.",
-    homework: "In the Journal tab under 'Session 6 Homework', write a JS object structure and keydown/keyup logic representing keys 'a', 'd', and 'w' (+50 XP).",
-    ethics: "Hardware Manipulation: the 2014 iCloud celebrity photo hack exploited Apple's lack of login rate-limiting on the 'Find My iPhone' API to brute-force passwords. If login endpoints don't enforce input rate thresholds, how do event lockouts and cooling loops protect a system?",
+    warmUp: "Multiple Inputs Mapping: match keyboard trigger combinations (e.g. ArrowLeft + Space) to output states; then compare two coordinate lists to trace where overlaps occur between them.",
+    miniLesson: "Input Matrices & Double Iteration: why single `keydown` listeners fail under simultaneous inputs, declaring a key-state map object (`keysPressed = {}`) with paired `keydown`/`keyup` listeners, sweeping a list of lasers against a grid of active aliens, and breaking loops early once a collision resolves true.",
+    coreActivity: "Input & Sweep Blueprint: flowchart how input events toggle key-map values; then flowchart outer-loop-lasers → inner-loop-aliens → check overlap → mark alien dead, splice laser, break. Then prompt the AI to build the key-state listener matrix (`input.js`) and the nested collision-sweeper function.",
+    handsOn: "Socratic Debugging — The Firing Spam Lock & The Multiple Kill Bug: the tutor removes the `keyup` handler (space key stuck `true`, infinite lasers), then removes the inner-loop `break` (one laser destroys a whole column in one frame). Trace both failures and restore the `keyup` mapping and the break statement.",
+    homework: "In the Journal tab under 'Session 6 Homework', write (1) keydown/keyup logic tracking keys 'a', 'd', and 'w' in a state object, and (2) a nested loop checking overlaps between an array of 2 lasers and a grid of 4 aliens, logging hit locations (+50 XP).",
+    ethics: "Input Rate Limits in Security: the 2014 iCloud celebrity photo hack exploited Apple's lack of login rate-limiting on the 'Find My iPhone' API to brute-force passwords. If login endpoints don't enforce input rate thresholds, how do event lockouts and cooling loops protect a system?",
     adaptations: "Age 13-16: Discuss why rate-limiting a login form is the same core pattern as cooling down a laser-fire loop — both cap how often an action can repeat."
   },
   {
     id: "l2-s7",
     level: 2,
-    module: "Module 2: Swarm Control & Keyboard Matrices",
-    title: "Session 7: \"Colony Shields: Destructible Grid Matrices\"",
+    module: "Module 2: Interaction, State & Performance",
+    title: "Session 7: \"Colony Status: Game States, HUD Gauges & Performance Audits\"",
     duration: "2 hours",
     objectives: [
-      "Build protective shields using multi-dimensional grid lists representing pixel cells",
-      "Detect laser hits on specific grid cells using coordinate index lookups",
-      "Modify shield grid values to represent degradation on hits"
+      "Implement game-state machines handling wave increments and health counters",
+      "Draw graphical HUD gauges (score text, wave counter, health bar) on canvas",
+      "Identify and resolve memory leaks and frame drops caused by unbounded array growth"
     ],
-    warmUp: "Pixel Grid Destruct: on grid paper, calculate and erase the cells that intersect a laser's path, showing how absolute coordinates translate to grid columns.",
-    miniLesson: "Shield Block Matrices: representing shields as grid cells (`0 = empty`, `1 = full`) and checking intersections using matrix index mapping.",
-    coreActivity: "Destructible Grid Logic: flowchart 'laser intersects shield bounds → find cell index → set cell to 0 → delete laser', write the coordinate-mapping formula (`col = Math.floor(laserX / cellWidth)`), then prompt the AI to generate the destructible shield drawing and collision logic.",
-    handsOn: "Socratic Debugging — The Invincible Shields: the tutor writes the grid-check index parameters out of bounds, so lasers silently bypass shield collision detection. Trace the column calculation to find and fix the index math.",
-    homework: "In the Journal tab under 'Session 7 Homework', write a JS coordinate lookup equation mapping absolute screen X = 145 to a column index given `cellWidth = 50` (+50 XP).",
-    ethics: "Self-Healing Systems: how should a safety gate behave during a network partition — fail-open (less secure but available) or fail-closed (secure but locked)? Relate this to how a destroyed shield cell should (or shouldn't) regenerate.",
-    adaptations: "Age 13-16: Discuss the tradeoff between fail-open and fail-closed defaults in real security systems, not just game shields."
+    warmUp: "Stage Multipliers & Memory Footprint Trace: calculate speed/scoring outputs using progression formulas (e.g. `speedMultiplier = wave * 0.15`) by hand; then trace array-length counters across 100 simulated frames.",
+    miniLesson: "State Machines & Profiling: wave-tracking variables and stage-clear triggers, dynamic drawing of HUD gauges (`fillText`, proportional health bars), garbage-collection pauses, loop optimization (caching lengths, minimizing allocations), and the DevTools Performance tab.",
+    coreActivity: "State Machine & Optimization Checklist: sketch the state progression from stage-clear to wave-update; identify optimization candidates (laser-list splicing checks, collision checks); draft the scale formulas and safety constraints.",
+    handsOn: "Socratic Debugging — The Infinite Spawn Loop & Out-of-Memory Crash: the tutor seeds a wave-count bug spawning infinite concurrent waves; then disables laser boundary pruning so 500 lasers accumulate and the frame rate crawls. Trace where the guard failed, and why the array's length log keeps climbing.",
+    homework: "In the Journal tab under 'Session 7 Homework', write a conditional that checks if the active alien list is empty, increments the wave level, and doubles obstacle speed; then list 3 performance checkpoints you would monitor in a canvas game (+50 XP).",
+    ethics: "Difficulty Scaling & Performance Equity: how do games use scaling mechanics to keep players hooked — and where is the line between fair challenge and manipulation? If developers only optimize for high-end laptops, how does that affect players on lower-end devices?",
+    adaptations: "Age 13-16: Graph the speed-multiplier formula across waves and profile the game in DevTools' Performance tab to identify one real bottleneck function."
   },
   {
     id: "l2-s8",
     level: 2,
-    module: "Module 2: Swarm Control & Keyboard Matrices",
-    title: "Session 8: \"Advanced Collision Matrix: Lasers vs. Alien Swarms\"",
+    module: "Module 3: Client-Server & Async APIs",
+    title: "Session 8: \"Mission Control Uplink: How the Web Works\"",
     duration: "2 hours",
     objectives: [
-      "Implement nested-loop collision sweeps (lasers array vs. aliens grid)",
-      "Trigger death updates removing elements from both active collections on overlap",
-      "Manage scoring increments and game-state updates dynamically"
+      "Explain the client-server model: browsers as clients, servers as remote programs, and the request/response cycle",
+      "Read the anatomy of an HTTP request (URL, method, headers, body) and response (status code, headers, JSON payload)",
+      "Inspect real network traffic using the browser DevTools Network tab and interpret JSON payloads"
     ],
-    warmUp: "Nested Array Intersections: compare two coordinate lists to trace where overlaps occur between them.",
-    miniLesson: "Double-Iteration Collision Matrix: sweeping a list of lasers against a grid of active aliens, the performance overhead of nested sweeps, and breaking loops early once a collision resolves true.",
-    coreActivity: "Matrix Sweep Flowchart: outer loop over lasers → inner loop over aliens → check coordinate overlap → splice both objects. Draft the nested loop bounds, then prompt the AI to generate the collision-sweeper function.",
-    handsOn: "Socratic Debugging — The Multiple Kill Bug: the tutor forgets to `break` the inner loop after a hit, so one laser destroys several aliens in the same column pass. Trace why, and insert the missing break.",
-    homework: "In the Journal tab under 'Session 8 Homework', write a nested JS loop checking overlaps between an array of 2 lasers and a grid of 4 aliens, logging hit locations (+50 XP).",
-    ethics: "System Safety Checks: firewall rules sweep packet headers the same way this collision matrix sweeps sprites. How does matching-rule efficiency affect real network traffic performance?",
-    adaptations: "Age 13-16: Estimate the number of comparisons this nested sweep performs per frame and discuss when it would become too slow."
+    warmUp: "The Radio Relay Roleplay: play 'Mars Colony' (client) and 'Mission Control' (server) — write request slips ('GET /supplies', 'POST /report + payload') and answer with response slips carrying status codes (200 OK, 404 Not Found, 500 Server Error).",
+    miniLesson: "The Request/Response Cycle: clients vs. servers, what a URL's parts mean (protocol, host, path, query), HTTP methods (GET reads, POST writes), status-code families (2xx success, 4xx client error, 5xx server error), and JSON as the data language of APIs.",
+    coreActivity: "API Contract Worksheet: design the 'contract' for a colony telemetry API on paper — endpoint paths, methods, and sample JSON responses (e.g. `GET /api/scores` returns `[{ \"player\": \"cdt_arya\", \"score\": 4200 }]`).",
+    handsOn: "Guided Dissection — Network Tab Investigation: open a live site (and the platform itself) with DevTools' Network tab open. Identify real GET/POST requests, read their status codes, headers, and JSON responses. Socratic Debugging — The Wrong Address: after requesting a misspelled endpoint (404) and a malformed payload (4xx), explain which side is at fault for each failure.",
+    homework: "In the Journal tab under 'Session 8 Homework', open any public website with the Network tab, pick one request, and document: the URL, the method, the status code, and a sketch of the response payload structure (+50 XP).",
+    ethics: "Metadata & Surveillance: in 2018, fitness app Strava's public heatmap of user GPS requests inadvertently revealed the locations of secret military bases worldwide. Even without reading message contents, what can someone learn just from which servers your device talks to and how often?",
+    adaptations: "Age 13-16: Compare the page URL in the address bar to the actual API request URLs listed in the Network tab, and discuss why they're often different."
   },
   {
     id: "l2-s9",
     level: 2,
-    module: "Module 3: Game State Progression & Cloud Leaderboard APIs",
-    title: "Session 9: \"Game States: Waves, Scores, and Health Indicators\"",
+    module: "Module 3: Client-Server & Async APIs",
+    title: "Session 9: \"Asynchronous Telemetry: Interfacing Leaderboard APIs\"",
     duration: "2 hours",
     objectives: [
-      "Implement game-state machines handling wave-level increments and health counters",
-      "Spawn faster and denser enemy waves upon clearing grid stages",
-      "Draw graphical health status bars and scoreboard screens"
-    ],
-    warmUp: "Stage Multipliers Calculation: calculate speed and scoring outputs using progression formulas, applying coefficient variables by hand before coding them.",
-    miniLesson: "Progressive Game State Matrices: wave-tracking variables and parameters, scale-factor formulas (e.g. `speedMultiplier = wave * 0.15`), and dynamically drawing HUD gauges.",
-    coreActivity: "Game Loop State Machine: sketch the state progression from stage-clear to wave-update, draft the scale formulas, then prompt the AI to write the wave-clear trigger and health-display update functions.",
-    handsOn: "Socratic Debugging — The Infinite Spawn Loop: the tutor introduces a bug where dropping below 1 alive alien spawns new waves concurrently, flooding the screen with wave titles. Trace where the validation guard failed to check the current wave's initialization state, then fix it.",
-    homework: "In the Journal tab under 'Session 9 Homework', write a JS conditional statement that checks if the active alien list is empty, increments the current wave level, and doubles the obstacle speed (+50 XP).",
-    ethics: "Difficulty Scaling and User Frustration: how do games use scaling mechanics to keep players hooked, and why must developers test the limits to keep challenge fair rather than punishing?",
-    adaptations: "Age 13-16: Graph the speed-multiplier formula across waves and discuss where it needs an upper clamp to stay playable."
-  },
-  {
-    id: "l2-s10",
-    level: 2,
-    module: "Module 3: Game State Progression & Cloud Leaderboard APIs",
-    title: "Session 10: \"Asynchronous Telemetry: Interfacing Leaderboard APIs\"",
-    duration: "2 hours",
-    objectives: [
-      "Understand client-server request dynamics and the REST API model",
-      "Read and explain asynchronous JS concepts (Promises, `async`/`await`)",
-      "Write asynchronous fetch requests to retrieve live high-score records from a telemetry API"
+      "Read and explain asynchronous execution (Promises, async/await) vs. synchronous blocking code",
+      "Write asynchronous fetch requests to retrieve live high-score records from a telemetry API",
+      "Connect the fetch call to the request/response model from Session 8"
     ],
     warmUp: "Sync vs. Async Timelines: chronologically trace execution order in synchronous code vs. asynchronous code logs, comparing when callbacks actually fire.",
-    miniLesson: "Asynchronous Pipelines & fetch: blocking vs. non-blocking execution paths, the request-response model (GET requests fetching remote JSON), and JS Promises with `async`/`await` syntax.",
+    miniLesson: "Asynchronous Pipelines & fetch: blocking vs. non-blocking execution paths, the request-response model in code (GET requests fetching remote JSON — recap Session 8's contract worksheet), and JS Promises with `async`/`await` syntax.",
     coreActivity: "API Telemetry Blueprint: sketch the data pipeline (request URL → server JSON response → parsed data array), draft the async function signature, then prompt the AI to write an async `fetchLeaderboard()` function querying the test endpoint.",
     handsOn: "Socratic Debugging — The Unresolved Promise: the tutor deletes the `await` keyword before the response-parse step, so the code logs `Promise <Pending>` instead of JSON. Trace what `await` actually tells the browser engine to do, then restore it.",
-    homework: "In the Journal tab under 'Session 10 Homework', write an async JS function skeleton that fetches data from a mock endpoint and logs the response to the console (+50 XP).",
+    homework: "In the Journal tab under 'Session 9 Homework', write an async JS function skeleton that fetches data from a mock endpoint and logs the response to the console (+50 XP).",
     ethics: "Server Load Boundaries: in 2023, X (formerly Twitter) imposed strict API rate limits after bots consumed excessive server resources, breaking the platform for legitimate users. If we fetched scores 60 times a second inside the game loop, what would happen to the server?",
     adaptations: "Age 13-16: Discuss polling vs. event-driven updates (e.g. WebSockets) as alternatives to fetching on every frame."
   },
   {
-    id: "l2-s11",
+    id: "l2-s10",
     level: 2,
-    module: "Module 3: Game State Progression & Cloud Leaderboard APIs",
-    title: "Session 11: \"Submitting High Scores to the Cloud Leaderboard\"",
+    module: "Module 3: Client-Server & Async APIs",
+    title: "Session 10: \"Transmitting to Mission Control: POST, Payloads & Error Handling\"",
     duration: "2 hours",
     objectives: [
       "Compose HTTP POST requests sending JSON payloads to server endpoints",
-      "Handle network communication exceptions and database errors using try/catch",
-      "Validate submitted payload sizes to prevent database errors"
+      "Handle network communication exceptions and server errors using try/catch",
+      "Validate submitted payload sizes to prevent server-side errors"
     ],
     warmUp: "Payload Structure Map: structure data parameters into a JSON object literal, writing out the object schema before sending it anywhere.",
     miniLesson: "Writing to Servers: POST requests and request-body payloads, try/catch blocks that capture connection drops, and checking server status (`response.ok` or status codes).",
     coreActivity: "Submission Pipeline Blueprint: flowchart 'player inputs name → build JSON payload → run POST request → verify response status', draft the payload template, then prompt the AI to write a `submitScore(name, score)` handler.",
-    handsOn: "Socratic Debugging — Silent Network Drops: the tutor blocks the destination URL, so the game freezes silently on submit because there's no `catch` block. Wrap the fetch call in try/catch and explain how that protects the interface from breaking.",
-    homework: "In the Journal tab under 'Session 11 Homework', write a JS fetch options object specifying a POST method, a JSON content-type header, and a body payload containing a test user score (+50 XP).",
-    ethics: "Client-Side Integrity and Cheat Prevention: in 2011, hackers modified client-side price values on the Citibank mobile app to transfer funds at manipulated exchange rates, stealing over $2.7 million. If scores are sent from the client, how do we prevent users from forging request packets to post fake scores?",
+    handsOn: "Socratic Debugging — Silent Network Drops: the tutor blocks the destination URL, so the page freezes silently on submit because there's no `catch` block. Wrap the fetch call in try/catch and explain how that protects the interface from breaking.",
+    homework: "In the Journal tab under 'Session 10 Homework', write a JS fetch options object specifying a POST method, a JSON content-type header, and a body payload containing a test user score (+50 XP).",
+    ethics: "Client-Side Integrity and Cheat Prevention: in 2011, hackers modified client-side price values on the Citibank mobile app to transfer funds at manipulated exchange rates, stealing over $2.7 million. If scores are sent from the client, how do we prevent users from forging request packets to post fake scores? (This question is answered properly in Sessions 11–12: the server and its database must validate everything.)",
     adaptations: "Age 13-16: Discuss server-side score validation (e.g. recomputing score from a replay log) as the real-world fix for client-side score forgery."
+  },
+  {
+    id: "l2-s11",
+    level: 2,
+    module: "Module 4: Database Fundamentals & Data Security",
+    title: "Session 11: \"The Colony Data Vault: Tables, Schemas & SQL Queries\"",
+    duration: "2 hours",
+    objectives: [
+      "Explain why persistent data lives in a database on the server, not in client variables",
+      "Design a simple relational table (columns, data types, primary key) for colony records",
+      "Read and write basic SQL: CREATE TABLE, INSERT, SELECT with WHERE and ORDER BY"
+    ],
+    warmUp: "The Paper Registry: 'query' a set of colony records scribbled on loose notes by hand (e.g. 'find all colonists with score above 4000'), experiencing how painful unstructured data is.",
+    miniLesson: "Relational Tables: tables, rows, columns, and data types (INT, VARCHAR, BOOLEAN, TIMESTAMP); primary keys as unique row identities; where the database sits in the Session 8 diagram (client → server → database — the server is the only one who talks to the vault).",
+    coreActivity: "Schema Blueprint: design a `colonist_scores` table on paper — choose columns, types, and the primary key — then draft two sample rows.",
+    handsOn: "SQL Playground: create the table, insert 5 rows, and run progressive queries (`SELECT *`, `WHERE score > 4000`, `ORDER BY score DESC`, an `UPDATE` of one row). Socratic Debugging — The Query That Lies: the tutor seeds a wrong-comparison query and a `WHERE`-less `UPDATE` that overwrites every row — identify why the results are wrong and repair both.",
+    homework: "In the Journal tab under 'Session 11 Homework', write the SQL to (1) create a `supply_inventory` table with an id primary key, item name, and quantity, (2) insert two items, and (3) select all items with quantity below 10 (+50 XP).",
+    ethics: "Data Retention: in 2017, Equifax's breach exposed the stored personal records of 147 million people — data many argued should never have been retained in one place. Our scores table stores player names — should it store birthdays? Addresses? What is the cost of every extra column we keep?",
+    adaptations: "Age 13-16: Discuss what fields a real leaderboard service would refuse to collect at all, not just how to protect the ones it does."
   },
   {
     id: "l2-s12",
     level: 2,
-    module: "Module 3: Game State Progression & Cloud Leaderboard APIs",
-    title: "Session 12: \"Performance Optimization & Memory Audit\"",
+    module: "Module 4: Database Fundamentals & Data Security",
+    title: "Session 12: \"Defending the Data Vault: Validation, Passwords & Injection Awareness\"",
     duration: "2 hours",
     objectives: [
-      "Identify and resolve memory leaks caused by unbounded growth of inactive array elements",
-      "Profile frame drops and optimize loop sweeps",
-      "Apply diagnostic tests to catch logic edge cases"
+      "Explain why the server must never trust client input, connecting Session 10's cheat discussion to the database layer",
+      "Describe how passwords are stored safely (hashing, never plaintext) at an awareness level",
+      "Recognize SQL injection in a query built by string concatenation, and explain parameterized queries as the defense"
     ],
-    warmUp: "Memory Footprint Trace: trace the length of array variables inside a simulator running over 100 frames, comparing how active-array counts grow.",
-    miniLesson: "Garbage Collection & Profiling: CPU performance limits and how garbage collection pauses code once arrays grow too large; loop optimization by caching array-length variables and minimizing allocations.",
-    coreActivity: "Optimization Checklist: identify candidates for optimization (e.g. laser-list splicing checks, collision checks), draft the safety constraints, then prompt the AI to refactor the rendering loops and array sweeps.",
-    handsOn: "Socratic Debugging — The Out-of-Memory Crash: the tutor disables the laser boundary-removal checks; after 500 lasers fire, the frame rate crawls. Check the lasers array's length log to see what happens to memory when dead sprites are never pruned, then restore the boundary checks.",
-    homework: "In the Journal tab under 'Session 12 Homework', list 3 performance diagnostic checkpoints you would monitor to ensure a canvas web game runs smoothly (+50 XP).",
-    ethics: "Performance on Older Hardware: if developers only optimize for high-end test laptops, how does that affect players on lower-end devices? Why is performance equity an ethical concern, not just a technical one?",
-    adaptations: "Age 13-16: Profile the game in browser DevTools' Performance tab and identify one real bottleneck function."
+    warmUp: "The Forged Supply Slip: replay Session 8's radio relay, but now play a hostile colonist who edits request slips ('quantity: -50', a name field containing `'; DROP TABLE...`) — the server received well-formed requests, but the content was the attack.",
+    miniLesson: "The Trust Boundary: client input as hostile territory (range/type/length checks on the server); password storage awareness (why databases store hashes, not passwords); SQL injection — how gluing user text into a query string changes the query's meaning — and parameterized queries as the professional fix.",
+    coreActivity: "Validation Rulebook: for the `colonist_scores` table from Session 11, write the validation rules the server must apply before any `INSERT` (name length, score range, allowed characters) as a field → rule → rejection-message table.",
+    handsOn: "SQL Playground + Guided Demo: the tutor demonstrates a login-style query built by string concatenation and shows how `' OR '1'='1` changes its meaning; the student then rewrites it in parameterized form and re-tests the hostile input. Socratic Debugging — The Negative Supply Heist: a purchase of quantity -5 adds stock and refunds credits — write the validation rule that closes the hole.",
+    homework: "In the Journal tab under 'Session 12 Homework', write the validation rulebook for a `register_colonist` form (username, password, age) and one sentence explaining why the password column should never contain the password itself (+50 XP).",
+    ethics: "Responsible Disclosure: in 2021, a researcher who reported a flaw exposing millions of records via a state website was initially threatened with prosecution — sparking a national debate over disclosure policy. If you discover a score-tampering hole in a real game's API, what is the ethical action?",
+    adaptations: "Age 13-16: Keep all injection demonstrations inside the sandboxed playground on throwaway tables — the framing stays defensive throughout, matching the platform's Cyber Detective identity."
   },
   {
     id: "l2-s13",
@@ -468,17 +468,17 @@ export const CURRICULUM_DATA = [
     title: "Session 13: \"Graduation Sprint & Level 2 Defense\"",
     duration: "2 hours",
     objectives: [
-      "Deploy a functional Canvas web game to a local development server",
-      "Diagnose and patch syntax or logic glitches in a project workspace",
-      "Defend game-loop math and asynchronous API integrations in a code-review walkthrough"
+      "Demonstrate mastery across all four modules: data structures & canvas, state & performance, client-server & async, and database fundamentals",
+      "Diagnose and patch seeded syntax or logic glitches across the level's lab types",
+      "Defend data-structure choices, async flows, and validation rules in a walkthrough"
     ],
-    warmUp: "Final QA Sweeps: run final gameplay passes and document any remaining bugs before the assessment begins.",
-    miniLesson: "Assessment Structure: Part A builds/verifies the full compiled stack (canvas init, sprite collections, input matrices, nested collision matrices, async leaderboard fetch); Part B is a tutor-led code walkthrough; Part C is a timed diagnostic challenge.",
-    coreActivity: "Part A — The Mars Defense Assembler: build and verify the fully compiled code stack — canvas initialization, sprite-collection loops, input-state matrices, nested collision matrices, and the async leaderboard fetch system.",
-    handsOn: "Part B — The Canvas Autopilot Walkthrough: walk the tutor through your game codebase line-by-line, explaining coordinate calculations, memory-cleanup loops, and API fetch options. Part C — Diagnostic Challenges: locate and patch a seeded bug in an asynchronous request handler or an array-splice statement.",
-    homework: "Complete the self-audit reflection in the Journal tab under 'Session 13 Assessment' summarizing what broke during QA, what you patched, and how confidently you could defend your async/API code (+50 XP).",
+    warmUp: "Final QA Sweeps: re-run three prior labs of the tutor's choosing and document any bugs before the assessment begins.",
+    miniLesson: "Assessment Structure: Part A builds/verifies a working stack of standalone snippets (canvas init, sprite array with pruning, input matrix, nested collision sweep, async leaderboard fetch); Part B is a tutor-led systems walkthrough covering coordinate math, memory cleanup, the request/response cycle, and schema/validation rules; Part C is a timed diagnostic challenge.",
+    coreActivity: "Part A — The Mars Defense Assembler: in a clean lab environment, build and verify canvas initialization, a sprite array with pruning, an input-state matrix, a nested collision sweep, and an async leaderboard fetch — each as a working standalone snippet.",
+    handsOn: "Part B — The Systems Walkthrough: walk the tutor through your completed labs, explaining coordinate calculations, memory-cleanup loops, the request/response cycle of the fetch labs, and the schema + validation rules from the database labs. Part C — Diagnostic Challenges: locate and patch a seeded bug in (a) an asynchronous request handler or array-splice statement, and (b) a SQL query (wrong WHERE logic or an injection-vulnerable concatenation).",
+    homework: "Complete the self-audit reflection in the Journal tab under 'Session 13 Assessment' summarizing what broke during QA, what you patched, and how confidently you could defend your data-structure, async, and database-security choices (+50 XP).",
     ethics: "Professional Defense: treating the tutor's code-walkthrough questioning as collaborative auditing rather than adversarial gatekeeping — the same posture a real code review requires.",
-    adaptations: "Age 13-16: Full live deployment to a local dev server plus a recorded code-walkthrough defense."
+    adaptations: "Age 13-16: Full live walkthrough of all four modules plus a recorded code-walkthrough defense."
   },
 
   // ================= LEVEL 3 =================

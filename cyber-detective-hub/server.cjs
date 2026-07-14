@@ -255,17 +255,11 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const userRes = await db.query("SELECT * FROM user_profile WHERE LOWER(username) = $1", [cleanUsername]);
     if (userRes.rows.length === 0) {
-      const allUsersRes = await db.query("SELECT username FROM user_profile LIMIT 10");
-      const usernames = allUsersRes.rows.map(r => r.username);
-      return res.status(401).json({ 
-        error: `User not found: '${cleanUsername}'. Registered usernames in DB: ${JSON.stringify(usernames)}` 
-      });
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
     const user = userRes.rows[0];
     if (user.password !== cleanPassword) {
-      return res.status(401).json({ 
-        error: `Password mismatch for '${cleanUsername}'. Expected: '${user.password}', Got: '${cleanPassword}'` 
-      });
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
     
     res.json({
@@ -314,7 +308,7 @@ app.get('/api/user', authenticateToken, async (req, res) => {
 });
 
 // 2. Update User Points
-app.post('/api/user/points', authenticateToken, async (req, res) => {
+app.post('/api/user/points', authenticateToken, requireTeacher, async (req, res) => {
   const { points } = req.body;
   if (points === undefined) {
     return res.status(400).json({ error: 'Missing points value' });
@@ -602,7 +596,7 @@ app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, r
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
       VALUES ($1, 1, $2, $3)
-    `, [studentId + '_j1', 'Write a process to warm up food from a plate.', 'Household IPO Blueprint: Microwave (Draft v1)\n\nInputs:\n- Start button pressed\n\nProcessing steps:\n- Turn on the microwave heating wave generator\n- Heat the food for 60 seconds\n- Beep when finished\n\nOutputs:\n- Hot food and alarm sound\n\n(Ambiguity Analysis: This is too vague. It does not check if the power is on, doesn\'t verify if the door is closed first, and doesn\'t define variables!)']);
+    `, [studentId + '_j1', 'Write a process to warm up food from a plate.', 'Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]']);
 
     res.json({ success: true, student: { id: studentId, username, name, role: 'student', points: 0, student_level: studentLevel } });
   } catch (error) {
