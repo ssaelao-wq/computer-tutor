@@ -1991,15 +1991,15 @@ The **Project Journal** milestone card ("Part 12: Performance & Memory Optimizat
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Final QA Sweeps
-* **00:15 - 01:00 | Assessment Part A**: The Mars Defense Assembler (build/verify the fully compiled code stack)
+* **00:15 - 01:00 | Assessment Part A**: The Mars Defense Assembler (rebuild/verify each lab type fresh, as a standalone snippet)
 * **01:00 - 01:45 | Assessment Part B**: The Canvas Autopilot Walkthrough (live code defense)
-* **01:45 - 02:00 | Assessment Part C**: Diagnostic Challenges (seeded bug patch)
+* **01:45 - 02:00 | Assessment Part C**: Diagnostic Challenges (two seeded bug patches)
 
 ### 1. Tutor Guidance: Evaluation Solutions
-* **Part A (Assembler Check)**: Verify the student's compiled build includes correctly working canvas initialization, sprite-collection loops (ship, lasers, aliens, shields), an input state matrix, nested-loop collision matrices, and the async leaderboard fetch/submit systems, all running together without errors.
-* **Part B (Defense Check)**: Verify the student can explain, line-by-line and without notes, the coordinate math driving sprite movement and collision, the memory cleanup (splice/filter) loops, and the fetch options object used for the leaderboard POST/GET calls.
-* **Part C (Diagnostic Check)**: Verify the student locates and correctly patches a seeded bug planted in either an asynchronous request handler (e.g. a missing `await`) or an array splice statement (e.g. a forward-iterating splice), within the allotted time.
-* **Take-Home Evaluation**: Verify self-reflection logs on the level's core mechanics (canvas rendering, sprite arrays, collision math, async APIs).
+* **Part A (Assembler Check)**: In a clean lab environment, verify the student can rebuild each of the five Level 2 lab types — canvas initialization, a sprite array with pruning, an input state matrix, a nested collision sweep, and an async leaderboard fetch — each as its own working standalone snippet, not one integrated build.
+* **Part B (Defense Check)**: Verify the student can explain, line-by-line and without notes, the coordinate math driving sprite movement and collision, the memory cleanup (splice/filter) loops, the fetch options object used for the leaderboard POST/GET calls, and the schema + validation rules from the database labs.
+* **Part C (Diagnostic Check)**: Verify the student locates and correctly patches **two** seeded bugs within the allotted time: (a) a bug in either an asynchronous request handler (e.g. a missing `await`) or an array splice statement (e.g. a forward-iterating splice), and (b) a SQL query bug (e.g. incorrect WHERE logic or an injection-vulnerable string-concatenated query).
+* **Take-Home Evaluation**: Verify self-reflection logs on the level's core mechanics (canvas rendering, sprite arrays, collision math, async APIs, database queries).
 
 ### 2. Concept Reference Cheat Sheet (Session 13)
 
@@ -2074,10 +2074,10 @@ Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open
 
 Level 2 uses the generic **Standard AI Prompt Sandbox** panel (Role / Task Description / Logical Constraints / Explicit Input Structure / Edge Cases fields + AI Generator + Chaos Monkey) rather than session-specific validators. The tutor should guide the student to fill in each field using this session's real project spec below — not a scripted answer key.
 
-* **Task description** field: Compile your full Mars Colony Defense codebase (canvas init, sprites, input matrix, collision sweeps, async leaderboard) into one working build, and prepare to explain each module's role to the tutor without notes.
-* **Logical Constraints (Rules)** field: Every module (rendering, input, collision, API) must be independently explainable; no leftover `console.log` debug statements or dead variables from earlier sessions should remain in the final build.
-* **Edge cases to handle** field: The seeded diagnostic bug (an async handler or splice statement) must be patched within the time limit, and at least 2 code design choices must be defended under tutor questioning.
-* **Expected AI output** (what the tutor should recognize as correct — for the capstone there is no single new function; the "output" is the full pipeline compiling cleanly, sourced from the L2 curriculum doc's Session 13 architecture overview):
+* **Task description** field: Rebuild canvas initialization, sprites, the input matrix, a collision sweep, and the async leaderboard fetch/submit as five separate, working standalone snippets (not one integrated build), and prepare to explain each one's role to the tutor without notes.
+* **Logical Constraints (Rules)** field: Every snippet (rendering, input, collision, API) must be independently explainable; no leftover `console.log` debug statements or dead variables should remain in any of the rebuilt labs.
+* **Edge cases to handle** field: Both seeded diagnostic bugs (one async-handler-or-splice bug, one SQL query bug) must be patched within the time limit, and at least 2 code design choices must be defended under tutor questioning.
+* **Expected AI output** (what the tutor should recognize as correct — these are five independent standalone snippets, not one merged program; sourced from the L2 curriculum doc's Session 13 architecture overview):
   ```javascript
   function init() {
     canvas = document.getElementById("game-canvas");
@@ -2108,35 +2108,36 @@ Level 2 uses the generic **Standard AI Prompt Sandbox** panel (Role / Task Descr
 | **Asynchronous Logic** | Successfully fetches and posts data using async/await; try/catch guards are robust. | Queries API successfully, but handles error exceptions poorly. | Struggling with fetch options, unresolved promises. | Blocked synchronous requests, syntax errors. |
 | **Memory Optimization** | Zero memory leaks; arrays are pruned cleanly; loop efficiency is high. | Sprites pruned, but loop performance dips under load. | Inconsistent pruning, dead lasers leak memory. | No garbage collection, array sizes grow indefinitely. |
 | **System Flow** | Strong modular decomposition; clear encapsulation of Canvas, inputs, and APIs. | Modules separated but share too many global scope dependencies. | Poor decoupling, monolithic rendering. | Spaghetti code, no modular functions. |
+| **Database & Security Knowledge** | Correct schema design, accurate SELECT/WHERE/UPDATE queries, identifies injection and states the parameterized defense. | Queries mostly correct; validation rules present but incomplete. | Can read but not write basic SQL; vague on why servers validate. | No working queries; no concept of the trust boundary. |
 
 ### 5. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
 
 The **Project Journal** milestone card ("Part 13: Graduation Sprint & Defense") tracks the student's real project file, separate from the Standard Sandbox above.
 
 1. **Plan & Design**
-   - *Visual Concept & UX Flow (expected):* "The complete game, demo-ready: steering, firing, marching alien waves, crumbling shields, a live HUD, and the cloud leaderboard all working together for the live defense session."
-   - *System Parts & Information (expected):* "Parts needed: nothing new — every prior module integrates into one build. Information to track: all Level 2 state at once (ship, lasers, alien grid, shield cells, score, wave, health)."
-   - *Logic Flow / Pseudocode (expected):* "Part A: assemble and verify every module works together as one build. Part B: walk the tutor through a live defense of the code. Part C: patch a timed, seeded bug under review."
-   - *Why:* This is the level's graduation moment — the plan has nothing new to add because the work of designing is done; System Parts & Information reads as a checklist of everything covered since Session 1, not a wishlist of what's still missing. Naming "all Level 2 state at once" is itself the milestone: the student is proving they can hold the ship, the lasers, the alien grid, the shields, and the async leaderboard state in their head simultaneously, the same integrated view a real code review demands. This closes the arc that began with Session 1's blank canvas and bridges directly into Level 3's Cyberpunk Hacker Arena, where the "never trust the client" habit planted in Session 11 becomes the entire subject of the level.
+   - *Visual Concept & UX Flow (expected):* "Every Level 2 lab type, rebuilt fresh and demo-ready: steering, firing, marching alien waves, crumbling shields, a live HUD, the cloud leaderboard, and a working SQL query — each running independently for the live defense session."
+   - *System Parts & Information (expected):* "Parts needed: nothing new — each of the five prior lab types is rebuilt fresh as its own standalone snippet. Information to track: the state shape for each lab type in isolation (ship, lasers, alien grid, shield cells, score, wave, health, and a sample query result)."
+   - *Logic Flow / Pseudocode (expected):* "Part A: rebuild and verify each of the five lab types as a fresh, standalone snippet. Part B: walk the tutor through a live defense of the code. Part C: patch two timed, seeded bugs (one async/array bug, one SQL bug) under review."
+   - *Why:* This is the level's graduation moment — the plan has nothing new to add because the work of designing is done; System Parts & Information reads as a checklist of everything covered since Session 1, not a wishlist of what's still missing. Naming "the state shape for each lab type in isolation" is itself the milestone: the student is proving fluency across the ship, the lasers, the alien grid, the shields, the async leaderboard, and the database query — each on its own, the same standalone-snippet model every session since Session 1 has used, not a single integrated build. This closes the arc that began with Session 1's blank canvas and bridges directly into Level 3's Cyberpunk Hacker Arena, where the "never trust the client" habit planted in Session 11 becomes the entire subject of the level.
 
 2. **Write AI Prompt**
-   - *Expected prompt:* "Compile your full Mars Colony Defense codebase — canvas initialization, sprite arrays, the input matrix, collision sweeps, and the async leaderboard fetch/submit calls — into one working build, and prepare to explain each module's role to the tutor without notes."
-   - *Why:* There is no new feature to request here — the "prompt" for this milestone is really a compilation and self-review instruction, reflecting that Session 13's actual work is integration and defense, not new code generation.
+   - *Expected prompt:* "Rebuild canvas initialization, sprite arrays, the input matrix, a collision sweep, and the async leaderboard fetch/submit calls as five separate, working standalone snippets, and prepare to explain each one's role to the tutor without notes."
+   - *Why:* There is no new feature to request here — the "prompt" for this milestone is really a rebuild-and-self-review instruction, reflecting that Session 13's actual work is fluency and defense across every standalone lab type, not new code generation.
 
 3. **Review & Explain**
-   - *Expected checklist:* Every module (rendering, input, collision, API) can be pointed to and explained independently; there are no leftover `console.log` debug statements or dead variables from earlier sessions.
+   - *Expected checklist:* Every rebuilt snippet (rendering, input, collision, API) can be pointed to and explained independently; there are no leftover `console.log` debug statements or dead variables in any of them.
    - *Expected Socratic answer* — *"If asked 'why does this collision check use && instead of ||,' can you explain the AABB logic from memory, not just recite what the AI generated?"* → Yes — an AABB overlap only exists when every axis overlaps simultaneously (the rectangles' left/right edges AND top/bottom edges must all cross), so the check must AND all four edge comparisons together; using `||` would report a collision the moment any single edge condition was true, which would falsely flag overlap for shapes that aren't actually touching.
    - *Why:* This is the level's final defense of a bug class first taught in the earlier collision sessions — being able to reconstruct the AABB logic from first principles, not recite memorized code, is exactly what Part B's live walkthrough is testing.
 
 4. **Test & Break**
-   - *Expected test checklist:* Run the full game end-to-end and verify the ship moves, fires, aliens march and die, shields degrade, waves progress, and scores submit; patch the seeded diagnostic bug (an async handler or splice statement) within the time limit; defend at least 2 code design choices under tutor questioning.
-   - *Why:* This is the level's final regression sweep — every system built since Session 1 is tested together for the first time as one continuous playthrough, not in isolation.
+   - *Expected test checklist:* Run each of the five rebuilt lab snippets and verify the ship moves, fires, aliens march and die, shields degrade, waves progress, and scores submit; patch both seeded diagnostic bugs (one async-handler-or-splice bug, one SQL query bug) within the time limit; defend at least 2 code design choices under tutor questioning.
+   - *Why:* This is the level's final regression sweep — every lab type taught since Session 1 is re-verified fresh and independently, proving the underlying skill rather than a memorized, still-running build.
 
 5. **Iterate & Improve**
    - *Expected answer:* "Write down which concept from Level 2 felt least solid, to flag as a review topic before starting Level 3."
    - *Why:* Closes the level with the same metacognitive habit Level 1's graduation session ended on — naming a genuine weak spot honestly is what turns a passed assessment into a usable starting point for Level 3's Cyberpunk Hacker Arena, rather than a closed chapter.
 
-* **Homework / Certification Checklist**: Verify the finished build passes a full end-to-end regression (movement, firing, alien waves, shields, HUD, leaderboard); confirm the seeded diagnostic bug was correctly patched within the time limit; confirm the student defended at least 2 design choices under questioning; and score the build against the Level 2 Assessment Rubric across Logical Logic, Asynchronous Logic, Memory Optimization, and System Flow before certifying advancement to Level 3.
+* **Homework / Certification Checklist**: Verify each rebuilt lab snippet passes its own regression check (movement, firing, alien waves, shields, HUD, leaderboard, database query); confirm both seeded diagnostic bugs (one async-handler-or-splice bug, one SQL query bug) were correctly patched within the time limit; confirm the student defended at least 2 design choices under questioning; and score against the Level 2 Assessment Rubric across Logical Logic, Asynchronous Logic, Memory Optimization, System Flow, and Database & Security Knowledge before certifying advancement to Level 3.
 
 ---
 
