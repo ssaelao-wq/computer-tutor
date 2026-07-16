@@ -4280,6 +4280,12 @@ export default function App() {
   // Active Sandbox Session Tracker
   const [sandboxSessionId, setSandboxSessionId] = useState('l1-s1');
 
+  // Per-exercise saved work, keyed by `${sessionId}-${exerciseNum}`. Populated when a
+  // student switches away from an exercise tab, so switching back restores what they'd
+  // typed (or, for Session 1's drag-and-drop sequencer, arranged) instead of the
+  // preloaded/preset starting state.
+  const [savedExerciseCode, setSavedExerciseCode] = useState({});
+
   // Level 1 Session 1 (Car Autopilot Sequencer) Simulator States
   const [s1Sequence, setS1Sequence] = useState([]);
   const [s1Logs, setS1Logs] = useState([]);
@@ -6630,15 +6636,14 @@ export default function App() {
                         key={num}
                         className={`btn-cyber btn-small ${s1ActiveExercise === num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
-                          setS1ActiveExercise(num);
-                          setS1Sequence([]);
-                          setS1Logs([]);
-                          setS1Success(false);
-                          
-                          // Pre-setup presets for specific exercises
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s1-${s1ActiveExercise}`]: s1Sequence }));
+
+                          // Pre-setup presets for specific exercises (used only the first time
+                          // an exercise is visited — a saved arrangement below takes priority).
+                          let defaultSequence = [];
                           if (num === 3) {
                             // Exercise 1.3 Pre-setup (Scrambled automatic car sequence)
-                            setS1Sequence([
+                            defaultSequence = [
                               { id: 'start_engine', label: 'Turn Ignition Key to Start' },
                               { id: 'check_gear_pn', label: 'Check P/N Gear State' },
                               { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' },
@@ -6646,10 +6651,10 @@ export default function App() {
                               { id: 'release_handbrake', label: 'Release Handbrake' },
                               { id: 'press_gas', label: 'Press Gas Pedal' },
                               { id: 'release_brake', label: 'Release Brake Pedal' }
-                            ]);
+                            ];
                           } else if (num === 4) {
                             // Exercise 1.4 Pre-setup (Preloaded steps with an extra incorrect step to remove)
-                            setS1Sequence([
+                            defaultSequence = [
                               { id: 'check_gear_pn', label: 'Check P/N Gear State' },
                               { id: 'press_brake', label: 'Depress Brake Pedal' },
                               { id: 'start_engine', label: 'Turn Ignition Key to Start' },
@@ -6658,8 +6663,13 @@ export default function App() {
                               { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)' }, // EXTRA step to remove!
                               { id: 'release_brake', label: 'Release Brake Pedal' },
                               { id: 'press_gas', label: 'Press Gas Pedal' }
-                            ]);
+                            ];
                           }
+
+                          setS1ActiveExercise(num);
+                          setS1Sequence(savedExerciseCode[`l1-s1-${num}`] ?? defaultSequence);
+                          setS1Logs([]);
+                          setS1Success(false);
                         }}
                       >
                         Exercise 1.{num}{(exerciseProgress['l1-s1'] || []).includes(num) ? ' ✓' : ''}
@@ -7073,8 +7083,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s2ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s2-${s2ActiveExercise}`]: s2CodeInput }));
                           setS2ActiveExercise(ex.num);
-                          setS2CodeInput(ex.preloaded);
+                          setS2CodeInput(savedExerciseCode[`l1-s2-${ex.num}`] ?? ex.preloaded);
                           setS2Logs([]);
                           setS2Success(false);
                         }}
@@ -7205,8 +7216,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s3ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s3-${s3ActiveExercise}`]: s3CodeInput }));
                           setS3ActiveExercise(ex.num);
-                          setS3CodeInput(ex.preloaded);
+                          setS3CodeInput(savedExerciseCode[`l1-s3-${ex.num}`] ?? ex.preloaded);
                           setS3Logs([]);
                           setS3Success(false);
                         }}
@@ -7303,20 +7315,40 @@ export default function App() {
                                 <style>
                                   body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
                                   #game-track {
+                                    position: relative;
+                                    width: 100%;
+                                    height: 260px;
                                     border: 2px dashed #444;
-                                    min-height: 130px;
+                                    background-color: #1a1a2e;
                                   }
                                   #player-car {
+                                    position: absolute;
+                                    bottom: 20px;
+                                    left: 165px;
+                                    width: 30px;
+                                    height: 50px;
                                     background-color: blue;
                                     color: white;
                                     text-align: center;
+                                    border-radius: 4px;
                                   }
                                   .obstacle {
+                                    position: absolute;
+                                    top: 30px;
+                                    width: 25px;
+                                    height: 40px;
                                     background-color: red;
                                     color: white;
                                     text-align: center;
+                                    border-radius: 4px;
                                   }
+                                  #obstacle-1 { left: 40px; }
+                                  #obstacle-2 { left: 300px; }
                                   .lane-divider {
+                                    position: absolute;
+                                    top: 0;
+                                    height: 100%;
+                                    width: 2px;
                                     border-left: 1px dashed white;
                                   }
                                   ${S3_EXERCISES[s3ActiveExercise - 1].previewCss ? '' : s3CodeInput}
@@ -7358,8 +7390,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s4ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s4-${s4ActiveExercise}`]: s4CodeInput }));
                           setS4ActiveExercise(ex.num);
-                          setS4CodeInput(ex.preloaded);
+                          setS4CodeInput(savedExerciseCode[`l1-s4-${ex.num}`] ?? ex.preloaded);
                           setS4Logs([]);
                           setS4Success(false);
                           setSimConsoleLogs([]);
@@ -7468,8 +7501,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s5ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s5-${s5ActiveExercise}`]: s5CodeInput }));
                           setS5ActiveExercise(ex.num);
-                          setS5CodeInput(ex.preloaded);
+                          setS5CodeInput(savedExerciseCode[`l1-s5-${ex.num}`] ?? ex.preloaded);
                           setS5Logs([]);
                           setS5Success(false);
                           setSimConsoleLogs([]);
@@ -7578,8 +7612,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s6ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s6-${s6ActiveExercise}`]: s6CodeInput }));
                           setS6ActiveExercise(ex.num);
-                          setS6CodeInput(ex.preloaded);
+                          setS6CodeInput(savedExerciseCode[`l1-s6-${ex.num}`] ?? ex.preloaded);
                           setS6Logs([]);
                           setS6Success(false);
                           setSimConsoleLogs([]);
@@ -7688,8 +7723,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s7ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s7-${s7ActiveExercise}`]: s7CodeInput }));
                           setS7ActiveExercise(ex.num);
-                          setS7CodeInput(ex.preloaded);
+                          setS7CodeInput(savedExerciseCode[`l1-s7-${ex.num}`] ?? ex.preloaded);
                           setS7Logs([]);
                           setS7Success(false);
                           setSimConsoleLogs([]);
@@ -7798,8 +7834,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s8ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s8-${s8ActiveExercise}`]: s8CodeInput }));
                           setS8ActiveExercise(ex.num);
-                          setS8CodeInput(ex.preloaded);
+                          setS8CodeInput(savedExerciseCode[`l1-s8-${ex.num}`] ?? ex.preloaded);
                           setS8Logs([]);
                           setS8Success(false);
                           setSimConsoleLogs([]);
@@ -7908,8 +7945,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s9ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s9-${s9ActiveExercise}`]: s9CodeInput }));
                           setS9ActiveExercise(ex.num);
-                          setS9CodeInput(ex.preloaded);
+                          setS9CodeInput(savedExerciseCode[`l1-s9-${ex.num}`] ?? ex.preloaded);
                           setS9Logs([]);
                           setS9Success(false);
                           setSimConsoleLogs([]);
@@ -8018,8 +8056,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s10ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s10-${s10ActiveExercise}`]: s10CodeInput }));
                           setS10ActiveExercise(ex.num);
-                          setS10CodeInput(ex.preloaded);
+                          setS10CodeInput(savedExerciseCode[`l1-s10-${ex.num}`] ?? ex.preloaded);
                           setS10Logs([]);
                           setS10Success(false);
                           setSimConsoleLogs([]);
@@ -8128,8 +8167,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s11ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s11-${s11ActiveExercise}`]: s11CodeInput }));
                           setS11ActiveExercise(ex.num);
-                          setS11CodeInput(ex.preloaded);
+                          setS11CodeInput(savedExerciseCode[`l1-s11-${ex.num}`] ?? ex.preloaded);
                           setS11Logs([]);
                           setS11Success(false);
                           setSimConsoleLogs([]);
@@ -8238,8 +8278,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s12ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s12-${s12ActiveExercise}`]: s12CodeInput }));
                           setS12ActiveExercise(ex.num);
-                          setS12CodeInput(ex.preloaded);
+                          setS12CodeInput(savedExerciseCode[`l1-s12-${ex.num}`] ?? ex.preloaded);
                           setS12Logs([]);
                           setS12Success(false);
                           setSimConsoleLogs([]);
@@ -8348,8 +8389,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s1ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s1-${l2s1ActiveExercise}`]: l2s1CodeInput }));
                           setL2s1ActiveExercise(ex.num);
-                          setL2s1CodeInput(ex.preloaded);
+                          setL2s1CodeInput(savedExerciseCode[`l2-s1-${ex.num}`] ?? ex.preloaded);
                           setL2s1Logs([]);
                           setL2s1Success(false);
                           setSimConsoleLogs([]);
@@ -8458,8 +8500,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s2ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s2-${l2s2ActiveExercise}`]: l2s2CodeInput }));
                           setL2s2ActiveExercise(ex.num);
-                          setL2s2CodeInput(ex.preloaded);
+                          setL2s2CodeInput(savedExerciseCode[`l2-s2-${ex.num}`] ?? ex.preloaded);
                           setL2s2Logs([]);
                           setL2s2Success(false);
                           setSimConsoleLogs([]);
@@ -8568,8 +8611,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s3ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s3-${l2s3ActiveExercise}`]: l2s3CodeInput }));
                           setL2s3ActiveExercise(ex.num);
-                          setL2s3CodeInput(ex.preloaded);
+                          setL2s3CodeInput(savedExerciseCode[`l2-s3-${ex.num}`] ?? ex.preloaded);
                           setL2s3Logs([]);
                           setL2s3Success(false);
                           setSimConsoleLogs([]);
@@ -8678,8 +8722,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s4ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s4-${l2s4ActiveExercise}`]: l2s4CodeInput }));
                           setL2s4ActiveExercise(ex.num);
-                          setL2s4CodeInput(ex.preloaded);
+                          setL2s4CodeInput(savedExerciseCode[`l2-s4-${ex.num}`] ?? ex.preloaded);
                           setL2s4Logs([]);
                           setL2s4Success(false);
                           setSimConsoleLogs([]);
@@ -8788,8 +8833,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s5ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s5-${l2s5ActiveExercise}`]: l2s5CodeInput }));
                           setL2s5ActiveExercise(ex.num);
-                          setL2s5CodeInput(ex.preloaded);
+                          setL2s5CodeInput(savedExerciseCode[`l2-s5-${ex.num}`] ?? ex.preloaded);
                           setL2s5Logs([]);
                           setL2s5Success(false);
                           setSimConsoleLogs([]);
@@ -8898,8 +8944,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s6ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s6-${l2s6ActiveExercise}`]: l2s6CodeInput }));
                           setL2s6ActiveExercise(ex.num);
-                          setL2s6CodeInput(ex.preloaded);
+                          setL2s6CodeInput(savedExerciseCode[`l2-s6-${ex.num}`] ?? ex.preloaded);
                           setL2s6Logs([]);
                           setL2s6Success(false);
                           setSimConsoleLogs([]);
@@ -9008,8 +9055,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s7ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s7-${l2s7ActiveExercise}`]: l2s7CodeInput }));
                           setL2s7ActiveExercise(ex.num);
-                          setL2s7CodeInput(ex.preloaded);
+                          setL2s7CodeInput(savedExerciseCode[`l2-s7-${ex.num}`] ?? ex.preloaded);
                           setL2s7Logs([]);
                           setL2s7Success(false);
                           setSimConsoleLogs([]);
@@ -9118,8 +9166,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s8ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s8-${l2s8ActiveExercise}`]: l2s8CodeInput }));
                           setL2s8ActiveExercise(ex.num);
-                          setL2s8CodeInput(ex.preloaded);
+                          setL2s8CodeInput(savedExerciseCode[`l2-s8-${ex.num}`] ?? ex.preloaded);
                           setL2s8Logs([]);
                           setL2s8Success(false);
                           setSimConsoleLogs([]);
@@ -9228,8 +9277,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s9ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s9-${l2s9ActiveExercise}`]: l2s9CodeInput }));
                           setL2s9ActiveExercise(ex.num);
-                          setL2s9CodeInput(ex.preloaded);
+                          setL2s9CodeInput(savedExerciseCode[`l2-s9-${ex.num}`] ?? ex.preloaded);
                           setL2s9Logs([]);
                           setL2s9Success(false);
                           setSimConsoleLogs([]);
@@ -9338,8 +9388,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s10ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s10-${l2s10ActiveExercise}`]: l2s10CodeInput }));
                           setL2s10ActiveExercise(ex.num);
-                          setL2s10CodeInput(ex.preloaded);
+                          setL2s10CodeInput(savedExerciseCode[`l2-s10-${ex.num}`] ?? ex.preloaded);
                           setL2s10Logs([]);
                           setL2s10Success(false);
                           setSimConsoleLogs([]);
@@ -9448,8 +9499,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s11ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s11-${l2s11ActiveExercise}`]: l2s11CodeInput }));
                           setL2s11ActiveExercise(ex.num);
-                          setL2s11CodeInput(ex.preloaded);
+                          setL2s11CodeInput(savedExerciseCode[`l2-s11-${ex.num}`] ?? ex.preloaded);
                           setL2s11Logs([]);
                           setL2s11Success(false);
                           setSimConsoleLogs([]);
@@ -9558,8 +9610,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s12ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s12-${l2s12ActiveExercise}`]: l2s12CodeInput }));
                           setL2s12ActiveExercise(ex.num);
-                          setL2s12CodeInput(ex.preloaded);
+                          setL2s12CodeInput(savedExerciseCode[`l2-s12-${ex.num}`] ?? ex.preloaded);
                           setL2s12Logs([]);
                           setL2s12Success(false);
                           setSimConsoleLogs([]);
@@ -9668,8 +9721,9 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${l2s13ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
+                          setSavedExerciseCode(prev => ({ ...prev, [`l2-s13-${l2s13ActiveExercise}`]: l2s13CodeInput }));
                           setL2s13ActiveExercise(ex.num);
-                          setL2s13CodeInput(ex.preloaded);
+                          setL2s13CodeInput(savedExerciseCode[`l2-s13-${ex.num}`] ?? ex.preloaded);
                           setL2s13Logs([]);
                           setL2s13Success(false);
                           setSimConsoleLogs([]);
