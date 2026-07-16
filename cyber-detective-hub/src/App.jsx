@@ -5505,23 +5505,23 @@ export default function App() {
       setS12Success(false);
       setSimConsoleLogs([]);
     } else if (session.id === 'l4-s1') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Cloud Integration Architect' : campaignId === 'mars' ? 'Mars Network DB Developer' : 'Wizard Core Database Conjurer');
-      setSandboxTask(campaignId === 'cyberpunk' ? 'Connect to remote database and execute CRUD' : campaignId === 'mars' ? 'Connect to telemetry database and execute CRUD' : 'Connect spell book to Magic Core Database and execute CRUD');
-      setSandboxConstraints('Establish client connection, secure client initialization, handle connectivity delays.');
-      setSandboxInput(campaignId === 'cyberpunk' ? 'supabaseUrl, supabaseAnonKey, sensorData' : campaignId === 'mars' ? 'marsDbClient, telemetryData' : 'spellCoreClient, magicalRegistryData');
-      setSandboxEdgeCases('Database timeout, empty records, network latency, bad credentials');
+      setSandboxRole('Capstone Game Producer');
+      setSandboxTask('Draft the capstone PRD and negotiate a 5-sprint scope contract for your own game concept');
+      setSandboxConstraints('Every user story needs testable acceptance criteria, plus explicit MoSCoW priorities and an out-of-scope list.');
+      setSandboxInput('coreLoop, userStories, acceptanceCriteria, scopeContract');
+      setSandboxEdgeCases('Untestable criteria ("feels fun"), hidden scope monsters (multiplayer, level editor), Must-line overflow beyond 5 sprints');
     } else if (session.id === 'l4-s2') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Security Systems Engineer' : campaignId === 'mars' ? 'Rover Telemetry Security Officer' : 'Hogwarts Security Ward Architect');
-      setSandboxTask('Configure environment configuration variables and .gitignore settings');
-      setSandboxConstraints('Prevent secret token leaks. Zero hardcoded passwords. Check environment variables existence.');
-      setSandboxInput('process.env.DB_PASSWORD, import.meta.env.VITE_SUPABASE_ANON_KEY');
-      setSandboxEdgeCases('Undefined environment keys, missing keys at build time, committed git secrets');
+      setSandboxRole('Capstone Game Architect');
+      setSandboxTask('Design the component architecture, data model, and 5-sprint milestone plan for your own game');
+      setSandboxConstraints('Record each stack decision as an ADR (Status, Context, Decision, Consequences); order sprints so no feature depends on data from a later sprint.');
+      setSandboxInput('componentDiagram, schema, apiContract, sprintMap');
+      setSandboxEdgeCases('Dependency-order errors (e.g. leaderboard sprint before accounts sprint), missing ADR consequences, undemoable sprint boundaries');
     } else if (session.id === 'l4-s5') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Database Security Officer' : campaignId === 'mars' ? 'Interplanetary Security Lead' : 'Hogwarts High Inquisitor of Wards');
-      setSandboxTask('Implement SQL Row-Level Security (RLS) policies for user data isolation');
-      setSandboxConstraints('Write database policies checking active user uid (auth.uid() = user_id). Block all unauthorized cross-user accesses.');
-      setSandboxInput('auth.uid(), user_id, table_name');
-      setSandboxEdgeCases('Null user tokens, cross-tenant reads, anonymous accesses, policy bypasses');
+      setSandboxRole('Capstone Game Developer');
+      setSandboxTask('Centralize game state into a single source of truth and implement safe menu/playing/paused/game-over transitions');
+      setSandboxConstraints('No component may mutate state directly; any operation that can fail (e.g. a save while offline) must optimistically update, then roll back on rejection.');
+      setSandboxInput('gameState, oldState, transition(), rollback()');
+      setSandboxEdgeCases('Concurrent state updates overwriting a newer value with an older one, failed save requests, rapid pause/resume spamming');
     } else if (session.id === 'l2-s1') {
       setSandboxRole('Colony Defense Systems Engineer');
       setSandboxTask('Create a <canvas id="game-canvas"> element sized 480x600, retrieve its 2D context in canvas.js, and draw a red 40x40 player ship rectangle at coordinates (200, 500) using fillStyle and fillRect.');

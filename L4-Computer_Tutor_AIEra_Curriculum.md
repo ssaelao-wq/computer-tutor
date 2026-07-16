@@ -10,7 +10,7 @@
 
 ### 🎮 The Capstone: The Student's Own Game
 
-**Scope contract (agreed in Session 1):** a browser game using the taught stack — HTML/CSS/JS or Canvas frontend, optional Express + MySQL backend for accounts/saves/leaderboard — sized so that a Must-scope build fits Sessions 3–8. The teacher holds veto power over scope, not over creative direction.
+**Scope contract (agreed in Session 1):** a browser game using the taught stack — HTML/CSS/JS or Canvas frontend, optional Express + MySQL backend for accounts/saves/leaderboard — sized so that a Must-scope build fits Sessions 4–8. The teacher holds veto power over scope, not over creative direction.
 
 | Sessions | Milestone | Engineering Practices Introduced |
 |----------|-----------|----------------------------------|
