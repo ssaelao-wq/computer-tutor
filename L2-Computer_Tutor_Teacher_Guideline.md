@@ -632,15 +632,15 @@ The **Project Journal** milestone card ("Part 4: Laser Motion & Garbage Collecti
 
 ### 3. Concept Reference Cheat Sheet
 
-Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 4 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 6 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
 
-* **2D Arrays & Nested Loops**
+* **2D Arrays (Rows of Arrays)**
 
   **Core Definition**
-  A 2D array is an array whose elements are themselves arrays — a grid of rows and columns. `grid[row][col]` reads the array at index `row`, then reads index `col` inside it. To visit every cell, wrap one loop inside another: the outer loop walks rows, the inner loop walks columns.
+  A 2D array is an array whose elements are themselves arrays — a grid of rows and columns. `grid[row][col]` reads the array at index `row`, then reads index `col` inside it.
 
   **Why It Matters**
-  A flat array (Session 3's `lasers` list) works when entities have no meaningful position relative to each other. An alien swarm — and, as this session shows, a destructible shield — both have structure that a flat list can't represent on its own: ROWS and COLUMNS that matter for spawning, marching, rendering, and (for the shield) which segment is still standing.
+  A flat array (Session 3's `lasers` list) works when entities have no meaningful position relative to each other. An alien swarm is different — it has ROWS and COLUMNS that matter for spawning, marching, and later collision — and a 2D array is the direct data-shape match for that grid structure, rather than trying to fake rows and columns with math on a flat list.
 
   **Syntax**
   ```javascript
@@ -650,15 +650,32 @@ Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open
     [1, 1, 1, 1]
   ];
   grid[1][2];  // reads row 1, column 2
+  ```
 
+  *Keywords: javascript 2d array grid rows columns nested array access*
+
+* **Nested Loops (Drawing Every Alien)**
+
+  **Core Definition**
+  To visit every cell of a 2D array, wrap one loop inside another: the outer loop walks rows, the inner loop walks columns.
+
+  **Syntax Blueprint**
+  ```javascript
   for (let row = 0; row < grid.length; row++) {
     for (let col = 0; col < grid[row].length; col++) {
-      if (grid[row][col] === 1) { /* draw this cell */ }
+      if (grid[row][col] === 1) {
+        let x = col * cellWidth;
+        let y = row * cellHeight;
+        ctx.fillRect(x, y, alienWidth, alienHeight);
+      }
     }
   }
   ```
 
-  *Keywords: javascript 2d array grid rows columns nested loop*
+  **Why It Matters**
+  The outer loop alone only ever reaches one row; the inner loop alone has no row to read from. Together they touch every `[row][col]` pair exactly once.
+
+  *Keywords: nested for loop 2d array javascript double loop grid*
 
 * **March-and-Bounce Boundary Logic**
 
@@ -683,48 +700,73 @@ Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open
 
   *Keywords: javascript bounce boundary direction reverse sprite edge detection*
 
-* **Shield Grids as State (0 = Empty, 1 = Full)**
+* **Grids as State (0 = Empty, 1 = Full)**
 
   **Core Definition**
-  A destructible shield doesn't need pixel-level destruction — a small array of cells, each either `1` (intact) or `0` (destroyed), is enough. Drawing only renders cells still equal to `1`, so "destroying" a cell is just flipping a number.
+  A destructible shield is a 2D array of small cells, where each cell's number represents whether it is still solid. `1` means the cell blocks lasers; `0` means it has already been shot away.
 
   **Why It Matters**
-  This reuses the exact same array-of-state idea as the alien grid, but the NUMBERS mean something different — not "is there an alien here" but "is this cell still solid." Recognizing that a grid can represent any yes/no state per cell (alive/dead, solid/destroyed) is a far more reusable idea than memorizing "shields use a grid."
+  This reuses the exact same 2D-array shape as the alien grid, but the NUMBERS mean something different — not "is there an alien here" but "is this cell still solid." Recognizing that a grid can represent any yes/no state per cell (alive/dead, solid/destroyed, visited/unvisited) is a far more reusable idea than memorizing "shields use a grid."
 
   ```javascript
-  shield = [1, 1, 1, 1, 1]; // a row of 5 cells; corners can be knocked to 0
+  shieldGrid = [
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+    [0, 1, 1, 0]   // corners already destroyed
+  ];
   ```
+
+  Drawing only renders cells still equal to `1`; a laser hit sets its cell to `0` so it disappears from both the render loop and the collision check.
 
   *Keywords: javascript grid array state destructible shield 0 1*
 
-* **Coordinate-to-Index Mapping & Out-of-Bounds Guards**
+* **Coordinate-to-Index Mapping**
 
   **Core Definition**
-  Lasers move in absolute pixel coordinates, but the shield (and the alien grid's boundary check) works in row/col or edge-constant terms. To find which cell a laser hit, subtract the shield's starting offset first, then divide by the cell width and round down — and always validate the result is inside the array's real bounds before trusting it.
+  Lasers move in absolute pixel coordinates (x, y), but the shield is stored as row/col grid indices starting at the shield's own on-screen offset — not at pixel 0. To find which cell a laser hit, subtract the shield's starting offset first, then divide by the size of one cell and round down.
+
+  **Why It Matters**
+  Two completely different coordinate systems are in play at once — pixels for rendering, grid indices for storage — and every hit-test has to convert between them correctly. This exact pixel-to-cell conversion pattern reappears anywhere a game overlays a logical grid on top of a pixel-based canvas, not just for shields.
 
   **Formula & Worked Example**
   ```javascript
   col = Math.floor((laserX - shieldOffsetX) / cellWidth);
+  row = Math.floor((laserY - shieldOffsetY) / cellHeight);
   // laserX = 145, shieldOffsetX = 30, cellWidth = 50
-  // col = Math.floor((145 - 30) / 50) = Math.floor(2.3) = 2
+  // col = Math.floor((145 - 30) / 50) = Math.floor(2.3) = 2   // hits the 3rd column (index 2)
   ```
 
-  **Guarded Read (The Invincible Shields bug, fixed):**
+  `Math.floor` is required — without it, `2.3` would not match any whole cell index. Skipping the offset subtraction is the classic bug here: it silently shifts every laser's hit-test by however many pixels the shield is offset from the canvas edge.
+
+  *Keywords: javascript coordinate to grid index math.floor pixel to cell offset*
+
+* **Out-of-Bounds Index Guards**
+
+  **Core Definition**
+  `Math.floor(laserX / cellWidth)` can produce an index outside the grid entirely if a laser is off to the side or the shield is smaller than the canvas. Reading `grid[row][col]` at an invalid index doesn't throw an error — it silently returns `undefined`.
+
+  **Why It Matters**
+  JavaScript's refusal to error on an out-of-bounds array read is a trap, not a convenience — `undefined` quietly fails every `===` comparison, so bugs like this hide behind "nothing happened" instead of a stack trace. Any time a coordinate is converted into an index, that index needs to be validated before it's trusted.
+
+  **Common Mistake — The Invincible Shields**
   ```javascript
-  // ❌ No bounds check — an out-of-range col reads undefined; undefined === 1
-  // is false, so the laser silently passes through:
-  if (shield[col] === 1) { ... }
+  // ❌ No bounds check:
+  if (shieldGrid[row][col] === 1) { ... }
+  // if col is -1 or too large, this reads undefined; undefined === 1 is false,
+  // so the laser is never detected as blocked — it silently passes through.
 
   // ✅ Guarded:
-  if (col >= 0 && col < shield.length && shield[col] === 1) {
-    shield[col] = 0;   // destroy the cell
+  if (row >= 0 && row < shieldGrid.length &&
+      col >= 0 && col < shieldGrid[0].length &&
+      shieldGrid[row][col] === 1) {
+    shieldGrid[row][col] = 0;   // destroy the cell
   }
   ```
 
-  **Why It Matters**
-  Two completely different coordinate systems are in play at once — pixels for rendering, grid indices for storage — and every hit-test has to convert between them correctly, then confirm the result actually lands inside the grid. This exact pixel-to-cell conversion pattern reappears anywhere a game overlays a logical grid on top of a pixel-based canvas, not just for shields.
+  **Rule**
+  Always validate row/col are inside the array's bounds BEFORE reading them.
 
-  *Keywords: javascript coordinate to grid index math.floor offset out of bounds guard*
+  *Keywords: javascript array index out of bounds undefined guard check*
 
 ### 4. Standard AI Prompt Sandbox — Tutor Fill-In Guide
 
@@ -831,7 +873,27 @@ The **Project Journal** milestone card ("Part 5: Alien Swarm Grids & Destructibl
 
 ### 3. Concept Reference Cheat Sheet
 
-Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 4 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 6 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+
+* **Why Single keydown Listeners Fail**
+
+  **Core Definition**
+  A single `addEventListener("keydown", ...)` only tells you the LAST key pressed at a given instant. It cannot represent two keys held down at once (steering left while holding fire), because each `keydown` event fires and finishes independently.
+
+  **The Problem**
+  ```javascript
+  window.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowLeft") { moveLeft(); }
+    if (e.key === " ") { fireLaser(); }
+  });
+  // Holding ArrowLeft AND pressing Space: there is no shared memory of what is
+  // currently held down, so the handler only ever reacts to whichever event just fired.
+  ```
+
+  **Why It Matters**
+  A real player needs to strafe AND fire in the same frame; a bare `keydown` handler has no persistent state to check "is ArrowLeft still held" while handling Space.
+
+  *Keywords: javascript keydown multiple keys at once simultaneous input*
 
 * **The keysPressed Map (Key-State Object)**
 
@@ -878,20 +940,39 @@ Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open
 
   *Keywords: javascript rate limiting cooldown timer timestamp throttle input*
 
-* **AABB Overlap & the Double-Iteration Sweep**
+* **AABB Overlap on Canvas Sprites**
 
   **Core Definition**
-  Canvas sprites (lasers, aliens) are plain JS objects with `x`, `y`, `width`, `height` — overlap is computed purely with math, the same four-comparison AABB rule as any bounding box check. To find every collision between two collections, loop one INSIDE a loop over the other.
+  Canvas sprites (lasers, aliens) are plain JS objects with `x`, `y`, `width`, `height` properties — there is no DOM element or CSS box to inspect, so overlap is computed purely with math using the same four-comparison rule as any bounding box check.
 
-  **Formula & Blueprint**
+  **Why It Matters**
+  This proves the AABB formula from Level 1 was never really about the DOM — it is pure math over positions and sizes, which is why it transfers unchanged onto plain objects with no visual element behind them at all. The grid stays a grid: Session 5's `aliens[row][col]` grid is NOT flattened for collision — removing a dead alien from the middle of a 2D grid would corrupt every other cell's row/col indexing, so instead each alien object gets an extra `alive` property.
+
+  **Formula**
   ```javascript
   function checkCollision(a, b) {
     return (
-      a.x < b.x + b.width && a.x + a.width > b.x &&
-      a.y < b.y + b.height && a.y + a.height > b.y
+      a.x < b.x + b.width &&
+      a.x + a.width > b.x &&
+      a.y < b.y + b.height &&
+      a.y + a.height > b.y
     );
   }
+  // a = laser sprite { x, y, width, height }, b = alien sprite { x, y, width, height, alive }
+  ```
 
+  *Keywords: canvas sprite collision AABB bounding box overlap javascript*
+
+* **Double-Iteration Sweep (Lasers x Alien Grid)**
+
+  **Core Definition**
+  To find every collision between two moving collections, loop over one INSIDE a loop over the other — every laser is checked against every still-alive alien in the grid.
+
+  **Why It Matters**
+  A single collision check (Level 1) only ever compared two fixed objects; this session's real challenge is that BOTH sides are now collections of unknown size. Nesting loops — one collection inside another — is the standard way to compare every pair across two groups.
+
+  **Blueprint**
+  ```javascript
   for (let i = lasers.length - 1; i >= 0; i--) {
     for (let row = 0; row < aliens.length; row++) {
       for (let col = 0; col < aliens[row].length; col++) {
@@ -900,32 +981,45 @@ Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open
           lasers.splice(i, 1);      // remove the laser (a flat array, safe to splice)
           alien.alive = false;      // keep the grid cell, just mark it dead
           score += 50;
-          break;                    // stop checking this laser against more aliens
+          break;                     // stop checking this laser against more aliens
         }
       }
     }
   }
   ```
 
-  **Why It Matters**
-  Session 5's `aliens[row][col]` grid is NOT flattened for collision — removing a dead alien from the middle of a 2D grid would corrupt every other cell's row/col indexing, so each alien instead gets an `alive` flag. Only the flat `lasers` array actually gets spliced.
+  Only the `lasers` array gets spliced — lasers are a flat list with no row/col to preserve. The alien grid keeps its shape; only the `alive` flag changes.
 
-  *Keywords: canvas sprite collision AABB double iteration nested loop splice*
+  *Keywords: javascript nested loop splice array collision sweep grid*
 
 * **break After a Hit (The Multiple Kill Bug)**
 
   **Core Definition**
-  Once a laser hits one alien, the inner loop must stop checking that same laser against the rest of the grid.
+  Once a laser hits one alien, it should stop checking that same laser against the rest of the grid. Forgetting `break` lets a single laser register as overlapping with several aliens in the same pass.
+
+  **Why It Matters**
+  This is Level 1's loop-control lesson (`break` as an early exit) applied inside a nested loop, where the stakes are higher — without it, one laser can silently score points off several aliens in a single frame, an outcome that looks like a working game but is quietly awarding the wrong score.
 
   **Common Mistake — Multiple Kill Bug**
   ```javascript
-  // ❌ Missing break: the loop keeps running and can mark MORE aliens dead
-  // from this same laser in the same pass.
-  // ✅ Correct: break immediately after resolving the hit.
+  // ❌ Missing break:
+  if (alien.alive && checkCollision(lasers[i], alien)) {
+    alien.alive = false;
+    score += 50;
+    // no break -- the loop keeps running and can mark MORE aliens dead
+    // from this same laser in the same pass
+  }
+
+  // ✅ Correct:
+  if (alien.alive && checkCollision(lasers[i], alien)) {
+    alien.alive = false;
+    score += 50;
+    break;   // this laser is used up -- stop scanning more aliens
+  }
   ```
 
-  **Why It Matters**
-  Without `break`, one laser can silently score points off several aliens in a single frame — an outcome that looks like a working game but is quietly awarding the wrong score. A sweep of L lasers against A aliens runs roughly L × A comparisons every frame — with large swarms this nested cost is why real games often use spatial partitioning instead of a brute-force sweep.
+  **Performance Note**
+  A sweep of L lasers against a grid of A aliens runs roughly L x A comparisons every frame — with large swarms this nested cost is why real games often use spatial partitioning instead of a brute-force sweep.
 
   *Keywords: javascript break statement loop bug multiple collision double kill*
 
@@ -1021,49 +1115,62 @@ The **Project Journal** milestone card ("Part 6: Input Matrix & Collision Sweepe
 
 ### 3. Concept Reference Cheat Sheet
 
-Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 4 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 6 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
 
-* **Game-State Variables, Wave Progression & Spawn Guards**
+* **Game-State Variables & Wave Progression**
 
-  **Core Definition:** A wave-based game tracks its state in a small set of variables: how many waves cleared, how much health remains, and how many aliens are still alive (counted fresh from the grid each check, not tracked separately). Checking "is anyone still alive?" every frame WITHOUT protection means several consecutive frames can all see zero alive count before the new wave populates — each one calling `spawnWave()` again.
+  **Core Definition:** A wave-based game tracks its state in a small set of variables: how many waves cleared, how much health remains, and how many aliens in the grid are still alive. The loop reads these variables every frame to decide what to draw and whether to advance.
 
-  **Why It Matters:** This is Level 1's `gameActive` gate idea scaled up into several variables describing WHICH stage of a longer game the player is in — and the spawn-guard problem is a check-then-act race condition run once per frame at 60fps, the general shape of "don't let this trigger fire again while it's already in progress."
+  **Why It Matters:** This is Level 1's `gameActive` gate idea scaled up — instead of one Boolean deciding "running or not," several variables together now describe WHICH stage of a longer game the player is in. Counting a derived value (how many aliens are still alive) from the existing grid, rather than tracking it separately, avoids a second source of truth that could drift out of sync with the real grid.
 
   ```javascript
   let wave = 1;
   let health = 100;
+  let aliens = [][];   // 2D grid of alien objects, each with an alive flag
+
   function countAlive(grid) {
     let count = 0;
-    for (const row of grid) { for (const alien of row) { if (alien.alive) count++; } }
+    for (const row of grid) {
+      for (const alien of row) {
+        if (alien.alive) count++;
+      }
+    }
     return count;
   }
 
-  let isSpawning = false;
-  if (countAlive(aliens) === 0 && !isSpawning) {
-    isSpawning = true;
+  if (countAlive(aliens) === 0) {
     wave++;
     spawnWave(wave);
-    isSpawning = false;   // reset once the new grid is populated
   }
   ```
 
-  *Keywords: javascript game state variables wave counter guard flag race condition*
+  The alive-count check is the entire trigger for progression — as long as one alien in the grid still has `alive === true`, the wave will not advance.
+
+  *Keywords: javascript game state variables tracking wave counter*
 
 * **Scale-Factor Formulas**
 
   **Core Definition:** As waves increase, enemies should get faster — but the formula must be capped, or the game becomes unplayable after a dozen waves.
 
+  **The Formula:**
   ```javascript
-  let speedMultiplier = Math.min(wave * 0.15, 2.5);   // never exceeds 2.5x
+  let speedMultiplier = wave * 0.15;
   ```
 
-  **Why It Needs an Upper Clamp:** By wave 40, an uncapped `wave * 0.15` would be 6.0 — six times the base speed, effectively unbeatable. Always graph a scaling formula across the wave range you expect players to reach before shipping it uncapped.
+  **Why It Needs an Upper Clamp:** By wave 40, `speedMultiplier` would be 6.0 — six times the base speed, effectively unbeatable. Cap it with `Math.min`:
+  ```javascript
+  speedMultiplier = Math.min(wave * 0.15, 2.5);   // never exceeds 2.5x
+  ```
+
+  Always graph a scaling formula across the wave range you expect players to reach before shipping it uncapped.
 
   *Keywords: difficulty scaling formula multiplier clamp math min*
 
 * **Drawing HUD Gauges on Canvas**
 
   **Core Definition:** Canvas games have no DOM elements to update — every HUD element (health bar, score text) is redrawn on the canvas each frame using drawing calls, not `textContent`.
+
+  **Why It Matters:** This is Level 1's HUD lesson meeting Level 2's immediate-mode canvas reality — there is no `#score-val` element to write into, so a proportional rectangle IS the health bar, recalculated fresh every single frame from the underlying health number rather than "updated" the way a DOM element would be.
 
   **Health Bar as a Proportional Rectangle:**
   ```javascript
@@ -1075,28 +1182,83 @@ Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open
   ctx.fillRect(20, 20, barWidth * healthPct, 20); // shrinks as health drops
   ```
 
-  **Why It Matters:** This is Level 1's `textContent`-based HUD lesson meeting Level 2's immediate-mode canvas reality — there is no `#score-val` element to write into, so a proportional rectangle IS the health bar, recalculated fresh every frame from the underlying number.
+  **Score Text:**
+  ```javascript
+  ctx.fillStyle = "white";
+  ctx.font = "16px monospace";
+  ctx.fillText("Score: " + score, 20, 60);
+  ```
+
+  There is no element to grab with an ID — the HUD only exists as pixels drawn fresh every frame.
 
   *Keywords: canvas fillRect health bar HUD ctx fillText*
 
-* **Memory Leaks, Garbage Collection & Loop Optimization**
+* **Spawn Guards Against Concurrent Waves**
 
-  **Core Definition:** If dead/off-screen sprites are never spliced out, an array only ever grows — every frame's loop has more stale entries to iterate over, update, and draw, and more objects for the garbage collector to eventually scan and reclaim.
+  **Core Definition:** Checking "is anyone still alive?" every single frame without protection means the moment the last alien is marked dead, MULTIPLE frames in a row can all see zero alive count before the new wave's grid is spawned in — each one calling `spawnWave()` again.
 
-  **Diagnosing & Fixing It:**
+  **Why It Matters:** This is a race condition: a check-then-act pattern (check alive count, then act by spawning) run once per frame at 60fps, with no protection against the SAME condition being true across several consecutive frames. The `isSpawning` flag is the general fix for "don't let this trigger fire again while it's already in progress," a pattern that reappears anywhere an action is slower than the loop calling it.
+
   ```javascript
-  console.log(lasers.length);   // watch this climb without bound over time
-  lasers = lasers.filter(laser => laser.y > 0);   // one-shot cleanup pass
+  // ❌ WRONG (floods the screen):
+  if (countAlive(aliens) === 0) {
+    wave++;
+    spawnWave(wave);   // can fire several times before the new grid populates
+  }
+
+  // ✅ CORRECT — an "already spawning" guard:
+  let isSpawning = false;
+  if (countAlive(aliens) === 0 && !isSpawning) {
+    isSpawning = true;
+    wave++;
+    spawnWave(wave);
+    isSpawning = false;   // reset once the new grid is populated
+  }
   ```
 
-  **Loop Optimization Habits:**
-  - Cache array length instead of re-reading `.length` every iteration: `for (let i = 0, len = lasers.length; i < len; i++) { ... }`
-  - Add early exits (`break`) so a sweep stops as soon as it finds what it needs.
-  - Profile with the DevTools Performance tab: record, play through the laggy moment, and find the widest block in your own code — a concrete target instead of a guess.
+  Without the guard flag, the wave-clear trigger fires concurrently and stacks several waves' worth of aliens on top of each other.
 
-  **Why It Matters:** This is Session 4's cleanup lesson resurfacing at a bigger scale, now with a diagnostic habit attached — watching an array's `.length` climb, or profiling a flame chart, is how you CONFIRM a leak or bottleneck exists before hunting for it.
+  *Keywords: javascript prevent duplicate function calls guard flag boolean*
 
-  *Keywords: javascript memory leak garbage collection loop performance devtools profiling*
+* **Memory Leaks from Dead Sprites**
+
+  **Core Definition:** A sprite array (lasers, particles, aliens) only shrinks if something actively removes finished entries. If a laser that flies off-screen is never spliced out, it stays in the array forever, still being looped over and drawn every frame even though the player can't see it.
+
+  **Why It Matters:** This is Session 4's cleanup lesson resurfacing at a bigger scale, now with a diagnostic habit attached: watching an array's `.length` climb over time is how you CONFIRM a leak exists before spending time hunting for it, rather than guessing from a vague sense that the game feels slower than it used to.
+
+  **Diagnosing It:**
+  ```javascript
+  console.log(lasers.length);   // watch this climb without bound over time
+  ```
+
+  After 500 unpruned lasers accumulate, the frame rate crawls — the game is still iterating over, updating, and drawing hundreds of invisible objects every single frame.
+
+  **The Fix — remove off-screen entries:**
+  ```javascript
+  lasers = lasers.filter(laser => laser.y > 0);   // drop anything past the edge
+  ```
+
+  Note: `.filter()` rebuilds the array in one pass and is a one-shot equivalent to the reverse-loop `splice()` pattern taught in Session 4 — same cleanup goal, just expressed as a single expression instead of a manual backward loop.
+
+  *Keywords: javascript memory leak array length unbounded growth sprites*
+
+* **Garbage Collection Pauses & Profiling**
+
+  **Core Definition:** Every new object (a new laser, a new particle) is memory the browser's garbage collector must eventually reclaim. When arrays grow unbounded, the collector has far more to scan and clean up, and it runs its cleanup pass in a pause that can freeze the frame. Guessing which function is slow wastes time — DevTools' Performance tab records exactly how long each function call takes.
+
+  **Why Stutter Happens:**
+  - Small, steady allocations = small, unnoticeable GC pauses.
+  - Large, unbounded allocations (never-pruned arrays) = long GC pauses that show up as visible frame hitches or stutter.
+
+  **Profiling Workflow:**
+  1. Open DevTools → Performance tab → click Record.
+  2. Play the game for a few seconds during the laggy moment.
+  3. Stop recording and inspect the flame chart — wider blocks mean more time spent in that function.
+  4. Look for the widest block in your own game code (not browser internals) — that's the function to optimize first.
+
+  Profiling replaces "this feels slow" with "this specific function used 40% of every frame" — a concrete target instead of a guess.
+
+  *Keywords: javascript garbage collection performance pause stutter frame rate devtools profiling*
 
 ### 4. Standard AI Prompt Sandbox — Tutor Fill-In Guide
 
@@ -1198,27 +1360,74 @@ The **Project Journal** milestone card ("Part 7: Wave Progression, HUD & Perform
 
 ### 3. Concept Reference Cheat Sheet
 
-Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 4 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
 
-* **Request/Response Cycle**
+* **The Client-Server Model**
 
-  **Core Definition:** One round trip = method + URL + (optional body) ➔ status code + headers + (optional body). Nothing on the web happens outside this shape.
+  **Core Definition:** A client (the browser) sends requests; a server (a remote program) sends responses. The client can never reach into the server's storage directly — it can only ask and wait.
 
-  *Keywords: http request response cycle*
+  **Why It Matters:** Everything built in Level 1 and the first half of Level 2 ran entirely inside the player's own browser — there was no "elsewhere" the data could live. A leaderboard that every player shares requires storage somewhere OTHER than any single player's machine, and the client-server model is the entire reason that's even possible: the browser asks, a separate program somewhere else answers.
 
-* **Status Code Triage**
+  **The Only Door:**
+  ```
+  Client  ──request──>  Server
+  Client  <──response──  Server
+  ```
 
-  **Core Definition:** `200 OK` — success; `201 Created` — success, something new exists now. `400 Bad Request` — malformed input; `401/403` — who are you / you may not; `404` — no such path. `500` — the server crashed handling a valid-looking request.
+  Every single thing your game does over the network — reading a leaderboard, submitting a score — is one round trip through this exact shape. There is no shortcut path.
 
-  **Common Mistake ❌/✅:** ❌ Reading the *page* URL in the address bar as "the request." ✅ The Network tab lists dozens of requests per page — the API calls are the XHR/Fetch rows, each with its own URL, method, and status.
+  *Keywords: client server model request response web architecture*
 
-  *Keywords: http status codes list*
+* **Anatomy of a URL**
 
-* **Reading the Network Tab**
+  **Core Definition:** A URL has four parts that each answer a different question about the request.
 
-  **Core Definition:** DevTools' Network tab lists every request a page makes, each with its own method, status, headers, and JSON payload — the browser's built-in window into the request/response model.
+  **Why It Matters:** Every `fetch()` call in the rest of this course starts with a URL string, and a bug in ANY one of its four parts sends the request to the wrong place entirely — a typo'd path is a completely different failure from a missing query parameter, and being able to name which part is wrong is what turns "the API isn't working" into an actual fix.
 
-  *Keywords: what is JSON, browser devtools network tab tutorial*
+  **Breakdown:**
+  ```
+  https://api.marsdefense.dev/scores?limit=5
+  └─┬──┘   └───────┬───────┘└──┬──┘└───┬───┘
+  protocol       host          path    query
+   (how)         (who)        (what)  (which)
+  ```
+
+  The path selects a resource on the server; the query string narrows or filters it. Both matter equally when reading a Network tab entry.
+
+  *Keywords: url anatomy protocol host path query string*
+
+* **HTTP Methods & Status Code Triage**
+
+  **Core Definition:** HTTP methods are verbs of intent; status codes are the server's one-word verdict on what happened.
+
+  **Why It Matters:** Status codes are the FIRST thing to check when a network call misbehaves, before diving into your own JavaScript — they tell you immediately which side of the client-server boundary the problem is on, which narrows debugging from "something is wrong" to "this specific half of the system is wrong."
+
+  **Methods:** GET — read data (no body). POST — send/create data (has a body).
+
+  **Status Code Families:**
+  ```
+  200 OK / 201 Created  — success
+  400 Bad Request       — malformed input (your fault)
+  401 / 403             — who are you / you may not
+  404 Not Found         — no such path
+  500 Internal Error    — the server crashed (its fault)
+  ```
+
+  Triage rule: the first digit alone tells you where to start looking for the bug — 4xx means check what you sent, 5xx means the server broke on its own.
+
+  *Keywords: http methods GET POST status codes 200 404 500 triage*
+
+* **Reading the DevTools Network Tab**
+
+  **Core Definition:** The address bar shows the PAGE's URL — but a page fires many separate requests underneath it (scripts, images, and API calls). The Network tab lists every one, and the XHR/Fetch filter isolates the API calls specifically.
+
+  **Why It Matters:** This is the network equivalent of Level 1's Console — a place to directly OBSERVE what actually happened instead of guessing from symptoms. Before writing any error-handling code, being able to look at the real request, its status, and its actual response body is what tells you whether the bug is in what you sent or in what came back.
+
+  **What Each Row Tells You:** Name/Path (which endpoint was hit), Method (GET or POST), Status (the response verdict), Preview/Response (the actual JSON payload returned).
+
+  **Common Mistake:** Reading only the address bar and concluding "the request" — the real API traffic is a separate row list, often invisible unless you open DevTools before the action happens.
+
+  *Keywords: browser devtools network tab xhr fetch inspect requests*
 
 ### 4. Standard AI Prompt Sandbox — Tutor Fill-In Guide
 
@@ -1560,21 +1769,73 @@ The **Project Journal** milestone card ("Part 10: Leaderboard Score Submission (
 * *"Where does this table physically live — the player's laptop or the server? Who can therefore edit it?"*
 
 ### 3. Concept Reference Cheat Sheet
-* **Core Definition — Relational Table**: Fixed columns with declared types; one row per record; one primary key per row.
-* **Syntax Cards**:
+
+Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 4 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+
+* **Relational Tables & Data Types**
+
+  **Core Definition:** A relational table has fixed columns with declared types; every row must fit the same shape. This is why databases can be queried reliably — every value in a column is guaranteed to be the same kind of thing.
+
+  **Common Types:** `INT` — whole numbers (scores, quantities, ids). `VARCHAR(n)` — text up to n characters (names). `BOOLEAN` — true/false. `TIMESTAMP` — a date + time.
+
+  **Why Types Matter:** If `score` were stored as `VARCHAR`, `ORDER BY score` would sort alphabetically ('1000' before '200') instead of numerically. The type isn't decoration — it changes what queries can correctly do.
+
+  *Keywords: sql relational table data types int varchar boolean timestamp*
+
+* **Primary Keys**
+
+  **Core Definition:** The primary key is a column (usually `id`) that uniquely identifies every row — no two rows can ever share one. It is a row's identity, separate from any of its other data.
+
+  **Syntax:**
   ```sql
   CREATE TABLE colonist_scores (
     id INT PRIMARY KEY,
     player VARCHAR(50),
-    score INT,
-    wave_reached INT
+    score INT
   );
-  INSERT INTO colonist_scores (id, player, score, wave_reached) VALUES (1, 'cdt_arya', 4200, 6);
+  ```
+
+  **Why It Matters:** Two colonists can share the exact same name — they can never share an id. Every UPDATE or DELETE that targets "one specific row" does so by matching the primary key, not by matching a name that might not be unique.
+
+  *Keywords: sql primary key unique identity row*
+
+* **CREATE, INSERT, SELECT, UPDATE**
+
+  **Core Definition:** Four SQL statements cover the basic lifecycle of a table: defining it, filling it, reading it, and changing it.
+
+  **Why It Matters:** These four statements are the entire CRUD lifecycle (Create, Read, Update — Delete comes next session) that every piece of persistent data in any real application goes through. Sessions 9-10's server calls exist specifically to trigger these statements safely from the client — a POST request's whole job, ultimately, is to run an INSERT or UPDATE on the server's behalf.
+
+  **Syntax Cheat Sheet:**
+  ```sql
+  CREATE TABLE colonist_scores (
+    id INT PRIMARY KEY, player VARCHAR(50), score INT
+  );
+  INSERT INTO colonist_scores (id, player, score) VALUES (1, 'cdt_arya', 4200);
   SELECT player, score FROM colonist_scores WHERE score > 4000 ORDER BY score DESC;
   UPDATE colonist_scores SET score = 4500 WHERE id = 1;
   ```
-* **Common Mistake ❌/✅**: ❌ `UPDATE colonist_scores SET score = 4500;` (updates every row). ✅ Always write the `WHERE` first, then the `SET` — the WHERE clause is the blast radius.
-* **Searchable Keywords**: `sql create table primary key`, `sql select where order by`, `sql data types int varchar`, `sql update without where danger`.
+
+  Read SQL like English but trace exactly what each clause filters: `SELECT` picks columns, `FROM` picks the table, `WHERE` picks rows, `ORDER BY` sorts what's left.
+
+  *Keywords: sql create insert select update where order by syntax*
+
+* **The Missing WHERE Danger**
+
+  **Core Definition:** An UPDATE or DELETE with no WHERE clause applies to EVERY row in the table, not just the one you meant. SQL does exactly what's written — the same literalness lesson as Level 1, now at data scale.
+
+  **Why It Matters:** In Level 1 a sequencing mistake broke a simulated car; a missing WHERE clause here can silently destroy every real row of live data in seconds, with no undo. This is why professional teams treat any UPDATE or DELETE statement as something to read twice.
+
+  ```sql
+  -- ❌ DANGEROUS:
+  UPDATE colonist_scores SET score = 4500;   -- overwrites every single row
+
+  -- ✅ SAFE:
+  UPDATE colonist_scores SET score = 4500 WHERE id = 1;   -- targets exactly one row
+  ```
+
+  **Rule of Thumb:** Write the WHERE clause FIRST, mentally, before deciding what SET does — the WHERE clause is the blast radius of the statement.
+
+  *Keywords: sql update delete missing where danger blast radius*
 
 ### 4. Standard AI Prompt Sandbox — Tutor Fill-In Guide
 Use the sandbox to draft one SQL-generation prompt (e.g., Role: "database engineer"; Task: "create a supply_inventory table with id primary key, item name, quantity"; Constraints: "MySQL syntax, quantity must not allow negatives"). Audit the AI's output in the playground: does the generated DDL actually enforce the negative-quantity constraint (`CHECK (quantity >= 0)`), or did the AI silently drop it? That gap **is** the audit lesson.
@@ -1615,17 +1876,62 @@ The **Project Journal** milestone card ("Part 11: The Colony Data Vault") tracks
 * *"Why does the parameterized version survive the exact same hostile input?"* (The input is bound as data; it can never terminate the string or add clauses.)
 
 ### 3. Concept Reference Cheat Sheet
-* **Core Definition — Trust Boundary**: The line between what your code controls (server) and what it must assume is hostile (everything the client sends).
-* **Injection Recognition Card**:
-  ```javascript
-  // ❌ VULNERABLE — data can become code
-  let query = "SELECT * FROM users WHERE name = '" + userInput + "'";
-  // ✅ SAFE — data stays data
-  // SELECT * FROM users WHERE name = ?   (driver binds userInput)
+
+Level 2 has no bespoke sandbox exercises like Level 1 — instead, students open the in-app **Concept Reference** tab for this session, which holds these 4 lookup cards. Walk through them as part of the Board Lesson or Sandbox Lab as needed:
+
+* **The Trust Boundary**
+
+  **Core Definition:** The client (browser, player-controlled) is hostile territory. Everything a request sends — form fields, POST bodies — must be validated by the server before it touches the database, regardless of what the frontend form already checked.
+
+  **Why Frontend Validation Isn't Enough:** A player can open DevTools and call `fetch()` directly, skipping the form entirely. Frontend checks are UX; server checks are the actual security boundary.
+
+  **Rule of Thumb:** Validate type, range, and length on the SERVER for every field, every time — never assume a request came from your own form.
+
+  *Keywords: trust boundary server validation client hostile security*
+
+* **SQL Injection Recognition**
+
+  **Core Definition:** Building a query by gluing (concatenating) raw user input into a string lets that input change the query's MEANING, not just its data — the classic SQL injection bug.
+
+  **Why It Matters:** This is Session 11's Missing WHERE danger's evil twin, except an attacker triggers it on purpose — string concatenation means user input isn't just DATA inside the query anymore, it's part of the query's actual code. Recognizing this shape on sight is one of the highest-value security skills in this entire course, because it's one of the most common real-world vulnerabilities.
+
+  ```sql
+  -- ❌ VULNERABLE:
+  -- let query = "SELECT * FROM users WHERE name = '" + userInput + "'";
+  -- if userInput is:  ' OR '1'='1
+  -- the query becomes: ...WHERE name = '' OR '1'='1'   -- always true, returns every row
   ```
-* **Validation Rulebook Pattern**: field ➔ rule ➔ rejection message (e.g., `score` ➔ integer, 0–1,000,000 ➔ "score out of range").
-* **Password Card**: store `hash(password)`, never `password`; a hash leak ≠ a password leak (but still a breach to disclose).
-* **Searchable Keywords**: `sql injection explained`, `parameterized query`, `password hashing vs encryption`, `input validation server side`, `responsible disclosure`.
+
+  **Read It Aloud:** Read the assembled query as a sentence after substituting the hostile input — the meaning change becomes obvious once you say it out loud.
+
+  *Keywords: sql injection concatenation vulnerable string user input*
+
+* **Parameterized Queries (The Fix)**
+
+  **Core Definition:** A parameterized query sends the SQL text and the user's data SEPARATELY — the database binds the value as pure data, so it can never be interpreted as part of the query structure.
+
+  ```sql
+  -- ✅ SAFE:
+  SELECT * FROM users WHERE name = ?;
+  -- driver binds userInput to the placeholder — it can never terminate the
+  -- string or add clauses, no matter what characters it contains
+  ```
+
+  **Why It's Immune:** Even the exact hostile input (`' OR '1'='1`) just becomes a literal string being searched for — a name that doesn't exist — and returns nothing, instead of hijacking the query.
+
+  *Keywords: parameterized query placeholder sql injection defense prepared statement*
+
+* **Password Hashing Awareness**
+
+  **Core Definition:** A database should never store a password itself — only a HASH of it, a one-way scramble. Same input always produces the same hash, but there is no path back from the hash to the original password.
+
+  **Why It Matters on a Leak:**
+  - Plaintext password table leaked: every account is instantly compromised, and reused passwords on other sites too.
+  - Hashed password table leaked: attackers get scrambled values they can't directly use to log in (though weak/common passwords can still be cracked over time).
+
+  **Rule of Thumb:** Store `hash(password)`, never `password` — this is why login checks compare `hash(inputPassword)` to the stored hash, not the raw strings.
+
+  *Keywords: password hashing plaintext leak security storage*
 
 ### 4. Standard AI Prompt Sandbox — Tutor Fill-In Guide
 Have the student draft a prompt asking the AI to *audit* a provided snippet: Role: "security reviewer"; Task: "identify why this login query is unsafe and rewrite it safely"; paste the concatenated query as the Explicit Input. The audit lesson: does the AI's rewrite use a real placeholder, and does its explanation match what the student saw happen in the playground? Any mismatch goes in the Prompt Journal's audit notes.
