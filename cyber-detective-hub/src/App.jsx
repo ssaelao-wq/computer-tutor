@@ -1281,6 +1281,8 @@ const S2_PREVIEW_STYLE_CSS_MINI = `
 
 // Fixed markup the S3 CSS sandbox styles. On a code step the student's CSS (or, once
 // merged in later sessions, the game's CSS) applies to this skeleton and renders live.
+// #restart-panel/.hidden exists so Exercise 3.9 (fixing display: none -> flex) has something
+// real to reveal in the preview.
 const S3_PREVIEW_SKELETON = `
   <div id="dashboard">
     <h2>Score: <span id="score-val">0</span></h2>
@@ -1291,8 +1293,75 @@ const S3_PREVIEW_SKELETON = `
     <div id="player-car">🏎️</div>
     <div id="obstacle-1" class="obstacle">🚗</div>
     <div id="obstacle-2" class="obstacle">🚘</div>
+    <div id="restart-panel" class="hidden">RESTART?</div>
   </div>
 `;
+
+// Base "scenery" CSS for the S3 CSS sandbox preview. Properties a given exercise is actually
+// teaching are deliberately left OUT of this base for that exercise number, so the visible
+// result comes from the student's own CSS (s3CodeInput) instead of a pre-baked default that
+// would make the preview look identical whether or not they wrote the correct rule:
+//   - Ex 3.4 teaches #game-track's `position: relative`, so it's omitted here on that exercise
+//     (everything else drifts to the top-left of the iframe until the student adds it — the
+//     exact bug the exercise describes).
+//   - Ex 3.5 teaches the entire `.lane-divider` rule, so that rule is omitted entirely on that
+//     exercise (dividers render invisible/unstyled until the student writes it).
+//   - Ex 3.9 teaches `.hidden`'s display value, so that rule is omitted on that exercise (the
+//     restart panel starts however the student's own preloaded/typed `.hidden` rule says).
+function buildS3PreviewCss(exerciseNum) {
+  return `
+    body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
+    #game-track {
+      ${exerciseNum === 4 ? '' : 'position: relative;'}
+      width: 100%;
+      height: 260px;
+      border: 2px dashed #444;
+      background-color: #1a1a2e;
+    }
+    #player-car {
+      position: absolute;
+      bottom: 20px;
+      left: 165px;
+      width: 30px;
+      height: 50px;
+      background-color: blue;
+      color: white;
+      text-align: center;
+      border-radius: 4px;
+    }
+    .obstacle {
+      position: absolute;
+      top: 30px;
+      width: 25px;
+      height: 40px;
+      background-color: red;
+      color: white;
+      text-align: center;
+      border-radius: 4px;
+    }
+    #obstacle-1 { left: 40px; }
+    #obstacle-2 { left: 300px; }
+    ${exerciseNum === 5 ? '' : `
+    .lane-divider {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      border-left: 1px dashed white;
+    }`}
+    #restart-panel {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      align-items: center;
+      justify-content: center;
+      color: #ff4d4d;
+      font-weight: bold;
+      z-index: 5;
+    }
+    ${exerciseNum === 9 ? '' : '.hidden { display: none; }'}
+  `;
+}
 
 // Shared live-execution iframe for the Level 1 JS Sandboxes (Sessions 4-8+).
 // Unlike the S2/S3 HTML/CSS previews (which just re-render static markup), this
@@ -7339,44 +7408,7 @@ export default function App() {
                             <html>
                               <head>
                                 <style>
-                                  body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
-                                  #game-track {
-                                    position: relative;
-                                    width: 100%;
-                                    height: 260px;
-                                    border: 2px dashed #444;
-                                    background-color: #1a1a2e;
-                                  }
-                                  #player-car {
-                                    position: absolute;
-                                    bottom: 20px;
-                                    left: 165px;
-                                    width: 30px;
-                                    height: 50px;
-                                    background-color: blue;
-                                    color: white;
-                                    text-align: center;
-                                    border-radius: 4px;
-                                  }
-                                  .obstacle {
-                                    position: absolute;
-                                    top: 30px;
-                                    width: 25px;
-                                    height: 40px;
-                                    background-color: red;
-                                    color: white;
-                                    text-align: center;
-                                    border-radius: 4px;
-                                  }
-                                  #obstacle-1 { left: 40px; }
-                                  #obstacle-2 { left: 300px; }
-                                  .lane-divider {
-                                    position: absolute;
-                                    top: 0;
-                                    height: 100%;
-                                    width: 2px;
-                                    border-left: 1px dashed white;
-                                  }
+                                  ${buildS3PreviewCss(s3ActiveExercise)}
                                   ${S3_EXERCISES[s3ActiveExercise - 1].previewCss ? '' : s3CodeInput}
                                 </style>
                               </head>
