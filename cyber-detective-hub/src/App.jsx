@@ -5018,18 +5018,44 @@ export default function App() {
     setViewingJournalEntryId(null);
     setViewingJournalVersion(null);
     setViewingJournalLoading(true);
-    fetch(`/api/admin/students/${student.id}/journal`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-      .then(res => {
+    Promise.all([
+      fetch(`/api/admin/students/${student.id}/journal`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).then(res => {
         if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to load student journal"); });
         return res.json();
+      }),
+      fetch(`/api/report/${student.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).then(res => {
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Failed to load student attendance"); });
+        return res.json();
       })
-      .then(data => {
-        setViewingJournalData(data);
-        if (data[0]) {
-          setViewingJournalEntryId(data[0].id);
-          setViewingJournalVersion(data[0].activeVersion);
+    ])
+      .then(([journalEntries, attendanceRows]) => {
+        // A journal entry created via "Initialize Project Journal" always titles itself
+        // "L{level} S{num}: ..." (see the button handler above) — match on that prefix
+        // rather than the entry id, since older seed data doesn't follow the id convention.
+        const studentLevelNum = parseInt((student.student_level || 'L1').replace('L', '')) || 1;
+        const attendedSessionDates = {};
+        attendanceRows.forEach(row => {
+          if (row.session_date) attendedSessionDates[row.session_id] = row.session_date;
+        });
+        const attendedSessions = CURRICULUM_DATA.filter(s => s.level === studentLevelNum && attendedSessionDates[s.id]);
+        const combined = attendedSessions.map(session => {
+          const titlePrefix = `L${session.level} S${session.id.split('-s')[1]}:`;
+          const matchedEntry = journalEntries.find(e => e.title && e.title.startsWith(titlePrefix)) || null;
+          return {
+            id: session.id,
+            title: session.title,
+            date: attendedSessionDates[session.id],
+            journalEntry: matchedEntry
+          };
+        });
+        setViewingJournalData(combined);
+        if (combined[0]) {
+          setViewingJournalEntryId(combined[0].id);
+          setViewingJournalVersion(combined[0].journalEntry ? combined[0].journalEntry.activeVersion : null);
         }
       })
       .catch(err => {
@@ -10042,9 +10068,7 @@ export default function App() {
                               const newId = `${currentUser.id}_${currentSession.id}`;
                               const newTitle = `L${currentSession.level} S${currentSession.id.split('-s')[1]}: ${currentSession.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}`;
                               const initialSerialized = serializeJournalData('', '', '', '', '', '', '', '', '');
-                              const initialPrompt = PROJECT_TASKS[currentSession.id] 
-                                ? PROJECT_TASKS[currentSession.id].promptGuide 
-                                : (currentSession.homework || 'Complete the session project task.');
+                              const initialPrompt = '';
                               fetch('/api/journal', {
                                 method: 'POST',
                                 headers: {
@@ -10192,21 +10216,21 @@ export default function App() {
                         {activeJournalTab === 'plan' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Visual Concept &amp; UX Flow</label>
-                              <textarea
-                                value={editingPlanVision}
-                                onChange={e => setEditingPlanVision(e.target.value)}
-                                style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
-                              />
-                            </div>
-                            <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>System Parts & Information</label>
                               <textarea
                                 value={editingPlanSpecs}
                                 onChange={e => setEditingPlanSpecs(e.target.value)}
                                 style={{ width: '100%', height: '130px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
                                 placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
+                              />
+                            </div>
+                            <div className="form-field">
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Visual Concept &amp; UX Flow</label>
+                              <textarea
+                                value={editingPlanVision}
+                                onChange={e => setEditingPlanVision(e.target.value)}
+                                style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
                               />
                             </div>
                             <div className="form-field">
@@ -10246,7 +10270,7 @@ export default function App() {
                                 value={editingCodePrompt}
                                 onChange={e => setEditingCodePrompt(e.target.value)}
                                 style={{ width: '100%', height: '280px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.4 }}
-                                placeholder="Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."
+                                placeholder={PROJECT_TASKS[currentSession.id]?.promptGuide ? "Draft the detailed prompt to guide your AI assistant. For example:\n" + PROJECT_TASKS[currentSession.id].promptGuide : "Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."}
                               />
                             </div>
                           </div>
@@ -10512,6 +10536,14 @@ export default function App() {
                       >
                         Attendance
                       </button>
+                      {currentUser.role === 'teacher' && (
+                        <button
+                          className="btn-cyber btn-small btn-cyber-secondary"
+                          onClick={() => handleViewStudentJournal(reportStudent)}
+                        >
+                          View Journal
+                        </button>
+                      )}
                       <button
                         className={`btn-cyber btn-small ${reportSubTab === 'feedback' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => setReportSubTab('feedback')}
@@ -10987,36 +11019,41 @@ export default function App() {
 
             {viewingJournalLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading journal entries...</p>}
             {!viewingJournalLoading && viewingJournalData.length === 0 && (
-              <p style={{ color: 'var(--text-muted)' }}>This student has no saved journal entries yet.</p>
+              <p style={{ color: 'var(--text-muted)' }}>This student has no attendance recorded yet — set a session date on the Attendance tab to track their sessions here.</p>
             )}
 
             {!viewingJournalLoading && viewingJournalData.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {viewingJournalData.map(entry => (
+                  {viewingJournalData.map(item => (
                     <div
-                      key={entry.id}
+                      key={item.id}
                       onClick={() => {
-                        setViewingJournalEntryId(entry.id);
-                        setViewingJournalVersion(entry.activeVersion);
+                        setViewingJournalEntryId(item.id);
+                        setViewingJournalVersion(item.journalEntry ? item.journalEntry.activeVersion : null);
                       }}
-                      className={`glass-panel ${viewingJournalEntryId === entry.id ? 'selected' : ''}`}
+                      className={`glass-panel ${viewingJournalEntryId === item.id ? 'selected' : ''}`}
                       style={{
                         padding: 10, cursor: 'pointer', fontSize: '0.8rem',
-                        border: viewingJournalEntryId === entry.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
-                        background: viewingJournalEntryId === entry.id ? 'rgba(0, 242, 254, 0.05)' : 'none'
+                        border: viewingJournalEntryId === item.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
+                        background: viewingJournalEntryId === item.id ? 'rgba(0, 242, 254, 0.05)' : 'none'
                       }}
                     >
-                      <div style={{ fontWeight: 600 }}>{entry.title}</div>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>{entry.date} · {entry.history.length} version{entry.history.length === 1 ? '' : 's'}</div>
+                      <div style={{ fontWeight: 600 }}>{item.title}</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>
+                        Attended {item.date}
+                        {!item.journalEntry && <span style={{ color: 'var(--accent-amber, #ffb020)' }}> · journal not started</span>}
+                      </div>
                     </div>
                   ))}
                 </div>
 
                 <div>
                   {(() => {
-                    const entry = viewingJournalData.find(e => e.id === viewingJournalEntryId);
-                    if (!entry) return <p style={{ color: 'var(--text-muted)' }}>Select an entry to view.</p>;
+                    const item = viewingJournalData.find(e => e.id === viewingJournalEntryId);
+                    if (!item) return <p style={{ color: 'var(--text-muted)' }}>Select a session to view.</p>;
+                    const entry = item.journalEntry;
+                    if (!entry) return <p style={{ color: 'var(--text-muted)' }}>This student attended "{item.title}" on {item.date} but has not started their Project Journal for it yet.</p>;
                     // Only the AI Prompt is versioned — Plan/Review/Test/Iterate always reflect the
                     // entry's active (latest) version, regardless of which prompt version is selected.
                     const activeHist = entry.history.find(h => h.version === entry.activeVersion) || entry.history[entry.history.length - 1];
@@ -11040,8 +11077,8 @@ export default function App() {
                         <div>
                           <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>1. Plan & Design</h4>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                            {renderField('Visual Concept & UX Flow', data.planVision)}
                             {renderField('System Parts & Information', data.planSpecs)}
+                            {renderField('Visual Concept & UX Flow', data.planVision)}
                             {renderField('Logic Flow Diagram / Pseudocode', data.planFlow)}
                           </div>
                         </div>

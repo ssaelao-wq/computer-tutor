@@ -482,7 +482,7 @@ app.get('/api/journal', authenticateToken, async (req, res) => {
 // 5. Create a New Journal Entry
 app.post('/api/journal', authenticateToken, async (req, res) => {
   const { id, title, date, prompt, code } = req.body;
-  if (!id || !title || !prompt) {
+  if (!id || !title) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
 
@@ -499,7 +499,7 @@ app.post('/api/journal', authenticateToken, async (req, res) => {
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
       VALUES ($1, 1, $2, $3)
-    `, [id, prompt, code || '']);
+    `, [id, prompt || '', code || '']);
 
     res.json({ success: true, id, version: 1 });
   } catch (error) {
