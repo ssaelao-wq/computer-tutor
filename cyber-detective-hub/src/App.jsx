@@ -4653,6 +4653,21 @@ export default function App() {
     }
   };
 
+  // L1 Project Journal chaining: pull another session's own saved codeOutput straight out
+  // of the already-fetched `journalEntries` state (GET /api/journal returns every entry's
+  // full version history up front, so this never needs an extra fetch). Used to seed a new
+  // session's starting code from the previous session (chainFrom) and to render read-only
+  // reference blocks (referenceSessions). Returns '' if the student hasn't started that
+  // session's journal yet — callers treat that as "not found", not an error.
+  const getSessionCodeOutput = (sessionId) => {
+    if (!currentUser || !sessionId) return '';
+    const entry = journalEntries.find(e => e.id === `${currentUser.id}_${sessionId}`);
+    if (!entry || !entry.history || entry.history.length === 0) return '';
+    const activeHist = entry.history.find(h => h.version === entry.activeVersion) || entry.history[entry.history.length - 1];
+    if (!activeHist) return '';
+    return deserializeJournalData(activeHist.code).codeOutput;
+  };
+
   // Handle user authentication load
   useEffect(() => {
     if (!token) {
@@ -10099,7 +10114,13 @@ export default function App() {
                             onClick={() => {
                               const newId = `${currentUser.id}_${currentSession.id}`;
                               const newTitle = `L${currentSession.level} S${currentSession.id.split('-s')[1]}: ${currentSession.title.replace(/Session \d+:\s*"/, '').replace(/"/, '')}`;
-                              const initialSerialized = serializeJournalData('', '', '', '', '', '', '', '', '');
+                              // Chained sessions (see PROJECT_TASKS[id].chainFrom) start from the
+                              // previous session's own saved code instead of blank, so the game
+                              // genuinely accumulates session-by-session. If that session hasn't
+                              // been started yet, this quietly falls back to blank — non-blocking.
+                              const chainFromId = PROJECT_TASKS[currentSession.id]?.chainFrom;
+                              const seededCodeOutput = chainFromId ? getSessionCodeOutput(chainFromId) : '';
+                              const initialSerialized = serializeJournalData('', '', '', seededCodeOutput, '', '', '', '', '');
                               const initialPrompt = '';
                               fetch('/api/journal', {
                                 method: 'POST',
@@ -10206,6 +10227,45 @@ export default function App() {
                         </div>
                       )}
 
+                      {/* L1-S12 only: the final assembled game, read-only text (not a live-executing
+                          iframe — the platform tracks the student's real game, it doesn't run it for
+                          them). Walks the whole S2-S11 chain by name so a gap is named, not silent. */}
+                      {currentSession.id === 'l1-s12' && (() => {
+                        const chainSessionIds = ['l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11'];
+                        const missing = chainSessionIds.filter(id => !getSessionCodeOutput(id));
+                        const missingTitles = missing.map(id => {
+                          const s = CURRICULUM_DATA.find(cs => cs.id === id);
+                          return s ? s.title : id;
+                        });
+                        const htmlCode = getSessionCodeOutput('l1-s2');
+                        const cssCode = getSessionCodeOutput('l1-s3');
+                        const jsCode = editingCodeOutput || getSessionCodeOutput('l1-s12');
+                        const codeBlock = (label, code) => (
+                          <div key={label} style={{ marginBottom: '12px' }}>
+                            <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</span>
+                            <pre style={{ margin: 0, maxHeight: '260px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word', background: '#0d1526', border: '1px solid #22314f', borderRadius: '4px', padding: '10px', color: '#00ffcc', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
+                              {code || '(nothing saved yet)'}
+                            </pre>
+                          </div>
+                        );
+                        return (
+                          <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px', borderLeft: '4px solid var(--accent-green)', background: 'rgba(57, 255, 20, 0.03)' }}>
+                            <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: 'var(--accent-green)' }}>🏁 Your Complete Game — Assembled</h3>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0 0 12px 0' }}>
+                              Your own HTML, CSS, and game.js, pulled straight from every session's saved Project Journal — this is the actual game you built, session by session. Run it on your own machine to play it; the platform only displays it here for review.
+                            </p>
+                            {missing.length > 0 && (
+                              <div style={{ padding: '8px 10px', marginBottom: '12px', background: 'rgba(255, 51, 102, 0.08)', border: '1px solid var(--accent-red)', borderRadius: '4px', fontSize: '0.78rem', color: 'var(--accent-red)' }}>
+                                ⚠ Incomplete build — no saved code found for: {missingTitles.join(', ')}. Finish those sessions' Project Journals (and click 🔄 Pull Latest on any session after them) to complete the assembly.
+                              </div>
+                            )}
+                            {codeBlock('index.html (from Session 2)', htmlCode)}
+                            {codeBlock('styles.css (from Session 3)', cssCode)}
+                            {codeBlock('game.js (this session, carrying every session since 4)', jsCode)}
+                          </div>
+                        );
+                      })()}
+
                       {/* 5 sub-tabs selection */}
                       <div className="journal-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', marginBottom: '16px' }}>
                         <button 
@@ -10247,6 +10307,29 @@ export default function App() {
                         {/* Tab 1: Plan & Design */}
                         {activeJournalTab === 'plan' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {/* Reference blocks: read-only carry-over from earlier sessions this one
+                                builds on (see PROJECT_TASKS[id].referenceSessions), shown before the
+                                student writes anything since it's prep material for Steps 1-2. */}
+                            {(PROJECT_TASKS[currentSession.id]?.referenceSessions || []).map(ref => {
+                              const refSession = CURRICULUM_DATA.find(s => s.id === ref.id);
+                              const refCode = getSessionCodeOutput(ref.id);
+                              return (
+                                <details key={ref.id} className="glass-panel" style={{ padding: '10px 14px', border: '1px solid var(--border-color)' }}>
+                                  <summary style={{ cursor: 'pointer', fontSize: '0.8rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
+                                    📎 Reference: {ref.label || (refSession ? refSession.title : ref.id)}
+                                  </summary>
+                                  {refCode ? (
+                                    <pre style={{ marginTop: '8px', maxHeight: '220px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word', background: '#0d1526', border: '1px solid #22314f', borderRadius: '4px', padding: '10px', color: '#00ffcc', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
+                                      {refCode}
+                                    </pre>
+                                  ) : (
+                                    <p style={{ marginTop: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                      Not available yet — the Project Journal for {refSession ? refSession.title : ref.id} hasn't been saved with any code.
+                                    </p>
+                                  )}
+                                </details>
+                              );
+                            })}
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>System Parts & Information</label>
                               <textarea
@@ -10313,6 +10396,38 @@ export default function App() {
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI-Generated Code</label>
+                              {PROJECT_TASKS[currentSession.id]?.chainFrom && (() => {
+                                const chainFromId = PROJECT_TASKS[currentSession.id].chainFrom;
+                                const chainFromSession = CURRICULUM_DATA.find(s => s.id === chainFromId);
+                                const chainFromLabel = chainFromSession ? chainFromSession.title : chainFromId;
+                                const hasSynced = editingCodeOutput.trim().length > 0;
+                                return (
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '6px', padding: '6px 10px', background: 'rgba(0, 242, 254, 0.05)', border: '1px solid rgba(0, 242, 254, 0.2)', borderRadius: '4px', fontSize: '0.75rem' }}>
+                                    <span style={{ color: 'var(--accent-cyan)' }}>
+                                      🔗 {hasSynced
+                                        ? `Starting point carried over from ${chainFromLabel} — extend it below.`
+                                        : `This session builds on ${chainFromLabel} — click Pull Latest to load its code.`}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      className="btn-cyber btn-cyber-secondary btn-small"
+                                      style={{ padding: '2px 8px', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
+                                      onClick={() => {
+                                        const pulled = getSessionCodeOutput(chainFromId);
+                                        if (!pulled) {
+                                          alert(`${chainFromLabel}'s Project Journal has no saved code yet — nothing to pull.`);
+                                          return;
+                                        }
+                                        if (window.confirm(`Replace your current "AI-Generated Code" with ${chainFromLabel}'s latest saved code? This overwrites what's in the box now (unsaved changes will be lost).`)) {
+                                          setEditingCodeOutput(pulled);
+                                        }
+                                      }}
+                                    >
+                                      🔄 Pull Latest
+                                    </button>
+                                  </div>
+                                );
+                              })()}
                               <textarea
                                 value={editingCodeOutput}
                                 onChange={e => setEditingCodeOutput(e.target.value)}

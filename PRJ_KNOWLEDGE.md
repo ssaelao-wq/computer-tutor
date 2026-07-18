@@ -17,6 +17,8 @@ In the era of Generative AI, memorizing programming language syntax is no longer
 ## 2. Level Progression & Targets
 
 > **Restructure decision (2026-07-13):** The four levels were repositioned. **Levels 1–2 focus on technical knowledge** (concepts, exercises, and small themed labs — no cumulative game-project deliverable). **Level 3 teaches the development process** by walking one guided project through the full software lifecycle. **Level 4 is the capstone where students develop an actual, complete, deployed game.** Level 3–4 project tracks are theme-swappable in the future (e.g., a web-application track instead of a game). The platform code (`src/curriculumData.js`, `CAMPAIGN_THEMES`, project-task flows, code-review gating UI) has **not yet been updated** to this structure — docs lead, code follows.
+>
+> **Addendum (2026-07-18):** Level 1's **Project Journal** homework (the session-by-session `PROJECT_TASKS` milestones a student fills in on the platform, distinct from the auto-graded Sandbox exercises) is now a **cumulative, chained build**: each session's Project starts from the previous session's own saved code and extends it, so by Session 12 the student has one assembled game (HTML from Session 2, CSS from Session 3, `game.js` accumulated from Sessions 4–12), shown read-only at the final session. This does **not** change Level 1's Sandbox exercises, which remain standalone single-exercise drills with no carry-over, and it does **not** change Level 3's distinct role: L3 is still the only level where a student owns the **full development lifecycle** (git-diff code review, deployment, testing discipline, scope/architecture they design themselves) on a project of their own scoping. L1's chaining is a lighter, fully-scaffolded mechanic on the same fixed curriculum topics every L1 student has always had — just with real code now flowing from one session's homework into the next instead of each Project Journal entry being isolated. Level 2 is unaffected for now (still no cumulative deliverable, sandbox or Project Journal) — this is expected to get the same treatment in a later pass.
 
 The curriculum is structured step-by-step: knowledge first (L1–2), process second (L3), real product last (L4).
 
@@ -28,9 +30,9 @@ graph TD
 ```
 
 ### Level 1: Technical Foundations I — Web & Programming Basics (Beginner)
-* **Theme context**: **Racing Car Game** (2D highway racing flavor). The theme is the *setting for exercises and mini-labs only* — Level 1 does **not** build a complete game as a course deliverable. Each session produces small, standalone themed artifacts.
+* **Theme context**: **Racing Car Game** (2D highway racing flavor). The theme frames the Sandbox exercises and mini-labs, each of which stays a small, standalone themed artifact — no cumulative build there. The session's separate Project Journal homework, however, *is* a cumulative build across Sessions 2–12 as of the 2026-07-18 addendum above.
 * **Focus**: How computers execute instructions (IPO, sequence, literalness), HTML document structure, CSS styling and positioning, JavaScript variables and math, keyboard events, conditionals and boundary logic, loops, functions and scope, timers/animation frames, 2D collision math, and DOM manipulation.
-* **Target**: Master the core technical knowledge of web programming — reading, tracing, auditing, and prompting for small pieces of code with AI supervision. Students finish able to explain every construct they used; the full game build is deliberately deferred to Levels 3–4.
+* **Target**: Master the core technical knowledge of web programming — reading, tracing, auditing, and prompting for small pieces of code with AI supervision. Students finish able to explain every construct they used; a *fully self-scoped, self-architected* game build is still deliberately deferred to Levels 3–4 — L1's Project Journal build is a fixed-topic, fully-scaffolded exercise in carrying code forward, not an open project.
 
 ### Level 2: Technical Foundations II — Data, Graphics & Client-Server (Intermediate)
 * **Theme context**: **Mars Colony Defense** (space-shooter flavor). As in Level 1, the theme frames exercises and mini-labs — there is no cumulative game build.
@@ -60,7 +62,7 @@ graph TD
 
 * **Single Theme per Level**: To keep students immersed and focused, all sessions within the same level must share the exact same thematic setting (e.g. all Level 1 exercises operate in the Racing Car Game setting, while Level 2 is space colony defense).
 * **Theme Role Differs by Level (per the 2026-07-13 restructure)**:
-  * **L1–2**: The theme is *exercise context* — it flavors sandbox exercises, mini-labs, and examples, but there is no cumulative game-project deliverable.
+  * **L1–2**: The theme is *exercise context* — it flavors sandbox exercises, mini-labs, and examples, and there is no cumulative deliverable at the Sandbox level. L1's Project Journal homework is the one exception (see §2's 2026-07-18 addendum): it's a cumulative build within Level 1, still on the fixed Racing Car theme, not a student-scoped project track like L3–4. L2 has no cumulative deliverable anywhere yet.
   * **L3–4**: The theme is a *project track* — L3's guided project (default: Cyberpunk Hacker Arena) and L4's capstone (the student's own game) are real builds. Tracks are designed to be swappable in the future (e.g., a web-application track) without changing the process curriculum.
 * **Age-Appropriate Narrative**: Themes must feel adventurous, gamified, and exciting for teenagers (avoiding domestic, baby-ish concepts like baking cakes or washing dishes).
 * **Interactive Sandbox Simulations**: Level 1 exercises inside the Sandbox tab must feature interactive, visual, code-involved simulators corresponding directly to that level's theme.
@@ -196,9 +198,9 @@ Professional AI-era programming is a **conversation**, not a single command. The
 
 **Decision date:** 2026-07-06 · **Scope updated:** 2026-07-13 restructure
 
-Real project builds now exist only at **Levels 3–4** (the L3 guided project and the L4 capstone game). These follow the **Hybrid delivery model**: the platform acts as the **engineering methodology scaffold**; external AI coding tools (e.g., Cursor, ChatGPT) perform the actual code generation.
+Student-scoped, self-architected project builds exist only at **Levels 3–4** (the L3 guided project and the L4 capstone game). These follow the **Hybrid delivery model**: the platform acts as the **engineering methodology scaffold**; external AI coding tools (e.g., Cursor, ChatGPT) perform the actual code generation. Level 1 additionally has a lighter, fixed-topic cumulative build inside its own Project Journal (see §2's 2026-07-18 addendum) — still Hybrid-model in spirit (the platform tracks/displays the student's own code, it never executes their real game), just scoped to a single pre-set curriculum topic rather than a student-designed project.
 
-At **Levels 1–2**, the 5-Step loop is practiced at *exercise scale* — sandbox exercises and small standalone themed labs hosted by the platform — not on a growing multi-session project. The table below therefore describes the L3–4 project workflow; L1–2 students use the same steps inside single-session labs.
+At **Levels 1–2**, the 5-Step loop is practiced at *exercise scale* on the Sandbox — small standalone themed labs, not a growing multi-session project. L1's separate Project Journal is the exception (2026-07-18 addendum, §2): it runs the same 5-Step loop, but on a growing multi-session project (Sessions 2–12's game.js) rather than a single-session lab — still a fixed, teacher-set topic, not open-ended like L3–4. L2's Project Journal is unaffected for now. The table below therefore describes the L3–4 project workflow; L1's Sandbox and L2 (Sandbox + Project Journal) use the same steps inside single-session labs.
 
 ### Rationale
 - Keeps the platform focused on methodology and learning tracking — not on competing with purpose-built AI coding IDEs.

@@ -27,293 +27,323 @@ export const PROJECT_TASKS = {
     partNum: "Lab 1",
     partTitle: "HTML Document Skeleton",
     objectives: [
-      "Create the base index.html file",
+      "Create the base index.html file — the file every later session's project work extends",
       "Construct the '#game-track' container to host the highway",
       "Nest the '#player-car' element inside the track",
       "Create a separate '#dashboard' panel for scoring HUD",
-      "Nest a span element with ID '#score-val' inside the dashboard header"
+      "Nest a span element with ID '#score-val' inside the dashboard header",
+      "Add the obstacle car and a hidden game-over panel the sandbox drill never asks for, but later sessions' code depends on"
     ],
     planSpecs: {
-      vision: "A highway-view racing screen: a vertical road area taking up most of the screen, with a small scoreboard panel above it showing the score. The player's car will later sit on the road — for now we're just building the empty containers, no colors or positions yet.",
-      parts: "Parts needed: a road area, a player's car, a lane divider line, and a scoreboard panel showing the score. Information to track (for later sessions): the score, how fast the car is going, and whether the game is currently running.",
+      vision: "A highway-view racing screen: a vertical road area taking up most of the screen, with a small scoreboard panel above it showing the score. The player's car and an oncoming obstacle car will later sit on the road, and a game-over overlay waits hidden underneath — for now we're just building the empty containers, no colors or positions yet.",
+      parts: "Parts needed: a road area, a player's car, an obstacle car, a lane divider line, a hidden game-over overlay, and a scoreboard panel showing the score. Information to track (for later sessions): the score, how fast the car is going, and whether the game is currently running.",
       flow: "Browser loads index.html sequentially.\nDOM elements are created in memory in a parent-child hierarchy.\nParent containers constrain child positions."
     },
-    promptGuide: "Draft an AI prompt asking to create an HTML document containing: a div container with an ID of 'game-track'; a child div nested inside 'game-track' with an ID of 'player-car'; and a separate scoreboard panel with an ID of 'dashboard' containing an h2 heading and a nested span with an ID of 'score-val' initialized to '0'. Avoid inline styles or Javascript logic at this stage.",
+    chainFrom: null,
+    promptGuide: "The sandbox drill only asked for the track, the car, and the scoreboard — but your actual game needs its whole foundation in one file, since every session from here on extends this exact file. Draft an AI prompt asking for all of that PLUS two elements the drill never covered: an oncoming obstacle car (its own div, id 'obstacle') and a game-over overlay (id 'restart-panel', starting hidden via a class named 'hidden') that a later session will reveal. Also ask the AI to add an HTML comment at the top naming your player car and your obstacle — this is your game now, give them names.",
     codeReviewGuide: [
       "Check if all HTML tags open and close properly (especially divs).",
-      "Verify that player-car is nested inside game-track.",
+      "Verify that player-car is nested inside game-track, and that obstacle and restart-panel exist too.",
       "Check that the scoreboard uses id='score-val' (not class or wrong spelling).",
-      "Socratic Question: Why must the score value be placed inside a span tag? How does nesting it allow JavaScript to change it later?"
+      "Socratic Question: 'restart-panel' has to exist in the HTML now, even though nothing shows it for many sessions yet. Why build it now instead of waiting until the session that actually needs it?"
     ],
-    sampleGeneratedHtml: '<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { margin: 0; padding: 10px; background: #060814; font-family: sans-serif; }\n    #dashboard {\n      width: 390px;\n      padding: 8px;\n      background-color: #1a1a2e;\n      border-radius: 6px;\n      text-align: center;\n      border: 1px solid #333;\n      box-sizing: border-box;\n    }\n    h2 { margin: 0; font-size: 1rem; color: #00ffcc; }\n    #game-track {\n      position: relative;\n      width: 390px;\n      height: 500px;\n      background-color: #222;\n      border: 3px solid #ffcc00;\n      margin: 10px 0;\n      overflow: hidden;\n    }\n    #player-car {\n      position: absolute;\n      bottom: 20px;\n      left: 165px;\n      width: 60px;\n      height: 100px;\n      background-color: #ff4d4d;\n      border-radius: 4px;\n    }\n    .lane-divider {\n      position: absolute;\n      top: 0;\n      left: 50%;\n      width: 2px;\n      height: 100%;\n      border-left: 2px dashed #ffffff;\n    }\n  </style>\n</head>\n<body>\n  <div id="dashboard">\n    <h2>Score: <span id="score-val">0</span></h2>\n  </div>\n  <div id="game-track">\n    <div id="player-car"></div>\n    <div class="lane-divider"></div>\n  </div>\n</body>\n</html>',
-    testCasesGuide: "- Verify element `#game-track` exists in DOM\n- Verify element `#player-car` is child of `#game-track`\n- Verify element `#dashboard` exists\n- Verify element `#score-val` is inside `#dashboard` and displays '0'",
+    sampleGeneratedHtml: '<!-- My Racing Car Game — player: [your name here], obstacle: [your name here] -->\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { margin: 0; padding: 10px; background: #060814; font-family: sans-serif; }\n    #dashboard {\n      width: 390px;\n      padding: 8px;\n      background-color: #1a1a2e;\n      border-radius: 6px;\n      text-align: center;\n      border: 1px solid #333;\n      box-sizing: border-box;\n    }\n    h2 { margin: 0; font-size: 1rem; color: #00ffcc; }\n  </style>\n</head>\n<body>\n  <div id="dashboard">\n    <h2>Score: <span id="score-val">0</span></h2>\n  </div>\n  <div id="game-track">\n    <div id="player-car"></div>\n    <div id="obstacle"></div>\n    <div class="lane-divider"></div>\n    <div id="restart-panel" class="hidden">GAME OVER</div>\n  </div>\n</body>\n</html>\n<!-- Positions/colors come from Session 3 — this lab is structure only. -->',
+    testCasesGuide: "- Verify element `#game-track` exists in DOM\n- Verify element `#player-car` and `#obstacle` are both children of `#game-track`\n- Verify element `#restart-panel` exists and carries a 'hidden' class (or equivalent) so it's not visible yet\n- Verify element `#dashboard` exists and `#score-val` is inside it, displaying '0'",
     iterationGuide: "If the initial AI output lacks semantic elements or is missing closing tags, write a follow-up prompt to clean it up. Plan to add a '.lane-divider' inside the track to represent lanes.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "Target look once styled: a yellow-bordered track with a red player-car sitting on the dashed center lane-divider, and a dashboard scoreboard above it. This lab only builds the HTML structure (unstyled/plain) — Session 3's lab starts from a fresh styled starter to focus on CSS positioning."
+    targetOutcomeCaption: "Target look once styled: a yellow-bordered track with a red player-car sitting on the dashed center lane-divider, and a dashboard scoreboard above it. This lab only builds the HTML structure (unstyled/plain) — Session 3's lab styles this exact file, not a fresh starter."
   },
   "l1-s3": {
     partNum: "Lab 2",
     partTitle: "CSS Sizing & Coordinates Layout",
     objectives: [
       "Apply relative/absolute positioning parameters in styles.css",
-      "Style '#game-track' width (390px), height (500px), and background color",
+      "Style '#game-track' with a width/height of your own choosing and a background color",
       "Style '#player-car' width/height and position it absolute at center-bottom",
       "Style '.lane-divider' as a dashed white marker line",
+      "Style '#obstacle' and the hidden '#restart-panel' overlay — not covered by the sandbox drill",
       "Align dashboard HUD items horizontally using flexbox"
     ],
     planSpecs: {
-      vision: "A dark 2-lane-divider highway (390px wide, 500px tall) with a white dashed line down the middle. A red car sits near the bottom-center of the road. The scoreboard sits above the road as a small horizontal bar.",
-      parts: "Parts needed: the road (sized to fit the screen), the car (positioned near the bottom, centered in a lane), and the lane divider (running down the middle). Information to track: the road's size, the car's position, and how wide each lane is.",
+      vision: "A dark 2-lane-divider highway with a white dashed line down the middle, sized however you like (390-430px wide, 480-520px tall). A car sits near the bottom-center of the road, with an obstacle car styled the same way, and a full-screen game-over overlay waits — invisible for now — behind everything. The scoreboard sits above the road as a small horizontal bar.",
+      parts: "Parts needed: the road (sized to fit the screen), the car (positioned near the bottom, centered in a lane), the lane divider (running down the middle), the obstacle car, and the hidden overlay. Information to track: the road's size, the car's position, and how wide each lane is.",
       flow: "Parent relative positioning establishes coordinate system origin (0,0) at top-left.\nChild absolute positioning uses (left, top, bottom, right) parameters relative to parent bounds."
     },
-    promptGuide: "Draft an AI prompt to style the game HTML elements: target '#game-track' with width 390px, height 500px, background-color '#333', and relative positioning. Style '#player-car' with absolute positioning, bottom 20px, left 165px (to center it inside a 390px track), and red background. Style '.lane-divider' to run down the center with dashed borders.",
+    referenceSessions: [{ id: "l1-s2", label: "Session 2's HTML structure — the exact elements you're styling here, not a generic spec" }],
+    promptGuide: "Open your own Session 2 file (shown above) — you're styling that file, not a fresh blank one. Draft an AI prompt to give '#game-track' relative positioning and dimensions of your choosing (390-430px wide, 480-520px tall). Position '#player-car' absolutely so it sits centered near the bottom of YOUR track width. Add a dashed '.lane-divider' down the center. Then style '#obstacle' (it can reuse most of the player-car's look) and '#restart-panel' as a full-screen dark overlay — remember it must stay invisible until a later session removes its 'hidden' class.",
     codeReviewGuide: [
       "Does `#game-track` have `position: relative`? If not, the absolute elements will drift out.",
-      "Is `#player-car` absolute-positioned?",
+      "Is `#player-car` absolute-positioned, and does its left offset actually center it inside YOUR chosen track width (not necessarily 165px)?",
+      "Is `#restart-panel` styled to cover the whole track (e.g. `inset: 0`) while its 'hidden' class still keeps it invisible?",
       "Socratic Question: What happens if `#game-track` loses `position: relative`? Which coordinate box will the browser calculate offsets against?"
     ],
-    sampleGeneratedHtml: '/* styles.css */\nbody { margin: 0; padding: 10px; background: #060814; font-family: sans-serif; }\n\n#dashboard {\n  display: flex;\n  justify-content: space-between;\n  padding: 10px;\n  background-color: #1a1a2e;\n  border: 1px solid #333;\n  border-radius: 6px;\n}\n#dashboard h2 { margin: 0; font-size: 1rem; color: #00ffcc; }\n\n#game-track {\n  position: relative;\n  width: 390px;\n  height: 500px;\n  background-color: #333;\n  border: 3px solid #ffcc00;\n  margin: 10px 0;\n  overflow: hidden;\n}\n\n#player-car {\n  position: absolute;\n  bottom: 20px;\n  left: 165px;\n  width: 60px;\n  height: 100px;\n  background-color: #ff4d4d;\n  border-radius: 4px;\n}\n\n.lane-divider {\n  position: absolute;\n  top: 0;\n  left: 50%;\n  width: 2px;\n  height: 100%;\n  border-left: 2px dashed #ffffff;\n}',
-    testCasesGuide: "- Verify `#game-track` has dimensions 390px width and 500px height\n- Verify `#player-car` is positioned at bottom: 20px and left: 165px\n- Verify `.lane-divider` uses dashed border-left rules\n- Verify `#dashboard` uses flex layout with space-between",
+    sampleGeneratedHtml: '/* styles.css — dimensions below are an EXAMPLE, use your own track width from above */\nbody { margin: 0; padding: 10px; background: #060814; font-family: sans-serif; }\n\n#dashboard {\n  display: flex;\n  justify-content: space-between;\n  padding: 10px;\n  background-color: #1a1a2e;\n  border: 1px solid #333;\n  border-radius: 6px;\n}\n#dashboard h2 { margin: 0; font-size: 1rem; color: #00ffcc; }\n\n#game-track {\n  position: relative;\n  width: 410px;   /* pick your own 390-430px */\n  height: 500px;\n  background-color: #333;\n  border: 3px solid #ffcc00;\n  margin: 10px 0;\n  overflow: hidden;\n}\n\n#player-car {\n  position: absolute;\n  bottom: 20px;\n  left: 175px;   /* centers a 60px car inside a 410px track */\n  width: 60px;\n  height: 100px;\n  background-color: #ff4d4d;\n  border-radius: 4px;\n}\n\n#obstacle {\n  position: absolute;\n  top: -100px;\n  width: 60px;\n  height: 100px;\n  background-color: #ff9f43;\n  border-radius: 4px;\n}\n\n.lane-divider {\n  position: absolute;\n  top: 0;\n  left: 50%;\n  width: 2px;\n  height: 100%;\n  border-left: 2px dashed #ffffff;\n}\n\n#restart-panel {\n  position: absolute;\n  inset: 0;\n  background: rgba(0,0,0,0.8);\n}\n.hidden { display: none; }',
+    testCasesGuide: "- Verify `#game-track` has a fixed width/height you chose and `position: relative`\n- Verify `#player-car` is absolute-positioned and visually centered inside YOUR track (not assumed to be exactly 165px)\n- Verify `.lane-divider` uses dashed border-left rules\n- Verify `#obstacle` and `#restart-panel` both have real styles, and `#restart-panel` stays invisible while 'hidden' is applied\n- Verify `#dashboard` uses flex layout with space-between",
     iterationGuide: "Audit element visibility. If elements overlap or are hidden, check display/position definitions. Adjust contrasts and symbols for colorblind accessibility.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "This is what this lab looks like once the CSS is applied (sizing, absolute positioning, dashed divider, flex HUD). Later sessions' starter files reuse this exact look so each new lab can focus on its own concept."
+    targetOutcomeCaption: "This is what your Session 2 file looks like once this session's CSS is applied to it (sizing, absolute positioning, dashed divider, flex HUD, plus the obstacle and hidden overlay you can't see yet). Session 4 starts from this exact file, not a fresh starter."
   },
   "l1-s4": {
-    partNum: "Lab 3",
+    partNum: "Lab 4",
     partTitle: "JS Variable Registry",
     objectives: [
-      "Initialize state registers in game.js",
+      "Initialize state registers in game.js — the file every session from here on extends",
       "Declare mutable variables for player position, speed, score, and state",
+      "Declare a lives/health variable the sandbox drill never asks for",
       "Declare immutable constants for track limits and lane dimensions",
       "Perform basic mathematical increments on state variables"
     ],
     planSpecs: {
-      vision: "This lab's starter file already looks like Session 3's styled road and car — this lab works behind the scenes, giving the game a memory of the score, speed, and whether it's running.",
-      parts: "Parts needed: none new on screen — this session gives the game a memory. Information to track: the car's position, the current speed, the score, whether the game is running, and the fixed width of a lane.",
+      vision: "This lab's file already looks like Session 3's styled road and car — this lab works behind the scenes, giving the game a memory of the score, speed, lives, and whether it's running.",
+      parts: "Parts needed: none new on screen — this session gives the game a memory. Information to track: the car's position, the current speed, the score, a lives count, whether the game is running, and the fixed width of a lane.",
       flow: "State initialization (start) -> Variable declarations -> Math increments on game events -> Render UI updates"
     },
-    promptGuide: "Write a prompt asking to declare JavaScript variables for a 2D highway avoidance game: mutable variables for 'carX' (initial 165), 'speed' (initial 0), 'score' (initial 0), 'gameActive' (initial false), and constants for track limits. Write test statements that increment score by 1 and speed by 10, then log the results.",
+    referenceSessions: [{ id: "l1-s2", label: "Session 2's HTML" }, { id: "l1-s3", label: "Session 3's CSS" }],
+    chainFrom: null,
+    promptGuide: "This is where game.js starts — every session from here to the final lab extends this exact file, so get the registry right. Ask the AI to declare mutable variables for your car's starting x position (read it off YOUR OWN Session 3 CSS, not a fixed number), 'speed' (initial 0), 'score' (initial 0), a 'lives' count (initial 3 — the sandbox drill never covers this one), and 'gameActive' (initial false), plus constants for your track's width and lane spacing. Write test statements that increment score by 1 and decrement lives by 1, then log the results.",
     codeReviewGuide: [
       "Are variables declared with `let` (mutable) and constants with `const` (immutable)?",
       "Is the speed variable initialized as a Number (not a String with quotes)?",
+      "Does the starting car x-position actually match where your Session 3 CSS centers `#player-car`, not a copied 165?",
       "Socratic Question: What would happen if we declared `speed = '10'` (string) and then executed `speed += 5`? How does variable data type dictate arithmetic outcomes?"
     ],
-    sampleGeneratedHtml: '// game.js — Racing Car Game state registry\nlet carX = 165;         // player position — changes as you steer\nlet speed = 0;          // Number, not "0"\nlet score = 0;\nlet gameActive = false; // true/false switch: is the game running?\n\nconst LANE_WIDTH = 130;  // fixed: pixels between lanes\nconst TRACK_WIDTH = 390; // fixed: track is 3 lanes wide\n\n// quick test of the math\nscore++;       // score is now 1\nspeed += 10;   // speed is now 10\nconsole.log("Score:", score, "Speed:", speed);',
-    testCasesGuide: "- Verify variables are declared with correct syntax\n- Verify speed and score values update mathematically rather than string concatenating\n- Verify console logs report correct variable transitions",
+    sampleGeneratedHtml: '// game.js — Racing Car Game state registry\n// NOTE: carX/TRACK_WIDTH below are an EXAMPLE — use YOUR OWN Session 3 numbers.\nlet carX = 175;         // player position — changes as you steer\nlet speed = 0;          // Number, not "0"\nlet score = 0;\nlet lives = 3;          // not in the sandbox drill — your own game needs this\nlet gameActive = false; // true/false switch: is the game running?\n\nconst LANE_WIDTH = 137;   // fixed: pixels between lanes, from YOUR track width\nconst TRACK_WIDTH = 410;  // fixed: matches YOUR Session 3 #game-track width\n\n// quick test of the math\nscore++;       // score is now 1\nlives--;       // lives is now 2\nconsole.log("Score:", score, "Lives:", lives);',
+    testCasesGuide: "- Verify variables are declared with correct syntax, using YOUR OWN track/car numbers from Sessions 2-3\n- Verify score and lives values update mathematically rather than string concatenating\n- Verify console logs report correct variable transitions",
     iterationGuide: "Ensure zero global variables are exposed in global browser scope directly (wrap them inside an object namespace or immediately invoked functional block to prevent client-side console hacks).",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "Screen unchanged from the Session 3 look — but score, speed, and gameActive are now real tracked variables in this lab's game.js, the same pattern steering, animation, and scoring labs will each set up for themselves."
+    targetOutcomeCaption: "Screen unchanged from the Session 3 look — but score, speed, lives, and gameActive are now real tracked variables in game.js. Session 5 opens THIS file and extends it, not a fresh copy."
   },
   "l1-s5": {
-    partNum: "Lab 4",
+    partNum: "Lab 5",
     partTitle: "Keyboard Control Interfaces",
     objectives: [
+      "Extend last session's game.js — don't restart it",
       "Bind keyboard keydown listeners to the browser window",
       "Capture ArrowLeft and ArrowRight event properties",
       "Trigger coordinate updates based on keyboard inputs",
       "Update DOM style properties dynamically when variables shift"
     ],
     planSpecs: {
-      vision: "Same red car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering.",
-      parts: "Parts needed: a way to listen for arrow key presses. Information to track: which key was pressed, and how far the car should shift each time.",
+      vision: "Same car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering.",
+      parts: "Parts needed: a way to listen for arrow key presses. Information to track: which key was pressed, and how far the car should shift each time (your own LANE_WIDTH constant from last session).",
       flow: "User presses keyboard key -> keydown Event fires -> JavaScript captures event.key -> IF key is ArrowLeft, decrease carX -> update #player-car.style.left coordinate"
     },
-    promptGuide: "Write a prompt asking to bind a keydown event listener to the window. When 'ArrowLeft' is pressed, it should subtract 130 from 'carX' and update the left position style of '#player-car' to match. When 'ArrowRight' is pressed, it should add 130 to 'carX' and update the style. Log key presses to the console.",
+    chainFrom: "l1-s4",
+    promptGuide: "Your game.js above already declares carX and LANE_WIDTH from Session 4 — don't ask the AI to redeclare them. Ask it to bind a keydown listener to the window that subtracts your LANE_WIDTH from carX on 'ArrowLeft' and adds it on 'ArrowRight', updating '#player-car''s left style to match each time, and logging every key press to the console.",
     codeReviewGuide: [
       "Is `window.addEventListener('keydown')` used correctly?",
       "Does the handler inspect `event.key` for exact key strings?",
-      "Is the style update formatted correctly (e.g. `carX + 'px'`)?",
+      "Does the step size actually reuse your existing `LANE_WIDTH` constant instead of a new hardcoded number?",
       "Socratic Question: How does the browser know a key was pressed? What is the event object and what properties does it pass to our handler?"
     ],
-    sampleGeneratedHtml: '// game.js — keyboard steering\nlet carX = 165;\nconst carElement = document.getElementById("player-car");\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    carX -= 130;\n  } else if (event.key === "ArrowRight") {\n    carX += 130;\n  }\n  carElement.style.left = carX + "px";\n  console.log("Steering:", event.key, "-> carX =", carX);\n});',
-    testCasesGuide: "- Press ArrowLeft: verify console logs the key and carX updates\n- Press ArrowRight: verify console logs key and carX increases\n- Verify #player-car moves visually on screen when keys are pressed",
+    sampleGeneratedHtml: '// game.js — adds keyboard steering on top of Session 4\'s registry\n// (carX, LANE_WIDTH, etc. already exist above this — not repeated here)\nconst carElement = document.getElementById("player-car");\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    carX -= LANE_WIDTH;\n  } else if (event.key === "ArrowRight") {\n    carX += LANE_WIDTH;\n  }\n  carElement.style.left = carX + "px";\n  console.log("Steering:", event.key, "-> carX =", carX);\n});',
+    testCasesGuide: "- Press ArrowLeft: verify console logs the key and carX updates by your LANE_WIDTH\n- Press ArrowRight: verify console logs key and carX increases by your LANE_WIDTH\n- Verify #player-car moves visually on screen when keys are pressed",
     iterationGuide: "Confirm that pressing keys repeatedly does not trigger rendering locks. Plan on screen controls (buttons) for accessibility.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car" style="left: 8%;"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "The car can now be steered left/right with the Arrow keys — shown here parked in the left lane after pressing ArrowLeft. Try it yourself in this session's sandbox lab."
+    targetOutcomeCaption: "The car can now be steered left/right with the Arrow keys — shown here parked in the left lane after pressing ArrowLeft. This is your Session 4 file, still growing."
   },
   "l1-s6": {
-    partNum: "Lab 5",
+    partNum: "Lab 6",
     partTitle: "Safety Guards & Boundary Clamps",
     objectives: [
+      "Extend last session's steering logic — don't rewrite it from zero",
       "Implement conditional boundary checkpoints using logic gates",
-      "Construct left-side limit guards (x >= 35)",
-      "Construct right-side limit guards (x <= 295)",
-      "Evaluate compound logic checks to lock steering inside lanes"
+      "Construct left-side and right-side limit guards from your own track width",
+      "Evaluate compound logic checks to lock steering inside lanes",
+      "Add a speed overheat clamp the sandbox drill doesn't cover"
     ],
     planSpecs: {
       vision: "Same steering car — but now it can't be steered off the edges of the road. Holding an arrow key at the edge just keeps it pinned at the outer lane instead of sliding off-screen.",
-      parts: "Parts needed: a safety check that runs every time a key is pressed. Information to track: the leftmost and rightmost positions the car is allowed to reach.",
-      flow: "IF key is ArrowLeft:\n  IF carX > LeftLimit:\n    carX -= 130\nIF key is ArrowRight:\n  IF carX < RightLimit:\n    carX += 130"
+      parts: "Parts needed: a safety check that runs every time a key is pressed, plus a cap on how fast speed is allowed to climb. Information to track: the leftmost and rightmost positions your car is allowed to reach (derived from your own TRACK_WIDTH), and a maximum playable speed.",
+      flow: "IF key is ArrowLeft:\n  IF carX > LeftLimit:\n    carX -= LANE_WIDTH\nIF key is ArrowRight:\n  IF carX < RightLimit:\n    carX += LANE_WIDTH"
     },
-    promptGuide: "Draft a prompt asking to modify the keyboard steering logic. Add conditional guards to prevent the player car from running off the road. The car must be locked inside 3 lanes (x coordinates 35px, 165px, 295px). If the user presses left, only move the car if it is not already in the leftmost lane (x = 35px).",
+    chainFrom: "l1-s5",
+    promptGuide: "Your keydown handler above already moves the car with no limits — ask the AI to add guards to it, not replace it. The car must stay locked inside the lanes YOUR track actually has (compute the left and right limits from your own TRACK_WIDTH and car width, don't assume 35/295). If the user presses left, only move the car if it's not already at the leftmost limit — same idea for right. Separately, add a small safety clamp: if 'speed' ever climbs past a maximum you choose, cap it back down and log a warning.",
     codeReviewGuide: [
-      "Verify the boundary checks use correct comparison operators (e.g. `carX > 35` or similar).",
+      "Do the boundary checks derive their limits from your own TRACK_WIDTH/car width, not a hardcoded 35/295?",
       "Does the car snap back or lock cleanly when boundaries are breached?",
-      "Socratic Question: What would happen if we used `>= 0` as the left boundary check instead of `> 35`? Where would the player car end up visually?"
+      "Is the speed clamp separate from the steering guards, not accidentally merged into the same if/else chain?",
+      "Socratic Question: If the left guard used `>= 0` instead of your real left limit, where would the player car end up visually?"
     ],
-    sampleGeneratedHtml: '// game.js — steering with boundary guards\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX > 35) {          // left guard: stop at the leftmost lane\n      carX -= 130;\n    }\n  } else if (event.key === "ArrowRight") {\n    if (carX < 295) {         // right guard: stop at the rightmost lane\n      carX += 130;\n    }\n  }\n  document.getElementById("player-car").style.left = carX + "px";\n});\n\n// overheat clamp: keep speed playable\nif (speed > 120) {\n  speed = 100;\n  console.warn("Overheat! Speed clamped to 100");\n}',
-    testCasesGuide: "- Start at center lane (165px), press ArrowLeft: verify car moves to left lane (35px)\n- Press ArrowLeft again: verify car remains locked at 35px and does not move off-screen\n- Start at center lane, press ArrowRight: verify moves to 295px\n- Press ArrowRight again: verify locks at 295px",
+    sampleGeneratedHtml: '// game.js — adds boundary guards on top of Session 5\'s steering\n// (LEFT_LIMIT/RIGHT_LIMIT below are an EXAMPLE — derive them from YOUR track width)\nconst LEFT_LIMIT = (TRACK_WIDTH % LANE_WIDTH === 0) ? 0 : Math.floor((TRACK_WIDTH % LANE_WIDTH) / 2);\nconst RIGHT_LIMIT = TRACK_WIDTH - LANE_WIDTH - LEFT_LIMIT;\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX > LEFT_LIMIT) {\n      carX -= LANE_WIDTH;\n    }\n  } else if (event.key === "ArrowRight") {\n    if (carX < RIGHT_LIMIT) {\n      carX += LANE_WIDTH;\n    }\n  }\n  document.getElementById("player-car").style.left = carX + "px";\n});\n\n// overheat clamp: keep speed playable, not in the sandbox drill\nconst MAX_SPEED = 120;\nif (speed > MAX_SPEED) {\n  speed = MAX_SPEED;\n  console.warn("Overheat! Speed clamped to", MAX_SPEED);\n}',
+    testCasesGuide: "- Start at your center lane, press ArrowLeft repeatedly: verify the car locks at your own left limit instead of sliding off-screen\n- Start at center, press ArrowRight repeatedly: verify it locks at your own right limit\n- Push speed above your chosen MAX_SPEED: verify it clamps and logs a warning",
     iterationGuide: "Test boundary limits. Refine prompt to reject negative values or out-of-range overrides.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car" style="left: 2%;"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "Boundary clamps now stop the car from sliding off the track — even holding ArrowLeft, it locks cleanly at the left edge instead of driving off-screen."
+    targetOutcomeCaption: "Boundary clamps now stop the car from sliding off the track — even holding ArrowLeft, it locks cleanly at the left edge instead of driving off-screen. Still Session 4's file, still growing."
   },
   "l1-s7": {
-    partNum: "Lab 6",
+    partNum: "Lab 7",
     partTitle: "Obstacle Loop Generation",
     objectives: [
+      "Extend last session's game.js with a new self-contained feature",
       "Construct looping structures (for/while) to automate repetitive creation",
-      "Render multiple road lane markers down the highway container",
+      "Render multiple road lane markers down the highway container, spaced to fit YOUR track height",
       "Calculate linear position coordinates inside loop runs",
       "Check loop safety boundaries to prevent infinite execution freezes"
     ],
     planSpecs: {
-      vision: "The dashed center lane markers running down the highway are now drawn by a loop instead of placed by hand. Visually the track resembles Session 3's, but every dash is generated programmatically.",
-      parts: "Parts needed: several repeating marker dashes down the highway. Information to track: how many dashes to create, and the vertical spacing between them.",
-      flow: "FOR i from 0 to 4:\n  Calculate markerY = i * 120\n  Create div element with class 'marker-dash'\n  Set styles top = markerY, left = center\n  Append marker dash to '#game-track'"
+      vision: "The dashed center lane markers running down the highway are now drawn by a loop instead of placed by hand, spaced to evenly fill YOUR OWN track height from Session 3 — not a fixed number that happens to fit a different-sized track.",
+      parts: "Parts needed: several repeating marker dashes down the highway. Information to track: how many dashes to create (your choice, 4-6), and the vertical spacing between them (computed from your own track height, not assumed).",
+      flow: "FOR i from 0 to markerCount-1:\n  Calculate markerY = i * (trackHeight / markerCount)\n  Create div element with class 'marker-dash'\n  Set styles top = markerY, left = center\n  Append marker dash to '#game-track'"
     },
-    promptGuide: "Write a prompt to generate repeating highway marker dashes using a JavaScript 'for' loop. The loop should run 5 times, calculating a vertical offset coordinate 'i * 120' on each iteration, creating a div element with class 'marker-dash' styled absolute, and nesting it inside '#game-track'.",
+    chainFrom: "l1-s6",
+    promptGuide: "This feature doesn't touch your steering/boundary code above — ask the AI to add it as its own block. Generate repeating highway marker dashes using a JavaScript 'for' loop: pick how many dashes you want (4-6), and calculate each one's vertical offset by dividing YOUR OWN track height (from Session 3) by that count — don't hardcode a spacing number that assumes a specific track size. Each dash should be a div with class 'marker-dash', styled absolute, nested inside '#game-track'.",
     codeReviewGuide: [
       "Does the loop have a clear terminating condition?",
       "Is the loop index incremented properly to prevent infinite loop browser lockups?",
-      "Are coordinates offsets calculated mathematically using the loop index?",
+      "Is the vertical spacing actually computed from your own track height divided by your marker count, not a copied 120px?",
       "Socratic Question: What happens to the browser call stack if the loop increment block is deleted? Why does the screen freeze?"
     ],
-    sampleGeneratedHtml: '// game.js — spawn lane markers with a loop\nconst track = document.getElementById("game-track");\n\nfor (let i = 0; i < 5; i++) {\n  let markerY = i * 120;                 // 0, 120, 240, 360, 480\n  const dash = document.createElement("div");\n  dash.className = "marker-dash";\n  dash.style.top = markerY + "px";\n  dash.style.left = "194px";             // centered on the track\n  track.appendChild(dash);\n  console.log("Highway Marker position: " + markerY);\n}',
-    testCasesGuide: "- Verify loop runs exactly 5 times and appends 5 elements\n- Verify lane markers are spaced equally vertically (0px, 120px, 240px, 360px, 480px)\n- Inspect DOM tree to verify all 5 divider elements exist",
+    sampleGeneratedHtml: '// game.js — spawn lane markers, spaced for YOUR track height (example: 500px, 5 markers)\nconst track = document.getElementById("game-track");\nconst MARKER_COUNT = 5;                 // your choice, 4-6\nconst TRACK_HEIGHT = 500;                // from YOUR Session 3 #game-track\nconst markerSpacing = TRACK_HEIGHT / MARKER_COUNT;\n\nfor (let i = 0; i < MARKER_COUNT; i++) {\n  let markerY = i * markerSpacing;\n  const dash = document.createElement("div");\n  dash.className = "marker-dash";\n  dash.style.top = markerY + "px";\n  dash.style.left = (TRACK_WIDTH / 2) + "px";  // centered on YOUR track\n  track.appendChild(dash);\n  console.log("Highway Marker position: " + markerY);\n}',
+    testCasesGuide: "- Verify the loop runs exactly MARKER_COUNT times and appends that many elements\n- Verify lane markers are spaced equally across YOUR OWN track height, not a fixed 120px\n- Inspect DOM tree to verify every marker element exists",
     iterationGuide: "Audit loop bounds and check CPU loads. If loops are sluggish, optimize calculation formulas.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "The dashed center lane markers are now generated by a for-loop (5 dashes, 120px apart) instead of hand-placed — visually the track resembles Session 3's, but every dash is drawn programmatically. Oncoming obstacle cars are a separate concept covered in Session 9's lab."
+    targetOutcomeCaption: "The dashed center lane markers are now generated by a for-loop, spaced to fit your own track height instead of hand-placed. Oncoming obstacle cars are a separate concept covered in Session 9's lab."
   },
   "l1-s8": {
-    partNum: "Lab 7",
+    partNum: "Lab 8",
     partTitle: "Modular Control Functions",
     objectives: [
+      "Refactor Sessions 5-6's own steering code — behavior must not change",
       "Decompose game script into dedicated single-purpose functions",
-      "Write parameter-driven functions for element styling updating",
+      "Group the movement functions under one namespaced object, not three loose globals",
       "Manage scope variables access: keep local variables locked",
       "Refactor keyboard listeners to invoke modular movement hooks"
     ],
     planSpecs: {
-      vision: "This lab's starter screen looks identical to Session 7's — this lab is a behind-the-scenes cleanup, organizing the movement code into reusable pieces without changing what the player sees.",
-      parts: "Parts needed: none new on screen — this session reorganizes existing behavior into named, reusable pieces (move left, move right, update position). Information to track: which pieces of information each reusable piece is allowed to see and change.",
-      flow: "Key pressed -> call moveLeft() -> update carX state -> call updatePlayerPosition() -> update DOM style offsets"
+      vision: "This lab's screen looks identical to Session 7's — this lab is a behind-the-scenes cleanup, organizing the movement code into one reusable, namespaced controller without changing what the player sees.",
+      parts: "Parts needed: none new on screen — this session reorganizes existing behavior into a named, reusable controller object (update position, move left, move right). Information to track: which pieces of information the controller is allowed to see and change.",
+      flow: "Key pressed -> call Controller.moveLeft() -> update carX state -> call Controller.updatePosition() -> update DOM style offsets"
     },
-    promptGuide: "Write a prompt instructing to refactor the steering script. Modularize into functions: 'updatePlayerPosition()' to style '#player-car' left coordinate; 'moveLeft()' to clamp 'carX' and call update; and 'moveRight()' to increment, clamp, and call update. Ensure keys event triggers invoke these modular functions.",
+    chainFrom: "l1-s7",
+    promptGuide: "Your own keydown handler above already does this steering inline — the exercise drilled three bare global functions, but ask the AI for something a little cleaner here: one namespaced object, e.g. `const Controller = { updatePosition, moveLeft, moveRight }`, so the three pieces don't pollute the global scope as separate names. `updatePosition()` styles '#player-car''s left coordinate; `moveLeft()`/`moveRight()` apply your existing boundary clamps then call `updatePosition()`. Make the keydown listener call `Controller.moveLeft()`/`Controller.moveRight()` instead of running the logic inline.",
     codeReviewGuide: [
-      "Are functions declared with clean signatures and clear names?",
-      "Are UI-rendering actions decoupled from variables increment checks?",
-      "Socratic Question: Why is modularizing code into functions helpful for collaborative development? What happens if you try to access a variable declared inside 'moveLeft()' from the main update function?"
+      "Are the three functions grouped under one object instead of three separate global names?",
+      "Are UI-rendering actions decoupled from variable increment checks?",
+      "Socratic Question: Why is grouping these three functions under one object helpful, beyond just 'organization'? What's one global name collision this avoids?"
     ],
-    sampleGeneratedHtml: '// game.js — modular movement controller\nfunction updatePlayerPosition() {\n  document.getElementById("player-car").style.left = carX + "px";\n}\n\nfunction moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n}\n\nfunction moveRight() {\n  if (carX < 295) {\n    carX += 130;\n  }\n  updatePlayerPosition();\n}\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    moveLeft();\n  } else if (event.key === "ArrowRight") {\n    moveRight();\n  }\n});',
-    testCasesGuide: "- Verify functions 'updatePlayerPosition', 'moveLeft', and 'moveRight' are declared\n- Press keys: verify correct functions execute and player steering behaves identically\n- Inspect scopes: ensure local variables do not leak into global window",
-    iterationGuide: "Confirm the refactor changed no behavior — steering still clamps cleanly at both lanes exactly as before. If a function logs 'undefined', check whether a variable it reads was accidentally declared inside another function instead of in shared (outer) scope.",
+    sampleGeneratedHtml: '// game.js — steering grouped into one namespaced controller\nconst Controller = {\n  updatePosition() {\n    document.getElementById("player-car").style.left = carX + "px";\n  },\n  moveLeft() {\n    if (carX > LEFT_LIMIT) {\n      carX -= LANE_WIDTH;\n    }\n    this.updatePosition();\n  },\n  moveRight() {\n    if (carX < RIGHT_LIMIT) {\n      carX += LANE_WIDTH;\n    }\n    this.updatePosition();\n  }\n};\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    Controller.moveLeft();\n  } else if (event.key === "ArrowRight") {\n    Controller.moveRight();\n  }\n});',
+    testCasesGuide: "- Verify `Controller.updatePosition`, `Controller.moveLeft`, and `Controller.moveRight` are all declared on one object\n- Press keys: verify steering behaves identically to before the refactor\n- Inspect scopes: ensure the three functions no longer exist as separate global names",
+    iterationGuide: "Confirm the refactor changed no behavior — steering still clamps cleanly at both edges exactly as before. If a function logs 'undefined', check whether `this` is being used correctly inside the object's own methods.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "Screen matches the Session 7 starter's loop-drawn track — but the steering logic has been refactored into clean, reusable functions (updatePlayerPosition(), moveLeft(), moveRight()) instead of one long script."
+    targetOutcomeCaption: "Screen matches Session 7's — but the steering logic is now grouped under one Controller object instead of scattered globals or one long script."
   },
   "l1-s9": {
-    partNum: "Lab 8",
+    partNum: "Lab 9",
     partTitle: "Timer Loops & Animations",
     objectives: [
+      "Add the animation loop as a new self-contained piece — steering/guards keep working untouched",
       "Implement recursively calling game loop cycles using requestAnimationFrame",
-      "Animate oncoming obstacle cars moving vertically down the lanes",
-      "Compute boundary resets to spawn obstacles back at off-screen top",
+      "Animate your own '#obstacle' element (built in Session 2-3) moving vertically down the lanes",
+      "Compute boundary resets to spawn the obstacle back at off-screen top, using YOUR track height",
       "Control animation loops execution using active state gates"
     ],
     planSpecs: {
-      vision: "The obstacle cars now visibly scroll DOWN the road continuously, like the player is driving forward past them, disappearing off the bottom and reappearing at the top — a real animated highway instead of a still picture.",
-      parts: "Parts needed: a continuously repeating game loop. Information to track: each obstacle's vertical position, how fast it moves, and the score increase each time one resets.",
-      flow: "gameLoop runs -> IF gameActive is True:\n  1. Update obstacleY += speed\n  2. IF obstacleY > trackHeight: reset obstacleY = -100, increase score\n  3. Style obstacle top = obstacleY\n  4. requestAnimationFrame(gameLoop) to trigger next paint frame"
+      vision: "The obstacle car now visibly scrolls DOWN the road continuously, like the player is driving forward past it, disappearing off the bottom of YOUR track and reappearing at the top — a real animated highway instead of a still picture.",
+      parts: "Parts needed: a continuously repeating game loop. Information to track: the obstacle's vertical position, how fast it moves, and the score increase each time it resets.",
+      flow: "gameLoop runs -> IF gameActive is True:\n  1. Update obstacleY += speed\n  2. IF obstacleY > YOUR trackHeight: reset obstacleY = -100, increase score\n  3. Style #obstacle top = obstacleY\n  4. requestAnimationFrame(gameLoop) to trigger next paint frame"
     },
-    promptGuide: "Draft a prompt to build the animation engine. Write a 'gameLoop()' function that runs recursively using 'requestAnimationFrame'. Inside, update the vertical position 'obstacleY' of '#obstacle-car' by adding 'speed' on each tick. If the obstacle moves past the bottom (500px), reset it to the top (-100px) and increase the score by 10.",
+    chainFrom: "l1-s8",
+    promptGuide: "Add this on top of the Controller object above — it's a separate concern from steering, so don't touch that code. Build a 'gameLoop()' function that runs recursively using 'requestAnimationFrame'. Inside, update a new 'obstacleY' variable by adding 'speed' on each tick, and move your '#obstacle' element (the one from your Session 2 HTML) to match. If the obstacle passes the bottom of YOUR OWN track height, reset it to -100 and increase the score by 10. Gate the whole loop on 'gameActive'.",
     codeReviewGuide: [
       "Does the animation loop check `gameActive` before requesting the next frame?",
-      "Does the obstacle reset coordinates correctly to spawn again at the top?",
+      "Does the obstacle reset coordinate use YOUR track height, not an assumed 500?",
+      "Is `#obstacle` (the element you already built) being moved, rather than a newly-created one?",
       "Socratic Question: Why is 'requestAnimationFrame' preferred over 'setInterval' for rendering fluid screen animations?"
     ],
-    sampleGeneratedHtml: '// game.js — animation engine\nlet obstacleY = -100;\nconst obstacle = document.getElementById("obstacle");\n\nfunction moveObstacles() {\n  obstacleY += speed;\n  if (obstacleY > 500) {      // passed the bottom edge\n    obstacleY = -100;         // respawn at the top\n    score += 10;              // scored a pass\n  }\n  obstacle.style.top = obstacleY + "px";\n  document.getElementById("score-val").textContent = score;\n}\n\nfunction gameLoop() {\n  if (!gameActive) { return; }   // stop when the game ends\n  moveObstacles();\n  requestAnimationFrame(gameLoop);\n}\n\ngameActive = true;\ngameLoop();',
-    testCasesGuide: "- Call gameLoop(): verify obstacle car moves down the screen continuously\n- Verify obstacle resets to -100px when it exits bottom boundaries\n- Verify score increments in dashboard HUD on each reset\n- Set gameActive to false: verify animation loop halts instantly",
+    sampleGeneratedHtml: '// game.js — animation engine, added on top of the steering Controller\n// TRACK_BOTTOM below is an EXAMPLE — use YOUR OWN track height from Session 3\nlet obstacleY = -100;\nconst TRACK_BOTTOM = 500;\nconst obstacleEl = document.getElementById("obstacle");\n\nfunction moveObstacle() {\n  obstacleY += speed;\n  if (obstacleY > TRACK_BOTTOM) {   // passed YOUR track\'s bottom edge\n    obstacleY = -100;               // respawn at the top\n    score += 10;                    // scored a pass\n  }\n  obstacleEl.style.top = obstacleY + "px";\n  document.getElementById("score-val").textContent = score;\n}\n\nfunction gameLoop() {\n  if (!gameActive) { return; }   // stop when the game ends\n  moveObstacle();\n  requestAnimationFrame(gameLoop);\n}\n\ngameActive = true;\ngameLoop();',
+    testCasesGuide: "- Call gameLoop(): verify the obstacle moves down the screen continuously\n- Verify the obstacle resets to -100px when it exits YOUR track's bottom boundary\n- Verify score increments in dashboard HUD on each reset\n- Set gameActive to false: verify the animation loop halts instantly",
     iterationGuide: "Examine framerate stability. Refine prompt rules if resetting overlaps causes glitches.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">10</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div><div class="obstacle" style="top:4px;left:8px;"></div><div id="obstacle-2" class="obstacle" style="top:24px;left:70px;"></div><div class="obstacle" style="top:40px;left:140px;"></div></div>',
-    targetOutcomeCaption: "The game loop now runs continuously via requestAnimationFrame — obstacles scroll smoothly down the screen 60 times a second, resetting to the top and increasing the score every cycle."
+    targetOutcomeCaption: "The game loop now runs continuously via requestAnimationFrame — the obstacle scrolls smoothly down YOUR track 60 times a second, resetting and increasing the score every cycle. Steering from Sessions 5-8 still works exactly as before."
   },
   "l1-s10": {
-    partNum: "Lab 9",
+    partNum: "Lab 10",
     partTitle: "Collision Detection Overlap Math",
     objectives: [
+      "Add collision checking into last session's animation loop, not a new loop",
       "Understand 2D coordinate overlap theorems (AABB collision logic)",
       "Compose mathematical collision checks comparing bounding borders",
-      "Trigger game-over states when coordinate registers intersect",
-      "Halt requestAnimationFrame recursions on collision flags"
+      "Spend a life on each collision instead of ending the game immediately — a wrinkle the sandbox drill skips",
+      "Halt requestAnimationFrame recursions only once lives reach zero"
     ],
     planSpecs: {
-      vision: "When the player's car touches an obstacle car, the screen should visibly react — the game freezes and shows that a crash happened.",
-      parts: "Parts needed: a collision check that runs every loop. Information to track: the edges (left/right/top/bottom) and size of the player's car and each obstacle.",
-      flow: "IF player.right > obstacle.left AND player.left < obstacle.right AND\n   player.bottom > obstacle.top AND player.top < obstacle.bottom:\n     Collision detected -> set gameActive = false -> Trigger Game Over"
+      vision: "When the player's car touches the obstacle, the screen should visibly react — but with 'lives' already tracked since Session 4, a single crash should cost one life and let the player keep going, only truly ending once lives hit zero.",
+      parts: "Parts needed: a collision check that runs every loop, plus a rule for what a collision actually costs. Information to track: the edges (left/right/top/bottom) and size of the player's car and the obstacle, and the current lives count.",
+      flow: "IF player.right > obstacle.left AND player.left < obstacle.right AND\n   player.bottom > obstacle.top AND player.top < obstacle.bottom:\n     Collision detected -> lives-- -> IF lives <= 0: gameActive = false, Trigger Game Over\n     ELSE: reset obstacle position, keep playing"
     },
-    promptGuide: "Write a prompt asking to code a collision detection sensor. Write a function checking if the bounding boxes of '#player-car' and '#obstacle-car' overlap. If they intersect, set 'gameActive' to false to stop the animation loop, and call a 'gameOver()' function to alert the player.",
+    chainFrom: "l1-s9",
+    promptGuide: "Add this check inside the gameLoop() you already have above — don't write a second loop. Write a function checking if the bounding boxes of '#player-car' and '#obstacle' overlap, using their real sizes from your own Session 3 CSS. On a collision, decrement 'lives' instead of ending the game outright; only when lives reaches 0 should 'gameActive' be set to false and a 'gameOver()' function called. A collision that doesn't end the game should reset the obstacle back off-screen so play continues.",
     codeReviewGuide: [
-      "Verify the collision function matches AABB overlap formula parameters.",
-      "Does collision detection trigger exactly when boxes touch?",
+      "Verify the collision function matches AABB overlap formula parameters, using YOUR car/obstacle sizes.",
+      "Does a collision decrement lives rather than always ending the game immediately?",
+      "Is the game-over check `lives <= 0`, not `lives < 0` (which would allow one extra hidden hit)?",
       "Socratic Question: If we only checked if the center coordinates were identical, why would cars drive right through each other without crashing? Why do box dimensions matter?"
     ],
-    sampleGeneratedHtml: '// game.js — AABB collision detection\nfunction checkCollision(rect1, rect2) {\n  return (\n    rect1.x < rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}\n\n// inside gameLoop(), after moving the obstacle.\n// Box sizes match the real car CSS from Sessions 2-3 (60x100, sitting at bottom:20 -> top y = 500 - 20 - 100 = 380):\nconst player = { x: carX, y: 380, width: 60, height: 100 };\nconst obstacle = { x: obstacleX, y: obstacleY, width: 60, height: 100 };\nif (checkCollision(player, obstacle)) {\n  gameActive = false;\n  console.log("Collision detected!");\n}',
-    testCasesGuide: "- Drive player car into path of obstacle: verify collision registers immediately on overlap\n- Verify gameActive transitions to false and movement halts\n- Verify console logs report exact overlap coordinates",
+    sampleGeneratedHtml: '// game.js — AABB collision detection, added inside gameLoop()\nfunction checkCollision(rect1, rect2) {\n  return (\n    rect1.x < rect2.x + rect2.width &&\n    rect1.x + rect1.width > rect2.x &&\n    rect1.y < rect2.y + rect2.height &&\n    rect1.y + rect1.height > rect2.y\n  );\n}\n\n// inside gameLoop(), after moving the obstacle.\n// width/height/playerY below are an EXAMPLE — use YOUR OWN Session 3 car dimensions:\nconst player = { x: carX, y: 380, width: 60, height: 100 };\nconst obstacleBox = { x: TRACK_WIDTH / 2, y: obstacleY, width: 60, height: 100 };\nif (checkCollision(player, obstacleBox)) {\n  lives--;\n  console.log("Hit! Lives remaining:", lives);\n  if (lives <= 0) {\n    gameActive = false;\n    console.log("Collision detected — game over!");\n  } else {\n    obstacleY = -100;   // reset so play continues\n  }\n}',
+    testCasesGuide: "- Drive player car into the obstacle once with lives > 1: verify lives decreases by 1 and the game keeps running\n- Let lives reach 0 via repeated collisions: verify gameActive transitions to false and movement halts\n- Verify console logs report the collision and the updated lives count",
     iterationGuide: "Audit collision accuracy. If triggers occur early or late, adjust box width/height offsets. Add test case objects checking boundary values.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">40</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div><div class="obstacle" style="top:32px;left:40%;"></div><div style="position:absolute;inset:0;background:rgba(139,0,0,0.6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:0.42rem;text-align:center;">💥 CRASH DETECTED</div></div>',
-    targetOutcomeCaption: "A collision has been detected — the AABB overlap check compared the player and obstacle bounding boxes and matched, halting the animation loop and setting gameActive to false."
+    targetOutcomeCaption: "A collision has been detected — the AABB overlap check matched the player and obstacle bounding boxes, this crash cost one of the lives tracked since Session 4, and (if lives remain) play continues instead of stopping outright."
   },
   "l1-s11": {
-    partNum: "Lab 10",
+    partNum: "Lab 11",
     partTitle: "DOM HUD Visual Updates",
     objectives: [
+      "Wire the HUD into last session's collision/lives logic, not a fresh scoring system",
       "Connect state registers changes to real-time UI text elements",
-      "Write score states updates to textContent of DOM nodes",
-      "Render modal retry popups when collision sensors trigger",
-      "Bind keypress event handlers to reset variables and restart games"
+      "Write score AND lives state updates to textContent of DOM nodes — the drill only covers score",
+      "Render modal retry popups when lives reach zero",
+      "Bind keypress event handlers to reset every tracked variable and restart the game"
     ],
     planSpecs: {
-      vision: "The scoreboard number visibly climbs as the game runs, and after a crash a 'Game Over' screen appears on top of the road showing the final score and a prompt to restart.",
-      parts: "Parts needed: a Game Over screen with a restart prompt (hidden until needed). Information to track: the current score to display, and whether the game is active or showing the Game Over screen.",
-      flow: "Score changes -> document.getElementById('score-val').textContent = score -> Collision triggers -> remove '.hidden' class from modal -> Press Space key -> reset game variables, restart loop"
+      vision: "The scoreboard number visibly climbs as the game runs, a lives readout ticks down on each crash, and once lives hit zero a 'Game Over' screen appears on top of the road showing the final score and a prompt to restart.",
+      parts: "Parts needed: a lives readout next to the score, and a Game Over screen with a restart prompt (hidden until needed). Information to track: the current score AND lives to display, and whether the game is active or showing the Game Over screen.",
+      flow: "Score or lives changes -> update their textContent -> lives reaches 0 -> remove '.hidden' class from restart-panel -> Press Space key -> reset ALL game variables (score, lives, position), restart loop"
     },
-    promptGuide: "Draft a prompt to build the HUD score updater and restart module. Write code that sets the textContent of '#score-val' to match the current 'score' variable. When a collision occurs, remove class 'hidden' from '#restart-panel'. If the user presses the 'Space' key while the restart panel is visible, reset score to 0, positions to default, hide panel, set gameActive to true, and restart loop.",
+    chainFrom: "l1-s10",
+    promptGuide: "Build on the lives-based collision logic above, not a simpler score-only version. Write code that keeps both '#score-val' text AND a lives readout (add your own small element for it, since the sandbox drill only ever displays score) in sync with the 'score' and 'lives' variables. When lives reaches 0, remove the 'hidden' class from '#restart-panel'. If the user presses 'Space' while the panel is visible, reset score to 0, lives back to 3, car position to default, hide the panel, set gameActive to true, and restart the loop.",
     codeReviewGuide: [
-      "Does score update in DOM text content whenever it changes?",
-      "Are HUD widgets classes updated to hide/show screen panels?",
-      "Does keypress restart clean up all previous game timers and intervals?",
+      "Does BOTH score and lives update in the DOM whenever either changes, not just score?",
+      "Is the restart-panel reveal gated on lives reaching 0, not on the first collision?",
+      "Does Space-to-restart reset every tracked variable (score, lives, position) — not just some of them?",
       "Socratic Question: What is the difference between setting 'textContent' vs 'innerHTML'? Why is 'textContent' safer for updating values?"
     ],
-    sampleGeneratedHtml: '// game.js — HUD updates and restart flow\nfunction updateScoreboard() {\n  if (score < 0) { score = 0; }\n  document.getElementById("score-val").textContent = score;\n}\n\nfunction triggerGameOverScreen() {\n  document.getElementById("restart-panel").classList.remove("hidden");\n}\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === " ") {          // Space restarts the game\n    score = 0;\n    carX = 165;\n    document.getElementById("restart-panel").classList.add("hidden");\n    gameActive = true;\n    gameLoop();\n  }\n});',
-    testCasesGuide: "- Verify score counts up on HUD display as game runs\n- Trigger crash: verify restart screen panel becomes visible\n- Press Space: verify dashboard resets to 0, track clears, and loop starts cleanly",
-    iterationGuide: "Check that resetting doesn't duplicate loop threads. Ensure all styles classes toggle cleanly.",
+    sampleGeneratedHtml: '// game.js — HUD updates (score + lives) and restart flow\nfunction updateHud() {\n  if (score < 0) { score = 0; }\n  document.getElementById("score-val").textContent = score;\n  document.getElementById("lives-val").textContent = lives;   // your own element, not in the sandbox drill\n}\n\nfunction triggerGameOverScreen() {\n  document.getElementById("restart-panel").classList.remove("hidden");\n}\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === " ") {          // Space restarts the game\n    score = 0;\n    lives = 3;\n    carX = 175;   // your own Session 4 starting x\n    document.getElementById("restart-panel").classList.add("hidden");\n    gameActive = true;\n    gameLoop();\n  }\n});',
+    testCasesGuide: "- Verify score AND lives both update on the HUD as the game runs\n- Reduce lives to 0 via collisions: verify the restart screen panel becomes visible\n- Press Space: verify score, lives, and position ALL reset, track clears, and the loop starts cleanly",
+    iterationGuide: "Check that resetting doesn't duplicate loop threads. Ensure all style classes toggle cleanly.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">80</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div><div class="obstacle"></div><div style="position:absolute;inset:0;background:rgba(6,8,20,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;"><strong style="color:#ff4d4d;font-size:0.5rem;">GAME OVER</strong><span style="font-size:0.4rem;margin-top:2px;">Final Score: 80</span><span style="font-size:0.34rem;margin-top:2px;color:#8899aa;">Press SPACE to Restart</span></div></div>',
-    targetOutcomeCaption: "Score now updates live from JavaScript into the HTML, and the Game Over screen (previously hidden with a .hidden class) appears with the final score and a restart prompt when the player crashes."
+    targetOutcomeCaption: "Score and lives now both update live from JavaScript into the HTML, and the Game Over screen (previously hidden with a .hidden class) appears with the final score and a restart prompt once the player runs out of lives."
   },
   "l1-s12": {
-    partNum: "Lab 11",
+    partNum: "Lab 12",
     partTitle: "Concept-Mastery Labs & Final Assessment",
     objectives: [
+      "Collect every constant your OWN game has accumulated since Session 4 into one config object",
       "Add score speed-multipliers to scale game difficulty dynamically",
       "Refactor global assets configurations into a single config record",
       "Execute automated QA scripts checks verifying safety locks",
-      "Defend code design structures and variables scopes under audits"
+      "Defend code design structures and variables scopes under audits",
+      "See your finished game assembled from every session below, in the Complete Game section"
     ],
     planSpecs: {
-      vision: "A fresh, config-driven assessment lab combining every concept from the level: obstacle cars appear faster and more often as the score climbs, and everything from the scoreboard to the crash screen works smoothly together, ready to demo in the live defense.",
-      parts: "Parts needed: none new on screen — this lab collects all the game's tunable numbers in one place. Information to track: the starting speed, how quickly difficulty ramps up, and the maximum allowed speed.",
+      vision: "A config-driven finish to the exact game you've been building since Session 4: obstacle speed now scales with score, and everything from the scoreboard to the crash screen works smoothly together, ready to demo in the live defense. Scroll down to the Complete Game section to see your HTML, CSS, and game.js assembled into one build.",
+      parts: "Parts needed: none new on screen — this lab collects all of YOUR game's tunable numbers (TRACK_WIDTH, LANE_WIDTH, your boundary limits, MAX_SPEED, etc. — not a generic list) into one place. Information to track: the starting speed, how quickly difficulty ramps up, and the maximum allowed speed.",
       flow: "Game running -> speed increases based on score * difficultyMultiplier -> clamp speed to CONFIG.maxSpeed"
     },
-    promptGuide: "Write a prompt to complete the game. Store configuration details (starting speed, lanes width, collision offsets) inside a single read-only constant config object. Add logic that increases obstacle speed dynamically as score increases, clamping it to a maximum speed to maintain playable limits.",
+    chainFrom: "l1-s11",
+    promptGuide: "Look back through everything above — you already have TRACK_WIDTH, LANE_WIDTH, your left/right boundary limits, and MAX_SPEED scattered across earlier sessions' code. Ask the AI to gather all of YOUR OWN constants (not a generic template list) into one read-only CONFIG object, then add logic that increases obstacle speed as score climbs, clamped to CONFIG.maxSpeed so it stays playable. Every place in your code that used one of those magic numbers directly should now read from CONFIG instead.",
     codeReviewGuide: [
-      "Are magic values refactored into a configuration constant object?",
+      "Does CONFIG actually contain every constant YOUR game already had, not a fresh generic set?",
       "Does difficulty scaling have upper clamping parameters to prevent unplayable speeds?",
+      "Do the boundary guards and obstacle logic from earlier sessions now read from CONFIG instead of their original hardcoded numbers?",
       "Socratic Question: Why is it bad practice to hardcode layout dimensions directly inside code logic? How does a config object simplify game changes?"
     ],
-    sampleGeneratedHtml: '// game.js — final config and difficulty scaling\nconst CONFIG = {\n  startSpeed: 5,\n  difficultyMultiplier: 0.1,\n  maxSpeed: 15,\n  leftBound: 35,\n  rightBound: 295\n};\n\nfunction updateDifficulty() {\n  let speed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;\n  speed = Math.min(speed, CONFIG.maxSpeed);   // clamp to a playable max\n  return speed;\n}\n\n// boundary guards now read from CONFIG instead of magic numbers\nif (event.key === "ArrowLeft" && carX > CONFIG.leftBound) { carX -= 130; }\nif (event.key === "ArrowRight" && carX < CONFIG.rightBound) { carX += 130; }',
-    testCasesGuide: "- Verify game speeds up dynamically as score climbs\n- Check that speed locks at max speed clamp limits\n- Run full test suite: verify zero regressions exist in inputs, collision math, or resets",
+    sampleGeneratedHtml: '// game.js — final config, gathering YOUR OWN constants from Sessions 4-9\n// (the numbers below are an EXAMPLE — use whatever YOUR earlier sessions actually declared)\nconst CONFIG = {\n  trackWidth: TRACK_WIDTH,\n  laneWidth: LANE_WIDTH,\n  leftBound: LEFT_LIMIT,\n  rightBound: RIGHT_LIMIT,\n  startSpeed: 5,\n  difficultyMultiplier: 0.1,\n  maxSpeed: MAX_SPEED\n};\n\nfunction updateDifficulty() {\n  let currentSpeed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;\n  return Math.min(currentSpeed, CONFIG.maxSpeed);   // clamp to a playable max\n}\n\n// Controller.moveLeft()/moveRight() from Session 8 now read from CONFIG\n// instead of the original LEFT_LIMIT/RIGHT_LIMIT constants directly.',
+    testCasesGuide: "- Verify game speeds up dynamically as score climbs\n- Check that speed locks at your CONFIG.maxSpeed clamp\n- Run the full game end-to-end: verify zero regressions in steering, collision math, lives, or restart\n- Open the Complete Game section below and verify your assembled HTML/CSS/game.js reflects every session's work",
     iterationGuide: "Complete self-reflection journal entries summarizing optimization tweaks, bugs solved, and lessons learned.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">240</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div><div class="obstacle"></div><div id="obstacle-2" class="obstacle"></div><div class="obstacle" style="top:30px;left:120px;"></div></div>',
-    targetOutcomeCaption: "The finished assessment build — obstacle spawning, difficulty scaling, collision detection, and a polished restart flow all work together in one config-driven lab. Ready for your live defense QA review."
+    targetOutcomeCaption: "The finished assessment build — obstacle spawning, difficulty scaling, collision detection, and a polished restart flow all work together, gathered from every session since Session 4. Ready for your live defense QA review."
   },
   "l2-s1": {
     partNum: "Lab 1",
