@@ -561,9 +561,14 @@ app.put('/api/journal/version', authenticateToken, async (req, res) => {
   }
 });
 
-// Admin Route: Read-only view of a specific student's journal entries
-app.get('/api/admin/students/:studentId/journal', authenticateToken, requireTeacher, async (req, res) => {
+// Read-only view of a specific student's journal entries — a teacher (Admin Panel or
+// Student Report) or that student's linked parent (Student Report) may view it.
+app.get('/api/admin/students/:studentId/journal', authenticateToken, async (req, res) => {
   try {
+    const access = await canAccessStudentReport(req.userId, req.params.studentId);
+    if (!access.allowed) {
+      return res.status(403).json({ error: "Forbidden: No access to this student's journal" });
+    }
     const result = await db.query(`
       SELECT je.id as entry_id, je.title, je.date, je.version as latest_version, je.active_version,
              jv.version as version_num, jv.prompt, jv.code

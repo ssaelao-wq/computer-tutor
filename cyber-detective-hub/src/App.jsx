@@ -10568,14 +10568,12 @@ export default function App() {
                       >
                         Attendance
                       </button>
-                      {currentUser.role === 'teacher' && (
-                        <button
-                          className="btn-cyber btn-small btn-cyber-secondary"
-                          onClick={() => handleViewStudentJournal(reportStudent)}
-                        >
-                          View Journal
-                        </button>
-                      )}
+                      <button
+                        className="btn-cyber btn-small btn-cyber-secondary"
+                        onClick={() => handleViewStudentJournal(reportStudent)}
+                      >
+                        View Journal
+                      </button>
                       <button
                         className={`btn-cyber btn-small ${reportSubTab === 'feedback' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => setReportSubTab('feedback')}
