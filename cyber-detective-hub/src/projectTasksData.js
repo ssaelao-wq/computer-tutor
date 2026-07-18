@@ -343,175 +343,214 @@ export const PROJECT_TASKS = {
     testCasesGuide: "- Verify game speeds up dynamically as score climbs\n- Check that speed locks at your CONFIG.maxSpeed clamp\n- Run the full game end-to-end: verify zero regressions in steering, collision math, lives, or restart\n- Open the Complete Game section below and verify your assembled HTML/CSS/game.js reflects every session's work",
     iterationGuide: "Complete self-reflection journal entries summarizing optimization tweaks, bugs solved, and lessons learned.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">240</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div><div class="obstacle"></div><div id="obstacle-2" class="obstacle"></div><div class="obstacle" style="top:30px;left:120px;"></div></div>',
-    targetOutcomeCaption: "The finished assessment build — obstacle spawning, difficulty scaling, collision detection, and a polished restart flow all work together, gathered from every session since Session 4. Ready for your live defense QA review."
+    targetOutcomeCaption: "The finished assessment build — obstacle spawning, difficulty scaling, collision detection, and a polished restart flow all work together, gathered from every session since Session 4. Ready for your live defense QA review.",
+    finalAssembly: {
+      title: "🏁 Your Complete Game — Assembled",
+      description: "Your own HTML, CSS, and game.js, pulled straight from every session's saved Project Journal — this is the actual game you built, session by session. Run it on your own machine to play it; the platform only displays it here for review.",
+      blocks: [
+        { label: "index.html (from Session 2)", sessionId: "l1-s2" },
+        { label: "styles.css (from Session 3)", sessionId: "l1-s3" },
+        { label: "game.js (this session, carrying every session since 4)", sessionId: "l1-s12" }
+      ],
+      chainCheckIds: ["l1-s2", "l1-s3", "l1-s4", "l1-s5", "l1-s6", "l1-s7", "l1-s8", "l1-s9", "l1-s10", "l1-s11"]
+    }
   },
   "l2-s1": {
     partNum: "Lab 1",
     partTitle: "Canvas Arena Initialization",
     objectives: [
-      "Create the base `<canvas id=\"game-canvas\">` element",
+      "Create the base `<canvas id=\"game-canvas\">` element — canvas.js starts here and every session from here extends it",
       "Retrieve its 2D drawing context in `canvas.js`",
-      "Draw the player ship as a filled rectangle at fixed coordinates"
+      "Declare your own canvas size and ship starting values as constants, not the sandbox drill's fixed numbers",
+      "Draw the player ship as a filled rectangle using those constants"
     ],
     planSpecs: {
-      vision: "A dark 480x600 space arena with a single red square ship near the bottom — the first pixels painted directly onto a canvas, not built from HTML boxes.",
-      parts: "Parts needed: the canvas viewport, the 2D drawing context (the 'pen' you draw with), and the ship rectangle. Information to track: canvas size, and the ship's position, size, and color.",
+      vision: "A dark space arena, sized however you like (440-520 wide, 560-640 tall), with a single ship near the bottom in a color and size of your choosing — the first pixels painted directly onto a canvas, not built from HTML boxes.",
+      parts: "Parts needed: the canvas viewport, the 2D drawing context (the 'pen' you draw with), and the ship rectangle. Information to track: your own canvas size, and the ship's position, size, and color as named constants — not hardcoded numbers sprinkled through the file.",
       flow: "Load the canvas element -> get its 2D drawing context -> set the fill color -> fillRect paints the ship's pixels onto the canvas."
     },
-    promptGuide: "Draft an AI prompt asking to create a `<canvas id=\"game-canvas\">` element sized 480x600, retrieve its 2D context in `canvas.js`, and draw a red 40x40 player ship rectangle at coordinates (200, 500) using `fillStyle` and `fillRect`.",
+    chainFrom: null,
+    promptGuide: "This is where canvas.js starts — every session through the final lab extends this exact file, so set it up cleanly. Ask the AI to create a `<canvas id=\"game-canvas\">` element sized to your own choosing (440-520 wide, 560-640 tall), retrieve its 2D context, and declare CANVAS_WIDTH/CANVAS_HEIGHT constants plus a `ship` starting position/size/color of your choosing (not necessarily the drill's 200/500/40/red) — then draw it with `fillStyle`/`fillRect` using those constants, not raw numbers.",
     codeReviewGuide: [
       "Does the script call `canvas.getContext('2d')` before any draw commands?",
       "Is `fillStyle` set before `fillRect` is called?",
+      "Does the draw call use your own named constants (CANVAS_WIDTH, ship.x, etc.) instead of hardcoded numbers?",
       "Socratic Question: Why does the ship look like a solid trail instead of a single moving square if `ctx.clearRect()` is missing from the draw loop?"
     ],
-    testCasesGuide: "- Verify `#game-canvas` exists with width 480 and height 600\n- Verify `ctx` is a valid 2D rendering context\n- Verify the player ship renders as a 40x40 red square at (200, 500)",
+    sampleGeneratedHtml: '// canvas.js — arena + ship, using YOUR OWN constants (example values below)\nconst CANVAS_WIDTH = 480;\nconst CANVAS_HEIGHT = 600;\nconst canvas = document.getElementById("game-canvas");\ncanvas.width = CANVAS_WIDTH;\ncanvas.height = CANVAS_HEIGHT;\nconst ctx = canvas.getContext("2d");\n\nconst ship = { x: 220, y: 550, width: 36, height: 36, color: "orange" };\n\nctx.fillStyle = ship.color;\nctx.fillRect(ship.x, ship.y, ship.width, ship.height);',
+    testCasesGuide: "- Verify `#game-canvas` exists and matches your own chosen width/height constants\n- Verify `ctx` is a valid 2D rendering context\n- Verify the player ship renders at your own chosen position, size, and color — not assumed to be exactly 200/500/40/red",
     iterationGuide: "Confirm `clearRect()` runs before every redraw once the game loop is introduced in Session 2's lab, so shapes don't leave trails.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><div style="position:absolute;bottom:4px;left:46%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "First render — a red 40x40 ship painted at (200, 500) on a 480x600 canvas. Unlike Level 1's DOM game, everything here is drawn as pixels with no elements to inspect or select."
+    targetOutcomeCaption: "First render — your own ship, painted at your own chosen position/size/color on your own sized canvas. Unlike Level 1's DOM game, everything here is drawn as pixels with no elements to inspect or select. Session 2 opens this exact file, not a fresh one."
   },
   "l2-s2": {
     partNum: "Lab 2",
     partTitle: "Sprite Object Modeling",
     objectives: [
-      "Declare the `ship` sprite as a single object literal",
-      "Store position, dimensions, and speed as object properties",
+      "Extend last session's canvas.js — reshape the ship variable, don't restart the file",
+      "Turn your ship into a single object literal (it may already be one from Session 1)",
+      "Add a `speed` property the drill treats as separate but your file should own as one object",
       "Update object properties in response to keyboard movement"
     ],
     planSpecs: {
-      vision: "The same ship, but now the arrow keys slide it left and right — each move erases the last frame and repaints it in the new spot.",
-      parts: "Parts needed: one `ship` object bundling its x, y, width, height, and speed. Information to track: the ship's current position and how far it steps per key press.",
+      vision: "The same ship from Session 1, but now the arrow keys slide it left and right within YOUR OWN canvas bounds — each move erases the last frame and repaints it in the new spot.",
+      parts: "Parts needed: your existing `ship` object, now with a `speed` property added if it doesn't have one. Information to track: the ship's current position and how far it steps per key press.",
       flow: "Arrow key pressed -> add or subtract ship.speed from ship.x -> clear the canvas -> redraw the ship at its new position."
     },
-    promptGuide: "Write a prompt asking to declare a `ship` object literal with `x`, `y`, `width`, `height`, and `speed` properties, then write a `moveLeft()` function that subtracts `ship.speed` from `ship.x`, clears the canvas, and redraws the ship.",
+    chainFrom: "l2-s1",
+    promptGuide: "Your ship object from Session 1 already has x, y, width, height, and color — ask the AI to add a `speed` property to that same object (don't redeclare it from scratch), then write a `moveLeft()` function that subtracts `ship.speed` from `ship.x`, clears YOUR canvas using your own CANVAS_WIDTH/CANVAS_HEIGHT, and redraws the ship.",
     codeReviewGuide: [
-      "Is `ship` declared as a single object literal rather than five separate loose variables?",
+      "Is `speed` added to your EXISTING ship object, not a brand-new separate ship declaration?",
       "Does `moveLeft()` reference `ship.speed` instead of a hardcoded number?",
+      "Does the clearRect call use your own CANVAS_WIDTH/CANVAS_HEIGHT constants from Session 1?",
       "Socratic Question: If a local variable inside the move handler is also named `ship`, which one does the assignment update — and why does the canvas ship stop moving?"
     ],
-    testCasesGuide: "- Verify `ship` object has exactly 5 properties (x, y, width, height, speed)\n- Press ArrowLeft: verify `ship.x` decreases by exactly `ship.speed`\n- Verify canvas re-renders the ship at the new x position",
+    sampleGeneratedHtml: '// canvas.js — ship gains a speed property, on top of Session 1\'s draw code\nship.speed = 6;   // added to the SAME object declared in Session 1\n\nfunction moveLeft() {\n  ship.x -= ship.speed;\n  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);\n  ctx.fillStyle = ship.color;\n  ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n}',
+    testCasesGuide: "- Verify `speed` was added to your existing ship object, not a second ship variable\n- Press ArrowLeft: verify `ship.x` decreases by exactly `ship.speed`\n- Verify canvas re-renders the ship at the new x position using your own canvas size",
     iterationGuide: "Check for variable shadowing bugs if the AI reintroduces a local `ship` inside any handler function.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><div style="position:absolute;bottom:4px;left:28%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "The ship is now an object literal with a speed property and steers with the arrow keys — shown here after pressing ArrowLeft. Session 1's lab had only a static, hardcoded rectangle."
+    targetOutcomeCaption: "Your ship now steers with the arrow keys — shown here after pressing ArrowLeft. Still Session 1's file, still growing."
   },
   "l2-s3": {
     partNum: "Lab 3",
     partTitle: "Laser Battery Arrays",
     objectives: [
+      "Add a self-contained new feature on top of last session's steering — don't touch it",
       "Declare an empty `lasers` array",
-      "Push new laser objects onto the array when firing",
+      "Push new laser objects onto the array when firing, sized/colored to your own choosing",
       "Loop through the array to render every active laser"
     ],
     planSpecs: {
-      vision: "Pressing spacebar fires yellow laser bolts from the ship's nose, and several can be in flight on screen at once.",
+      vision: "Pressing spacebar fires laser bolts (your own color choice) from the ship's nose, and several can be in flight on screen at once.",
       parts: "Parts needed: a growing list (array) of laser objects. Information to track: each laser's position and speed, and how many lasers are currently active.",
       flow: "Spacebar pressed -> fireLaser() creates a laser object and pushes it into the lasers array -> the render loop draws every laser currently in the array."
     },
-    promptGuide: "Draft a prompt asking to declare an empty `lasers` array, write a `fireLaser()` function that pushes a new laser object (positioned at the ship's x + 18, moving at speed 8) onto the array when spacebar is pressed, and a loop that draws every laser in the array.",
+    chainFrom: "l2-s2",
+    promptGuide: "Add this as a new block below your steering code — it doesn't touch moveLeft/moveRight. Ask the AI to declare an empty `lasers` array, write a `fireLaser()` function that pushes a new laser object (positioned relative to YOUR ship's own width — e.g. ship.x + ship.width/2, not a hardcoded +18) at a speed of your choosing when spacebar is pressed, and a loop that draws every laser in the array in a color you pick.",
     codeReviewGuide: [
       "Is `lasers` initialized as an empty array before any pushes occur?",
       "Does `fireLaser()` push a full object literal (not just a coordinate number)?",
+      "Does the laser's starting x derive from YOUR ship's own width/position, not a copied +18?",
       "Socratic Question: If the keydown listener isn't distinguishing held keys from repeated presses, why does the laser cannon stutter instead of firing smoothly?"
     ],
-    testCasesGuide: "- Press spacebar once: verify `lasers.length` increases by exactly 1\n- Verify each pushed laser object has x, y, width, height, and speed properties\n- Verify the render loop draws one rectangle per array element",
+    sampleGeneratedHtml: '// canvas.js — laser battery, added below the steering code\nconst lasers = [];\n\nfunction fireLaser() {\n  lasers.push({\n    x: ship.x + ship.width / 2,   // centered on YOUR ship\'s own width\n    y: ship.y,\n    width: 3,\n    height: 12,\n    speed: 9\n  });\n}\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === " ") {\n    fireLaser();\n  }\n});\n\n// inside the render loop, alongside the ship draw:\nctx.fillStyle = "cyan";\nfor (let i = 0; i < lasers.length; i++) {\n  ctx.fillRect(lasers[i].x, lasers[i].y, lasers[i].width, lasers[i].height);\n}',
+    testCasesGuide: "- Press spacebar once: verify `lasers.length` increases by exactly 1\n- Verify each pushed laser object has x, y, width, height, and speed properties\n- Verify the render loop draws one rectangle per array element, without breaking existing ship steering",
     iterationGuide: "Confirm rapid-fire spacebar presses don't push duplicate lasers per single press (debounce key-repeat if needed).",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><div style="position:absolute;bottom:4px;left:28%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div><div style="position:absolute;top:14px;left:30%;width:2px;height:7px;background:#ffee55;"></div><div style="position:absolute;top:32px;left:31%;width:2px;height:7px;background:#ffee55;"></div><div style="position:absolute;top:50px;left:29%;width:2px;height:7px;background:#ffee55;"></div></div>',
-    targetOutcomeCaption: "Spacebar now pushes laser objects onto the `lasers` array — three mid-flight bolts are shown here. Session 2's lab had an empty sky."
+    targetOutcomeCaption: "Spacebar now pushes laser objects onto the `lasers` array — three mid-flight bolts are shown here, on top of your still-working steering from Session 2."
   },
   "l2-s4": {
     partNum: "Lab 4",
     partTitle: "Laser Motion & Garbage Collection",
     objectives: [
+      "Make last session's static lasers actually move — extend fireLaser's array, don't rebuild it",
       "Move every laser's `y` coordinate each frame",
-      "Detect lasers that cross off-screen bounds",
+      "Detect lasers that cross off-screen bounds, using YOUR canvas height",
       "Prune dead lasers from the array using a reverse loop and `splice()`"
     ],
     planSpecs: {
-      vision: "Lasers now fly upward every frame and vanish cleanly once they pass the top edge, instead of piling up invisibly forever.",
-      parts: "Parts needed: a per-frame cleanup pass over the lasers array. Information to track: each laser's y position, the off-screen boundary (y < 0), and the array's current length.",
+      vision: "Lasers now fly upward every frame and vanish cleanly once they pass the top edge of YOUR OWN canvas, instead of piling up invisibly forever.",
+      parts: "Parts needed: a per-frame cleanup pass over the lasers array you already built. Information to track: each laser's y position, the off-screen boundary (y < 0), and the array's current length.",
       flow: "Every frame -> loop backward over the lasers array -> move each laser up (y -= speed) -> if a laser's y < 0, splice it out of the array."
     },
-    promptGuide: "Write a prompt asking to update every laser's `y` coordinate by subtracting its `speed`, then remove any laser whose `y` drops below 0 using `splice()`, iterating the array in reverse order.",
+    chainFrom: "l2-s3",
+    promptGuide: "Your `lasers` array from Session 3 exists but nothing moves the entries yet — ask the AI to add that motion, not rebuild the array. Update every laser's `y` coordinate by subtracting its own `speed`, then remove any laser whose `y` drops below 0 using `splice()`, iterating the array in reverse order so the removal is safe mid-loop.",
     codeReviewGuide: [
       "Does the loop iterate from `lasers.length - 1` down to `0` (reverse), not forward?",
       "Is `splice(i, 1)` called only after the off-screen check, not unconditionally?",
+      "Does this reuse your existing `lasers` array from Session 3 rather than declaring a new one?",
       "Socratic Question: If this loop iterated forward instead, why would some off-screen lasers survive the cleanup after a splice shifts the array?"
     ],
+    sampleGeneratedHtml: '// canvas.js — laser motion + cleanup, added to Session 3\'s battery\nfunction updateLasers() {\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    lasers[i].y -= lasers[i].speed;\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);\n    }\n  }\n}',
     testCasesGuide: "- Fire 3 lasers, let them travel off-screen: verify `lasers.length` returns to 0\n- Fire lasers simultaneously exiting on the same frame: verify all are removed, not just every other one\n- Verify on-screen lasers are unaffected by the cleanup pass",
     iterationGuide: "Stress-test with 50+ simultaneous lasers to confirm the reverse-loop cleanup has zero skipped entries.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><span style="position:absolute;top:2px;left:4px;font-size:0.5rem;color:#00ffcc;">LASERS: 1</span><div style="position:absolute;bottom:4px;left:28%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div><div style="position:absolute;top:10px;left:30%;width:2px;height:7px;background:#ffee55;"></div></div>',
-    targetOutcomeCaption: "Lasers now move every frame and get spliced from the array once they scroll off-screen — the count returns to 0 instead of leaking memory. Session 3's lasers were drawn but never moved or cleaned up."
+    targetOutcomeCaption: "Lasers now move every frame and get spliced from the array once they scroll off YOUR canvas — the count returns to 0 instead of leaking memory."
   },
   "l2-s5": {
     partNum: "Lab 5",
     partTitle: "Alien Swarm Grids & Shield Index Mapping",
     objectives: [
-      "Build a 2D grid of alien objects using nested loops and march the whole swarm in sync",
-      "Reverse direction and drop the grid down when any alien reaches an edge",
-      "Map absolute pixel coordinates to a shield's row/col cell index"
+      "Add the swarm and shield as new features — steering and lasers from Sessions 2-4 keep working untouched",
+      "Build a 2D grid of alien objects (your own row/column count) using nested loops and march the whole swarm in sync",
+      "Reverse direction and drop the grid down when any alien reaches YOUR canvas edge",
+      "Map absolute pixel coordinates to a shield's row/col cell index, using your own shield size"
     ],
     planSpecs: {
-      vision: "A 3-row by 5-column grid of green aliens marches side-to-side, dropping down and reversing at screen edges; a separate teal shield row shows one cell already knocked out by a mapped laser hit.",
+      vision: "A grid of aliens (your own choice of rows/columns, 3-4 rows by 4-6 columns) marches side-to-side across YOUR canvas, dropping down and reversing at its edges; a separate shield row (your own cell count and color) shows cells that get knocked out by mapped laser hits.",
       parts: "Parts needed: a rows-and-columns grid of alien objects, plus a shield modeled as a row of cells (1 = intact, 0 = destroyed). Information to track: each alien's x/y and alive flag, the swarm's shared marching direction, each shield cell's state, and the shield's pixel offset.",
-      flow: "Every tick -> moveSwarm() shifts every alien's x by the current direction -> if any alien reaches a screen edge, flip direction and drop every alien's y. Separately: a laser reaches shield height -> col = floor((laser.x - shieldOffset) / cellWidth) -> if that cell is 1, set it to 0."
+      flow: "Every tick -> moveSwarm() shifts every alien's x by the current direction -> if any alien reaches YOUR canvas edge, flip direction and drop every alien's y. Separately: a laser reaches shield height -> col = floor((laser.x - shieldOffset) / cellWidth) -> if that cell is 1, set it to 0."
     },
-    promptGuide: "Draft a prompt asking to (1) build a 3-row by 5-column grid of alien objects (each with x, y, alive) with a `moveSwarm()` function that reverses direction and drops the grid at screen edges, and (2) represent a shield as an array of 5 cells and write a `checkShieldCollision(laser)` function that computes which cell index a laser hit and destroys that cell.",
+    chainFrom: "l2-s4",
+    referenceSessions: [{ id: "l2-s1", label: "Your own CANVAS_WIDTH/CANVAS_HEIGHT from Session 1 — the swarm's edge-bounce needs these, not fixed numbers" }],
+    promptGuide: "This is a new block, separate from your steering/laser code above — don't modify those. Ask the AI to (1) build a grid of alien objects (pick your own row/column count) with a `moveSwarm()` function that reverses direction and drops the grid when it hits YOUR OWN CANVAS_WIDTH edge (not a hardcoded 440), and (2) represent a shield as an array of cells (your own count) and write a `checkShieldCollision(laser)` function that computes which cell a laser hit using your own shield's pixel offset and cell width.",
     codeReviewGuide: [
       "Is the alien grid built with nested `for` loops producing `aliens[row][col]` objects, checking edges across the WHOLE grid before reversing?",
+      "Does the edge check use YOUR CANVAS_WIDTH constant, not a copied 440?",
       "Does the shield's column-index formula subtract the shield's starting x offset before dividing by `cellWidth`?",
       "Socratic Question: If the boundary check is removed, why does the whole swarm slide off-screen instead of bouncing back? If the index formula skips the offset subtraction, why do lasers appear to pass straight through the shield?"
     ],
-    testCasesGuide: "- Verify `aliens.length` is 3 and `aliens[0].length` is 5, and the swarm reverses/drops exactly when an edge alien crosses the boundary\n- Fire a laser at a known x coordinate: verify the correct shield cell index is computed and destroyed\n- Fire at an already-destroyed cell: verify no further effect",
+    sampleGeneratedHtml: '// canvas.js — alien swarm + shield, added below steering/lasers\n// ROWS/COLS/shield count below are an EXAMPLE — use your own\nconst ROWS = 3, COLS = 5;\nlet direction = 1;\nconst aliens = [];\nfor (let r = 0; r < ROWS; r++) {\n  aliens.push([]);\n  for (let c = 0; c < COLS; c++) {\n    aliens[r].push({ x: c * 60 + 50, y: r * 50 + 40, alive: true });\n  }\n}\n\nfunction moveSwarm() {\n  let hitEdge = false;\n  for (let r = 0; r < aliens.length; r++) {\n    for (let c = 0; c < aliens[r].length; c++) {\n      aliens[r][c].x += 2 * direction;\n      if (aliens[r][c].x > CANVAS_WIDTH - 40 || aliens[r][c].x < 10) hitEdge = true;\n    }\n  }\n  if (hitEdge) {\n    direction *= -1;\n    for (let r = 0; r < aliens.length; r++) {\n      for (let c = 0; c < aliens[r].length; c++) { aliens[r][c].y += 20; }\n    }\n  }\n}\n\nconst SHIELD_OFFSET = 100, SHIELD_CELL_WIDTH = 20;\nconst shield = [1, 1, 1, 1, 1];   // your own count\n\nfunction checkShieldCollision(laser) {\n  const col = Math.floor((laser.x - SHIELD_OFFSET) / SHIELD_CELL_WIDTH);\n  if (col >= 0 && col < shield.length && shield[col] === 1) {\n    shield[col] = 0;\n    return true;\n  }\n  return false;\n}',
+    testCasesGuide: "- Verify `aliens.length` and `aliens[0].length` match your own chosen grid size, and the swarm reverses/drops exactly when an edge alien crosses YOUR canvas boundary\n- Fire a laser at a known x coordinate: verify the correct shield cell index is computed and destroyed\n- Fire at an already-destroyed cell: verify no further effect",
     iterationGuide: "Confirm the swarm's edge check accounts for alien width (not just its left-edge x), and double-check the shield's column formula against its actual pixel offset.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><div style="position:absolute;bottom:20px;left:60px;width:10px;height:6px;background:#00f2fe;"></div><div style="position:absolute;bottom:20px;left:72px;width:10px;height:6px;background:#00f2fe;"></div><div style="position:absolute;bottom:20px;left:96px;width:10px;height:6px;background:#00f2fe;"></div><div style="position:absolute;bottom:20px;left:108px;width:10px;height:6px;background:#00f2fe;"></div><div style="position:absolute;top:12px;left:22px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:36px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:64px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:78px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:22px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:36px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:64px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:78px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:22px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:36px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:64px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:78px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;bottom:4px;left:46%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "A standalone lab: a marching 3x5 alien swarm above a shield row with one cell already knocked out by a mapped laser hit."
+    targetOutcomeCaption: "A marching alien swarm above a shield row with one cell already knocked out by a mapped laser hit — added on top of your still-working steering and lasers from Sessions 2-4."
   },
   "l2-s6": {
     partNum: "Lab 6",
     partTitle: "Keyboard Input Matrix & Collision Sweeper",
     objectives: [
+      "Replace the single-key steering from Session 2 with a proper input matrix — don't lose the boundary logic",
       "Track simultaneous key states using a `keysPressed` map object with paired `keydown`/`keyup` listeners",
-      "Sweep every laser against every alien in the grid with correct splice/break behavior",
-      "Reason about sweep cost and why the inner loop must break after a hit"
+      "Sweep every laser against your own alien grid from Session 5 with correct splice/break behavior",
+      "Add a score variable the drill never declares explicitly, and increment it on kills"
     ],
     planSpecs: {
-      vision: "Controls feel arcade-smooth — the player can steer and fire at the same time — and lasers now destroy exactly one alien each on contact, with the score climbing accordingly.",
-      parts: "Parts needed: a key-state map remembering held keys, plus a nested collision sweep comparing every laser against every living alien. Information to track: true/false per key, a firing cooldown timer, the running score, and each alien's alive/dead status.",
-      flow: "keydown sets a key's entry true -> keyup sets it false -> every frame, handleInputs() reads the map. Separately: loop backward over lasers -> for each laser, loop over the alien grid -> on overlap, mark the alien dead, splice the laser, add to score, and break."
+      vision: "Controls feel arcade-smooth — the player can steer and fire at the same time — and lasers now destroy exactly one alien each on contact from YOUR OWN grid, with a score you now track climbing accordingly.",
+      parts: "Parts needed: a key-state map remembering held keys, plus a nested collision sweep comparing every laser against every living alien in your grid. Information to track: true/false per key, a firing cooldown timer, a running `score` variable, and each alien's alive/dead status.",
+      flow: "keydown sets a key's entry true -> keyup sets it false -> every frame, handleInputs() reads the map. Separately: loop backward over lasers -> for each laser, loop over your alien grid -> on overlap, mark the alien dead, splice the laser, add to score, and break."
     },
-    promptGuide: "Write a prompt asking to (1) declare a `keysPressed` object with `keydown`/`keyup` listeners toggling each key's state, read every game-loop tick by `handleInputs()`, and (2) sweep every laser against every alien in the grid, marking `alive = false` and splicing the laser plus adding 50 to score on overlap, with a `break` after each hit.",
+    chainFrom: "l2-s5",
+    promptGuide: "Your single keydown listener from Session 2 works but can't hold two keys at once — ask the AI to replace it with a `keysPressed` map: both `keydown`/`keyup` listeners toggling each key's state, read every game-loop tick by `handleInputs()` (which should still respect your existing boundary limits). Separately, declare a `score` variable (not in the drill's exercise, your game needs it) starting at 0, and sweep every laser against YOUR OWN alien grid from Session 5, marking `alive = false`, splicing the laser, and adding to score on overlap, with a `break` after each hit.",
     codeReviewGuide: [
       "Are both `keydown` AND `keyup` listeners bound, and does `handleInputs()` run every frame rather than only inside the event handler?",
       "Does the outer laser loop iterate in reverse, with a `break` immediately after a hit is resolved?",
+      "Does the sweep actually reference YOUR OWN grid dimensions from Session 5, not an assumed 3x5?",
       "Socratic Question: If the `keyup` listener is missing, why does the ship keep firing forever after the player releases spacebar? If `break` is missing, why could one laser wipe out three aliens in one frame?"
     ],
-    testCasesGuide: "- Hold ArrowLeft and ArrowRight simultaneously: verify movement and firing can happen in the same frame\n- Fire one laser through a single alien: verify exactly one alien dies and score increases by exactly 50\n- Fire into a dense cluster: verify each laser destroys at most one alien",
+    sampleGeneratedHtml: '// canvas.js — input matrix + collision sweep, replacing Session 2\'s single-key listener\nlet score = 0;   // not in the sandbox drill\nconst keysPressed = {};\n\nwindow.addEventListener("keydown", (e) => { keysPressed[e.key] = true; });\nwindow.addEventListener("keyup", (e) => { keysPressed[e.key] = false; });\n\nfunction handleInputs() {\n  if (keysPressed["ArrowLeft"]) { ship.x -= ship.speed; }\n  if (keysPressed["ArrowRight"]) { ship.x += ship.speed; }\n  if (keysPressed[" "]) { fireLaser(); }\n}\n\nfunction checkSwarmCollisions() {\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    for (let r = 0; r < aliens.length; r++) {\n      for (let c = 0; c < aliens[r].length; c++) {\n        const a = aliens[r][c];\n        if (a.alive && lasers[i].x < a.x + 30 && lasers[i].x + lasers[i].width > a.x) {\n          a.alive = false;\n          lasers.splice(i, 1);\n          score += 50;\n          break;\n        }\n      }\n    }\n  }\n}',
+    testCasesGuide: "- Hold ArrowLeft and ArrowRight simultaneously: verify movement and firing can happen in the same frame\n- Fire one laser through a single alien: verify exactly one alien dies and score increases\n- Fire into a dense cluster: verify each laser destroys at most one alien",
     iterationGuide: "Add a cooldown timestamp check inside `handleInputs()` so holding spacebar doesn't fire on every frame, and profile the nested sweep's cost as the alien grid grows.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><span style="position:absolute;top:2px;right:4px;font-size:0.5rem;color:#00ffcc;">SCORE: 150</span><div style="position:absolute;bottom:4px;left:30%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div><div style="position:absolute;bottom:40px;left:33%;width:2px;height:7px;background:#ffee55;"></div><div style="position:absolute;top:12px;left:22px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:36px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:64px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:12px;left:78px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:36px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:64px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:23px;left:78px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:22px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:36px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:34px;left:64px;width:9px;height:7px;background:#39ff88;"></div></div>',
-    targetOutcomeCaption: "A standalone lab: three aliens destroyed cleanly by the collision sweep (score 150), steering and firing controlled through the keysPressed matrix."
+    targetOutcomeCaption: "Aliens destroyed cleanly by the collision sweep, score climbing, steering and firing now controlled through the keysPressed matrix — still your Session 1 file."
   },
   "l2-s7": {
     partNum: "Lab 7",
     partTitle: "Wave States, HUD Gauges & Memory Audit",
     objectives: [
-      "Detect when a wave's alien grid is cleared and spawn a harder swarm exactly once per clear",
-      "Render score, wave number, and a health bar in a canvas HUD",
+      "Wire wave/HUD logic into the score and grid you already have — don't restart either",
+      "Detect when your wave's alien grid is cleared and spawn a harder swarm exactly once per clear",
+      "Render score, wave number, and a health bar (a new variable, not in the drill) in a canvas HUD",
       "Cache array lengths and skip dead sprites early, confirming frame-rate stability under load"
     ],
     planSpecs: {
-      vision: "Clearing every alien spawns a faster new wave; a HUD shows score, wave number, and a shrinking health bar; and the loops now hold a steady 60 FPS through a stress test with hundreds of lasers.",
-      parts: "Parts needed: a wave counter, a health value, a HUD-drawing routine, and cached-length/early-exit optimizations in the update loops. Information to track: current wave, health (0-100), how many aliens are alive, cached array lengths, and a before/after FPS measurement.",
+      vision: "Clearing every alien in YOUR grid spawns a faster new wave; a HUD shows your existing score, a wave number, and a shrinking health bar; and the loops now hold a steady 60 FPS through a stress test with hundreds of lasers.",
+      parts: "Parts needed: a wave counter, a health value (not yet tracked anywhere in your file), a HUD-drawing routine, and cached-length/early-exit optimizations in the update loops. Information to track: current wave, health (0-100), how many aliens are alive, cached array lengths, and a before/after FPS measurement.",
       flow: "Each tick -> count living aliens -> if none remain, increment wave and spawn one fresh swarm -> drawHUD() paints score/wave text plus a health bar. Separately: snapshot array lengths once per loop instead of re-reading `.length`, and skip dead/off-screen sprites immediately."
     },
-    promptGuide: "Draft a prompt asking to (1) write a `checkWaveCompletion()` function that counts alive aliens and — only at exactly zero — increments `wave` and calls `spawnSwarm(wave)` once, plus a `drawHUD()` rendering score/wave/health, and (2) refactor the alien-sweep loop so array lengths are cached before looping and dead aliens are skipped before further work.",
+    chainFrom: "l2-s6",
+    promptGuide: "Build on your existing `score` and alien grid from Sessions 5-6, don't redeclare them. Ask the AI to (1) write a `checkWaveCompletion()` function that counts alive aliens in YOUR grid and — only at exactly zero — increments a new `wave` variable and calls `spawnSwarm(wave)` once, plus a `drawHUD()` rendering your existing score, the wave number, and a new `health` variable (starting at 100, not previously tracked) as a bar, and (2) refactor your collision sweep so array lengths are cached before looping and dead aliens are skipped before further work.",
     codeReviewGuide: [
       "Does `checkWaveCompletion()` guard against calling `spawnSwarm()` more than once per clear?",
       "Are `aliens.length` and each row's `.length` cached into variables before the loop starts?",
+      "Does drawHUD() display YOUR existing score variable, not a newly-declared duplicate?",
       "Socratic Question: If the wave-clear check has no 'already spawned' guard, why does the screen flood with duplicate wave titles? If dead lasers are never pruned, why does the frame rate degrade the longer the player plays?"
     ],
-    testCasesGuide: "- Destroy every alien in a wave: verify `wave` increments exactly once and a new swarm spawns\n- Verify the health bar visually shrinks as `health` decreases\n- Run a 500-laser stress test: verify the frame rate stays stable rather than degrading",
+    sampleGeneratedHtml: '// canvas.js — wave/HUD system, reading YOUR existing score and grid\nlet wave = 1;\nlet health = 100;\n\nfunction checkWaveCompletion() {\n  let aliveCount = 0;\n  for (let r = 0; r < aliens.length; r++) {\n    for (let c = 0; c < aliens[r].length; c++) {\n      if (aliens[r][c].alive) aliveCount++;\n    }\n  }\n  if (aliveCount === 0) {\n    wave++;\n    spawnSwarm(wave);\n  }\n}\n\nfunction drawHUD() {\n  ctx.fillStyle = "white";\n  ctx.fillText("Score: " + score, 10, 20);   // YOUR existing score variable\n  ctx.fillText("Wave: " + wave, 10, 35);\n  ctx.fillStyle = "red";\n  ctx.fillRect(10, 45, 100, 10);\n  ctx.fillStyle = "green";\n  ctx.fillRect(10, 45, health, 10);\n}',
+    testCasesGuide: "- Destroy every alien in a wave: verify `wave` increments exactly once and a new swarm spawns\n- Verify the health bar visually shrinks as `health` decreases, and score shown matches your existing score variable\n- Run a stress test with many lasers/aliens: verify the frame rate stays stable rather than degrading",
     iterationGuide: "Add a boolean 'wave transition in progress' flag, and record a baseline FPS before/after the optimization pass to make the improvement concrete.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><span style="position:absolute;top:2px;left:4px;font-size:0.5rem;color:#00ffcc;">SCORE: 400</span><span style="position:absolute;top:9px;left:4px;font-size:0.5rem;color:#00ffcc;">WAVE: 2</span><div style="position:absolute;top:2px;right:4px;width:30px;height:4px;background:#ff4444;"></div><div style="position:absolute;top:2px;right:4px;width:22px;height:4px;background:#39ff88;"></div><span style="position:absolute;bottom:4px;left:4px;font-size:0.5rem;color:#ffee55;">60 FPS</span><div style="position:absolute;top:16px;left:10px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:16px;left:30px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:16px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:16px;left:70px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:16px;left:90px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:28px;left:10px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:28px;left:30px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:28px;left:50px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;bottom:4px;left:46%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "A standalone lab: Wave 2 just spawned with a live HUD (score/wave/health), and the loop holds 60 FPS under a stress test."
+    targetOutcomeCaption: "Wave 2 just spawned with a live HUD (score/wave/health), and the loop holds 60 FPS under a stress test — the same canvas.js file since Session 1."
   },
   "l2-s8": {
     partNum: "Lab 8",
@@ -526,13 +565,13 @@ export const PROJECT_TASKS = {
       parts: "Parts needed: the DevTools Network tab, open against any real site (or the platform itself). Information to track: the request's URL (protocol/host/path/query), its method, its status code, and the shape of its JSON response.",
       flow: "Open DevTools -> filter to XHR/Fetch -> trigger an action on the page -> click the resulting request row -> read the Headers tab for method/status and the Preview/Response tab for the JSON payload."
     },
-    promptGuide: "This lab is a comprehension exercise, not code generation: draft a prompt asking the AI for a plain-English, 8-step walkthrough of what happens between typing a URL and seeing a page — then audit the answer against what you actually observed in the Network tab.",
+    promptGuide: "This lab is a comprehension exercise, not code generation: draft a prompt asking the AI for a plain-English, 8-step walkthrough of what happens between typing a URL and seeing a page — using a real site or endpoint of your own choosing, not a generic example — then audit the answer against what you actually observed in the Network tab.",
     codeReviewGuide: [
       "Does the documented pair name all four fields: URL, method, status code, and payload shape?",
-      "Is the captured request an actual API call (XHR/Fetch row), not just the page's own document request?",
+      "Is the captured request an actual API call (XHR/Fetch row) from a site YOU picked, not just the page's own document request?",
       "Socratic Question: The server answered 404 — did the network fail, or did it succeed and say no? What's the difference between 'no connection' and 'connected, but the server refused'?"
     ],
-    testCasesGuide: "- Capture one GET request: verify all four fields (URL, method, status, payload shape) are recorded accurately\n- Deliberately request a misspelled path: verify you can distinguish the resulting 404 from a true offline/network failure\n- Verify the payload sketch correctly identifies whether the response is a JSON array or a single object",
+    testCasesGuide: "- Capture one GET request from a real site of your choosing: verify all four fields (URL, method, status, payload shape) are recorded accurately\n- Deliberately request a misspelled path: verify you can distinguish the resulting 404 from a true offline/network failure\n- Verify the payload sketch correctly identifies whether the response is a JSON array or a single object",
     iterationGuide: "Note one thing you'd want to inspect next time (e.g. what a POST body looks like on a real login form) — this sets up Session 10's POST work.",
     sampleGeneratedHtml: 'GET https://api.marsdefense.dev/scores?limit=5\nStatus: 200 OK\nResponse: [{ "player": "cdt_arya", "score": 4200 }, { "player": "cdt_ben", "score": 3900 }]'
   },
@@ -540,121 +579,146 @@ export const PROJECT_TASKS = {
     partNum: "Lab 9",
     partTitle: "Async Leaderboard Fetch (GET)",
     objectives: [
+      "Add a fetch function to your canvas.js from Session 7 — Session 8 was comprehension-only, no code to extend there",
       "Write an `async` function that fetches remote leaderboard data",
       "Await both the network request and its JSON parsing",
       "Handle fetch failures with try/catch instead of crashing"
     ],
     planSpecs: {
-      vision: "A small TOP SCORES panel shows real player records fetched from a server, and the game never freezes while that data loads.",
+      vision: "A small TOP SCORES panel shows real player records fetched from a server, drawn into YOUR OWN HUD area from Session 7, and the game never freezes while that data loads.",
       parts: "Parts needed: an async fetch function. Information to track: the leaderboard endpoint URL, the raw network response, and the parsed list of scores.",
       flow: "fetchLeaderboard() runs -> await fetch(url) -> await response.json() to parse it -> display the resulting list (a catch block logs a friendly error if the request fails)."
     },
-    promptGuide: "Write a prompt asking for an `async function fetchLeaderboard()` that awaits a `fetch()` call to a leaderboard endpoint, awaits parsing the JSON response, logs the result, and wraps both awaits in a try/catch that logs a friendly error on failure.",
+    chainFrom: "l2-s7",
+    promptGuide: "This picks up from Session 7's file (Session 8 had no code of its own to carry forward). Ask the AI for an `async function fetchLeaderboard()` that awaits a `fetch()` call to a leaderboard endpoint, awaits parsing the JSON response, and stores the result somewhere your existing `drawHUD()` from Session 7 can read it — wrap both awaits in a try/catch that logs a friendly error on failure.",
     codeReviewGuide: [
       "Is the function declared with the `async` keyword before it uses any `await`?",
       "Are both the `fetch()` call and the `.json()` parse individually awaited?",
+      "Does the fetched data actually connect to your existing HUD/score display from Session 7, not a disconnected new panel?",
       "Socratic Question: If the `await` before `res.json()` is deleted, why does the console print `Promise { <pending> }` instead of the actual score data?"
     ],
-    testCasesGuide: "- Call `fetchLeaderboard()` against a working endpoint: verify it returns a parsed array of score objects\n- Point it at a broken URL: verify the catch block logs an error instead of throwing an uncaught exception\n- Verify the function does not block or freeze the rest of the game loop while waiting",
+    sampleGeneratedHtml: '// canvas.js — async leaderboard fetch, feeding your Session 7 HUD\nlet leaderboard = [];\n\nasync function fetchLeaderboard() {\n  try {\n    const res = await fetch("/api/leaderboard");\n    leaderboard = await res.json();\n    console.log("Loaded leaderboard:", leaderboard);\n  } catch (err) {\n    console.error("Leaderboard fetch failed:", err.message);\n  }\n}\n\nfetchLeaderboard();',
+    testCasesGuide: "- Call `fetchLeaderboard()` against a working endpoint: verify it returns a parsed array of score objects\n- Point it at a broken URL: verify the catch block logs an error instead of throwing an uncaught exception\n- Verify the function does not block or freeze the rest of your game loop while waiting",
     iterationGuide: "If real network calls are too slow for classroom pacing, mock the fetch with a short artificial delay to make the async behavior visible without a slow endpoint.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><span style="position:absolute;top:2px;left:4px;font-size:0.5rem;color:#00ffcc;">SCORE: 400</span><div style="position:absolute;top:9px;right:4px;width:60px;padding:2px;border:1px solid #00f2fe;font-size:0.42rem;color:#e0e0ff;background:rgba(0,0,0,0.4);">TOP SCORES<br/>ACE 900<br/>NOVA 750</div><div style="position:absolute;bottom:4px;left:46%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "The leaderboard panel now fills in from an async GET request using await/try-catch — the lab keeps running smoothly while the data loads."
+    targetOutcomeCaption: "The leaderboard panel now fills in from an async GET request using await/try-catch, feeding into your existing Session 7 HUD — the lab keeps running smoothly while the data loads."
   },
   "l2-s10": {
     partNum: "Lab 10",
     partTitle: "Score Submission (POST) & Error Handling",
     objectives: [
+      "Add score submission alongside last session's fetch — both can coexist in the same file",
       "Compose a JSON payload representing a player's score",
       "Send it via an `async` POST request with the correct headers",
       "Check the response status and handle failures gracefully"
     ],
     planSpecs: {
-      vision: "After a run ends, the player's own name and score are sent up to a leaderboard endpoint, with a clear warning shown instead of a freeze if the network fails.",
-      parts: "Parts needed: a JSON payload and a POST-sending function. Information to track: the player's name, their score, the content-type header, and whether the server confirmed success.",
+      vision: "After a run ends, the player's own name and YOUR OWN score variable are sent up to a leaderboard endpoint, with a clear warning shown instead of a freeze if the network fails.",
+      parts: "Parts needed: a JSON payload and a POST-sending function. Information to track: the player's name, their score (your own existing variable), the content-type header, and whether the server confirmed success.",
       flow: "Build a {name, score} object -> JSON.stringify() it -> await a POST fetch with that body -> check response.ok -> on failure, catch the error and warn the player instead of freezing."
     },
-    promptGuide: "Draft a prompt asking for an `async function submitScore(player, val)` that POSTs a JSON body `{ player, score: val }` to a scores endpoint with a `Content-Type: application/json` header, checks `res.ok` and throws if the submission failed, and catches/logs any network error.",
+    chainFrom: "l2-s9",
+    promptGuide: "Add this next to `fetchLeaderboard()` from last session — both functions can live in the same file. Ask the AI for an `async function submitScore(player, val)` that POSTs a JSON body `{ player, score: val }` (using YOUR OWN `score` variable from Sessions 6-7 as the value) to a scores endpoint with a `Content-Type: application/json` header, checks `res.ok` and throws if the submission failed, and catches/logs any network error.",
     codeReviewGuide: [
       "Does the fetch options object set `method: \"POST\"` and the correct JSON content-type header?",
       "Is the body passed through `JSON.stringify()` rather than a raw object?",
+      "Does the submitted score value actually come from YOUR OWN game's score variable, not a hardcoded test number?",
       "Socratic Question: If the destination URL is unreachable and there's no try/catch, why does the lab freeze silently when the player clicks submit?"
     ],
-    testCasesGuide: "- Submit a valid score: verify the POST body matches `{ player, score }` and the request succeeds\n- Point the endpoint at an unreachable URL: verify the catch block logs a warning instead of crashing\n- Attempt to submit an oversized or malformed payload: verify the server's error status is surfaced, not swallowed silently",
+    sampleGeneratedHtml: '// canvas.js — score submission, alongside fetchLeaderboard() from Session 9\nasync function submitScore(player, val) {\n  try {\n    const res = await fetch("/api/leaderboard", {\n      method: "POST",\n      headers: { "Content-Type": "application/json" },\n      body: JSON.stringify({ player, score: val })   // val = YOUR OWN score variable\n    });\n    if (!res.ok) {\n      throw new Error("Submission failed: " + res.status);\n    }\n  } catch (err) {\n    console.warn("Could not submit score:", err.message);\n  }\n}',
+    testCasesGuide: "- Submit a valid score using YOUR OWN score variable: verify the POST body matches `{ player, score }` and the request succeeds\n- Point the endpoint at an unreachable URL: verify the catch block logs a warning instead of crashing\n- Attempt to submit an oversized or malformed payload: verify the server's error status is surfaced, not swallowed silently",
     iterationGuide: "Discuss with students what a server-side check should reject (e.g. absurd score values) so client-submitted data isn't trusted blindly — Sessions 11-12 pick this up for real.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><span style="position:absolute;top:2px;left:4px;font-size:0.5rem;color:#00ffcc;">SCORE: 400</span><div style="position:absolute;top:9px;right:4px;width:60px;padding:2px;border:1px solid #00f2fe;font-size:0.42rem;color:#e0e0ff;background:rgba(0,0,0,0.4);">TOP SCORES<br/>ACE 900<br/>NOVA 750<br/>YOU 400</div><div style="position:absolute;bottom:4px;left:46%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "submitScore() now POSTs the run's score to the server — the player's own entry appears in the panel. Session 9's leaderboard was read-only."
+    targetOutcomeCaption: "submitScore() now POSTs the run's score to the server — the player's own entry appears in the panel, right where Session 9's fetch already draws it."
   },
   "l2-s11": {
     partNum: "Lab 11",
     partTitle: "The Colony Data Vault: SQL Fundamentals",
     objectives: [
+      "Design a table that actually matches what YOUR OWN Session 9-10 fetch/submit code sends and expects",
       "Explain why persistent data lives in a database on the server, not in client variables",
       "Design a simple relational table (columns, types, primary key) for colony records",
       "Read and write basic SQL: CREATE TABLE, INSERT, SELECT with WHERE and ORDER BY"
     ],
     planSpecs: {
-      vision: "A small `colonist_scores` table exists in the browser-based SQL playground, populated with sample rows, queryable by score and sortable by rank.",
+      vision: "A small scores table exists in the browser-based SQL playground, with column names matching what YOUR OWN submitScore()/fetchLeaderboard() from Sessions 9-10 actually send and expect back, populated with sample rows, queryable and sortable.",
       parts: "Parts needed: a browser-based SQL playground (no local database install at this level). Information to track: the table's columns and types, its primary key, and the query results returned.",
-      flow: "CREATE TABLE colonist_scores (...) -> INSERT 5 sample rows -> SELECT * -> SELECT with WHERE score > 4000 -> ORDER BY score DESC -> UPDATE one row by its primary key."
+      flow: "CREATE TABLE (your own name/columns) (...) -> INSERT sample rows -> SELECT * -> SELECT with WHERE score > (your own threshold) -> ORDER BY score DESC -> UPDATE one row by its primary key."
     },
-    promptGuide: "Draft a prompt asking a database engineer AI persona to create a `colonist_scores` table with an id primary key, player name, score, and wave_reached columns, insert sample rows, and write a query filtering scores above 4000 sorted highest first.",
+    referenceSessions: [{ id: "l2-s10", label: "Your own submitScore() payload from Session 10 — this table's columns should match what it actually sends" }],
+    promptGuide: "Look back at the JSON body your own submitScore() (Session 10) actually sends — ask a database engineer AI persona to create a table whose columns match those fields (player name, score, plus one more of your choosing like wave_reached) with an id primary key, insert sample rows, and write a query filtering scores above a threshold of your choosing, sorted highest first.",
     codeReviewGuide: [
       "Does the `CREATE TABLE` statement declare a primary key column?",
+      "Do the table's columns actually match the field names YOUR OWN submitScore() sends, not a generic guess?",
       "Does the `WHERE` clause correctly filter (not accidentally invert) the intended condition?",
       "Socratic Question: If an `UPDATE` statement runs with no `WHERE` clause, what happens to every row in the table — and why does the database not warn you first?"
     ],
-    testCasesGuide: "- Run `SELECT * FROM colonist_scores WHERE score > 4000`: verify only qualifying rows return\n- Run the same query with `ORDER BY score DESC`: verify the highest score appears first\n- Run an `UPDATE ... WHERE id = 1` on a throwaway table: verify only that one row changes",
+    testCasesGuide: "- Verify the table's columns match your own Session 10 submitScore() payload fields\n- Run a SELECT with WHERE on your own chosen threshold: verify only qualifying rows return, highest first with ORDER BY\n- Run an `UPDATE ... WHERE id = 1` on a throwaway table: verify only that one row changes",
     iterationGuide: "Add a `created_at TIMESTAMP` column and write a query that orders by newest first, to practice a second sortable field.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;padding:6px;box-sizing:border-box;"><table style="width:100%;font-size:0.5rem;color:#e0e0ff;border-collapse:collapse;"><tbody><tr style="color:#00ffcc;"><td>id</td><td>player</td><td>score</td></tr><tr><td>1</td><td>cdt_arya</td><td>4200</td></tr><tr><td>2</td><td>cdt_ben</td><td>3900</td></tr><tr><td>3</td><td>cdt_cora</td><td>3500</td></tr></tbody></table></div>',
-    targetOutcomeCaption: "A standalone SQL lab: the colonist_scores table, queried and sorted by score, in the browser-based playground."
+    targetOutcomeCaption: "Your scores table, matching your own Session 10 payload shape, queried and sorted in the browser-based playground."
   },
   "l2-s12": {
     partNum: "Lab 12",
     partTitle: "Defending the Data Vault: Validation & Injection Awareness",
     objectives: [
+      "Extend last session's table design with validation rules, not a fresh table",
       "Explain why the server must never trust client input, at the database layer",
       "Describe how passwords are stored safely (hashing, never plaintext) at an awareness level",
       "Recognize SQL injection in a concatenated query and rewrite it as a parameterized query"
     ],
     planSpecs: {
-      vision: "A validation rulebook (field -> rule -> rejection message) sits alongside a break-and-fix demonstration: a concatenated query is shown vulnerable to a classic injection string, then rewritten safely with a parameterized placeholder.",
-      parts: "Parts needed: the browser-based SQL playground on throwaway tables only. Information to track: the validation rule for each input field, and the before/after query text for the injection demo.",
-      flow: "Write the validation rulebook for colonist_scores inserts -> demonstrate the concatenated query breaking under `' OR '1'='1` -> rewrite the same query using a parameterized placeholder -> re-test the hostile input and confirm it now fails harmlessly."
+      vision: "A validation rulebook for YOUR OWN table from Session 11 (field -> rule -> rejection message) sits alongside a break-and-fix demonstration: a concatenated query is shown vulnerable to a classic injection string, then rewritten safely with a parameterized placeholder.",
+      parts: "Parts needed: the browser-based SQL playground on throwaway tables only. Information to track: the validation rule for each input field in YOUR OWN table, and the before/after query text for the injection demo.",
+      flow: "Write the validation rulebook for YOUR OWN table's inserts -> demonstrate a concatenated query breaking under `' OR '1'='1` -> rewrite the same query using a parameterized placeholder -> re-test the hostile input and confirm it now fails harmlessly."
     },
-    promptGuide: "Draft a prompt asking a security-reviewer AI persona to identify why a given concatenated login query is unsafe and rewrite it using a parameterized placeholder — paste the vulnerable query as the input to review.",
+    chainFrom: "l2-s11",
+    promptGuide: "Write validation rules for the exact table you designed in Session 11 (shown above), not a generic template. Ask a security-reviewer AI persona to identify why a given concatenated login query is unsafe and rewrite it using a parameterized placeholder — paste the vulnerable query as the input to review.",
     codeReviewGuide: [
-      "Does the rulebook cover every field going into the insert (type, range, length)?",
+      "Does the rulebook cover every field YOUR OWN Session 11 table actually has (type, range, length)?",
       "Does the rewritten query use a real placeholder (`?` or `$1`), not just renamed string concatenation?",
       "Socratic Question: Every line of the negative-quantity purchase ran correctly — so where is the bug? What assumption did the code make about the user?"
     ],
-    testCasesGuide: "- Run the concatenated query with the hostile input `' OR '1'='1` on a throwaway table: verify it returns every row (the vulnerability)\n- Run the parameterized version with the same hostile input: verify it returns nothing (the fix)\n- Verify the rulebook rejects a quantity of -5 with a clear message",
+    testCasesGuide: "- Run the concatenated query with the hostile input `' OR '1'='1` on a throwaway version of YOUR table: verify it returns every row (the vulnerability)\n- Run the parameterized version with the same hostile input: verify it returns nothing (the fix)\n- Verify the rulebook rejects an out-of-range value for one of YOUR OWN table's fields with a clear message",
     iterationGuide: "Add one rule the session didn't require (e.g. a username character allowlist) and explain the reasoning in one sentence.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;padding:8px;box-sizing:border-box;color:#e0e0ff;font-size:0.48rem;"><div style="color:#ff4d4d;">✗ REJECTED: score out of range (0–1,000,000)</div><div style="color:#39ff88;margin-top:6px;">✓ Parameterized query — hostile input treated as data</div></div>',
-    targetOutcomeCaption: "A standalone security lab: the validation rulebook rejects an out-of-range value, and the parameterized query neutralizes the injection input."
+    targetOutcomeCaption: "The validation rulebook rejects an out-of-range value in YOUR OWN table, and the parameterized query neutralizes the injection input."
   },
   "l2-s13": {
     partNum: "Lab 13",
     partTitle: "Graduation Sprint & Level 2 Defense",
     objectives: [
       "Demonstrate mastery across all four modules: data structures & canvas, state & performance, client-server & async, and database fundamentals",
-      "Diagnose and patch seeded bugs across the level's lab types",
-      "Defend data-structure choices, async flows, and validation rules in a walkthrough"
+      "Diagnose and patch seeded bugs in YOUR OWN accumulated canvas.js and SQL work",
+      "Defend data-structure choices, async flows, and validation rules in a walkthrough",
+      "Review the assembled Complete Build below — every session's contribution to one file"
     ],
     planSpecs: {
-      vision: "A clean-room rebuild of the level's core snippets, demo-ready: canvas init, a sprite array with pruning, an input matrix, a nested collision sweep, an async leaderboard fetch, and a validated SQL query — each running as a standalone piece for the live defense session.",
-      parts: "Parts needed: nothing new — every prior lab's concept gets re-demonstrated as a standalone snippet. Information to track: all four modules' worth of concepts at once (data structures, async/web, database/security, performance).",
-      flow: "Part A: assemble and verify a working stack of standalone snippets across all four modules. Part B: walk the tutor through a systems-level defense of the code. Part C: patch two timed, seeded bugs (one async/array, one SQL) under review."
+      vision: "Your own canvas.js — accumulated since Session 1 through steering, lasers, aliens, shields, waves, HUD, and async leaderboard calls — demo-ready alongside your own Session 11-12 SQL work. Scroll down to the Complete Build section to see it all assembled.",
+      parts: "Parts needed: nothing new — every prior session's own contribution gets reviewed as part of one accumulated file, not rebuilt from scratch. Information to track: all four modules' worth of concepts at once (data structures, async/web, database/security, performance), all in code YOU already wrote.",
+      flow: "Part A: verify your own accumulated canvas.js and SQL work still function end-to-end. Part B: walk the tutor through a systems-level defense of YOUR OWN code. Part C: patch two timed, seeded bugs (one async/array, one SQL) under review."
     },
-    promptGuide: "Compile a clean set of standalone snippets covering canvas init, sprite pruning, the input matrix, the collision sweep, the async leaderboard fetch, and a validated SQL query, and prepare to explain each concept's role to the tutor without notes.",
+    chainFrom: "l2-s10",
+    promptGuide: "This isn't a rebuild — it's a review pass on the actual canvas.js you've been extending since Session 1 (shown above) and your own Session 11-12 SQL work. Ask the AI to help you trace through your own accumulated file end-to-end (canvas init through async leaderboard calls) and flag anything that looks like dead code, a leftover debug log, or a concept you can't yet explain in your own words.",
     codeReviewGuide: [
-      "Can every concept (rendering, input, collision, API, database) be pointed to and explained independently?",
-      "Are there any leftover console.log debug statements or dead variables from earlier labs?",
-      "Socratic Question: If asked 'why does this collision check use `&&` instead of `||`,' can you explain the AABB logic from memory, not just recite what the AI generated? Can you do the same for why a query uses a placeholder instead of concatenation?"
+      "Can every concept (rendering, input, collision, API, database) be pointed to INSIDE YOUR OWN FILE and explained independently?",
+      "Are there any leftover console.log debug statements or dead variables from earlier sessions still in your accumulated file?",
+      "Socratic Question: If asked 'why does this collision check use `&&` instead of `||`,' can you explain the AABB logic from memory, not just recite what the AI generated? Can you do the same for why your Session 12 query uses a placeholder instead of concatenation?"
     ],
-    testCasesGuide: "- Run each standalone snippet: sprite array moves, fires, aliens march and die, HUD updates, leaderboard fetch/submit succeeds, SQL query returns correctly filtered rows\n- Patch the seeded diagnostic bug in an asynchronous handler or array-splice statement within the time limit\n- Patch the seeded SQL bug (wrong WHERE logic or an injection-vulnerable concatenation) within the time limit\n- Defend at least 2 code design choices under tutor questioning",
+    testCasesGuide: "- Run your OWN accumulated canvas.js end-to-end: sprite array moves, fires, aliens march and die, HUD updates, leaderboard fetch/submit succeeds\n- Run your OWN Session 11-12 SQL queries: verify correctly filtered rows and a working parameterized fix\n- Patch the seeded diagnostic bug in an asynchronous handler or array-splice statement within the time limit\n- Patch the seeded SQL bug (wrong WHERE logic or an injection-vulnerable concatenation) within the time limit\n- Defend at least 2 code design choices under tutor questioning, using YOUR OWN code as the reference",
     iterationGuide: "Write down which concept from Level 2 felt least solid, to flag as a review topic before starting Level 3's guided project.",
     targetOutcomeHtml: '<div style="position:relative;width:100%;height:86px;background:#0a0e1a;border:2px solid #7f5af0;border-radius:3px;overflow:hidden;font-family:monospace;"><span style="position:absolute;top:2px;left:4px;font-size:0.5rem;color:#00ffcc;">SCORE: 650</span><span style="position:absolute;top:9px;left:4px;font-size:0.5rem;color:#00ffcc;">WAVE: 3</span><div style="position:absolute;top:9px;right:4px;width:60px;padding:2px;border:1px solid #00f2fe;font-size:0.42rem;color:#e0e0ff;background:rgba(0,0,0,0.4);">TOP SCORES<br/>ACE 900<br/>YOU 650</div><div style="position:absolute;top:16px;left:10px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:16px;left:30px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;top:28px;left:10px;width:9px;height:7px;background:#39ff88;"></div><div style="position:absolute;bottom:16px;left:47%;width:2px;height:7px;background:#ffee55;"></div><div style="position:absolute;bottom:4px;left:46%;width:14px;height:10px;background:#ff4d4d;border-radius:2px;"></div></div>',
-    targetOutcomeCaption: "The final assessment: standalone snippets from every Level 2 module, verified and ready for the graduation defense."
+    targetOutcomeCaption: "The final assessment: your own accumulated canvas.js and SQL work from every Level 2 session, verified and ready for the graduation defense.",
+    finalAssembly: {
+      title: "🏁 Your Complete Level 2 Build — Assembled",
+      description: "Your own canvas.js, accumulated from every session since Session 1, alongside your own Session 11-12 SQL work — this is the actual code you built, session by session. Run it on your own machine to play it; the platform only displays it here for review.",
+      blocks: [
+        { label: "canvas.js (this session, carrying every session since 1)", sessionId: "l2-s13" },
+        { label: "SQL schema & queries (from Session 11)", sessionId: "l2-s11" },
+        { label: "Validation & injection fixes (from Session 12)", sessionId: "l2-s12" }
+      ],
+      chainCheckIds: ["l2-s1", "l2-s2", "l2-s3", "l2-s4", "l2-s5", "l2-s6", "l2-s7", "l2-s9", "l2-s10", "l2-s11", "l2-s12"]
+    }
   },
   "l3-s1": {
     partNum: "Part 1",

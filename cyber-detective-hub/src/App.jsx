@@ -10227,19 +10227,18 @@ export default function App() {
                         </div>
                       )}
 
-                      {/* L1-S12 only: the final assembled game, read-only text (not a live-executing
-                          iframe — the platform tracks the student's real game, it doesn't run it for
-                          them). Walks the whole S2-S11 chain by name so a gap is named, not silent. */}
-                      {currentSession.id === 'l1-s12' && (() => {
-                        const chainSessionIds = ['l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11'];
-                        const missing = chainSessionIds.filter(id => !getSessionCodeOutput(id));
+                      {/* Final-session assembly, read-only text (not a live-executing iframe — the
+                          platform tracks the student's real game, it doesn't run it for them).
+                          Driven entirely by PROJECT_TASKS[id].finalAssembly so any level's last
+                          session can opt in, not just L1's. Walks the declared chain by name so a
+                          gap is named, not silent. */}
+                      {PROJECT_TASKS[currentSession.id]?.finalAssembly && (() => {
+                        const assembly = PROJECT_TASKS[currentSession.id].finalAssembly;
+                        const missing = (assembly.chainCheckIds || []).filter(id => !getSessionCodeOutput(id));
                         const missingTitles = missing.map(id => {
                           const s = CURRICULUM_DATA.find(cs => cs.id === id);
                           return s ? s.title : id;
                         });
-                        const htmlCode = getSessionCodeOutput('l1-s2');
-                        const cssCode = getSessionCodeOutput('l1-s3');
-                        const jsCode = editingCodeOutput || getSessionCodeOutput('l1-s12');
                         const codeBlock = (label, code) => (
                           <div key={label} style={{ marginBottom: '12px' }}>
                             <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</span>
@@ -10250,18 +10249,24 @@ export default function App() {
                         );
                         return (
                           <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px', borderLeft: '4px solid var(--accent-green)', background: 'rgba(57, 255, 20, 0.03)' }}>
-                            <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: 'var(--accent-green)' }}>🏁 Your Complete Game — Assembled</h3>
+                            <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: 'var(--accent-green)' }}>{assembly.title}</h3>
                             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0 0 12px 0' }}>
-                              Your own HTML, CSS, and game.js, pulled straight from every session's saved Project Journal — this is the actual game you built, session by session. Run it on your own machine to play it; the platform only displays it here for review.
+                              {assembly.description}
                             </p>
                             {missing.length > 0 && (
                               <div style={{ padding: '8px 10px', marginBottom: '12px', background: 'rgba(255, 51, 102, 0.08)', border: '1px solid var(--accent-red)', borderRadius: '4px', fontSize: '0.78rem', color: 'var(--accent-red)' }}>
                                 ⚠ Incomplete build — no saved code found for: {missingTitles.join(', ')}. Finish those sessions' Project Journals (and click 🔄 Pull Latest on any session after them) to complete the assembly.
                               </div>
                             )}
-                            {codeBlock('index.html (from Session 2)', htmlCode)}
-                            {codeBlock('styles.css (from Session 3)', cssCode)}
-                            {codeBlock('game.js (this session, carrying every session since 4)', jsCode)}
+                            {assembly.blocks.map(block => {
+                              // The block matching the CURRENT session should reflect live unsaved
+                              // edits (editingCodeOutput), same as before; other blocks read the
+                              // saved value from that session's own journal entry.
+                              const code = block.sessionId === currentSession.id
+                                ? (editingCodeOutput || getSessionCodeOutput(block.sessionId))
+                                : getSessionCodeOutput(block.sessionId);
+                              return codeBlock(block.label, code);
+                            })}
                           </div>
                         );
                       })()}
