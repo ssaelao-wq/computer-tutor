@@ -4387,6 +4387,7 @@ export default function App() {
   const [showProjectTasks, setShowProjectTasks] = useState(true);
   const [showCurriculumSidebar, setShowCurriculumSidebar] = useState(true);
   const [showExercisesSidebar, setShowExercisesSidebar] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => (typeof window === 'undefined' ? true : window.innerWidth > 900));
   const [curriculumDetailTab, setCurriculumDetailTab] = useState('plan');
   
   // Tab fields state
@@ -5967,7 +5968,7 @@ export default function App() {
   return (
     <div className="cyber-container">
       {/* Sidebar navigation */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${sidebarOpen ? '' : 'sidebar-hidden'}`}>
         <div className="logo-section">
           <svg className="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
@@ -5975,7 +5976,7 @@ export default function App() {
           <span className="logo-text">DETECTIVE HUB</span>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="sidebar-nav" onClick={() => { if (window.innerWidth <= 900) setSidebarOpen(false); }}>
           {currentUser && currentUser.role !== 'parent' && (
             <>
               <button className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
@@ -6058,10 +6059,23 @@ export default function App() {
         </div>
       </aside>
 
+      {/* Backdrop for mobile overlay sidebar */}
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)}></div>}
+
       {/* Main Content Area */}
       <main className="main-content">
         <header className="header">
           <div className="header-title">
+            <button
+              className="sidebar-toggle"
+              onClick={() => setSidebarOpen(prev => !prev)}
+              aria-label={sidebarOpen ? 'Hide navigation menu' : 'Show navigation menu'}
+              title={sidebarOpen ? 'Hide menu' : 'Show menu'}
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
             <h1>
               {activeTab === 'dashboard' && 'Operations Dashboard'}
               {activeTab === 'cases' && 'Quest Board'}
