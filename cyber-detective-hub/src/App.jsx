@@ -11187,29 +11187,28 @@ export default function App() {
             )}
 
             {!viewingJournalLoading && viewingJournalData.length > 0 && (
-              <div className="journal-viewer-grid" style={{ display: 'grid', gap: 20 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {viewingJournalData.map(item => (
-                    <div
-                      key={item.id}
-                      onClick={() => {
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div className="form-group">
+                  <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Select a session</label>
+                  <select
+                    className="login-input"
+                    value={viewingJournalEntryId || ''}
+                    onChange={e => {
+                      const item = viewingJournalData.find(d => d.id === e.target.value);
+                      if (item) {
                         setViewingJournalEntryId(item.id);
                         setViewingJournalVersion(item.journalEntry ? item.journalEntry.activeVersion : null);
-                      }}
-                      className={`glass-panel ${viewingJournalEntryId === item.id ? 'selected' : ''}`}
-                      style={{
-                        padding: 10, cursor: 'pointer', fontSize: '0.8rem',
-                        border: viewingJournalEntryId === item.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
-                        background: viewingJournalEntryId === item.id ? 'rgba(0, 242, 254, 0.05)' : 'none'
-                      }}
-                    >
-                      <div style={{ fontWeight: 600 }}>{item.title}</div>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: 2 }}>
-                        Attended {item.date}
-                        {!item.journalEntry && <span style={{ color: 'var(--accent-amber, #ffb020)' }}> · journal not started</span>}
-                      </div>
-                    </div>
-                  ))}
+                      }
+                    }}
+                    style={{ padding: '8px 12px', background: 'rgba(6, 8, 20, 0.8)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px' }}
+                  >
+                    <option value="">-- choose a session --</option>
+                    {viewingJournalData.map(item => (
+                      <option key={item.id} value={item.id}>
+                        {item.title} — Attended {item.date}{!item.journalEntry ? ' (journal not started)' : ''}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
