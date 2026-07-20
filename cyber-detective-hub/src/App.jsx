@@ -4259,6 +4259,7 @@ export default function App() {
   const [viewingJournalLoading, setViewingJournalLoading] = useState(false);
   const [viewingJournalEntryId, setViewingJournalEntryId] = useState(null);
   const [viewingJournalVersion, setViewingJournalVersion] = useState(null);
+  const [journalSessionPickerOpen, setJournalSessionPickerOpen] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
 
   // Student Report states (Attendance + Feedback, for teacher and parent roles)
@@ -5102,6 +5103,7 @@ export default function App() {
     setViewingJournalData([]);
     setViewingJournalEntryId(null);
     setViewingJournalVersion(null);
+    setJournalSessionPickerOpen(false);
     setViewingJournalLoading(true);
     Promise.all([
       fetch(`/api/admin/students/${student.id}/journal`, {
@@ -5155,6 +5157,7 @@ export default function App() {
     setViewingJournalData([]);
     setViewingJournalEntryId(null);
     setViewingJournalVersion(null);
+    setJournalSessionPickerOpen(false);
   };
 
   const handleMoveS1Step = (idx, direction) => {
@@ -11188,27 +11191,57 @@ export default function App() {
 
             {!viewingJournalLoading && viewingJournalData.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <div className="form-group">
+                <div className="form-group" style={{ position: 'relative' }}>
                   <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Select a session</label>
-                  <select
-                    className="login-input"
-                    value={viewingJournalEntryId || ''}
-                    onChange={e => {
-                      const item = viewingJournalData.find(d => d.id === e.target.value);
-                      if (item) {
-                        setViewingJournalEntryId(item.id);
-                        setViewingJournalVersion(item.journalEntry ? item.journalEntry.activeVersion : null);
-                      }
+                  <button
+                    type="button"
+                    onClick={() => setJournalSessionPickerOpen(prev => !prev)}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+                      padding: '10px 12px', background: 'rgba(6, 8, 20, 0.8)', color: 'var(--text-primary)',
+                      border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer',
+                      fontFamily: 'var(--font-mono)', fontSize: '0.85rem', textAlign: 'left'
                     }}
-                    style={{ padding: '8px 12px', background: 'rgba(6, 8, 20, 0.8)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px' }}
                   >
-                    <option value="">-- choose a session --</option>
-                    {viewingJournalData.map(item => (
-                      <option key={item.id} value={item.id}>
-                        {item.title} — Attended {item.date}{!item.journalEntry ? ' (journal not started)' : ''}
-                      </option>
-                    ))}
-                  </select>
+                    <span style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                      {(() => {
+                        const selected = viewingJournalData.find(d => d.id === viewingJournalEntryId);
+                        if (!selected) return '-- choose a session --';
+                        return selected.title + (!selected.journalEntry ? ' (journal not started)' : '');
+                      })()}
+                    </span>
+                    <svg style={{ width: 16, height: 16, flexShrink: 0, transform: journalSessionPickerOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </button>
+
+                  {journalSessionPickerOpen && (
+                    <>
+                      <div style={{ position: 'fixed', inset: 0, zIndex: 9 }} onClick={() => setJournalSessionPickerOpen(false)}></div>
+                      <div
+                        className="glass-panel"
+                        style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, zIndex: 10, maxHeight: 260, overflowY: 'auto', padding: 6, display: 'flex', flexDirection: 'column', gap: 4 }}
+                      >
+                        {viewingJournalData.map(item => (
+                          <div
+                            key={item.id}
+                            onClick={() => {
+                              setViewingJournalEntryId(item.id);
+                              setViewingJournalVersion(item.journalEntry ? item.journalEntry.activeVersion : null);
+                              setJournalSessionPickerOpen(false);
+                            }}
+                            style={{
+                              padding: '8px 10px', cursor: 'pointer', fontSize: '0.85rem', borderRadius: '4px',
+                              color: item.journalEntry ? 'var(--text-primary)' : 'var(--text-muted)',
+                              background: viewingJournalEntryId === item.id ? 'rgba(0, 242, 254, 0.08)' : 'transparent'
+                            }}
+                          >
+                            {item.title}{!item.journalEntry ? ' (journal not started)' : ''}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div>
