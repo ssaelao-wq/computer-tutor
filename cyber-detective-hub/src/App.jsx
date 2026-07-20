@@ -11220,7 +11220,7 @@ export default function App() {
                       <div style={{ position: 'fixed', inset: 0, zIndex: 9 }} onClick={() => setJournalSessionPickerOpen(false)}></div>
                       <div
                         className="glass-panel"
-                        style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, zIndex: 10, maxHeight: 260, overflowY: 'auto', padding: 6, display: 'flex', flexDirection: 'column', gap: 4 }}
+                        style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, zIndex: 10, maxHeight: 260, overflowY: 'auto', padding: 6, display: 'flex', flexDirection: 'column', gap: 4, background: '#0d1024', backdropFilter: 'none' }}
                       >
                         {viewingJournalData.map(item => (
                           <div
