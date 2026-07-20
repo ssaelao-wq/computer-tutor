@@ -10719,8 +10719,8 @@ export default function App() {
                     {reportLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading report...</p>}
 
                     {!reportLoading && reportSubTab === 'attendance' && (
-                      <div style={{ border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <div style={{ border: '1px solid var(--border-color)', borderRadius: '8px', overflowX: 'auto', minWidth: 0 }}>
+                        <table style={{ width: '100%', minWidth: 420, borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                           <thead>
                             <tr style={{ borderBottom: '1px solid var(--border-color)', background: 'rgba(0, 242, 254, 0.04)' }}>
                               <th style={{ padding: 10, textAlign: 'left', color: 'var(--accent-cyan)' }}>Session</th>
@@ -10781,13 +10781,13 @@ export default function App() {
                               key={session.id}
                               id={`report-feedback-${session.id}`}
                               className="glass-panel"
-                              style={{ padding: 16, border: reportSessionFocus === session.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)' }}
+                              style={{ padding: 16, minWidth: 0, border: reportSessionFocus === session.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)' }}
                             >
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                                 <h5 style={{ margin: 0, color: 'var(--accent-cyan)' }}>{session.title}</h5>
                                 {row.session_date && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{row.session_date}</span>}
                               </div>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: 16 }}>
                                 <div>
                                   <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: 4 }}>Teacher Feedback</label>
                                   <textarea
@@ -11187,7 +11187,7 @@ export default function App() {
             )}
 
             {!viewingJournalLoading && viewingJournalData.length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 20 }}>
+              <div className="journal-viewer-grid" style={{ display: 'grid', gap: 20 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {viewingJournalData.map(item => (
                     <div
