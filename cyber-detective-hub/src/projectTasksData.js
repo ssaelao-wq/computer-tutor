@@ -4,24 +4,25 @@
 export const PROJECT_TASKS = {
   "l1-s1": {
     partNum: "Lab 0",
-    partTitle: "System Logic Warm-Up",
+    partTitle: "Project Kickoff & Roadmap",
     objectives: [
-      "Model basic input-process-output (IPO) systems",
-      "Write sequential, unambiguous instructions for execution"
+      "See the whole Racing Car Game project — what it looks like finished, and what each session ahead contributes to it",
+      "Identify the game's core parts (track, player car, obstacles, scoreboard, game states) before any HTML/CSS/JS is written",
+      "Understand that each session's homework extends the previous session's own file, rather than starting fresh every time"
     ],
     planSpecs: {
-      vision: "A microwave control panel: a keypad to enter cook time, a Start button, a door sensor, and a display showing the countdown. Pressing Start begins counting down visibly; opening the door mid-cycle should immediately pause the countdown.",
-      parts: "Parts needed: a keypad for entering time, a Start button, a door sensor, a countdown display, and the heating element. Information to track: whether the power is on, how much time is left, and whether the door is open or closed.",
-      flow: "IF powerState is ON AND doorClosed is True AND startPressed is True:\n  1. Activate heating component\n  2. Run countdown timer loop\n  3. Deactivate heating and play buzzer when timer hits 0"
+      vision: "A top-down 2D highway racing game: a scrolling road with lane dividers, a player car controlled with the arrow keys, oncoming obstacle cars to dodge, a live score counter, and a game-over screen when you crash. By Session 12 this is a real, playable game built entirely from your own session-by-session homework.",
+      parts: "Parts needed across the whole project: the road/track, the player's car, obstacle cars, a scoreboard, a game-over overlay, and the game state (score, speed, whether the game is running). Sessions 2-3 build the visual pieces (HTML/CSS); Sessions 4-12 build the behavior (JavaScript).",
+      flow: "Session 2: HTML skeleton (track, car, scoreboard containers).\nSession 3: CSS styling (lanes, positioning, colors).\nSessions 4-12: JavaScript — variables, keyboard controls, boundaries, loops, functions, animation, collisions, and DOM updates, each session extending the previous session's game.js.\nSession 12: the finished, assembled game."
     },
-    promptGuide: "Describe a step-by-step sequential blueprint for warming up food in a microwave. Specify system preconditions (e.g. power status), input parameters (e.g. duration, sensor states), processing loops (e.g. countdown checks), and output reactions (e.g. alarms, magnetron toggles).",
+    promptGuide: "This is a planning document, not an AI-generation step — no code yet. Write a short 'project brief' for the game you're about to build: what should it look like and feel like when finished? What are the major parts? Skim the Session 2-12 titles in the Curriculum tab and note, in your own words, what each one seems to contribute to the finished game.",
     codeReviewGuide: [
-      "Are all steps sequential and literal?",
-      "Are inputs, processing, and outputs clearly isolated?",
-      "Precondition check: Did you check if the door is open?"
+      "Did you list all the major visual parts of the finished game (track, player car, obstacles, scoreboard, game-over screen)?",
+      "Can you name which technology builds which part (HTML = structure, CSS = look, JavaScript = behavior)?",
+      "Socratic Question: each session's homework extends the previous session's own file instead of starting over. Why might building it this way, one accumulating file, be closer to how real software gets built than 12 separate unconnected exercises?"
     ],
-    testCasesGuide: "- Happy Path: Door closed, timer > 0, system heats\n- Edge Case: Door opened mid-operation (should halt immediately)\n- Boundary Case: Timer set to 0 seconds (should not start)",
-    iterationGuide: "Trace if the sequence contains any implicit assumptions that a literal computer would fail on, and update the instructions accordingly."
+    testCasesGuide: "Self-check, not code tests — answer in your own words:\n- Can you explain what problem or fun the finished racing game gives a player?\n- Can you list the 5 steps of the AI-Era Development Loop you'll use starting next session?\n- Can you point to which session (by number) will first make something appear on screen?",
+    iterationGuide: "Revisit this roadmap after Session 3, once you have a working visual track and car — note anything about the finished game that changed from what you first imagined here."
   },
   "l1-s2": {
     partNum: "Lab 1",

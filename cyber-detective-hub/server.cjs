@@ -195,20 +195,20 @@ async function createTables() {
     // Seed default journal entry
     await db.query(`
       INSERT INTO journal_entries (id, user_id, title, date, version, active_version)
-      VALUES ('j1', 'current_user', 'L1 S1: Household IPO Blueprint', '2026-06-24 14:32', 2, 2)
+      VALUES ('j1', 'current_user', 'L1 S1: Project Kickoff & Roadmap', '2026-06-24 14:32', 2, 2)
     `).catch(() => {});
 
     // Seed default journal versions
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
-      VALUES 
-      ('j1', 1, 
-      'Write a process to warm up food from a plate.', 
-      'Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]'
+      VALUES
+      ('j1', 1,
+      'Sketch the Racing Car Game you will build across Sessions 2-12: its parts, its look, and the session-by-session build plan.',
+      'Racing Car Game — Project Roadmap (Draft v1)\n\nGame Concept:\n- [Describe the finished game in 1-2 sentences]\n\nMajor Parts:\n- [List the visual/gameplay parts: track, car, obstacles, scoreboard, game-over screen]\n\nSession Build Plan:\n- [Which session builds what? e.g. Session 2 = HTML, Session 3 = CSS, Sessions 4-12 = JavaScript]'
       ),
-      ('j1', 2, 
-      'Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.', 
-      'Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)\n\nSystem Preconditions:\n- [Write preconditions, e.g. powerState is "ON"]\n\nInputs (Identify variables and types):\n- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)\n\nProcessing Logic Steps (Step-by-step algorithm and loops):\n1. [First Step]\n2. [Second Step]\n3. [Repeat/Loop Check Step]\n\nOutputs (Identify expected actions/results):\n- [Output Variable Name]: [Expected Action/Value]'
+      ('j1', 2,
+      'Sketch the Racing Car Game you will build across Sessions 2-12: its parts, its look, and the session-by-session build plan — before writing a single line of code.',
+      'Racing Car Game — Project Roadmap (Detailed Plan v2)\n\nGame Concept:\n- [Describe what the player sees and does]\n\nMajor Parts (System Parts & Information):\n- [List every part needed: track, car, obstacles, scoreboard, game-over overlay, and what data/state the game must remember]\n\nSession Build Plan (Session-by-Session):\n1. Session 2 (HTML): [ ]\n2. Session 3 (CSS): [ ]\n3. Sessions 4-12 (JavaScript): [ ]\n\n5-Step AI-Era Loop (used starting next session):\n1. Plan & Design 2. Write the AI Prompt 3. Review & Explain 4. Test & Break It 5. Iterate & Improve'
       )
     `).catch(() => {});
     console.log('Seeding completed.');
@@ -216,34 +216,36 @@ async function createTables() {
 
   // Always run migrations to fix/update old titles or prompts in existing user databases
   await db.query(`
-    UPDATE journal_entries 
-    SET title = 'L1 S1: Household IPO Blueprint' 
-    WHERE id = 'j1' OR id LIKE '%_j1' OR title LIKE '%Cauldron%'
+    UPDATE journal_entries
+    SET title = 'L1 S1: Project Kickoff & Roadmap'
+    WHERE id = 'j1' OR id LIKE '%_j1' OR title LIKE '%Cauldron%' OR title LIKE '%Household IPO Blueprint%'
   `).catch(err => console.warn(err));
 
   await db.query(`
-    UPDATE journal_versions 
-    SET prompt = 'Write a process to warm up food from a plate.' 
+    UPDATE journal_versions
+    SET prompt = 'Sketch the Racing Car Game you will build across Sessions 2-12: its parts, its look, and the session-by-session build plan.'
     WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 1
   `).catch(err => console.warn(err));
 
   await db.query(`
-    UPDATE journal_versions 
-    SET prompt = 'Write a process to warm up food from a plate. Identify inputs (with data types), processing logic (handling loops and state checks), and outputs. Make sure to define system preconditions.' 
+    UPDATE journal_versions
+    SET prompt = 'Sketch the Racing Car Game you will build across Sessions 2-12: its parts, its look, and the session-by-session build plan — before writing a single line of code.'
     WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2
   `).catch(err => console.warn(err));
 
-  // Migration to update the actual code value in existing databases if it contains sandwich or microwave pre-fills
+  // Migration to update the actual code value in existing databases if it still contains the
+  // retired Household IPO Blueprint pre-fill (Session 1's homework moved to a project-roadmap
+  // brief — see PROJECT_TASKS['l1-s1'] in projectTasksData.js).
   await db.query(`
-    UPDATE journal_versions 
-    SET code = 'Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]' 
-    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 1 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Draft v1)%')
+    UPDATE journal_versions
+    SET code = 'Racing Car Game — Project Roadmap (Draft v1)\n\nGame Concept:\n- [Describe the finished game in 1-2 sentences]\n\nMajor Parts:\n- [List the visual/gameplay parts: track, car, obstacles, scoreboard, game-over screen]\n\nSession Build Plan:\n- [Which session builds what? e.g. Session 2 = HTML, Session 3 = CSS, Sessions 4-12 = JavaScript]'
+    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 1 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Draft v1)%' OR code LIKE '%Household IPO Blueprint%')
   `).catch(err => console.warn(err));
 
   await db.query(`
-    UPDATE journal_versions 
-    SET code = 'Household IPO Blueprint: [Enter Device Name] (Detailed Spec v2)\n\nSystem Preconditions:\n- [Write preconditions, e.g. powerState is "ON"]\n\nInputs (Identify variables and types):\n- [Input Variable Name] ([Data Type], e.g. Yes/No, Number, Text)\n\nProcessing Logic Steps (Step-by-step algorithm and loops):\n1. [First Step]\n2. [Second Step]\n3. [Repeat/Loop Check Step]\n\nOutputs (Identify expected actions/results):\n- [Output Variable Name]: [Expected Action/Value]' 
-    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Detailed Spec v2)%')
+    UPDATE journal_versions
+    SET code = 'Racing Car Game — Project Roadmap (Detailed Plan v2)\n\nGame Concept:\n- [Describe what the player sees and does]\n\nMajor Parts (System Parts & Information):\n- [List every part needed: track, car, obstacles, scoreboard, game-over overlay, and what data/state the game must remember]\n\nSession Build Plan (Session-by-Session):\n1. Session 2 (HTML): [ ]\n2. Session 3 (CSS): [ ]\n3. Sessions 4-12 (JavaScript): [ ]\n\n5-Step AI-Era Loop (used starting next session):\n1. Plan & Design 2. Write the AI Prompt 3. Review & Explain 4. Test & Break It 5. Iterate & Improve'
+    WHERE (entry_id = 'j1' OR entry_id LIKE '%_j1') AND version = 2 AND (code LIKE '%sandwich%' OR code LIKE '%Microwave (Detailed Spec v2)%' OR code LIKE '%Household IPO Blueprint%')
   `).catch(err => console.warn(err));
 }
 
@@ -737,12 +739,12 @@ app.post('/api/admin/students', authenticateToken, requireTeacher, async (req, r
     await db.query(`
       INSERT INTO journal_entries (id, user_id, title, date, version, active_version)
       VALUES ($1, $2, $3, $4, 1, 1)
-    `, [studentId + '_j1', studentId, 'L1 S1: Household IPO Blueprint', formatBangkokTimestamp()]);
+    `, [studentId + '_j1', studentId, 'L1 S1: Project Kickoff & Roadmap', formatBangkokTimestamp()]);
 
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
       VALUES ($1, 1, $2, $3)
-    `, [studentId + '_j1', 'Write a process to warm up food from a plate.', 'Household IPO Blueprint: [Enter Device Name] (Draft v1)\n\nInputs:\n- [Write your inputs here, e.g. start button clicked]\n\nProcessing Steps:\n- [Write your step-by-step process steps here]\n\nOutputs:\n- [Write your expected outputs here]']);
+    `, [studentId + '_j1', 'Sketch the Racing Car Game you will build across Sessions 2-12: its parts, its look, and the session-by-session build plan.', 'Racing Car Game — Project Roadmap (Draft v1)\n\nGame Concept:\n- [Describe the finished game in 1-2 sentences]\n\nMajor Parts:\n- [List the visual/gameplay parts: track, car, obstacles, scoreboard, game-over screen]\n\nSession Build Plan:\n- [Which session builds what? e.g. Session 2 = HTML, Session 3 = CSS, Sessions 4-12 = JavaScript]']);
 
     res.json({ success: true, student: { id: studentId, username, name, role: 'student', points: 0, student_level: studentLevel } });
   } catch (error) {

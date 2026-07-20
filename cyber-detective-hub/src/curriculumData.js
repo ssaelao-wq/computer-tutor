@@ -7,20 +7,21 @@ export const CURRICULUM_DATA = [
     id: "l1-s1",
     level: 1,
     module: "Module 1: Inputs, Processing, and Outputs",
-    title: "Session 1: \"Literal Logic & Digital Infiltration\"",
+    title: "Session 1: \"Systems Briefing: Hardware, Networks & the AI-Era Dev Loop\"",
     duration: "2 hours",
     objectives: [
-      "Understand that computers follow instructions sequentially, literally, and without common sense",
-      "Identify the Input → Process → Output pattern in everyday digital systems",
-      "Create sequential instruction lists in Sandbox simulation"
+      "Identify the core hardware components of a computer (CPU, RAM, storage, GPU) and the roles of the operating system and application software",
+      "Explain how networks and the client-server model deliver a web page from a server to a browser",
+      "Identify the roles of HTML, CSS, and JavaScript, and how a browser renders them into what a player sees",
+      "Describe the 5-Step AI-Era Development Loop and preview the Level 1 Racing Car Game project this loop will be used to build"
     ],
-    warmUp: "Car Autopilot Roleplay: Tutor-student roleplay. Student gives step-by-step instructions to tutor to drive and park a vehicle. Tutor follows them strictly literally, demonstrating computer logical processing.",
-    miniLesson: "The IPO Model: Trace Input → Process → Output. Variable concepts as labeled memory registers that hold one state value.",
-    coreActivity: "Sequence Blueprinting: Student uses flowcharts inside the app to arrange command blocks (Check P/N, Press Brake, Start Engine, Shift D, Release Handbrake, release brake, press gas) in correct logical order.",
-    handsOn: "Complete 5 sandbox tasks: (1) Basic Start & Move, (2) Reversing & Parking, (3) Sequence Correction, (4) Code Cleanup, (5) Emergency Halt.",
-    homework: "Complete the \"Household IPO Blueprint\" in the app's Journal tab: Write a process to warm up food from a plate using a microwave. Identify preconditions, inputs, processing logic, and outputs (+50 XP).",
-    ethics: "Autonomous Car Crash Responsibility: If an autonomous car crashes because of a logic error in its code, who is responsible — the coder, the company, or the operator?",
-    adaptations: "Age 13-16: Use digital sandbox modules and audit terminal outputs. Discuss real IPO algorithms."
+    warmUp: "Case File Briefing: before any detective opens a case, they read the full case file — the suspects, the scene, the tools available. Today's 'case' is the machine and the network itself. Discuss as a class: when you press a key on your keyboard, what do you think physically happens between that keypress and something appearing on screen?",
+    miniLesson: "From Silicon to Screen: trace a single click from the physical keyboard hardware, through the CPU and RAM, out over the network to a server, and back through HTML/CSS/JS rendering into pixels on screen. Introduce the AI-Era 5-Step Loop (Plan & Design → Write the AI Prompt → Review & Explain → Test & Break It → Iterate & Improve) that every remaining session in this course will use.",
+    coreActivity: "System & Network Field Map: sketch a diagram tracing a request from the player's browser, across the network, to a server, and back — labeling which parts are hardware, which are software, and which piece of the web stack (HTML/CSS/JS) is responsible for each visual result. Then preview the Level 1 Racing Car Game's session roadmap (Sessions 2-12) to see the whole build ahead.",
+    handsOn: "Complete 10 Sandbox Exercises in two 5-step AI-Era loops: the first covering hardware, software, and how a program actually runs; the second covering networks, the web technology stack, and the AI-era development process itself.",
+    homework: "Complete the \"Project Kickoff & Roadmap\" in the app's Journal tab: sketch the full Racing Car Game you'll build across Sessions 2-12 — its parts, its look, and the session-by-session build plan — before writing a single line of code (+50 XP).",
+    ethics: "Who's Responsible for AI-Generated Bugs?: developers increasingly paste AI-suggested code straight into real products without fully reviewing it, and some of those bugs have shipped as real security vulnerabilities. If an AI coding tool generates code with a flaw that causes real harm, who is responsible — the AI tool's maker, the developer who used it, or the company that shipped it? (This is exactly why Step 3 — Review & Explain — exists in this course.)",
+    adaptations: "Age 13-16: Relate CPU/RAM to devices they already own (phone storage running out, a laptop slowing down with too many tabs open) before introducing the formal vocabulary."
   },
   {
     id: "l1-s2",

@@ -8,24 +8,29 @@ import { PROJECT_TASKS } from './projectTasksData';
 const CONCEPT_REFERENCES = {
   'l1-s1': [
     {
-      name: "Input-Process-Output (IPO) Model",
-      desc: "Core Definition:\n  Every piece of software you will ever build — a game, a website, a chatbot — boils down to one repeating pattern: something comes IN, the program does work on it, and a result goes OUT. Nothing a computer does falls outside this loop; even one key press is a complete IPO cycle by itself.\n\nWhy It Matters:\n  Before writing a single line of JavaScript, IPO gives you a planning checklist: 'What triggers this? What has to be calculated or decided? What should the player see or hear as a result?' Answering those three questions in plain English before touching syntax is exactly the 'Plan & Design' step this course is built around.\n\nDetailed Mechanics:\n  1. Input: Incoming triggers or sensor records (clicks, key presses, API streams).\n  2. Process: The logic controller executing sequence calculations and evaluations.\n  3. Output: Visual draws, updates to states, sound indicators, physical moves.\n\nClassroom Autopilot Project Example:\n  - Input: User presses the 'Up Arrow' key.\n  - Process: The engine computes state updates: newY = currentY - speed.\n  - Output: The HTML view changes the top/bottom coordinates of the car element.",
-      keywords: "IPO model diagram, computing inputs processing outputs"
+      name: "Computer Hardware vs. Software",
+      desc: "Core Definition:\n  HARDWARE is the physical, touchable machinery — the CPU, RAM, storage drive, GPU, monitor, keyboard. SOFTWARE is the instructions that run ON that hardware — the operating system, the browser, the game code you're about to start writing. Hardware without software is inert; software cannot exist without some hardware executing it.\n\nWhy It Matters:\n  Every bug you'll ever debug falls into one of these two buckets: a HARDWARE limit (not enough memory, a slow processor, no network signal) or a SOFTWARE mistake (a typo, a missing check, bad logic). Knowing which bucket you're in tells you whether to fix the code or upgrade the machine.\n\nWorked Example — Running the Racing Car Game:\n  - Hardware: the CPU calculating car positions 60 times a second, RAM holding the current game state, the monitor displaying the result.\n  - Software: the operating system managing the browser process, the browser rendering HTML/CSS/JS, and game.js — the code you write — deciding what happens next.",
+      keywords: "hardware software difference CPU RAM operating system"
     },
     {
-      name: "Sequential Execution",
-      desc: "Core Definition:\n  A computer has no judgment about what 'should' happen next — it blindly runs line 1, then line 2, then line 3, in the exact order they are written. There is no skipping ahead or reading your intent; the order on the page IS the order of events.\n\nWhy It Matters:\n  This is why code that 'looks right' can still fail: the logic can be correct while the ORDER is wrong. Real-world procedures — starting a car, following a recipe, logging into an account — all have a required sequence, and code that models them must respect that sequence or it fails at exactly the step where something was skipped.\n\nCommon Student Mistake:\n  Coding operations out of chronological order. For example, trying to drive forward before shifting the car out of park:\n\n  // ❌ INVALID SEQUENCE (Crashes/Fails Preconditions):\n  1. press_gas(); // Fails: Engine is not started yet!\n  2. start_engine();\n  3. shift_to_drive();\n\n  //  VALID SEQUENCE:\n  1. start_engine();\n  2. press_footbrake();\n  3. shift_to_drive();\n  4. release_handbrake();\n  5. press_gas();",
-      keywords: "order of execution code step by step, sequential control flow"
+      name: "How a Program Runs (CPU, RAM & Storage)",
+      desc: "Core Definition:\n  The CPU (Central Processing Unit) is the 'brain' that executes instructions one at a time, extremely fast. RAM (Random Access Memory) is short-term, high-speed workspace that holds whatever the CPU is actively using right now — it's wiped when the machine restarts. Storage (an SSD or hard drive) is long-term memory that keeps files even after shutdown, but is much slower to read from than RAM.\n\nWhy It Matters:\n  'The game feels laggy' usually means the CPU is overloaded doing too many calculations per frame. 'The game crashed' often means RAM ran out because too much was loaded into memory at once. Knowing which resource is the bottleneck is the first step of any performance fix — guessing wastes time.\n\nWorked Example:\n  Loading 500 full-resolution car images before a race even starts fills up RAM fast. The fix isn't a faster CPU — it's loading fewer images, or loading them only when needed (this is exactly what Sandbox Exercises 1.4 and 1.5 walk through).",
+      keywords: "CPU RAM storage memory bottleneck performance"
     },
     {
-      name: "System Preconditions",
-      desc: "Core Definition:\n  A precondition is a fact about the system's state that MUST already be true before an instruction is allowed to run — a locked gate that checks your 'ticket' before letting an action through. Preconditions aren't optional style; skipping them is what lets a program crash or, worse, silently do the wrong thing.\n\nWhy It Matters:\n  Real systems are full of these gates: a car won't start in gear, a bank won't let you withdraw money you don't have, a game shouldn't let you fire a weapon before the level has loaded. Learning to ask 'what MUST be true right before this line runs?' is how you catch bugs while designing, instead of after a crash.\n\nCode Validation Logic:\n  Before starting autopilot sequence, systems check state values:\n  if (gearState !== \"PARK\") {\n    throw Error(\"Lockout Triggered: Shift to Park first!\");\n  }\n  if (!footBrakeDepressed) {\n    throw Error(\"Lockout Triggered: Brake pedal must be pressed!\");\n  }",
-      keywords: "preconditions assertions contract validation code"
+      name: "Networks & the Client-Server Model",
+      desc: "Core Definition:\n  A CLIENT (your browser) sends a REQUEST across a network to a SERVER, which looks up or processes data and sends back a RESPONSE. Every webpage you've ever loaded — including this platform — used this exact request → response cycle, often dozens of times per page.\n\nWhy It Matters:\n  'The website is down' can mean several different things: the server crashed, the network connection dropped, or the client (browser) has a bug. Separating the client's job from the server's job is what lets you localize where a problem actually is, instead of guessing.\n\nWorked Example — Loading This Platform:\n  1. Your browser (client) sends a request: 'give me the Student Report page.'\n  2. The server receives it, checks the database, builds the response.\n  3. The server sends the response (HTML/JSON data) back across the network.\n  4. Your browser renders it into the page you see.",
+      keywords: "network client server request response HTTP"
     },
     {
-      name: "Variables as Storage Registers",
-      desc: "Core Definition:\n  A variable is a named slot in the computer's memory that holds exactly one value at a time. Declaring let speed = 0; reserves a labeled box called speed that the rest of your program can read from and write to by name — you never have to track a raw memory address yourself.\n\nWhy It Matters:\n  Variables are how a program 'remembers' anything between one line and the next: the car's position, the player's score, whether the engine is running. Without them, every value would be a hardcoded literal and nothing could change while the program runs — variables are what make a program interactive instead of a fixed slideshow.\n\nJavaScript Syntax Cheat Sheet:\n  let speed = 0;        // Declares a number variable\n  let isRunning = true; // Declares a boolean (true/false) variable\n  let driver = \"Agent\"; // Declares a string (text) variable\n\nHow Variables Change:\n  speed = 10;           // Overwrites old value. speed is now 10.\n  speed = speed + 5;    // Evaluates right side (10 + 5) first, then saves 15.",
-      keywords: "declaring variables javascript let const data types"
+      name: "The Web Technology Stack (HTML, CSS, JavaScript & the Browser)",
+      desc: "Core Definition:\n  Every webpage is built from exactly three technologies, each with one job: HTML defines STRUCTURE and CONTENT (what elements exist), CSS defines STYLE and APPEARANCE (how they look), and JavaScript defines BEHAVIOR and INTERACTIVITY (what happens when you click, press a key, or wait). The browser reads all three and renders the final result on screen.\n\nWhy It Matters:\n  Diagnosing 'why does my page look wrong' starts with identifying which of the three technologies is responsible for the broken part. Text in the wrong place with no color or layout at all almost always means CSS failed to load — the HTML (content) is fine, but nothing is styled.\n\nWorked Example — The Racing Car Game (Sessions 2-12):\n  - HTML (Session 2): the track, the car, the scoreboard containers.\n  - CSS (Session 3): lane colors, car positioning, layout.\n  - JavaScript (Sessions 4-12): variables, keyboard controls, collisions, scoring.",
+      keywords: "HTML CSS JavaScript web stack browser rendering"
+    },
+    {
+      name: "The AI-Era 5-Step Development Loop",
+      desc: "Core Definition:\n  The process this entire course uses, every session, starting with Session 2: (1) Plan & Design — think before you type, (2) Write the AI Prompt — turn the plan into a precise instruction, (3) Review & Explain — read and understand every line the AI generated, (4) Test & Break It — try to make it fail, (5) Iterate & Improve — refine the prompt based on what you found, and repeat.\n\nWhy It Matters:\n  In the AI era, typing code from scratch is no longer the bottleneck — knowing WHAT to ask for, and whether what you got back is actually correct, is. A student who can run this 5-step loop can work with any AI coding tool, in any language, for the rest of their career.\n\nWhere You'll Use It Next:\n  Starting with Session 2's HTML lab, every Sandbox Exercise set and every Project Journal entry in this course is structured around these exact 5 steps.",
+      keywords: "5-step loop plan prompt review test iterate AI-era methodology"
     }
   ],
   'l1-s2': [
@@ -734,6 +739,142 @@ const CAMPAIGN_THEMES = {
     }
   }
 };
+
+const S1_EXERCISES = [
+  {
+    num: 1,
+    title: "Exercise 1.1: [Plan & Design] Mapping the Machine",
+    problem: "Before touching any code, you need to know what's physically running your game versus what's just instructions telling it what to do.",
+    instruction: "List which of these are HARDWARE and which are SOFTWARE: the CPU, the game code (game.js), the RAM, the operating system, the monitor, the web browser.",
+    preloaded: "/* Write your answer here: label each item HARDWARE or SOFTWARE */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('hardware') && clean.includes('software') && clean.includes('cpu') && clean.includes('ram');
+    },
+    hint: "Hardware = physical parts you can touch (CPU, RAM, monitor). Software = instructions running on that hardware (the OS, the browser, game.js).",
+    reference: "🖥️ HARDWARE = physical, touchable parts (CPU, RAM, GPU, monitor, keyboard). 💻 SOFTWARE = instructions that run ON that hardware (operating system, browser, game code)."
+  },
+  {
+    num: 2,
+    title: "Exercise 1.2: [Write AI Prompt] Requesting a Plain-English Explanation",
+    problem: "A precise prompt gets a precise, useful answer — a vague one gets a vague one.",
+    instruction: "Write an AI prompt asking an AI IDE to explain, in one sentence, the difference between RAM and storage (like an SSD) — using a racing game's saved replay files vs. the game currently running as the example.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('ram') && (clean.includes('storage') || clean.includes('ssd')) && clean.includes('difference');
+    },
+    hint: "Mention: RAM, storage/SSD, difference, and ask for one sentence using the racing game as an example.",
+    reference: "RAM = short-term active memory, cleared on restart. Storage (SSD/HDD) = long-term memory, keeps files after shutdown."
+  },
+  {
+    num: 3,
+    title: "Exercise 1.3: [Review & Explain] Reading a System Resource Report",
+    problem: "A teammate says the racing game 'feels laggy' and pastes this resource snapshot: CPU usage: 91%. RAM usage: 38%. Disk usage: 12%.",
+    instruction: "Which hardware resource is the bottleneck causing the lag — CPU, RAM, or Disk?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('cpu');
+    },
+    hint: "CPU — it's the resource sitting near 100% usage, meaning the processor itself is the bottleneck, not memory or storage.",
+    reference: "CPU = the 'brain' doing calculations. RAM = short-term workspace. Disk = long-term storage & file reads/writes. High % on one = that resource is the bottleneck."
+  },
+  {
+    num: 4,
+    title: "Exercise 1.4: [Test & Break] The Out-of-Memory Crash",
+    problem: "Bug: the racing game loads 500 full-resolution, uncompressed car images into memory all at once before the race even starts, then crashes on low-end laptops.",
+    instruction: "Which hardware resource is being overloaded, causing the crash — CPU, RAM, or the network connection?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('ram') || clean.includes('memory');
+    },
+    hint: "RAM (memory) — loading hundreds of large images at once fills up available memory faster than the system can handle.",
+    reference: "Loading many large files into RAM at once is a classic memory bottleneck — the same failure mode as opening too many browser tabs."
+  },
+  {
+    num: 5,
+    title: "Exercise 1.5: [Iterate & Improve] Optimizing the Load",
+    problem: "Now that you know RAM is the bottleneck from 1.4, the fix isn't 'buy more RAM' — it's changing how the software behaves.",
+    instruction: "Propose ONE software-side fix that reduces memory usage without needing new hardware (hint: does the game need all 500 images loaded before the race even starts?).",
+    preloaded: "/* Write your proposed fix here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('compress') || clean.includes('lazy') || (clean.includes('load') && clean.includes('only'));
+    },
+    hint: "Compress the images, or lazy-load them (only load each car's image right before it's needed) instead of loading all 500 upfront.",
+    reference: "Common fixes: compress assets, lazy-load (only load what's needed, when it's needed), reuse objects instead of creating new ones."
+  },
+  {
+    num: 6,
+    title: "Exercise 1.6: [Plan & Design] Mapping the Request",
+    problem: "Before you can explain how the internet works, you need to know who talks to whom.",
+    instruction: "Describe the request cycle: the Browser (Client) sends a request, the Server looks up the data, the Server sends back a response, the Browser displays the page. Name all four parts in your answer.",
+    preloaded: "/* Write your answer here, naming all 4 parts */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('browser') && clean.includes('request') && clean.includes('server') && (clean.includes('response') || clean.includes('sends back') || clean.includes('sendsback'));
+    },
+    hint: "Order: 1) Browser (Client) sends a request 2) Server looks up the data 3) Server sends back the page (response) 4) Browser displays the page.",
+    reference: "Client-Server Model: Client (browser) = requests. Server = stores/processes data and responds. This request→response cycle repeats for every page load."
+  },
+  {
+    num: 7,
+    title: "Exercise 1.7: [Write AI Prompt] Explaining HTTP Requests",
+    problem: "You want the AI IDE to explain a concept, not write code yet — the prompt needs to ask for an explanation, precisely scoped.",
+    instruction: "Write an AI prompt asking to explain, in beginner-friendly terms, what happens when a browser requests a web page — make sure your prompt mentions client, server, request, and response.",
+    preloaded: "/* Write your AI Prompt here: */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('client') && clean.includes('server') && clean.includes('request') && clean.includes('response');
+    },
+    hint: "Mention: client, server, request, and response — those four words are what makes the prompt precise instead of vague.",
+    reference: "HTTP = HyperText Transfer Protocol, the request/response 'language' browsers and servers speak to each other."
+  },
+  {
+    num: 8,
+    title: "Exercise 1.8: [Review & Explain] The Web Trio's Jobs",
+    problem: "Every webpage — including the Racing Car Game you'll start building next session — is built from exactly three technologies, each with one job.",
+    instruction: "In one short phrase each, state what HTML, CSS, and JavaScript are each responsible for (e.g. 'HTML = ___, CSS = ___, JS = ___').",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      const hasHtml = clean.includes('html') && (clean.includes('structure') || clean.includes('content') || clean.includes('skeleton'));
+      const hasCss = clean.includes('css') && (clean.includes('style') || clean.includes('look') || clean.includes('visual') || clean.includes('design'));
+      const hasJs = (clean.includes('javascript') || clean.includes('js')) && (clean.includes('behavior') || clean.includes('logic') || clean.includes('interact'));
+      return hasHtml && hasCss && hasJs;
+    },
+    hint: "HTML = structure/content, CSS = style/appearance, JavaScript = behavior/interactivity.",
+    reference: "HTML = structure/content. CSS = style/appearance. JavaScript = behavior/interactivity. All three together = a complete webpage."
+  },
+  {
+    num: 9,
+    title: "Exercise 1.9: [Test & Break] The Site That \"Looks Broken\"",
+    problem: "Bug report: 'The racing game page loads — I can see the words \"Score: 0\" and the buttons — but everything is plain black text on a white background with no layout, no colors, no positioning at all.'",
+    instruction: "Which of the three web technologies (HTML, CSS, or JavaScript) most likely failed to load, based on this symptom?",
+    preloaded: "/* Write your answer here */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('css');
+    },
+    hint: "CSS — the content (HTML) is clearly there since you can read the text, but nothing is STYLED, which is exactly CSS's job.",
+    reference: "If text appears but styling doesn't, the CSS file failed to load or link — a very common real bug (wrong file path, typo in the <link> tag)."
+  },
+  {
+    num: 10,
+    title: "Exercise 1.10: [Iterate & Improve] The 5-Step Loop, Applied to This Course",
+    problem: "Every session from here on — including your very next one — will use the same repeating process to work with an AI IDE.",
+    instruction: "Write the 5 steps of the AI-Era Development Loop, in order, that this course uses in every session (hint: it starts with Plan & Design and ends with Iterate & Improve).",
+    preloaded: "/* Write the 5 steps here, in order */",
+    validate: (code) => {
+      const clean = code.toLowerCase();
+      return clean.includes('plan') && clean.includes('prompt') && clean.includes('review') && clean.includes('test') && clean.includes('iterate');
+    },
+    hint: "1. Plan & Design 2. Write the AI Prompt 3. Review & Explain 4. Test & Break It 5. Iterate & Improve",
+    reference: "This 5-step loop repeats every single session for the rest of this course — memorize it now, since Session 2 uses it immediately."
+  }
+];
 
 const S2_EXERCISES = [
   {
@@ -4187,7 +4328,7 @@ const S12_EXERCISES = [
 // claimable once every one of its exercises has been passed (no jumping straight
 // to the final exercise), preserving the curriculum's "cognitive resistance" design.
 const EXERCISE_COUNTS = {
-  'l1-s1': 5, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 10, 'l1-s5': 10, 'l1-s6': 10,
+  'l1-s1': 10, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 10, 'l1-s5': 10, 'l1-s6': 10,
   'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10,
   'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10, 'l2-s5': 10, 'l2-s6': 10, 'l2-s7': 10, 'l2-s8': 10,
   'l2-s9': 10, 'l2-s10': 10, 'l2-s11': 10, 'l2-s12': 10, 'l2-s13': 10
@@ -4335,11 +4476,11 @@ export default function App() {
   };
   
   // Sandbox states
-  const [sandboxRole, setSandboxRole] = useState('Junior Autopilot Car Controller');
-  const [sandboxTask, setSandboxTask] = useState('Configure autopilot car sequential driving instructions');
-  const [sandboxConstraints, setSandboxConstraints] = useState('Verify P/N gear and depress brake pedal before starting ignition.');
-  const [sandboxInput, setSandboxInput] = useState('gearState, brakeState, engineIgnition');
-  const [sandboxEdgeCases, setSandboxEdgeCases] = useState('Incorrect ignition sequence, gear shifting lockouts');
+  const [sandboxRole, setSandboxRole] = useState('Junior Systems Analyst');
+  const [sandboxTask, setSandboxTask] = useState('Explain the hardware, network, and web-technology layers behind the Racing Car Game platform');
+  const [sandboxConstraints, setSandboxConstraints] = useState('Keep answers plain-English and precise: name the specific hardware resource, network step, or web technology responsible.');
+  const [sandboxInput, setSandboxInput] = useState('Plain-English answers and short AI prompts');
+  const [sandboxEdgeCases, setSandboxEdgeCases] = useState('Confusing hardware limits with software bugs, vague prompts that could apply to anything');
   const [sandboxCodeOutput, setSandboxCodeOutput] = useState(null);
   
   // Chaos Monkey console states
@@ -4352,16 +4493,14 @@ export default function App() {
 
   // Per-exercise saved work, keyed by `${sessionId}-${exerciseNum}`. Populated when a
   // student switches away from an exercise tab, so switching back restores what they'd
-  // typed (or, for Session 1's drag-and-drop sequencer, arranged) instead of the
-  // preloaded/preset starting state.
+  // typed instead of the preloaded/preset starting state.
   const [savedExerciseCode, setSavedExerciseCode] = useState({});
 
-  // Level 1 Session 1 (Car Autopilot Sequencer) Simulator States
-  const [s1Sequence, setS1Sequence] = useState([]);
+  // Level 1 Session 1 (Systems Briefing) States
+  const [s1ActiveExercise, setS1ActiveExercise] = useState(1);
+  const [s1CodeInput, setS1CodeInput] = useState('');
   const [s1Logs, setS1Logs] = useState([]);
-  const [s1Executing, setS1Executing] = useState(false);
   const [s1Success, setS1Success] = useState(false);
-  const [s1ActiveExercise, setS1ActiveExercise] = useState(1); // Exercises 1 to 5
 
   // Level 1 Session 2 (HTML Sandbox) States
   const [s2ActiveExercise, setS2ActiveExercise] = useState(1);
@@ -5160,22 +5299,6 @@ export default function App() {
     setJournalSessionPickerOpen(false);
   };
 
-  const handleMoveS1Step = (idx, direction) => {
-    setS1Sequence(prev => {
-      const next = [...prev];
-      if (direction === 'up' && idx > 0) {
-        const temp = next[idx];
-        next[idx] = next[idx - 1];
-        next[idx - 1] = temp;
-      } else if (direction === 'down' && idx < next.length - 1) {
-        const temp = next[idx];
-        next[idx] = next[idx + 1];
-        next[idx + 1] = temp;
-      }
-      return next;
-    });
-  };
-
   const updatePointsDB = (newVal) => {
     setPoints(newVal);
     if (!token) return;
@@ -5494,11 +5617,15 @@ export default function App() {
   const loadTemplate = (session) => {
     setSandboxSessionId(session.id);
     if (session.id === 'l1-s1') {
-      setSandboxRole(campaignId === 'cyberpunk' ? 'Junior Autopilot Car Controller' : campaignId === 'mars' ? 'Atmospheric Telemetry Systems Operator' : 'Junior Apprentice Spellcaster');
-      setSandboxTask(campaignId === 'cyberpunk' ? 'Configure autopilot car sequential driving instructions' : campaignId === 'mars' ? 'Configure oxygen regulator sequential boot instructions' : 'Write cauldron cauldron sequence');
-      setSandboxConstraints(campaignId === 'cyberpunk' ? 'Verify P/N gear and depress brake pedal before starting ignition.' : campaignId === 'mars' ? 'Power regulator boot sequence, verify oxygen levels.' : 'Goblin proof shields. Cauldron heat monitoring.');
-      setSandboxInput(campaignId === 'cyberpunk' ? 'gearState, brakeState, engineIgnition' : campaignId === 'mars' ? 'powerState, oxygenSensorValue, regulatorValveState' : 'cauldronTemp, goblinBait');
-      setSandboxEdgeCases(campaignId === 'cyberpunk' ? 'Incorrect ignition sequence, gear shifting lockouts' : campaignId === 'mars' ? 'Unpowered boot checks, sensor failure' : 'Mana spikes, double cast');
+      setSandboxRole('Junior Systems Analyst');
+      setSandboxTask('Explain the hardware, network, and web-technology layers behind the Racing Car Game platform');
+      setSandboxConstraints('Keep answers plain-English and precise: name the specific hardware resource, network step, or web technology responsible.');
+      setSandboxInput('Plain-English answers and short AI prompts');
+      setSandboxEdgeCases('Confusing hardware limits with software bugs, vague prompts that could apply to anything');
+      setS1ActiveExercise(1);
+      setS1CodeInput(S1_EXERCISES[0].preloaded);
+      setS1Logs([]);
+      setS1Success(false);
     } else if (session.id === 'l1-s2') {
       setSandboxRole('Junior HTML Developer');
       setSandboxTask('Assemble HTML elements for the Racing Car Game track and dashboard');
@@ -6189,7 +6316,7 @@ export default function App() {
                       <div className="feed-item">
                         <span className="feed-time">19:42</span>
                         <div className="feed-message">
-                          Prompt spec revised: <strong>Household IPO Blueprint</strong> (v2 created)
+                          Prompt spec revised: <strong>Project Kickoff & Roadmap</strong> (v2 created)
                         </div>
                       </div>
                       <div className="feed-item">
@@ -6753,447 +6880,122 @@ export default function App() {
                 {/* Main Content Area */}
                 <div style={{ flexGrow: 1, height: 'calc(100% - 60px)', minHeight: 0, overflowY: 'auto' }}>
               
-              {/* LEVEL 1 SESSION 1: CAR AUTOPILOT SEQUENCER */}
-               {sandboxSessionId === 'l1-s1' && (
+              {/* LEVEL 1 SESSION 1: SYSTEMS BRIEFING */}
+              {sandboxSessionId === 'l1-s1' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   {/* Exercise selector tabs */}
-                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <button 
-                        key={num}
-                        className={`btn-cyber btn-small ${s1ActiveExercise === num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                  <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
+                    {S1_EXERCISES.map((ex) => (
+                      <button
+                        key={ex.num}
+                        className={`btn-cyber btn-small ${s1ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
-                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s1-${s1ActiveExercise}`]: s1Sequence }));
-
-                          // Pre-setup presets for specific exercises (used only the first time
-                          // an exercise is visited — a saved arrangement below takes priority).
-                          let defaultSequence = [];
-                          if (num === 3) {
-                            // Exercise 1.3 Pre-setup (Scrambled automatic car sequence)
-                            defaultSequence = [
-                              { id: 'start_engine', label: 'Turn Ignition Key to Start' },
-                              { id: 'check_gear_pn', label: 'Check P/N Gear State' },
-                              { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' },
-                              { id: 'press_brake', label: 'Depress Brake Pedal' },
-                              { id: 'release_handbrake', label: 'Release Handbrake' },
-                              { id: 'press_gas', label: 'Press Gas Pedal' },
-                              { id: 'release_brake', label: 'Release Brake Pedal' }
-                            ];
-                          } else if (num === 4) {
-                            // Exercise 1.4 Pre-setup (Preloaded steps with an extra incorrect step to remove)
-                            defaultSequence = [
-                              { id: 'check_gear_pn', label: 'Check P/N Gear State' },
-                              { id: 'press_brake', label: 'Depress Brake Pedal' },
-                              { id: 'start_engine', label: 'Turn Ignition Key to Start' },
-                              { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)' },
-                              { id: 'release_handbrake', label: 'Release Handbrake' },
-                              { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)' }, // EXTRA step to remove!
-                              { id: 'release_brake', label: 'Release Brake Pedal' },
-                              { id: 'press_gas', label: 'Press Gas Pedal' }
-                            ];
-                          }
-
-                          setS1ActiveExercise(num);
-                          setS1Sequence(savedExerciseCode[`l1-s1-${num}`] ?? defaultSequence);
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s1-${s1ActiveExercise}`]: s1CodeInput }));
+                          setS1ActiveExercise(ex.num);
+                          setS1CodeInput(savedExerciseCode[`l1-s1-${ex.num}`] ?? ex.preloaded);
                           setS1Logs([]);
                           setS1Success(false);
                         }}
                       >
-                        Exercise 1.{num}{(exerciseProgress['l1-s1'] || []).includes(num) ? ' ✓' : ''}
+                        Ex 1.{ex.num}{(exerciseProgress['l1-s1'] || []).includes(ex.num) ? ' ✓' : ''}
                       </button>
                     ))}
                   </div>
 
-                  {/* Exercise Card Header: Description, Instruction, and Explanation */}
-                  <div className="glass-panel" style={{ padding: '15px', background: 'rgba(0, 242, 254, 0.02)', border: '1px solid rgba(0, 242, 254, 0.1)' }}>
-                    {s1ActiveExercise === 1 && (
-                      <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.1: Basic Start & Move (Logical Sequencing)</h4>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The automatic security vehicle needs to start its engine and drive forward.
-                        </p>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Before a vehicle can drive off, you must safely start the engine and place it in Drive. Observe the dashboard handbrake condition first to see if you can skip releasing it. Remember, the starter motor will not run and gear locks will not disengage unless safety checks (checking P/N gear and holding the footbrake) are done first.
-                        </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0 0 8px 0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Computers execute steps literally. Automatic gearboxes have safety switches. The starter motor will not turn unless you depress the brake and ensure gear selector is in P or N.
-                        </p>
-                        <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(0, 255, 204, 0.05)', borderRadius: '4px', borderLeft: '3px solid #00ffcc', fontSize: '0.8rem' }}>
-                          🚦 <strong>Dashboard Condition Status:</strong> Handbrake is <span style={{ color: '#00ffcc', fontWeight: 'bold' }}>RELEASED (OFF)</span>.
-                        </div>
-                      </div>
-                    )}
-                    {s1ActiveExercise === 2 && (
-                      <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.2: Basic Start & Reverse (Logical Sequencing)</h4>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The vehicle needs to start its engine and reverse out of a parking space.
-                        </p>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> To back out of a space, start the engine and select Reverse gear. Pay close attention to the dashboard condition status: if the handbrake is engaged, you must release it in your sequence before disengaging the footbrake and accelerating, otherwise the engine will stall.
-                        </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0 0 8px 0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> This follows the exact same logical security checklist as starting and driving forward, but you must release the handbrake manually since it is engaged.
-                        </p>
-                        <div style={{ marginTop: '8px', padding: '8px 12px', background: 'rgba(255, 77, 77, 0.05)', borderRadius: '4px', borderLeft: '3px solid #ff4d4d', fontSize: '0.8rem' }}>
-                          🚦 <strong>Dashboard Condition Status:</strong> Handbrake is <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>ENGAGED (ON)</span>.
-                        </div>
-                      </div>
-                    )}
-                    {s1ActiveExercise === 3 && (
-                      <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.3: Autopilot Sequence Correction (Debugging)</h4>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The preloaded autopilot driving script is scrambled and fails safety checks.
-                        </p>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> The script sequence has execution logic errors. Click "Run Autopilot Script", look at the terminal logs on the right to diagnose exactly which safety switch locked (e.g. starter lockout), and rearrange the cards in correct chronological order.
-                        </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Watch the terminal output logs to trace where the sequence violates safety checks (e.g. attempting to start ignition in Drive gear).
-                        </p>
-                      </div>
-                    )}
-                    {s1ActiveExercise === 4 && (
-                      <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.4: Code Cleanup (Debugging Extra Steps)</h4>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> The preloaded script has an extra, incorrect step that causes a safety violation.
-                        </p>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Inspect the preloaded commands in the workspace. Find the single card that is redundant or out of place (hint: shifting to Reverse in the middle of driving forward) and click its "×" button to remove it.
-                        </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Unused or invalid logic blocks in a sequence can trigger safety lockouts or errors. Code cleanup is a key part of debugging.
-                        </p>
-                      </div>
-                    )}
-                    {s1ActiveExercise === 5 && (
-                      <div>
-                        <h4 style={{ color: 'var(--accent-cyan)', margin: '0 0 8px 0' }}>🎯 Exercise 1.5: Emergency Halt (Continuous State Checks)</h4>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-secondary)' }}>
-                          <strong>Problem:</strong> An obstacle is detected on the road ahead. The vehicle must be brought to a halt.
-                        </p>
-                        <p style={{ fontSize: '0.85rem', margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          <strong>Instruction:</strong> Sequence commands to safely boot the system, shift to Drive, and accelerate forward. However, you must add the final control command at the very end to depress the footbrake pedal and stop before hit.
-                        </p>
-                        <p style={{ fontSize: '0.75rem', margin: '0', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          <strong>Explanation:</strong> Safety rules check conditions continuously. Depressing the footbrake pedal instantly changes speed to 0 mph, stopping the car safely.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
                   <div className="simulator-grid">
-                    <div className="glass-panel sim-left">
-                      <div className="panel-header">
-                        <h3>Available Driving Commands</h3>
+                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div className="panel-header">
+                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S1_EXERCISES[s1ActiveExercise - 1].title}</h4>
+                        </div>
+                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                            <strong>Problem:</strong> {S1_EXERCISES[s1ActiveExercise - 1].problem}
+                          </p>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
+                            <strong>Instruction:</strong> {S1_EXERCISES[s1ActiveExercise - 1].instruction}
+                          </p>
+                        </div>
                       </div>
-                      <div className="sim-panel-body drone-commands">
-                        <p className="sim-instructions" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 10px 0' }}>Click commands to add to sequence workspace:</p>
-                        {(() => {
-                          const allCommands = [
-                            { id: 'start_engine', label: 'Turn Ignition Key to Start', icon: '🔑' },
-                            { id: 'release_handbrake', label: 'Release Handbrake', icon: '🛑' },
-                            { id: 'shift_d', label: 'Shift Gear Selector to D (Drive)', icon: '⚙️' },
-                            { id: 'press_gas', label: 'Press Gas Pedal', icon: '🚀' },
-                            { id: 'check_gear_pn', label: 'Check P/N Gear State', icon: '🔍' },
-                            { id: 'shift_r', label: 'Shift Gear Selector to R (Reverse)', icon: '⚙️' },
-                            { id: 'press_brake', label: 'Depress Brake Pedal', icon: '🦶' },
-                            { id: 'release_brake', label: 'Release Brake Pedal', icon: '🦶' },
-                            { id: 'shift_p', label: 'Shift Gear Selector to P (Park)', icon: '⚙️' },
-                            { id: 'engage_handbrake', label: 'Engage Handbrake', icon: '🛑' }
-                          ];
-                          const availableCommands = allCommands.filter(cmd => {
-                            const maxAllowed = (s1ActiveExercise === 5 && cmd.id === 'press_brake') ? 2 : 1;
-                            const currentCount = s1Sequence.filter(s => s.id === cmd.id).length;
-                            return currentCount < maxAllowed;
-                          });
-                          return (
-                            <div className="drone-actions-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                              {availableCommands.map((cmd) => (
-                                <button 
-                                  key={cmd.id} 
-                                  className="btn-sim-action" 
-                                  onClick={() => setS1Sequence(prev => [...prev, { id: cmd.id, label: cmd.label }])}
-                                >
-                                  <span className="sim-action-icon">{cmd.icon}</span> {cmd.label}
-                                </button>
-                              ))}
-                              {availableCommands.length === 0 && (
-                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic', textAlign: 'center', padding: '10px' }}>
-                                  All commands moved to workspace.
-                                </p>
-                              )}
-                            </div>
-                          );
-                        })()}
+
+                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <button
+                          className={`btn-cyber ${s1Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                          onClick={() => {
+                            const ex = S1_EXERCISES[s1ActiveExercise - 1];
+                            const logs = [{ type: 'info', text: `Analyzing your answer for Exercise 1.${s1ActiveExercise}...` }];
+                            const pass = ex.validate(s1CodeInput);
+                            if (pass) {
+                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} verification passed.` });
+                              setS1Success(true);
+                              const prog = markExerciseComplete('l1-s1', s1ActiveExercise);
+                              if (prog.allDone) {
+                                logs.push({ type: 'success', text: '✓ SESSION 1 BRIEFING COMPLETE! You now have the systems knowledge to start building.' });
+                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                              } else {
+                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                              }
+                            } else {
+                              logs.push({ type: 'error', text: `✗ Not quite. Check your answer against the key concepts.` });
+                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                              setS1Success(false);
+                            }
+                            setS1Logs(logs);
+                          }}
+                        >
+                          {s1Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                        </button>
+                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => setS1CodeInput(S1_EXERCISES[s1ActiveExercise - 1].preloaded)}>
+                          Reset Answer
+                        </button>
                       </div>
                     </div>
 
                     <div className="glass-panel sim-middle">
                       <div className="panel-header">
-                        <h3>Command Sequence Workspace</h3>
-                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS1Sequence([]); setS1Logs([]); setS1Success(false); }}>Reset</button>
+                        <h3>Answer Sheet</h3>
                       </div>
-                      <div className="sim-panel-body sequence-workspace">
-                        {s1Sequence.length === 0 ? (
-                          <div className="sequence-empty">
-                            Workspace Empty. Click commands on the left to sequence the script.
-                          </div>
-                        ) : (
-                          <div className="sequence-cards-list">
-                            {s1Sequence.map((cmd, idx) => (
-                              <div key={idx} className="sequence-card animate-in" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span className="sequence-number">Step {idx + 1}</span>
-                                <span className="sequence-label">{cmd.label}</span>
-                                <div style={{ display: 'flex', gap: '4px', marginLeft: 'auto', alignItems: 'center' }}>
-                                  <button 
-                                    className="btn-card-move-arrow" 
-                                    onClick={() => handleMoveS1Step(idx, 'up')}
-                                    disabled={idx === 0}
-                                    style={{ background: 'transparent', border: 'none', color: idx === 0 ? 'rgba(255,255,255,0.1)' : 'var(--accent-cyan)', cursor: 'pointer', padding: '0 4px', fontSize: '0.9rem' }}
-                                  >
-                                    ▲
-                                  </button>
-                                  <button 
-                                    className="btn-card-move-arrow" 
-                                    onClick={() => handleMoveS1Step(idx, 'down')}
-                                    disabled={idx === s1Sequence.length - 1}
-                                    style={{ background: 'transparent', border: 'none', color: idx === s1Sequence.length - 1 ? 'rgba(255,255,255,0.1)' : 'var(--accent-cyan)', cursor: 'pointer', padding: '0 4px', fontSize: '0.9rem' }}
-                                  >
-                                    ▼
-                                  </button>
-                                  <button className="btn-card-remove" onClick={() => setS1Sequence(prev => prev.filter((_, i) => i !== idx))}>×</button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <div className="sim-footer">
-                        <button 
-                          className="btn-cyber btn-cyber-primary" 
-                          onClick={() => {
-                            if (s1Executing) return;
-                            setS1Executing(true);
-                            setS1Logs([{ type: 'info', text: '🤖 Autopilot: Initializing automatic transmission safety diagnostics...' }]);
-                            
-                            let currentStep = 0;
-                            let hasError = false;
-                            const logsToAppend = [];
-                            
-                            // Automatic Car State Variables
-                            let checkedPN = false;
-                            let brakePressed = false;
-                            let engineStarted = false;
-                            let gear = 'P'; // P, D, R
-                            let handbrakeReleased = s1ActiveExercise === 1;
-                            let speed = 0;
-                            
-                            const runNext = () => {
-                              if (s1Sequence.length === 0) {
-                                setS1Logs(prev => [...prev, { type: 'error', text: 'Error: Autopilot workspace is empty. Car remained parked.' }]);
-                                setS1Executing(false);
-                                return;
-                              }
- 
-                              if (currentStep >= s1Sequence.length) {
-                                if (!hasError) {
-                                  const ids = s1Sequence.map(c => c.id).join(',');
-                                  
-                                  if (s1ActiveExercise === 1) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_brake,press_gas';
-                                    if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving forward in Drive. Autopilot basic setup complete!' }]);
-                                      setS1Success(true);
-                                      {
-                                        const prog = markExerciseComplete('l1-s1', 1);
-                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
-                                      }
-                                    } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & drive off sequence.' }]);
-                                    }
-                                  } else if (s1ActiveExercise === 2) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_r,release_handbrake,release_brake,press_gas';
-                                    if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Vehicle moving backward in Reverse. Autopilot reversing setup complete!' }]);
-                                      setS1Success(true);
-                                      {
-                                        const prog = markExerciseComplete('l1-s1', 2);
-                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
-                                      }
-                                    } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Incorrect basic start & reverse off sequence.' }]);
-                                    }
-                                  } else if (s1ActiveExercise === 3) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
-                                    if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Autopilot sequence rearranged correctly. Cruising in Drive!' }]);
-                                      setS1Success(true);
-                                      {
-                                        const prog = markExerciseComplete('l1-s1', 3);
-                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
-                                      }
-                                    } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Scrambled script sequence is still incorrect.' }]);
-                                    }
-                                  } else if (s1ActiveExercise === 4) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas';
-                                    if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Debugging successful! Incorrect R-gear shift step removed.' }]);
-                                      setS1Success(true);
-                                      {
-                                        const prog = markExerciseComplete('l1-s1', 4);
-                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
-                                      }
-                                    } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Extra incorrect step is still in the workspace!' }]);
-                                    }
-                                  } else if (s1ActiveExercise === 5) {
-                                    const isCorrect = ids === 'check_gear_pn,press_brake,start_engine,shift_d,release_handbrake,release_brake,press_gas,press_brake';
-                                    if (isCorrect) {
-                                      setS1Logs(prev => [...prev, { type: 'success', text: '✓ SUCCESS: Emergency stop executed safely! Vehicle brought to a secure halt.' }]);
-                                      setS1Success(true);
-                                      {
-                                        const prog = markExerciseComplete('l1-s1', 5);
-                                        setS1Logs(prev => [...prev, { type: prog.allDone ? 'success' : 'info', text: prog.allDone ? '✓ ALL 5 AUTOPILOT EXERCISES COMPLETE! Session 1 certified.' : `Progress: ${prog.doneCount}/${prog.total} exercises complete.` }]);
-                                      }
-                                    } else {
-                                      setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Emergency stop failed or stalled.' }]);
-                                    }
-                                  }
-                                }
-                                setS1Executing(false);
-                                return;
-                              }
- 
-                              const cmd = s1Sequence[currentStep];
-                              let actionId = cmd.id;
-                              if (actionId === 'press_brake_stop') actionId = 'press_brake';
-                              if (actionId === 'release_brake_drive') actionId = 'release_brake';
-                              if (actionId === 'press_gas_cruise') actionId = 'press_gas';
- 
-                              if (actionId === 'check_gear_pn') {
-                                checkedPN = true;
-                                logsToAppend.push({ type: 'info', text: '🔍 [Transmission Log] Gear checked. Gear selector is currently in P (Park) (P/N Check = TRUE).' });
-                              } else if (actionId === 'press_brake') {
-                                brakePressed = true;
-                                if (speed !== 0) {
-                                  speed = 0;
-                                  logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Footbrake pedal depressed. Vehicle brought to a secure halt.' });
-                                } else {
-                                  logsToAppend.push({ type: 'info', text: '🦶 [Pedal Log] Footbrake pedal depressed (footbrakeState = DEPRESSED).' });
-                                }
-                              } else if (actionId === 'start_engine') {
-                                if (!checkedPN) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to start engine without verifying gear is in P or N! Safety lockout active.' });
-                                  hasError = true;
-                                } else if (!brakePressed) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Attempted to start engine without depressing footbrake! Starter safety switch locked.' });
-                                  hasError = true;
-                                } else {
-                                  engineStarted = true;
-                                  logsToAppend.push({ type: 'info', text: '🔑 [Ignition Log] Starter motor running. Engine active (engineState = RUNNING).' });
-                                }
-                              } else if (actionId === 'shift_d') {
-                                if (!engineStarted) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
-                                  hasError = true;
-                                } else if (!brakePressed) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector out of P/N without depressing the brake pedal.' });
-                                  hasError = true;
-                                } else {
-                                  gear = 'D';
-                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to D (Drive) (currentGear = D).' });
-                                }
-                              } else if (actionId === 'shift_r') {
-                                if (!engineStarted) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shifted gears while engine is offline.' });
-                                  hasError = true;
-                                } else if (!brakePressed) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to R (Reverse) without depressing the brake pedal.' });
-                                  hasError = true;
-                                } else {
-                                  gear = 'R';
-                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to R (Reverse) (currentGear = R).' });
-                                }
-                              } else if (actionId === 'shift_p') {
-                                if (!brakePressed) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Shift lock engaged! You cannot shift gear selector to P (Park) without depressing the brake pedal.' });
-                                  hasError = true;
-                                } else {
-                                  gear = 'P';
-                                  logsToAppend.push({ type: 'info', text: '⚙️ [Transmission Log] Shifted gear selector to P (Park) (currentGear = P).' });
-                                }
-                              } else if (actionId === 'release_handbrake') {
-                                handbrakeReleased = true;
-                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Mechanical handbrake released (handbrakeState = OFF).' });
-                              } else if (actionId === 'release_brake') {
-                                brakePressed = false;
-                                logsToAppend.push({ type: 'info', text: '🦶 [Pedal Log] Footbrake pedal released (footbrakeState = RELEASED).' });
-                              } else if (actionId === 'press_gas') {
-                                if (!engineStarted) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Pressed gas pedal with engine offline. Car stayed idle.' });
-                                  hasError = true;
-                                } else if (gear === 'P') {
-                                  logsToAppend.push({ type: 'info', text: '🚀 Engine revved in Park. Speed = 0 mph.' });
-                                } else if (!handbrakeReleased) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Gas pedal pressed while handbrake is engaged! Friction smoked the pads, engine stalled.' });
-                                  hasError = true;
-                                } else if (brakePressed) {
-                                  logsToAppend.push({ type: 'error', text: '💥 CRITICAL ERROR: Accelerator pressed while footbrake is fully depressed! Transmission overheated and stalled.' });
-                                  hasError = true;
-                                } else if (gear === 'D') {
-                                  speed = 25;
-                                  logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = 25 mph (Driving forward in D).' });
-                                } else if (gear === 'R') {
-                                  speed = -10;
-                                  logsToAppend.push({ type: 'info', text: '🚀 Gas pedal pressed. Acceleration active. Speed = -10 mph (Moving backward in R).' });
-                                }
-                              } else if (actionId === 'engage_handbrake') {
-                                handbrakeReleased = false;
-                                logsToAppend.push({ type: 'info', text: '🛑 [Brakes Log] Parking handbrake engaged (handbrakeState = ON).' });
-                              }
-                              
-                              setS1Logs(prev => [...prev, logsToAppend[logsToAppend.length - 1]]);
-                              
-                              if (hasError) {
-                                setS1Logs(prev => [...prev, { type: 'error', text: '✗ MISSION FAILURE: Safety systems halted vehicle.' }]);
-                                setS1Executing(false);
-                                return;
-                              }
- 
-                              currentStep++;
-                              setTimeout(runNext, 800);
-                            };
-                            setTimeout(runNext, 600);
-                          }} 
-                          disabled={s1Executing}
-                        >
-                          {s1Executing ? 'Executing Sequence...' : 'Run Autopilot Script'}
-                        </button>
+                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                        <textarea
+                          value={s1CodeInput}
+                          onChange={(e) => setS1CodeInput(e.target.value)}
+                          style={{
+                            width: '100%',
+                            height: '500px',
+                            background: 'rgba(6, 8, 20, 0.7)',
+                            color: '#00ffcc',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '4px',
+                            padding: '12px',
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.85rem',
+                            lineHeight: 1.5,
+                            resize: 'none'
+                          }}
+                          placeholder="Write your answer here..."
+                        />
                       </div>
                     </div>
 
                     <div className="glass-panel sim-right">
                       <div className="panel-header">
-                        <h3>Autopilot Telemetry Terminal</h3>
+                        <h3>Field Reference</h3>
                         {s1Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
                       </div>
-                      <div className="sim-panel-body drone-terminal">
-                        {s1Logs.length === 0 ? (
-                          <div className="terminal-empty">Terminal offline. Run the autopilot script to observe telemetry.</div>
-                        ) : (
-                          <div className="terminal-log-flow">
-                            {s1Logs.map((log, index) => (
-                              <div key={index} className={`terminal-log-item ${log.type}`}>
-                                {log.type === 'error' ? '💥 ' : log.type === 'success' ? '✓ ' : '🛰️ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div style={{ padding: '10px 12px', background: 'rgba(0, 242, 254, 0.04)', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                          {S1_EXERCISES[s1ActiveExercise - 1].reference}
+                        </div>
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {s1Logs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your answer and click Verify.</div>
+                          ) : s1Logs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
