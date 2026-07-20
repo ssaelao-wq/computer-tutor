@@ -256,6 +256,36 @@
   transition: width 0.4s ease;
 }
 
+@media (max-width: 900px) {
+  .header {
+    height: auto;
+    min-height: 70px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 12px 16px;
+    row-gap: 10px;
+  }
+
+  .header-title {
+    width: 100%;
+  }
+
+  .header-title h1 {
+    font-size: 1.1rem;
+    white-space: normal;
+  }
+
+  .header-stats {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .xp-progress {
+    width: 90px;
+  }
+}
+
 /* Content Container */
 .content-body {
   flex-grow: 1;
