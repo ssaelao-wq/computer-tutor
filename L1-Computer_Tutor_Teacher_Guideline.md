@@ -42,7 +42,7 @@ Before running classes, tutors must familiarize themselves with the administrati
 The lab track, aligned to each session's core concept:
 - **Lab 1 (Session 2)**: *HTML Document Skeleton* — Base containers (Track Arena, Player Car, Dashboard Panel).
 - **Lab 2 (Session 3)**: *CSS Sizing & Coordinates Layout* — Sizing '#game-track', absolute position '#player-car' and styled road dividers with white dashes.
-- **Lab 3 (Session 4)**: *JS Variable Registry* — Variables for position state, speed metrics, score registers, and crash flags.
+- **Lab 3 (Session 4)**: *Difficulty-Scaling State System* — Variables for position state, speed metrics, score registers, and a lives count, plus a student-designed score-driven difficulty rule. (Trial of a reduced 5-exercise/3-box Sandbox format — see the Session 4 section below.)
 - **Lab 4 (Session 5)**: *Keyboard Control Interfaces* — Keydown listeners registering steering moves (WASD/Arrows).
 - **Lab 5 (Session 6)**: *Safety Guards & Boundary Clamps* — Boundary checks clamping coordinates to keep the player on the road.
 - **Lab 6 (Session 7)**: *Obstacle Loop Generation* — Spawning oncoming obstacle cars dynamically using loops.
@@ -460,87 +460,61 @@ As in Session 2, the **Project Journal** milestone card ("Part 2: CSS Sizing & C
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. **Note on the live preview:** unlike the HTML/CSS sessions, most steps here show a "nothing to run yet" note. Only the two steps with a visible on-screen effect run live: **E5.9** (Test & Break — the missing `px` unit makes the car vanish, then reappear once fixed) and **E5.10** (Iterate & Improve — the complete steering handler; click the preview and press the arrow keys to steer). E5.4/E5.5 change only an in-memory value with no DOM output, so they are fixed as static code (this also keeps E5.4's "silent input fail" from surfacing a spurious runtime error).
+**Format note (Session 4 trial):** Session 4 is running a trial of a new, reduced sandbox format — **5 exercises** instead of 10, each with **3 input boxes** rather than one: (1) **Plan & Design**, (2) **Writing Prompt** and **Output Code** side by side, (3) **Explain the Output Code**. There is no separate Test & Break / Iterate & Improve step in the UI for this session — running the pasted Output Code live and explaining what it actually did covers both. The student pastes the *real* code their AI tool generated into Output Code (not a typed "model answer" like other sessions), so grading is a hybrid: "Verify" requires all 3 boxes to be filled in **and** a lightweight keyword check on the prompt/output/explanation text (not exact string matching, since real AI output varies). **Note on the live preview:** the preview no longer shows the racing-game track/car graphic used elsewhere in Level 1 — this session's code is variables & math only and never touches the DOM, so a car image would never change regardless of what the student wrote. Instead the preview panel is a **Console Output** box showing only real `console.log`/error text captured from running the pasted code; some exercises legitimately produce no printed output at all (declarations with no `console.log` are still a valid, complete answer — a blank Console Output is not a failure state here).
 
-Following the same principle as Sessions 2–3, the **[Plan & Design] steps stay at plain-language / system-design level** — the student describes *what changes, what stays fixed, what the system does* in plain words, and the technical form is accepted but never required. The JavaScript keywords (`let`, `const`, `event.key`, `requestAnimationFrame`, `textContent`, …) are each session's own board-lesson content and are *earned* at the **Write AI Prompt** and **Review & Explain** steps — not demanded at planning time.
+* **Exercise 4.1: The Core State Variables** — Declare `carX` (165), `speed` (0), `score` (0), `gameActive` (false).
+  * *Plan box expects:* which values change vs. stay fixed during play (all four change here — nothing fixed yet).
+  * *Prompt box must mention:* `let`, `carX`, `165`.
+  * *Output Code box must include:* `let` declarations for `carX`, `speed`, `score`, `gameActive` (correct Number/Boolean types, no quotes).
+  * *Explain box must cover:* why all four are `let` rather than `const` (they change during play).
+  * *Why:* Same design thinking as the old plan/prompt pair, now inside one exercise: name what changes, ask the AI for it with real starting values, and paste back the actual result instead of typing a model answer into a shared box.
+* **Exercise 4.2: Constants and the Lives Count** — Add `const TRACK_WIDTH`/`LANE_WIDTH` and a `let lives = 3` — the lives count is new; no earlier drill covers it.
+  * *Plan box expects:* naming the fixed values (track/lane width) and what `lives` starts at and whether it changes.
+  * *Prompt box must mention:* `const`, `lives`, `3`.
+  * *Output Code box must include:* a `const` declaration plus `lives`.
+  * *Explain box must cover:* why `TRACK_WIDTH`/`LANE_WIDTH` are `const` while `lives` is `let`, even though `3` looks like a fixed number.
+  * *Why:* Tests that "starts at a fixed-looking number" isn't the same as "never changes" — `lives` will decrement on a crash in a later session.
+* **Exercise 4.3: Math Increments on Game State** — `score++` (or `score += 1`) and `speed += 10`, logged to the console.
+  * *Plan box expects:* a plain-language description of how `score`/`speed` change — the specific amounts ("up by 1"/"up by 10") are expected, not just "they increase."
+  * *Prompt box must mention:* `score`, `speed`, `console.log`.
+  * *Output Code box must include:* `score++`/`score += 1` and `speed += 10`.
+  * *Explain box must predict:* the resulting values — `score = 1`, `speed = 10` (starting from 0).
+  * *Why:* Predicting a result by *reading* code before running it is the core Review skill; the pasted Output Code's console.log then lets the student confirm their own prediction against a real run, not a hypothetical.
+* **Exercise 4.4: The Quoted-Number Bug Hunt** — `let speed = "10"; speed += 5;` produces `"105"` instead of `15`. Fix it.
+  * *Plan box expects:* in the student's own words, why a quoted `"10"` behaves differently from a plain `10` in math.
+  * *Prompt box must mention:* `speed` plus one of `number`/`quote`/`string`.
+  * *Output Code box must include:* the corrected declaration, `let speed = 10;` (no quotes).
+  * *Explain box must mention:* both the buggy result (`"105"`) and the fixed result (`15`).
+  * *Why:* This is the session's signature bug made concrete: with a String, `+=` glues text instead of adding. Seeing the wrong and right outputs side by side (both named in the explanation) is what makes "data types matter" stick better than any lecture.
+* **Exercise 4.5: The Complete Variable Registry** — Assemble every declaration from the session (`carX`, `speed`, `score`, `gameActive`, `lives`, `TRACK_WIDTH`, `LANE_WIDTH`) into one registry. **Declarations only — no math or increments this time** (that was already proven in 4.3).
+  * *Plan box expects:* the full list of what to declare and which is `let` vs `const`.
+  * *Prompt box must mention:* `let`, `const`, `lives`.
+  * *Output Code box must include:* all seven declarations, correctly typed, no quoted numbers, **no math statements**.
+  * *Explain box must cover:* why each one is `let` vs `const`.
+  * *Why:* Deliberately narrowed to declarations-only so this exercise's answer doesn't double as a ready-made solution to the Project Task below — the Project Task is the only place in this session that asks the student to design and defend their own conditional logic. A copy-paste from this exercise into the Project Task will visibly be missing that entire layer.
 
-* **Exercise 4.1: [Plan & Design] The Variable Registry** — Sort the game's values into ones that change (`let`) vs ones fixed forever (`const`).
-  * *Editor expects:* Plain-language plan naming which values change vs stay fixed. **No `let`/`const` syntax required** (the technical form is still accepted).
-  * *Model answer:* `changing — car position, speed, score, game-running; fixed — lane width` (technical form `let carX, speed, score, gameActive | const LANE_WIDTH` also accepted)
-  * *Why:* State design starts by asking "what changes and what doesn't" — a decision the student makes in plain words before meeting the syntax. This step used to demand the literal `let`/`const` keywords in the session's very first exercise, before either had been written by hand; now the plan captures the *design thinking* (position/speed/score vary, lane width is fixed) and the keywords are earned at the prompt/review steps that follow — exactly as E3.1 does for CSS units.
-* **Exercise 4.2: [Write AI Prompt] Requesting the Declarations** — Turn the 4.1 plan into an AI instruction with concrete starting values.
-  * *Editor expects:* Plain-English prompt. Validator needs `let`, `const`, `carX`, and `165`.
-  * *Model answer:* `Declare mutable variables with let — carX starting at 165, speed 0, score 0, gameActive false — plus a const LANE_WIDTH`
-  * *Why:* A plan says *which* variables; a prompt must also supply their **initial values** (carX = 165 centers the car in a 390px track). Naming the starting numbers is what makes the AI's output runnable rather than a blank template.
-* **Exercise 4.3: [Review & Explain] Reading Data Types** — The AI generated `let score = 0;`. What type is `0`?
-  * *Editor expects:* One word — `Number`, `String`, or `Boolean`.
-  * *Model answer:* `Number`
-  * *Why:* A bare `0` (no quotes) is a **Number**, so the browser can do arithmetic on it. The whole session hinges on telling Numbers apart from quoted Strings — this is the read-check before the bug in E4.4 makes the distinction bite.
-* **Exercise 4.4: [Test & Break] The Quoted Number Bug** — The AI wrote `let speed = "0";`. Remove the quotes so `speed` is a real Number.
-  * *Editor expects:* Corrected JavaScript.
-  * *Model answer:* `let speed = 0;`
-  * *Why:* `"0"` is text, not a value you can count with. It looks identical on screen but silently breaks every later `+=`. Fixing it here — *before* any math runs — is cheaper than debugging the `"105"` symptom later, which is exactly the point of the Test & Break step.
-* **Exercise 4.5: [Iterate & Improve] Adding the Game State Flag** — Add the missing `gameActive` Boolean.
-  * *Editor expects:* JavaScript adding a Boolean. Validator needs `gameActive = false`.
-  * *Model answer:* `let gameActive = false;`
-  * *Why:* `gameActive` is a true/false switch, the simplest data type. It seems trivial now, but from Session 9 the game loop reads this one flag every frame to decide "keep running or stop?" — so this single Boolean is what later makes Game Over possible.
-* **Exercise 4.6: [Plan & Design] Planning the Math Updates** — Plan how `score` and `speed` change during play.
-  * *Editor expects:* Plain-language plan of how the two values change (no operator syntax required; the shorthand is still accepted).
-  * *Model answer:* `score goes up by 1 each time; speed goes up by 10` (shorthand `score++ | speed += 10` also accepted)
-  * *Why:* `score++` is shorthand for `score = score + 1`; `speed += 10` adds 10. Planning the exact increments now means the gameplay events in later sessions ("dodged an obstacle → score++") already have their math defined.
-* **Exercise 4.7: [Write AI Prompt] Requesting the Math Statements** — Prompt for the increment statements plus a console check.
-  * *Editor expects:* Plain-English prompt. Validator needs `score`, `speed`, and `console.log`.
-  * *Model answer:* `Write statements that increment score by 1 and speed by 10, then console.log both values`
-  * *Why:* Asking the AI to *also* log the values is a deliberate habit: `console.log` is the developer's window into whether the numbers really changed. A prompt that requests verification alongside the work is a stronger prompt.
-* **Exercise 4.8: [Review & Explain] Predicting the Output** — After `let speed = 0; speed += 10;`, what is `speed`?
-  * *Editor expects:* A number.
-  * *Model answer:* `10`
-  * *Why:* Predicting a result by *reading* code — before running it — is the core Review skill. `0 + 10 = 10`. Simple here, but it's the same tracing habit that will let the student audit the AI's collision math in Session 10.
-* **Exercise 4.9: [Test & Break] The String Concatenation Trap** — `let speed = "10"; speed += 5;` produces `"105"`. Fix the declaration.
-  * *Editor expects:* Corrected JavaScript.
-  * *Model answer:* `let speed = 10;`
-  * *Why:* This is E4.4's bug with the consequence made visible: with a String, `+= 5` glues `"5"` onto the end as text → `"105"`, not `15`. Seeing the wrong output firsthand is what makes "data types matter" stick better than any lecture.
-* **Exercise 4.10: [Iterate & Improve] The Complete Variable Registry** — Assemble the whole session into one correct registry + math block.
-  * *Editor expects:* Full JavaScript.
-  * *Model answer:*
-    ```javascript
-    let carX = 165;
-    let speed = 0;
-    let score = 0;
-    let gameActive = false;
-    const LANE_WIDTH = 130;
-    score++;
-    speed += 10;
-    ```
-  * *Why:* This is the real starting point of `game.js` that every later session builds on. Proving the student can assemble correctly-typed declarations *plus* working math in one block is the milestone competency for the session.
+* **Homework Evaluation Checklist**: All 3 boxes filled in per exercise; Output Code pastes read like real AI output (not the sandbox's own placeholder text); Explain boxes name the *reason*, not just the result (e.g. E4.4's explanation should say *why* the quotes broke the math, not just restate "105 became 15").
 
-### 4. Project Journal Milestone — Expected Student Answers (5-Step Workflow)
+### 4. Project Task Milestone — Expected Student Answers (Session 4 trial format)
 
-As in Session 2, the **Project Journal** milestone card ("Part 3: JS Variable Registry") tracks the student's standalone session lab script (fresh tutor-provided starter, not a carried-forward project), separate from the Sandbox exercises above.
+**Format note:** Session 4's Project Task also uses the trial 3-box format (not the standard 5-tab Plan/Prompt/Review/Test/Iterate layout every other session uses) — **Plan & Design**, **Prompt & Output Code** (with a live Console Output panel, the same execution sandbox as the exercises above), and **Explain the Code**. The milestone card is "Lab 4: Difficulty-Scaling State System."
 
-1. **Plan & Design**
-   - *Visual Concept & UX Flow (expected):* "Screen still looks like Session 3's styled road and car — this session works behind the scenes, giving the game a memory of the score, speed, and whether it's running."
-   - *System Parts & Information (expected):* "Parts needed: none new on screen — this session gives the game a memory. Information to track: the car's position, the current speed, the score, whether the game is running, and the fixed width of a lane."
-   - *Logic Flow / Pseudocode (expected):* "State initialization (start) → Variable declarations → Math increments on game events → Render UI updates."
-   - *Why:* This is the first session with *nothing new on screen*, so the Visual Concept honestly says so. The design work is naming **what the game must remember** — and the student can now state it as real data (position, speed, score, a running flag, a fixed lane width) because Session 4 has finally taught variables and types. The plan lists *what to track*; the prompt and review steps decide the exact `let`/`const` lines.
+Unlike the sandbox exercises (which hand the student every value to declare), this task is deliberately open-ended: extend the session's registry with **one new value the student designs themselves** — e.g. a `difficultyLevel` — that changes once `score` crosses a threshold the student picks, and that visibly affects another value (commonly `speed`). No exercise spells out the exact rule, so a straight copy of Exercise 4.5's registry does **not** satisfy this task on its own — it's missing the entire conditional-logic layer being graded here.
 
-2. **Write AI Prompt**
-   - *Expected prompt:* "Write a prompt asking to declare JavaScript variables for a 2D highway avoidance game: mutable variables for 'carX' (initial 165), 'speed' (initial 0), 'score' (initial 0), 'gameActive' (initial false), and constants for track limits. Write test statements that increment score by 1 and speed by 10, then log the results."
-   - *Why:* The milestone prompt is fully technical (the sandbox 4.1–4.10 scaffolding is complete by now): it names each variable, its initial value, and its mutability, and asks for a `console.log` check in the same breath — a complete, self-verifying request.
+1. **Plan & Design** (single box)
+   - *Expected:* the student names their own new value (e.g. `difficultyLevel`), states what score threshold triggers it, and what it should affect and by how much — e.g. "every 50 points, difficultyLevel goes up by 1, and speed increases by 5 per level."
+   - *Why:* there's no single correct threshold — grading is on whether the student made and can defend a real decision, not on matching a specific number.
 
-3. **Review & Explain**
-   - *Expected checklist:* variables use `let` (mutable) and `const` (immutable) correctly; `speed` is a Number, not a quoted String.
-   - *Expected Socratic answer* — *"What would happen if we declared `speed = '10'` (string) and then executed `speed += 5`?"* → It produces `"105"` (string concatenation), not `15`. The data type silently dictates whether `+=` **adds** or **glues text** — so a wrong type corrupts every later calculation.
+2. **Prompt & Output Code** (side by side, with live Console Output below)
+   - *Expected prompt:* describes the student's own rule in plain language and asks the AI to implement it as an extension of the existing registry (`carX`, `speed`, `score`, `gameActive`, `lives`).
+   - *Expected Output Code:* a new `let` value plus a conditional (`if`) that checks `score` against the student's chosen threshold and updates another value — pasted from what the AI actually generated, then run live in the Console Output panel to confirm it actually executes/prints as expected.
+   - *Why:* the AI can write the code, but only the student can supply the design decision (which threshold, which effect) — that's the part a generic prompt can't produce on its own.
 
-4. **Test & Break**
-   - *Expected test checklist:* variables declared with correct syntax; `speed`/`score` update mathematically (not string-concatenating); console logs report the correct transitions.
-   - *Why:* These map to the Milestone Objectives — Test & Break is where the student proves, in the console, that the game's memory holds real Numbers.
+3. **Explain the Code**
+   - *Expected:* the student walks through their own conditional in plain words and defends their threshold choice.
+   - *Expected Socratic answer* — *"What happens to your rule if score can jump by more than 1 at a time (e.g. a bonus of +5)?"* → A plain `===` threshold check can be skipped over entirely; the fix is a `>=` comparison (or an explicit "already triggered" flag) so the rule still fires even if score jumps past the exact threshold value.
 
-5. **Iterate & Improve**
-   - *Expected answer:* "Ensure zero game variables are exposed in the global browser scope directly (wrap them inside an object namespace or an immediately-invoked function) to prevent client-side console cheating."
-   - *Why:* Introduces **scope as a security concern** — a player could open DevTools and set `score = 9999` if the variables sit in global scope. This previews the modular-scope work of Session 8 and connects to the session's Ethics Discussion on immutable data.
-
-* **Homework Evaluation Checklist**: Verify the student declared the four game-state variables (`carX`, `speed`, `score`, `gameActive`) with correct types (no quoted numbers) plus at least one `const`, and demonstrated a working `+=` increment in the Project Journal.
+* **Homework Evaluation Checklist**: the new value is genuinely the student's own design (a threshold/effect not lifted from Exercise 4.5), it's declared with `let` (since it changes), it visibly affects a second value when run in the Console Output panel, and the explanation defends the student's specific numbers rather than restating the assignment.
 
 ---
 
@@ -564,7 +538,7 @@ As in Session 2, the **Project Journal** milestone card ("Part 3: JS Variable Re
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. As in Session 4, only the **Test & Break** and **Iterate & Improve** steps run live in the preview (click the preview, then press the arrow keys to steer); Plan/Prompt/Review steps show a "nothing to run yet" note.
+Students complete 10 sandbox exercises structured as AI-Era workflow loops. As in Session 2, *what to type depends on the `[step tag]`* — see the **📝 Answer-Type Key** in Session 2 (Plan/Prompt steps = plain-language plan or prompt inside the `/* */` comment; Test/Iterate steps = real JavaScript; Review steps = a short answer). The **Model Answer** per exercise is exactly what the app's validator accepts. Only the **Test & Break** and **Iterate & Improve** steps run live in the preview (click the preview, then press the arrow keys to steer); Plan/Prompt/Review steps show a "nothing to run yet" note. (Note: Session 4 is running a separate 5-exercise/3-box trial format with its own Console Output preview — see that session's own section; this Session 5 lab is unaffected and still uses the standard 10-exercise/[step tag] format.)
 
 * **Exercise 5.1: [Plan & Design] Reading the Key Pressed** — Plan how the browser reports which key was pressed.
   * *Editor expects:* Plain-language description of how the browser reports the key (no `event.key` syntax required; the `keydown > event.key` form is still accepted).

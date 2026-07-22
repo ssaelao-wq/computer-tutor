@@ -1142,132 +1142,102 @@ const S3_EXERCISES = [
 const S4_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 4.1: [Plan & Design] The Variable Registry",
-    problem: "Before writing any code, plan which game values need to change during play and which stay fixed forever. (Values that change — the car's position, speed, score — become 'let' variables; values fixed for the whole game, like a lane's width, become 'const'. Sorting them now prevents accidentally overwriting a constant later.)",
-    instruction: "In plain language, list which game values CHANGE during play and which stay FIXED. Example: changing — car position, speed, score, game-running; fixed — lane width. (The technical form 'let ... | const ...' is also accepted.)",
-    preloaded: "/* Write your plan here: */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      const hasChanging = clean.includes('chang') || clean.includes('vary') || clean.includes('update') || clean.includes('let');
-      const hasFixed = clean.includes('fixed') || clean.includes('stay') || clean.includes('same') || clean.includes('never') || clean.includes('const');
-      const namesValues = clean.includes('speed') || clean.includes('score') || clean.includes('car') || clean.includes('position');
-      return hasChanging && hasFixed && namesValues;
+    title: "Exercise 4.1: The Core State Variables",
+    problem: "Every game needs a memory of what's happening right now. In this session's game, that memory is a set of JavaScript variables: the car's position, its speed, the score, and whether the game is currently running. Values that CHANGE during play are declared with 'let'; values that never change are declared with 'const'.",
+    instruction: "1) Plan: in plain language, list the values this game needs to remember and whether each one changes during play or stays fixed. 2) Prompt: write the AI prompt asking it to declare mutable variables carX (initial 165), speed (initial 0), score (initial 0), and gameActive (initial false) — then paste the AI's actual code into Output Code. 3) Explain: describe what each variable stores and why 'let' (not 'const') is correct for all of them.",
+    planPlaceholder: "Which values change during play, and which stay fixed? (e.g. car position, speed, score, and whether the game is running all change; nothing here is fixed yet.)",
+    promptPlaceholder: "Write the prompt you'd give an AI assistant to generate these declarations. Mention: let, carX, speed, score, gameActive, and their starting values.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('let') && p.includes('carx') && p.includes('165');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('let') && clean.includes('carx') && clean.includes('speed') && clean.includes('score') && clean.includes('gameactive');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('let') || e.includes('chang');
+      return promptOk && codeOk && explainOk;
     },
-    hint: "In plain words: changing — car position, speed, score, game-running; fixed — lane width."
+    hint: "Prompt should mention 'let', 'carX', and '165'. Output code needs carX/speed/score/gameActive all declared with 'let'. Explanation should say why they use 'let' (they change during play)."
   },
   {
     num: 2,
-    title: "Exercise 4.2: [Write AI Prompt] Requesting the Declarations",
-    problem: "Now instruct the AI to write the actual variable declaration block. (You supply the starting values and which ones change; the AI turns that into real let/const lines — which you'll read and verify in the next step, never just trust.)",
-    instruction: "Write a prompt asking to declare mutable variables carX (initial 165), speed (initial 0), score (initial 0), and gameActive (initial false), plus a constant LANE_WIDTH. Your prompt must contain 'let', 'const', 'carX', and '165'.",
-    preloaded: "/* Write your AI Prompt here: */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('165');
+    title: "Exercise 4.2: Constants and the Lives Count",
+    problem: "Not everything in the registry changes. A lane's width and the track's width are fixed for the whole game — those become 'const'. This session also adds a value the earlier drills never covered: a lives count, so the player can survive more than one crash.",
+    instruction: "1) Plan: name the fixed values this game needs (track width, lane width) and the new 'lives' value (starting count, and whether it changes). 2) Prompt: ask the AI for const TRACK_WIDTH and LANE_WIDTH declarations plus a mutable lives variable starting at 3 — paste its real output into Output Code. 3) Explain: why TRACK_WIDTH/LANE_WIDTH are 'const' while lives is 'let', even though lives starts as a fixed-looking number.",
+    planPlaceholder: "What stays fixed for the whole game (track width, lane width)? What is 'lives', what does it start at, and does it change during play?",
+    promptPlaceholder: "Write the prompt asking for const TRACK_WIDTH, const LANE_WIDTH, and let lives = 3.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('const') && p.includes('lives') && p.includes('3');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('const') && (clean.includes('trackwidth') || clean.includes('lanewidth')) && clean.includes('lives');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('const') && (e.includes('let') || e.includes('chang'));
+      return promptOk && codeOk && explainOk;
     },
-    hint: "Mention 'let', 'const', 'carX', and '165' in your prompt."
+    hint: "Prompt should mention 'const', 'lives', and '3'. Output code needs a const TRACK_WIDTH or LANE_WIDTH plus 'lives'. Explanation should contrast 'const' (fixed) vs 'let' (lives can change when the player crashes)."
   },
   {
     num: 3,
-    title: "Exercise 4.3: [Review & Explain] Reading Data Types",
-    problem: `The AI generated: let score = 0;. Review this declaration. (A bare 0 with no quotes is a Number — the browser can do math on it. Wrap it in quotes as "0" and it silently becomes a String (text), which breaks arithmetic — exactly the trap in E4.4.)`,
-    instruction: "What data type is the value 0? Type Number, String, or Boolean.",
-    preloaded: "/* Type the data type: */",
-    validate: (code) => {
-      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
-      return clean === 'NUMBER';
+    title: "Exercise 4.3: Math Increments on Game State",
+    problem: "Declaring variables is only half the job — the game also has to update them. score++ adds 1 (shorthand for score = score + 1); speed += 10 adds 10. These are the exact increments the game runs every time a player dodges an obstacle or speeds up.",
+    instruction: "1) Plan: describe how score and speed should change during play (score up by 1 each time, speed up by 10). 2) Prompt: ask the AI for statements that increment score by 1 and speed by 10, then log both to the console — paste its real output into Output Code. 3) Explain: predict what score and speed equal after the code runs, starting from score = 0 and speed = 0.",
+    planPlaceholder: "In plain language: how should score change during play? How should speed change?",
+    promptPlaceholder: "Write the prompt asking for score++ (or score += 1), speed += 10, and console.log statements for both.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('score') && p.includes('speed') && p.includes('console.log');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = (clean.includes('score++') || clean.includes('score+=1')) && clean.includes('speed+=10');
+      const e = explain.replace(/[^0-9]/g, '');
+      const explainOk = e.includes('1') && e.includes('10');
+      return promptOk && codeOk && explainOk;
     },
-    hint: "0 with no quotes around it is a 'Number'."
+    hint: "Prompt should mention 'score', 'speed', and 'console.log'. Output code needs score++ (or score += 1) and speed += 10. Explanation should predict score = 1 and speed = 10."
   },
   {
     num: 4,
-    title: "Exercise 4.4: [Test & Break] The Quoted Number Bug",
-    problem: `Bug: the AI generated let speed = "0"; — the quotes make speed a String, not a Number. (Everything looks fine until you do math: adding to a String glues text together instead of counting — you'll watch that failure happen live in E4.9.)`,
-    instruction: "Fix the declaration so speed is a real Number, not a quoted string.",
-    preloaded: 'let speed = "0";',
+    title: "Exercise 4.4: The Quoted-Number Bug Hunt",
+    problem: `Bug: an AI generated let speed = "10"; speed += 5; — the quotes make speed a String, not a Number. Running it produces "105" (text glued together) instead of 15 (real addition). This is the single most common data-type trap in this session's topic.`,
+    instruction: "1) Plan: explain in your own words why a quoted \"10\" behaves differently from a plain 10 in math. 2) Prompt: ask the AI to fix the declaration so speed is a real Number — paste its corrected code into Output Code and run it. 3) Explain: what result did you get before vs. after the fix, and why.",
+    planPlaceholder: "Why does let speed = \"10\"; speed += 5; produce \"105\" instead of 15? What's different about a String vs a Number here?",
+    promptPlaceholder: "Write the prompt asking the AI to fix let speed = \"10\"; so speed is a Number, not a String.",
+    outputCodePlaceholder: 'Paste the AI\'s corrected code here, e.g.:\nlet speed = 10;\nspeed += 5;\nconsole.log(speed);',
     runnable: true,
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '');
-      return (clean.includes('letspeed=0;') || clean.includes('letspeed=0')) && !clean.includes('"0"') && !clean.includes("'0'");
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('speed') && (p.includes('number') || p.includes('quote') || p.includes('string'));
+      const clean = outputCode.replace(/\s+/g, '');
+      const codeOk = clean.includes('letspeed=10;') && !clean.includes('"10"') && !clean.includes("'10'");
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('105') && e.includes('15');
+      return promptOk && codeOk && explainOk;
     },
-    hint: `Remove the quotes: let speed = 0;`
+    hint: 'Prompt should ask to fix the quoted "10" into a real Number. Output code needs let speed = 10; (no quotes). Explanation should mention both "105" (buggy) and 15 (fixed).'
   },
   {
     num: 5,
-    title: "Exercise 4.5: [Iterate & Improve] Adding the Game State Flag",
-    problem: "Iterate on your fixed declarations to add the missing game-state flag. (gameActive is a Boolean — a true/false switch. From Session 9 on, the game loop checks this one flag every frame to decide whether to keep running or stop.)",
-    instruction: "Add a boolean variable gameActive initialized to false.",
-    preloaded: 'let speed = 0;\nlet score = 0;',
+    title: "Exercise 4.5: The Complete Variable Registry",
+    problem: "Combine every declaration from this session — the state variables, the constants, and the lives count — into the single registry that every later session's homework will open and extend. (The math itself was already proven in Exercise 4.3 — this exercise is only about getting every declaration assembled correctly in one place, no math statements this time.)",
+    instruction: "1) Plan: list everything the finished game.js needs to declare (carX, speed, score, gameActive, lives, TRACK_WIDTH, LANE_WIDTH) and whether each is let or const. No math or increments this time. 2) Prompt: ask the AI to write the complete registry — all seven declarations, correct types, no quoted numbers, and no math statements — paste its real output into Output Code and run it. 3) Explain: walk through why each one is let vs const.",
+    planPlaceholder: "List every variable/constant this game.js needs to declare, and mark which is let vs const. No math this time — that's already covered by Exercise 4.3.",
+    promptPlaceholder: "Write the prompt asking for ALL seven declarations only: carX, speed, score, gameActive, lives (let) and TRACK_WIDTH, LANE_WIDTH (const) — correct types, no quoted numbers, no math statements.",
+    outputCodePlaceholder: "Paste the AI's complete registry code here (declarations only, no math).",
     runnable: true,
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('gameactive=false');
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('let') && p.includes('const') && p.includes('lives');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('speed') && clean.includes('score') && clean.includes('gameactive') && clean.includes('lives') && (clean.includes('trackwidth') || clean.includes('lanewidth'));
+      const explainOk = explain.trim().length > 20;
+      return promptOk && codeOk && explainOk;
     },
-    hint: "Add: let gameActive = false;"
-  },
-  {
-    num: 6,
-    title: "Exercise 4.6: [Plan & Design] Planning the Math Updates",
-    problem: "Plan how score and speed will change during gameplay. (score++ adds 1 — shorthand for score = score + 1; speed += 10 adds 10. These are the exact increments the game runs each time you dodge an obstacle or speed up.)",
-    instruction: "In plain language, say how score and speed change during play. Example: score goes up by 1 each time, speed goes up by 10. (The shorthand 'score++ | speed += 10' is also accepted.)",
-    preloaded: "/* Write your plan here: */",
-    validate: (code) => {
-      const compact = code.replace(/\s+/g, '').toLowerCase();
-      const tech = (compact.includes('score++') || compact.includes('score+=1')) && compact.includes('speed+=10');
-      const clean = code.toLowerCase();
-      const plain = clean.includes('score') && clean.includes('speed') && (clean.includes('up') || clean.includes('increase') || clean.includes('add') || clean.includes('plus') || clean.includes('+')) && clean.includes('10');
-      return tech || plain;
-    },
-    hint: "In plain words: score goes up by 1 each time; speed goes up by 10."
-  },
-  {
-    num: 7,
-    title: "Exercise 4.7: [Write AI Prompt] Requesting the Math Statements",
-    problem: "Instruct the AI to write the increment statements. (console.log prints a value into the browser's console — a developer's window into what the code is really doing, so you can confirm the numbers actually change.)",
-    instruction: "Write a prompt asking for statements that increment score by 1 and speed by 10, then log both values to the console. Your prompt must contain 'score', 'speed', and 'console.log'.",
-    preloaded: "/* Write your AI Prompt here: */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('score') && clean.includes('speed') && clean.includes('console.log');
-    },
-    hint: "Mention 'score', 'speed', and 'console.log' in your prompt."
-  },
-  {
-    num: 8,
-    title: "Exercise 4.8: [Review & Explain] Predicting the Output",
-    problem: `The AI generated: let speed = 0; speed += 10;. Review this code. (Predicting a result by reading code — before running it — is the core Review skill: speed starts at 0, then += 10 adds 10 to it.)`,
-    instruction: "After this code runs, what is the value of speed? Type a number.",
-    preloaded: "/* Type a number: */",
-    validate: (code) => {
-      const clean = code.replace(/[^0-9]/g, '');
-      return clean === '10';
-    },
-    hint: "0 + 10 = 10 — type '10'."
-  },
-  {
-    num: 9,
-    title: "Exercise 4.9: [Test & Break] The String Concatenation Trap",
-    problem: `Bug: speed was declared as let speed = "10"; (a string). Running speed += 5; produces "105" instead of 15. (With a String, += glues "5" onto the end as text → "105". Same root cause as E4.4's quoted number, now visibly wrong — this is why data types matter.)`,
-    instruction: "Fix the original declaration so speed is a Number, making speed += 5 produce 15 as expected.",
-    preloaded: 'let speed = "10";\nspeed += 5;',
-    runnable: true,
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '');
-      return clean.includes('letspeed=10;') && !clean.includes('"10"') && !clean.includes("'10'");
-    },
-    hint: `Remove the quotes from the original declaration: let speed = 10;`
-  },
-  {
-    num: 10,
-    title: "Exercise 4.10: [Iterate & Improve] The Complete Variable Registry",
-    problem: "Combine every piece from this session into the final variable registry and math block. (This is the real starting point of game.js that every later session builds on — get the types right here and steering, scoring, and the game loop all receive correct data to work with.)",
-    instruction: "Write the complete code: declare carX, speed, score, gameActive (all correct Number/Boolean types, no quoted numbers), plus a LANE_WIDTH constant, then increment score by 1 and speed by 10.",
-    preloaded: "/* Write the complete variable registry here */",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('gameactive') && (clean.includes('score++') || clean.includes('score+=1')) && clean.includes('speed+=10');
-    },
-    hint: "Your code needs: let/const declarations for carX/speed/score/gameActive/LANE_WIDTH, plus score++ and speed += 10."
+    hint: "Prompt should mention 'let', 'const', and 'lives'. Output code needs let declarations for carX/speed/score/gameActive/lives, plus const TRACK_WIDTH/LANE_WIDTH — no math statements needed this time. Explanation should walk through why each one is let vs const."
   }
 ];
 
@@ -1548,6 +1518,39 @@ function buildJsSandboxPreview(studentCode) {
             _origLog.apply(console, args);
           };
           var carX = 165;
+          try {
+            ${studentCode}
+          } catch (e) {
+            parent.postMessage({ __sim: true, type: 'error', text: e.message }, '*');
+          }
+        </script>
+      </body>
+    </html>
+  `;
+}
+
+// L1 Session 4 dedicated execution sandbox (variables & math — no DOM/game elements
+// yet; that starts in Session 5's keyboard steering). buildJsSandboxPreview's racing
+// track/car markup would render identically for every S4 exercise regardless of what
+// the student's code does, since none of it touches the DOM — showing that graphic
+// here would be pure decoration, not a real "actual output." This sandbox has no
+// visible body at all; the only real output is whatever the code prints via
+// console.log/errors, surfaced through the terminal log panel in the parent UI.
+function buildJsConsoleOnlyPreview(studentCode) {
+  return `
+    <html>
+      <body>
+        <script>
+          window.onerror = function(msg) {
+            parent.postMessage({ __sim: true, type: 'error', text: String(msg) }, '*');
+            return true;
+          };
+          var _origLog = console.log;
+          console.log = function() {
+            var args = Array.prototype.slice.call(arguments);
+            parent.postMessage({ __sim: true, type: 'log', text: args.map(String).join(' ') }, '*');
+            _origLog.apply(console, args);
+          };
           try {
             ${studentCode}
           } catch (e) {
@@ -4328,7 +4331,7 @@ const S12_EXERCISES = [
 // claimable once every one of its exercises has been passed (no jumping straight
 // to the final exercise), preserving the curriculum's "cognitive resistance" design.
 const EXERCISE_COUNTS = {
-  'l1-s1': 10, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 10, 'l1-s5': 10, 'l1-s6': 10,
+  'l1-s1': 10, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 5, 'l1-s5': 10, 'l1-s6': 10,
   'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10,
   'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10, 'l2-s5': 10, 'l2-s6': 10, 'l2-s7': 10, 'l2-s8': 10,
   'l2-s9': 10, 'l2-s10': 10, 'l2-s11': 10, 'l2-s12': 10, 'l2-s13': 10
@@ -4514,9 +4517,13 @@ export default function App() {
   const [s3Logs, setS3Logs] = useState([]);
   const [s3Success, setS3Success] = useState(false);
 
-  // Level 1 Session 4 (Climate Controller) Simulator States
+  // Level 1 Session 4 (Variable Registry) Simulator States — 3-box format:
+  // Plan & Design / Prompt+Output Code / Explain the Output Code
   const [s4ActiveExercise, setS4ActiveExercise] = useState(1);
-  const [s4CodeInput, setS4CodeInput] = useState('');
+  const [s4PlanInput, setS4PlanInput] = useState('');
+  const [s4PromptInput, setS4PromptInput] = useState('');
+  const [s4OutputCodeInput, setS4OutputCodeInput] = useState('');
+  const [s4ExplainInput, setS4ExplainInput] = useState('');
   const [s4Logs, setS4Logs] = useState([]);
   const [s4Success, setS4Success] = useState(false);
 
@@ -5653,7 +5660,10 @@ export default function App() {
       setSandboxInput('carX, speed, score, gameActive');
       setSandboxEdgeCases('Quoted numbers causing string concatenation instead of math, wrong initial values');
       setS4ActiveExercise(1);
-      setS4CodeInput(S4_EXERCISES[0].preloaded);
+      setS4PlanInput('');
+      setS4PromptInput('');
+      setS4OutputCodeInput('');
+      setS4ExplainInput('');
       setS4Logs([]);
       setS4Success(false);
       setSimConsoleLogs([]);
@@ -7273,7 +7283,8 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 4: CLIMATE CONTROLLER CONDITIONALS */}
+              {/* LEVEL 1 SESSION 4: JS VARIABLE REGISTRY — 3-box trial format
+                  (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s4' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
@@ -7282,9 +7293,13 @@ export default function App() {
                         key={ex.num}
                         className={`btn-cyber btn-small ${s4ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
-                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s4-${s4ActiveExercise}`]: s4CodeInput }));
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s4-${s4ActiveExercise}`]: { plan: s4PlanInput, prompt: s4PromptInput, outputCode: s4OutputCodeInput, explain: s4ExplainInput } }));
+                          const saved = savedExerciseCode[`l1-s4-${ex.num}`];
                           setS4ActiveExercise(ex.num);
-                          setS4CodeInput(savedExerciseCode[`l1-s4-${ex.num}`] ?? ex.preloaded);
+                          setS4PlanInput(saved?.plan ?? '');
+                          setS4PromptInput(saved?.prompt ?? '');
+                          setS4OutputCodeInput(saved?.outputCode ?? '');
+                          setS4ExplainInput(saved?.explain ?? '');
                           setS4Logs([]);
                           setS4Success(false);
                           setSimConsoleLogs([]);
@@ -7295,91 +7310,139 @@ export default function App() {
                     ))}
                   </div>
 
-                  <div className="simulator-grid">
-                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div className="panel-header">
-                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S4_EXERCISES[s4ActiveExercise - 1].title}</h4>
-                        </div>
-                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                            <strong>Problem:</strong> {S4_EXERCISES[s4ActiveExercise - 1].problem}
-                          </p>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
-                            <strong>Instruction:</strong> {S4_EXERCISES[s4ActiveExercise - 1].instruction}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <button
-                          className={`btn-cyber ${s4Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                          onClick={() => {
-                            const ex = S4_EXERCISES[s4ActiveExercise - 1];
-                            const logs = [{ type: 'info', text: `Analyzing variable registry logic for Exercise 4.${s4ActiveExercise}...` }];
-                            const pass = ex.validate(s4CodeInput);
-                            if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
-                              setS4Success(true);
-                              const prog = markExerciseComplete('l1-s4', s4ActiveExercise);
-                              if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 4 CHALLENGES COMPLETE! Your game state variables are ready to drive!' });
-                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                              } else {
-                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                              }
-                            } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Variable declaration or type requirement missing.` });
-                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
-                              setS4Success(false);
-                            }
-                            setS4Logs(logs);
-                          }}
-                        >
-                          {s4Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
-                        </button>
-                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setS4CodeInput(S4_EXERCISES[s4ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
-                          Reset Code
-                        </button>
-                      </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header">
+                      <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S4_EXERCISES[s4ActiveExercise - 1].title}</h4>
                     </div>
+                    <div className="sim-panel-body" style={{ marginTop: '10px', padding: 0 }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                        <strong>Problem:</strong> {S4_EXERCISES[s4ActiveExercise - 1].problem}
+                      </p>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                        <strong>Instruction:</strong> {S4_EXERCISES[s4ActiveExercise - 1].instruction}
+                      </p>
+                    </div>
+                  </div>
 
-                    <div className="glass-panel sim-middle">
-                      <div className="panel-header">
-                        <h3>Code Editor (game.js)</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>1. Plan &amp; Design</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s4PlanInput}
+                        onChange={(e) => setS4PlanInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder={S4_EXERCISES[s4ActiveExercise - 1].planPlaceholder}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>2. Write the AI Prompt &amp; Paste the Output Code</h3></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
+                      <div className="form-field">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
                         <textarea
-                          value={s4CodeInput}
-                          onChange={(e) => setS4CodeInput(e.target.value)}
-                          style={{ width: '100%', height: '500px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'none' }}
-                          placeholder="Write JavaScript here..."
+                          value={s4PromptInput}
+                          onChange={(e) => setS4PromptInput(e.target.value)}
+                          style={{ width: '100%', height: '260px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S4_EXERCISES[s4ActiveExercise - 1].promptPlaceholder}
+                        />
+                      </div>
+                      <div className="form-field">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <textarea
+                          value={s4OutputCodeInput}
+                          onChange={(e) => setS4OutputCodeInput(e.target.value)}
+                          style={{ width: '100%', height: '260px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S4_EXERCISES[s4ActiveExercise - 1].outputCodePlaceholder}
                         />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="glass-panel sim-right">
-                      <div className="panel-header">
-                        <h3>Live Racing Game Preview</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <iframe
-                          srcDoc={buildJsSandboxPreview(S4_EXERCISES[s4ActiveExercise - 1].runnable ? s4CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
-                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                          title="JS Sandbox Live Preview"
-                        />
-                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                          {[...s4Logs, ...simConsoleLogs].length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
-                          ) : [...s4Logs, ...simConsoleLogs].map((log, idx) => (
-                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                              {log.text}
-                            </div>
-                          ))}
-                        </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Console Output</h3></div>
+                    <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
+                      {/* Execution sandbox is not shown visually — this session's code is
+                          variables & math, not DOM/graphics, so there is nothing honest to
+                          render as a "preview." The real result is whatever the code prints. */}
+                      <iframe
+                        srcDoc={buildJsConsoleOnlyPreview(S4_EXERCISES[s4ActiveExercise - 1].runnable ? s4OutputCodeInput : '')}
+                        style={{ display: 'none' }}
+                        title="JS Execution Sandbox"
+                      />
+                      <div className="state-terminal-logs" style={{ height: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {[...s4Logs, ...simConsoleLogs].length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                            No console output yet. Not every exercise needs to print something — running without an error is already a valid result. Add console.log(...) to your Output Code if you want to see real values here, then click Verify.
+                          </div>
+                        ) : [...s4Logs, ...simConsoleLogs].map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
                       </div>
                     </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>3. Explain the Output Code</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s4ExplainInput}
+                        onChange={(e) => setS4ExplainInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder="Explain what this code does, in your own words."
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className={`btn-cyber ${s4Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                      onClick={() => {
+                        const ex = S4_EXERCISES[s4ActiveExercise - 1];
+                        const logs = [{ type: 'info', text: `Checking Exercise 4.${s4ActiveExercise}...` }];
+                        const filled = s4PlanInput.trim() && s4PromptInput.trim() && s4OutputCodeInput.trim() && s4ExplainInput.trim();
+                        const pass = filled && ex.validate({ plan: s4PlanInput, prompt: s4PromptInput, outputCode: s4OutputCodeInput, explain: s4ExplainInput });
+                        if (pass) {
+                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
+                          setS4Success(true);
+                          const prog = markExerciseComplete('l1-s4', s4ActiveExercise);
+                          if (prog.allDone) {
+                            logs.push({ type: 'success', text: '✓ SESSION 4 CHALLENGES COMPLETE! Your game state variables are ready to drive!' });
+                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                          } else {
+                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                          }
+                        } else if (!filled) {
+                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                          setS4Success(false);
+                        } else {
+                          logs.push({ type: 'error', text: `✗ Check failed. Your prompt, output code, or explanation is missing a required detail.` });
+                          logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                          setS4Success(false);
+                        }
+                        setS4Logs(logs);
+                      }}
+                    >
+                      {s4Success ? '✓ Exercise Complete' : 'Verify'}
+                    </button>
+                    <button
+                      className="btn-cyber btn-cyber-red btn-small"
+                      onClick={() => {
+                        setS4PlanInput('');
+                        setS4PromptInput('');
+                        setS4OutputCodeInput('');
+                        setS4ExplainInput('');
+                        setS4Logs([]);
+                        setS4Success(false);
+                        setSimConsoleLogs([]);
+                      }}
+                    >
+                      Reset
+                    </button>
                   </div>
                 </div>
               )}
@@ -9906,6 +9969,15 @@ export default function App() {
                   
                   const isInitialized = selectedJournal && selectedJournal.id.endsWith('_' + currentSession.id);
 
+                  // L1S4 is a trial of a reduced 3-box Project Task format (Plan & Design /
+                  // Prompt & Output Code / Explain the Code) — Test & Iterate are dropped from
+                  // the UI for this session only; every other session keeps the original 5-tab
+                  // layout untouched.
+                  const isL1S4 = currentSession.id === 'l1-s4';
+                  // Guard against arriving on this session while a stale 'test'/'iterate' tab
+                  // selection carried over from a previously viewed session.
+                  const effectiveJournalTab = isL1S4 && !['plan', 'prompt', 'review'].includes(activeJournalTab) ? 'plan' : activeJournalTab;
+
                   if (!isInitialized) {
                     return (
                       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -10090,38 +10162,45 @@ export default function App() {
                         );
                       })()}
 
-                      {/* 5 sub-tabs selection */}
+                      {/* Sub-tabs selection. L1S4 is a trial of a reduced 3-box format
+                          (Plan & Design / Prompt & Output Code / Explain the Code) — Test &
+                          Iterate are dropped from the UI for this session only; every other
+                          session keeps the original 5-tab layout untouched. */}
                       <div className="journal-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', marginBottom: '16px' }}>
-                        <button 
-                          className={`btn-cyber btn-small ${activeJournalTab === 'plan' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        <button
+                          className={`btn-cyber btn-small ${effectiveJournalTab === 'plan' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                           onClick={() => setActiveJournalTab('plan')}
                         >
                           1. Plan & Design
                         </button>
-                        <button 
-                          className={`btn-cyber btn-small ${activeJournalTab === 'prompt' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        <button
+                          className={`btn-cyber btn-small ${effectiveJournalTab === 'prompt' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                           onClick={() => setActiveJournalTab('prompt')}
                         >
-                          2. Write AI Prompt
+                          {isL1S4 ? '2. Prompt & Output Code' : '2. Write AI Prompt'}
                         </button>
-                        <button 
-                          className={`btn-cyber btn-small ${activeJournalTab === 'review' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                        <button
+                          className={`btn-cyber btn-small ${effectiveJournalTab === 'review' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                           onClick={() => setActiveJournalTab('review')}
                         >
-                          3. Review & Explain
+                          {isL1S4 ? '3. Explain the Code' : '3. Review & Explain'}
                         </button>
-                        <button 
-                          className={`btn-cyber btn-small ${activeJournalTab === 'test' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
-                          onClick={() => setActiveJournalTab('test')}
-                        >
-                          4. Test & Break
-                        </button>
-                        <button 
-                          className={`btn-cyber btn-small ${activeJournalTab === 'iterate' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
-                          onClick={() => setActiveJournalTab('iterate')}
-                        >
-                          5. Iterate & Improve
-                        </button>
+                        {!isL1S4 && (
+                          <>
+                            <button
+                              className={`btn-cyber btn-small ${activeJournalTab === 'test' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                              onClick={() => setActiveJournalTab('test')}
+                            >
+                              4. Test & Break
+                            </button>
+                            <button
+                              className={`btn-cyber btn-small ${activeJournalTab === 'iterate' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
+                              onClick={() => setActiveJournalTab('iterate')}
+                            >
+                              5. Iterate & Improve
+                            </button>
+                          </>
+                        )}
                       </div>
 
 
@@ -10129,7 +10208,7 @@ export default function App() {
                       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         
                         {/* Tab 1: Plan & Design */}
-                        {activeJournalTab === 'plan' && (
+                        {effectiveJournalTab === 'plan' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {/* Reference blocks: read-only carry-over from earlier sessions this one
                                 builds on (see PROJECT_TASKS[id].referenceSessions), shown before the
@@ -10154,44 +10233,58 @@ export default function App() {
                                 </details>
                               );
                             })}
-                            <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>System Parts & Information</label>
-                              <textarea
-                                value={editingPlanSpecs}
-                                onChange={e => setEditingPlanSpecs(e.target.value)}
-                                style={{ width: '100%', height: '130px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
-                              />
-                            </div>
-                            <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Visual Concept &amp; UX Flow</label>
-                              <textarea
-                                value={editingPlanVision}
-                                onChange={e => setEditingPlanVision(e.target.value)}
-                                style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
-                              />
-                            </div>
-                            <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Logic Flow Diagram / Pseudocode</label>
-                              <textarea 
-                                value={editingPlanFlow}
-                                onChange={e => setEditingPlanFlow(e.target.value)}
-                                style={{ width: '100%', height: '150px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.flow ? "Planned control algorithm:\n" + PROJECT_TASKS[currentSession.id].planSpecs.flow : "Outline step-by-step logic in plain English or flowchart syntax (e.g. IF ArrowLeft pressed AND carX > leftBoundary THEN decrease carX)"}
-                              />
-                            </div>
+                            {isL1S4 ? (
+                              <div className="form-field">
+                                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Plan &amp; Design</label>
+                                <textarea
+                                  value={editingPlanSpecs}
+                                  onChange={e => setEditingPlanSpecs(e.target.value)}
+                                  style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                  placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planning guidance:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language: what does this feature need to track, and how should it behave? No code yet."}
+                                />
+                              </div>
+                            ) : (
+                              <>
+                                <div className="form-field">
+                                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>System Parts & Information</label>
+                                  <textarea
+                                    value={editingPlanSpecs}
+                                    onChange={e => setEditingPlanSpecs(e.target.value)}
+                                    style={{ width: '100%', height: '130px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
+                                  />
+                                </div>
+                                <div className="form-field">
+                                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Visual Concept &amp; UX Flow</label>
+                                  <textarea
+                                    value={editingPlanVision}
+                                    onChange={e => setEditingPlanVision(e.target.value)}
+                                    style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
+                                  />
+                                </div>
+                                <div className="form-field">
+                                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Logic Flow Diagram / Pseudocode</label>
+                                  <textarea
+                                    value={editingPlanFlow}
+                                    onChange={e => setEditingPlanFlow(e.target.value)}
+                                    style={{ width: '100%', height: '150px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.flow ? "Planned control algorithm:\n" + PROJECT_TASKS[currentSession.id].planSpecs.flow : "Outline step-by-step logic in plain English or flowchart syntax (e.g. IF ArrowLeft pressed AND carX > leftBoundary THEN decrease carX)"}
+                                  />
+                                </div>
+                              </>
+                            )}
                           </div>
                         )}
 
-                        {/* Tab 2: Write AI Prompt */}
-                        {activeJournalTab === 'prompt' && (
+                        {/* Tab 2: Write AI Prompt (L1S4: Prompt & Output Code, side by side) */}
+                        {effectiveJournalTab === 'prompt' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                               <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Iterate your prompt versions to improve the generated code output.</span>
                               <div className="journal-history-nav" style={{ display: 'flex', gap: '6px' }}>
                                 {selectedJournal.history.map(hist => (
-                                  <button 
+                                  <button
                                     key={hist.version}
                                     className={`version-nav-btn ${activeJournalVersion === hist.version ? 'active' : ''}`}
                                     onClick={() => setActiveJournalVersion(hist.version)}
@@ -10202,81 +10295,142 @@ export default function App() {
                                 ))}
                               </div>
                             </div>
-                            
-                            <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI Prompt Specification (Active Version)</label>
-                              <textarea 
-                                value={editingCodePrompt}
-                                onChange={e => setEditingCodePrompt(e.target.value)}
-                                style={{ width: '100%', height: '280px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.4 }}
-                                placeholder={PROJECT_TASKS[currentSession.id]?.promptGuide ? "Draft the detailed prompt to guide your AI assistant. For example:\n" + PROJECT_TASKS[currentSession.id].promptGuide : "Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."}
-                              />
-                            </div>
+
+                            {isL1S4 ? (
+                              <>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                  <div className="form-field">
+                                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                                    <textarea
+                                      value={editingCodePrompt}
+                                      onChange={e => setEditingCodePrompt(e.target.value)}
+                                      style={{ width: '100%', height: '280px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.4 }}
+                                      placeholder={PROJECT_TASKS[currentSession.id]?.promptGuide ? "Draft the detailed prompt to guide your AI assistant. For example:\n" + PROJECT_TASKS[currentSession.id].promptGuide : "Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."}
+                                    />
+                                  </div>
+                                  <div className="form-field">
+                                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code</label>
+                                    <textarea
+                                      value={editingCodeOutput}
+                                      onChange={e => setEditingCodeOutput(e.target.value)}
+                                      style={{ width: '100%', height: '280px', background: '#030409', color: '#c5cdd8', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}
+                                      placeholder={PROJECT_TASKS[currentSession.id]?.sampleGeneratedHtml ? "Paste the actual code the AI generated from your prompt here. Example of what this milestone's AI output might look like:\n\n" + PROJECT_TASKS[currentSession.id].sampleGeneratedHtml : "Paste the actual code the AI generated from your prompt here."}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="glass-panel" style={{ padding: '12px' }}>
+                                  <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '6px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Console Output</span>
+                                  {/* No visual DOM preview here — this task's code is variables &
+                                      math, not graphics, so a game-screen graphic would be decorative,
+                                      not a real "actual output." The sandbox runs invisibly; the real
+                                      result is whatever the code prints via console.log. */}
+                                  <iframe
+                                    srcDoc={buildJsConsoleOnlyPreview(editingCodeOutput || '')}
+                                    style={{ display: 'none' }}
+                                    title="Project Task Execution Sandbox"
+                                  />
+                                  <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                                    {simConsoleLogs.length === 0 ? (
+                                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                                        No console output yet. This doesn't necessarily mean something's wrong — add console.log(...) to your Output Code if you want to see real values here.
+                                      </div>
+                                    ) : simConsoleLogs.map((log, idx) => (
+                                      <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                        {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                        {log.text}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="form-field">
+                                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI Prompt Specification (Active Version)</label>
+                                <textarea
+                                  value={editingCodePrompt}
+                                  onChange={e => setEditingCodePrompt(e.target.value)}
+                                  style={{ width: '100%', height: '280px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.4 }}
+                                  placeholder={PROJECT_TASKS[currentSession.id]?.promptGuide ? "Draft the detailed prompt to guide your AI assistant. For example:\n" + PROJECT_TASKS[currentSession.id].promptGuide : "Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."}
+                                />
+                              </div>
+                            )}
                           </div>
                         )}
 
-                        {/* Tab 3: Review & Explain */}
-                        {activeJournalTab === 'review' && (
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                        {/* Tab 3: Review & Explain (L1S4: Explain the Code only — Output Code moved to Tab 2) */}
+                        {effectiveJournalTab === 'review' && (
+                          isL1S4 ? (
                             <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI-Generated Code</label>
-                              {PROJECT_TASKS[currentSession.id]?.chainFrom && (() => {
-                                const chainFromId = PROJECT_TASKS[currentSession.id].chainFrom;
-                                const chainFromSession = CURRICULUM_DATA.find(s => s.id === chainFromId);
-                                const chainFromLabel = chainFromSession ? chainFromSession.title : chainFromId;
-                                const hasSynced = editingCodeOutput.trim().length > 0;
-                                return (
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '6px', padding: '6px 10px', background: 'rgba(0, 242, 254, 0.05)', border: '1px solid rgba(0, 242, 254, 0.2)', borderRadius: '4px', fontSize: '0.75rem' }}>
-                                    <span style={{ color: 'var(--accent-cyan)' }}>
-                                      🔗 {hasSynced
-                                        ? `Starting point carried over from ${chainFromLabel} — extend it below.`
-                                        : `This session builds on ${chainFromLabel} — click Pull Latest to load its code.`}
-                                    </span>
-                                    <button
-                                      type="button"
-                                      className="btn-cyber btn-cyber-secondary btn-small"
-                                      style={{ padding: '2px 8px', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
-                                      onClick={() => {
-                                        const pulled = getSessionCodeOutput(chainFromId);
-                                        if (!pulled) {
-                                          alert(`${chainFromLabel}'s Project Journal has no saved code yet — nothing to pull.`);
-                                          return;
-                                        }
-                                        if (window.confirm(`Replace your current "AI-Generated Code" with ${chainFromLabel}'s latest saved code? This overwrites what's in the box now (unsaved changes will be lost).`)) {
-                                          setEditingCodeOutput(pulled);
-                                        }
-                                      }}
-                                    >
-                                      🔄 Pull Latest
-                                    </button>
-                                  </div>
-                                );
-                              })()}
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Explain the Output Code</label>
                               <textarea
-                                value={editingCodeOutput}
-                                onChange={e => setEditingCodeOutput(e.target.value)}
-                                style={{ width: '100%', height: '350px', background: '#030409', color: '#c5cdd8', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] && PROJECT_TASKS[currentSession.id].sampleGeneratedHtml ? "Paste the code generated by the AI here. Example of what this milestone's AI output might look like:\n\n" + PROJECT_TASKS[currentSession.id].sampleGeneratedHtml : "Paste the code generated by the AI here..."}
-                              />
-                            </div>
-                            <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Code Defense & Explanations</label>
-                              <textarea 
                                 value={editingCodeReview}
                                 onChange={e => setEditingCodeReview(e.target.value)}
-                                style={{ width: '100%', height: '350px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                placeholder={PROJECT_TASKS[currentSession.id] ? "Review guidelines:\n" + PROJECT_TASKS[currentSession.id].codeReviewGuide.map((g, i) => (i + 1) + '. ' + g).join('\n') : "Review the code. Explain key blocks or audit for issues (e.g. 'The AI used var. I changed it to let. It missed checking boundary clamping...')"}
+                                style={{ width: '100%', height: '260px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                placeholder={PROJECT_TASKS[currentSession.id] ? "Review guidelines:\n" + PROJECT_TASKS[currentSession.id].codeReviewGuide.map((g, i) => (i + 1) + '. ' + g).join('\n') : "Explain what this code does, in your own words."}
                               />
                             </div>
-                          </div>
+                          ) : (
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                              <div className="form-field">
+                                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>AI-Generated Code</label>
+                                {PROJECT_TASKS[currentSession.id]?.chainFrom && (() => {
+                                  const chainFromId = PROJECT_TASKS[currentSession.id].chainFrom;
+                                  const chainFromSession = CURRICULUM_DATA.find(s => s.id === chainFromId);
+                                  const chainFromLabel = chainFromSession ? chainFromSession.title : chainFromId;
+                                  const hasSynced = editingCodeOutput.trim().length > 0;
+                                  return (
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '6px', padding: '6px 10px', background: 'rgba(0, 242, 254, 0.05)', border: '1px solid rgba(0, 242, 254, 0.2)', borderRadius: '4px', fontSize: '0.75rem' }}>
+                                      <span style={{ color: 'var(--accent-cyan)' }}>
+                                        🔗 {hasSynced
+                                          ? `Starting point carried over from ${chainFromLabel} — extend it below.`
+                                          : `This session builds on ${chainFromLabel} — click Pull Latest to load its code.`}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        className="btn-cyber btn-cyber-secondary btn-small"
+                                        style={{ padding: '2px 8px', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
+                                        onClick={() => {
+                                          const pulled = getSessionCodeOutput(chainFromId);
+                                          if (!pulled) {
+                                            alert(`${chainFromLabel}'s Project Journal has no saved code yet — nothing to pull.`);
+                                            return;
+                                          }
+                                          if (window.confirm(`Replace your current "AI-Generated Code" with ${chainFromLabel}'s latest saved code? This overwrites what's in the box now (unsaved changes will be lost).`)) {
+                                            setEditingCodeOutput(pulled);
+                                          }
+                                        }}
+                                      >
+                                        🔄 Pull Latest
+                                      </button>
+                                    </div>
+                                  );
+                                })()}
+                                <textarea
+                                  value={editingCodeOutput}
+                                  onChange={e => setEditingCodeOutput(e.target.value)}
+                                  style={{ width: '100%', height: '350px', background: '#030409', color: '#c5cdd8', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}
+                                  placeholder={PROJECT_TASKS[currentSession.id] && PROJECT_TASKS[currentSession.id].sampleGeneratedHtml ? "Paste the code generated by the AI here. Example of what this milestone's AI output might look like:\n\n" + PROJECT_TASKS[currentSession.id].sampleGeneratedHtml : "Paste the code generated by the AI here..."}
+                                />
+                              </div>
+                              <div className="form-field">
+                                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Code Defense & Explanations</label>
+                                <textarea
+                                  value={editingCodeReview}
+                                  onChange={e => setEditingCodeReview(e.target.value)}
+                                  style={{ width: '100%', height: '350px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
+                                  placeholder={PROJECT_TASKS[currentSession.id] ? "Review guidelines:\n" + PROJECT_TASKS[currentSession.id].codeReviewGuide.map((g, i) => (i + 1) + '. ' + g).join('\n') : "Review the code. Explain key blocks or audit for issues (e.g. 'The AI used var. I changed it to let. It missed checking boundary clamping...')"}
+                                />
+                              </div>
+                            </div>
+                          )
                         )}
 
-                        {/* Tab 4: Test & Break */}
-                        {activeJournalTab === 'test' && (
+                        {/* Tab 4: Test & Break (not shown for L1S4) */}
+                        {!isL1S4 && activeJournalTab === 'test' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Test Cases Checklist</label>
-                              <textarea 
+                              <textarea
                                 value={editingTestCases}
                                 onChange={e => setEditingTestCases(e.target.value)}
                                 style={{ width: '100%', height: '120px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
@@ -10285,7 +10439,7 @@ export default function App() {
                             </div>
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Test Failure Results & Logs</label>
-                              <textarea 
+                              <textarea
                                 value={editingTestResults}
                                 onChange={e => setEditingTestResults(e.target.value)}
                                 style={{ width: '100%', height: '180px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
@@ -10295,8 +10449,8 @@ export default function App() {
                           </div>
                         )}
 
-                        {/* Tab 5: Iterate & Improve */}
-                        {activeJournalTab === 'iterate' && (
+                        {/* Tab 5: Iterate & Improve (not shown for L1S4) */}
+                        {!isL1S4 && activeJournalTab === 'iterate' && (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {PROJECT_TASKS[currentSession.id] && (
                               <div style={{ padding: '10px 12px', background: 'rgba(0, 242, 254, 0.04)', borderLeft: '3px solid var(--accent-cyan)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
@@ -10305,7 +10459,7 @@ export default function App() {
                             )}
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Prompt Iteration Changes</label>
-                              <textarea 
+                              <textarea
                                 value={editingIterationChanges}
                                 onChange={e => setEditingIterationChanges(e.target.value)}
                                 style={{ width: '100%', height: '120px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
@@ -10314,7 +10468,7 @@ export default function App() {
                             </div>
                             <div className="form-field">
                               <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Reflective Lessons Learned</label>
-                              <textarea 
+                              <textarea
                                 value={editingIterationLessons}
                                 onChange={e => setEditingIterationLessons(e.target.value)}
                                 style={{ width: '100%', height: '180px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}

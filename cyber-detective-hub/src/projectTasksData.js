@@ -86,33 +86,32 @@ export const PROJECT_TASKS = {
   },
   "l1-s4": {
     partNum: "Lab 4",
-    partTitle: "JS Variable Registry",
+    partTitle: "Difficulty-Scaling State System",
     objectives: [
-      "Initialize state registers in game.js — the file every session from here on extends",
-      "Declare mutable variables for player position, speed, score, and state",
-      "Declare a lives/health variable the sandbox drill never asks for",
-      "Declare immutable constants for track limits and lane dimensions",
-      "Perform basic mathematical increments on state variables"
+      "Extend this session's registry (carX, speed, score, gameActive, lives) with ONE new value you design yourself — e.g. a difficultyLevel",
+      "Decide independently what triggers your new value to change (a score threshold, a time interval, etc.) — no exercise spells this out",
+      "Decide independently what your new value should affect (speed, spawn rate, or something else you choose) and by how much",
+      "Defend your own thresholds and formula in your own words — there's no single correct answer here"
     ],
     planSpecs: {
-      vision: "This lab's file already looks like Session 3's styled road and car — this lab works behind the scenes, giving the game a memory of the score, speed, lives, and whether it's running.",
-      parts: "Parts needed: none new on screen — this session gives the game a memory. Information to track: the car's position, the current speed, the score, a lives count, whether the game is running, and the fixed width of a lane.",
-      flow: "State initialization (start) -> Variable declarations -> Math increments on game events -> Render UI updates"
+      vision: "Same racing game, same registry from the exercises — but this task asks for something no exercise spelled out: make the game feel harder over time. You decide what 'harder' means and which variable drives it.",
+      parts: "Building on carX/speed/score/gameActive/lives, design ONE new value (e.g. difficultyLevel) that changes based on score, plus your own rule for how it should affect speed (or another value you pick).",
+      flow: "Score grows during play -> your own rule decides when your new value changes -> that change drives a visible effect on speed (or whatever you chose) -> the game gets harder over time."
     },
     referenceSessions: [{ id: "l1-s2", label: "Session 2's HTML" }, { id: "l1-s3", label: "Session 3's CSS" }],
     chainFrom: null,
-    promptGuide: "This is where game.js starts — every session from here to the final lab extends this exact file, so get the registry right. Ask the AI to declare mutable variables for your car's starting x position (read it off YOUR OWN Session 3 CSS, not a fixed number), 'speed' (initial 0), 'score' (initial 0), a 'lives' count (initial 3 — the sandbox drill never covers this one), and 'gameActive' (initial false), plus constants for your track's width and lane spacing. Write test statements that increment score by 1 and decrement lives by 1, then log the results.",
+    promptGuide: "The exercises gave you a fixed registry and fixed increments (score++, speed += 10) — this task doesn't hand you the rule. First decide, on paper, what should make the game harder as score grows and by how much. Then write a prompt that describes YOUR rule in your own words and asks the AI to implement it as an extension of the carX/speed/score/gameActive/lives registry. The AI can write the code, but it can't invent your design decision — that part is yours.",
     codeReviewGuide: [
-      "Are variables declared with `let` (mutable) and constants with `const` (immutable)?",
-      "Is the speed variable initialized as a Number (not a String with quotes)?",
-      "Does the starting car x-position actually match where your Session 3 CSS centers `#player-car`, not a copied 165?",
-      "Socratic Question: What would happen if we declared `speed = '10'` (string) and then executed `speed += 5`? How does variable data type dictate arithmetic outcomes?"
+      "Does the AI's code actually implement YOUR rule, or did it invent its own thresholds you never asked for?",
+      "Is your new value declared with `let` (it changes during play), not `const`?",
+      "Does the value actually change something else visibly (speed or another value), or does it sit there unused?",
+      "Socratic Question: what happens to your rule if score can jump by more than 1 at a time (e.g. a bonus of +5)? Does your threshold check still catch it correctly?"
     ],
-    sampleGeneratedHtml: '// game.js — Racing Car Game state registry\n// NOTE: carX/TRACK_WIDTH below are an EXAMPLE — use YOUR OWN Session 3 numbers.\nlet carX = 175;         // player position — changes as you steer\nlet speed = 0;          // Number, not "0"\nlet score = 0;\nlet lives = 3;          // not in the sandbox drill — your own game needs this\nlet gameActive = false; // true/false switch: is the game running?\n\nconst LANE_WIDTH = 137;   // fixed: pixels between lanes, from YOUR track width\nconst TRACK_WIDTH = 410;  // fixed: matches YOUR Session 3 #game-track width\n\n// quick test of the math\nscore++;       // score is now 1\nlives--;       // lives is now 2\nconsole.log("Score:", score, "Lives:", lives);',
-    testCasesGuide: "- Verify variables are declared with correct syntax, using YOUR OWN track/car numbers from Sessions 2-3\n- Verify score and lives values update mathematically rather than string concatenating\n- Verify console logs report correct variable transitions",
-    iterationGuide: "Ensure zero global variables are exposed in global browser scope directly (wrap them inside an object namespace or immediately invoked functional block to prevent client-side console hacks).",
+    sampleGeneratedHtml: '// This is NOT your task\'s answer — it shows the general TECHNIQUE\n// (a counter + a threshold check that changes another value) using a\n// different mechanic, so you still have to design your own difficulty rule.\nlet boostMeter = 0;      // fills up over time\nlet boostReady = false;  // becomes true once boostMeter crosses a threshold\n\nboostMeter += 1;\nif (boostMeter >= 20 && !boostReady) {\n  boostReady = true;\n  console.log("Boost ready! boostMeter:", boostMeter);\n}',
+    testCasesGuide: "Self-check, not code tests — answer in your own words:\n- What specific score value(s) trigger your difficulty change, and why did you pick them?\n- Does the effect (e.g. speed increase) actually happen when you run your code, or only in theory?\n- Would a player of your game notice the difficulty change without you telling them?",
+    iterationGuide: "If your first threshold felt too easy or too sudden, adjust the numbers and explain what you changed and why — this is expected to take more than one attempt.",
     targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "Screen unchanged from the Session 3 look — but score, speed, lives, and gameActive are now real tracked variables in game.js. Session 5 opens THIS file and extends it, not a fresh copy."
+    targetOutcomeCaption: "Screen unchanged from the Session 3 look — the difficulty system lives entirely in game.js's variables and logic, not anything visual yet. Session 5 opens THIS file and extends it, not a fresh copy."
   },
   "l1-s5": {
     partNum: "Lab 5",

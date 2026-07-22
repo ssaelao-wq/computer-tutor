@@ -267,34 +267,24 @@ Each session contains exactly 10 progressive sandbox exercises designed to follo
    - *Discussion*: *"If variables are exposed in global scope, a player can open the developer console and set `score = 99999`. How do we protect system states from user modification?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 4 Homework", write a JS code snippet declaring variables for a player's `speed`, `laneIndex`, and `isCrashed`. Update these variables by driving 10 units faster and changing lanes.
+- **In-App Project Task ("Lab 4: Difficulty-Scaling State System")**: In the Journal tab, extend this session's variable registry (`carX`, `speed`, `score`, `gameActive`, `lives`) with ONE new value the student designs themselves (e.g. `difficultyLevel`) that changes once `score` crosses a threshold the student picks, and that visibly affects another value (e.g. `speed`). Unlike the sandbox exercises, no exercise spells out the exact rule — the student must decide and defend their own numbers.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 4)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal):
+**Format note (Session 4 trial):** unlike other Level 1 sessions, Session 4 is running a trial of a reduced sandbox format — **5 exercises** (not 10), each with **3 input boxes** instead of one: (1) Plan & Design, (2) Writing Prompt + Output Code side by side, (3) Explain the Output Code. There's no separate Test & Break / Iterate & Improve step in the UI — running the pasted Output Code live and explaining it covers both. The student pastes the *actual* code their AI tool generated into Output Code; the app runs it live and shows real `console.log`/error text in a **Console Output** panel (not a graphical preview — this session's code never touches the racing game's visuals, so a car/track image would never change regardless of what was typed). "Verify" requires all 3 boxes filled in and a keyword check on the prompt/output/explanation text.
 
-- **Exercise 4.1 [Plan & Design]**: Plan which game values change during play (mutable) and which stay fixed forever.
-  * *Solution:* `let carX, speed, score, gameActive | const LANE_WIDTH`
-- **Exercise 4.2 [Write AI Prompt]**: Prompt the AI to declare the state variables.
-  * *Solution:* Prompt mentions `let`, `const`, `carX`, and the initial value `165` (lane positions: 35, 165, 295).
-- **Exercise 4.3 [Review & Explain]**: What data type is the value `0` in `let score = 0;`?
-  * *Solution:* `Number`
-- **Exercise 4.4 [Test & Break]**: Fix `let speed = "0";` (quotes make it a String).
-  * *Solution:* `let speed = 0;`
-- **Exercise 4.5 [Iterate & Improve]**: Add the missing game-state flag.
-  * *Solution:* `let gameActive = false;`
-- **Exercise 4.6 [Plan & Design]**: Plan how score and speed change during gameplay.
-  * *Solution:* `score++ | speed += 10`
-- **Exercise 4.7 [Write AI Prompt]**: Prompt for the increment statements plus console output.
-  * *Solution:* Prompt mentions `score`, `speed`, and `console.log`.
-- **Exercise 4.8 [Review & Explain]**: After `let speed = 0; speed += 10;`, what is speed?
-  * *Solution:* `10`
-- **Exercise 4.9 [Test & Break]**: The String Concatenation Trap — `let speed = "10"; speed += 5;` produces `"105"`.
-  * *Solution:* `let speed = 10;` (remove the quotes so the result is `15`).
-- **Exercise 4.10 [Iterate & Improve]**: Complete variable registry.
-  * *Solution:* `let`/`const` declarations for `carX`/`speed`/`score`/`gameActive`/`LANE_WIDTH` plus `score++` and `speed += 10`, with no quoted numbers.
+- **Exercise 4.1: The Core State Variables** — Declare `carX` (165), `speed` (0), `score` (0), `gameActive` (false).
+  * *Solution:* Plan names all four as changing; prompt mentions `let`, `carX`, `165`; Output Code declares all four with `let`; explanation says why they're `let` (they change during play).
+- **Exercise 4.2: Constants and the Lives Count** — Add `const TRACK_WIDTH`/`LANE_WIDTH` and a new `let lives = 3` (not covered by any earlier drill).
+  * *Solution:* Prompt mentions `const`, `lives`, `3`; Output Code includes a `const` declaration plus `lives`; explanation contrasts `const` (fixed) vs. `let` (`lives` still changes on a crash).
+- **Exercise 4.3: Math Increments on Game State** — `score++` (or `score += 1`) and `speed += 10`, logged to the console.
+  * *Solution:* Prompt mentions `score`, `speed`, `console.log`; Output Code includes both increments; explanation predicts `score = 1`, `speed = 10`.
+- **Exercise 4.4: The Quoted-Number Bug Hunt** — `let speed = "10"; speed += 5;` produces `"105"` instead of `15`. Fix it.
+  * *Solution:* Prompt mentions `speed` plus `number`/`quote`/`string`; Output Code corrects it to `let speed = 10;` (no quotes); explanation names both `"105"` (buggy) and `15` (fixed).
+- **Exercise 4.5: The Complete Variable Registry** — Assemble every declaration (`carX`, `speed`, `score`, `gameActive`, `lives`, `TRACK_WIDTH`, `LANE_WIDTH`) into one registry. **Declarations only, no math this time** (already proven in 4.3) — deliberately narrowed so this exercise's answer doesn't double as a ready-made solution to the Project Task below.
+  * *Solution:* Prompt mentions `let`, `const`, `lives`; Output Code declares all seven values correctly typed, no math statements; explanation covers why each is `let` vs `const`.
 
-- **Homework Evaluation**: Ensure the student correctly uses variables and increments types correctly without string quotes on integers.
+- **Homework Evaluation**: Check that the Project Task's new value is genuinely the student's own design (a threshold/effect not copied from Exercise 4.5), declared with `let`, and that it visibly affects the value the student chose when run in the Console Output panel.
 
 ---
 
