@@ -1161,9 +1161,13 @@ const S4_EXERCISES = [
       const codeOk = clean.includes('let') && clean.includes('carx') && clean.includes('speed') && clean.includes('score') && clean.includes('gameactive');
       const e = explain.toLowerCase();
       const explainOk = e.includes('let') || e.includes('chang');
-      return promptOk && codeOk && explainOk;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Prompt should mention 'let', 'carX', and '165'. Output code needs carX/speed/score/gameActive all declared with 'let'. Explanation should say why they use 'let' (they change during play)."
+    hint: {
+      prompt: "Mention 'let', 'carX', and '165'.",
+      code: "Needs carX/speed/score/gameActive all declared with 'let'.",
+      explain: "Say WHY these use 'let' — not just what they are — e.g. because they change during play."
+    }
   },
   {
     num: 2,
@@ -1181,9 +1185,13 @@ const S4_EXERCISES = [
       const codeOk = clean.includes('const') && (clean.includes('trackwidth') || clean.includes('lanewidth')) && clean.includes('lives');
       const e = explain.toLowerCase();
       const explainOk = e.includes('const') && (e.includes('let') || e.includes('chang'));
-      return promptOk && codeOk && explainOk;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Prompt should mention 'const', 'lives', and '3'. Output code needs a const TRACK_WIDTH or LANE_WIDTH plus 'lives'. Explanation should contrast 'const' (fixed) vs 'let' (lives can change when the player crashes)."
+    hint: {
+      prompt: "Mention 'const', 'lives', and '3'.",
+      code: "Needs a const TRACK_WIDTH or LANE_WIDTH plus 'lives'.",
+      explain: "Contrast 'const' (fixed) vs 'let' — say why lives can change when the player crashes."
+    }
   },
   {
     num: 3,
@@ -1201,9 +1209,13 @@ const S4_EXERCISES = [
       const codeOk = (clean.includes('score++') || clean.includes('score+=1')) && clean.includes('speed+=10');
       const e = explain.replace(/[^0-9]/g, '');
       const explainOk = e.includes('1') && e.includes('10');
-      return promptOk && codeOk && explainOk;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Prompt should mention 'score', 'speed', and 'console.log'. Output code needs score++ (or score += 1) and speed += 10. Explanation should predict score = 1 and speed = 10."
+    hint: {
+      prompt: "Mention 'score', 'speed', and 'console.log'.",
+      code: "Needs score++ (or score += 1) and speed += 10.",
+      explain: "Predict the results in your explanation: score = 1 and speed = 10."
+    }
   },
   {
     num: 4,
@@ -1221,9 +1233,13 @@ const S4_EXERCISES = [
       const codeOk = clean.includes('letspeed=10;') && !clean.includes('"10"') && !clean.includes("'10'");
       const e = explain.toLowerCase();
       const explainOk = e.includes('105') && e.includes('15');
-      return promptOk && codeOk && explainOk;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: 'Prompt should ask to fix the quoted "10" into a real Number. Output code needs let speed = 10; (no quotes). Explanation should mention both "105" (buggy) and 15 (fixed).'
+    hint: {
+      prompt: 'Ask to fix the quoted "10" into a real Number.',
+      code: 'Needs let speed = 10; (no quotes).',
+      explain: 'Mention both "105" (buggy) and 15 (fixed).'
+    }
   },
   {
     num: 5,
@@ -1240,9 +1256,13 @@ const S4_EXERCISES = [
       const clean = outputCode.replace(/\s+/g, '').toLowerCase();
       const codeOk = clean.includes('let') && clean.includes('const') && clean.includes('carx') && clean.includes('speed') && clean.includes('score') && clean.includes('gameactive') && clean.includes('lives') && (clean.includes('trackwidth') || clean.includes('lanewidth'));
       const explainOk = explain.trim().length > 20;
-      return promptOk && codeOk && explainOk;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Prompt should mention 'let', 'const', and 'lives'. Output code needs let declarations for carX/speed/score/gameActive/lives, plus const TRACK_WIDTH/LANE_WIDTH — no math statements needed this time. Explanation should walk through why each one is let vs const."
+    hint: {
+      prompt: "Mention 'let', 'const', and 'lives'.",
+      code: "Needs let declarations for carX/speed/score/gameActive/lives, plus const TRACK_WIDTH/LANE_WIDTH — no math statements needed this time.",
+      explain: "Walk through why each one is let vs const (a couple of sentences)."
+    }
   }
 ];
 
@@ -7436,7 +7456,8 @@ export default function App() {
                         const ex = S4_EXERCISES[s4ActiveExercise - 1];
                         const logs = [{ type: 'info', text: `Checking Exercise 4.${s4ActiveExercise}...` }];
                         const filled = s4PlanInput.trim() && s4PromptInput.trim() && s4OutputCodeInput.trim() && s4ExplainInput.trim();
-                        const pass = filled && ex.validate({ plan: s4PlanInput, prompt: s4PromptInput, outputCode: s4OutputCodeInput, explain: s4ExplainInput });
+                        const result = filled ? ex.validate({ plan: s4PlanInput, prompt: s4PromptInput, outputCode: s4OutputCodeInput, explain: s4ExplainInput }) : null;
+                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
                         if (pass) {
                           logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
                           setS4Success(true);
@@ -7451,8 +7472,10 @@ export default function App() {
                           logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
                           setS4Success(false);
                         } else {
-                          logs.push({ type: 'error', text: `✗ Check failed. Your prompt, output code, or explanation is missing a required detail.` });
-                          logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
+                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
+                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
+                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
+                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
                           setS4Success(false);
                         }
                         setS4Logs(logs);
