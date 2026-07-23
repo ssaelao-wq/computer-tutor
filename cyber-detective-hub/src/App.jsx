@@ -4531,6 +4531,7 @@ export default function App() {
   const [s4ExplainInput, setS4ExplainInput] = useState('');
   const [s4Logs, setS4Logs] = useState([]);
   const [s4Success, setS4Success] = useState(false);
+  const [promptCopiedKey, setPromptCopiedKey] = useState('');
 
   // Journal selection states
   const [selectedJournalId, setSelectedJournalId] = useState('j1');
@@ -5360,6 +5361,18 @@ export default function App() {
     const idx = sequence.findIndex(s => s.id === sessionId);
     if (idx <= 0) return false;
     return sequence.slice(0, idx).some(s => !solvedCases[s.id]);
+  };
+
+  // Copies a written prompt to the clipboard so the student can paste it into
+  // their own external AI tool (ChatGPT/Cursor/Copilot), then paste that tool's
+  // real response back into the Output Code box themselves — the platform never
+  // calls an AI API itself.
+  const copyPromptToClipboard = (text, key) => {
+    if (!text?.trim()) return;
+    navigator.clipboard.writeText(text).then(() => {
+      setPromptCopiedKey(key);
+      setTimeout(() => setPromptCopiedKey(prev => (prev === key ? '' : prev)), 1500);
+    });
   };
 
   // Per-exercise completion tracking for the Level 1 sandbox sessions. A session's
@@ -7345,13 +7358,26 @@ export default function App() {
                     <div className="panel-header"><h3>2. Write the AI Prompt &amp; Paste the Output Code</h3></div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            onClick={() => copyPromptToClipboard(s4PromptInput, `ex-${s4ActiveExercise}`)}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {promptCopiedKey === `ex-${s4ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                          </button>
+                        </div>
                         <textarea
                           value={s4PromptInput}
                           onChange={(e) => setS4PromptInput(e.target.value)}
                           style={{ width: '100%', height: '260px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S4_EXERCISES[s4ActiveExercise - 1].promptPlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          Copy your prompt, run it in your own AI tool (ChatGPT, Cursor, Copilot...), then paste the result into Output Code on the right.
+                        </span>
                       </div>
                       <div className="form-field">
                         <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
@@ -10305,13 +10331,26 @@ export default function App() {
                               <>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                                   <div className="form-field">
-                                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                      <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                                      <button
+                                        type="button"
+                                        className="btn-cyber btn-small btn-cyber-secondary"
+                                        onClick={() => copyPromptToClipboard(editingCodePrompt, 'project-task')}
+                                        style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                                      >
+                                        {promptCopiedKey === 'project-task' ? '✓ Copied' : 'Copy Prompt'}
+                                      </button>
+                                    </div>
                                     <textarea
                                       value={editingCodePrompt}
                                       onChange={e => setEditingCodePrompt(e.target.value)}
                                       style={{ width: '100%', height: '280px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', lineHeight: 1.4 }}
                                       placeholder={PROJECT_TASKS[currentSession.id]?.promptGuide ? "Draft the detailed prompt to guide your AI assistant. For example:\n" + PROJECT_TASKS[currentSession.id].promptGuide : "Draft the detailed prompt to guide your AI assistant. Specify constraints and outputs."}
                                     />
+                                    <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                      Copy your prompt, run it in your own AI tool (ChatGPT, Cursor, Copilot...), then paste the result into Output Code on the right.
+                                    </span>
                                   </div>
                                   <div className="form-field">
                                     <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code</label>
