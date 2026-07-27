@@ -748,399 +748,362 @@ const CAMPAIGN_THEMES = {
 const S1_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 1.1: [Plan & Design] Mapping the Machine",
-    problem: "Before touching any code, you need to know what's physically running your game versus what's just instructions telling it what to do.",
-    instruction: "List which of these are HARDWARE and which are SOFTWARE: the CPU, the game code (game.js), the RAM, the operating system, the monitor, the web browser.",
-    preloaded: "/* Write your answer here: label each item HARDWARE or SOFTWARE */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('hardware') && clean.includes('software') && clean.includes('cpu') && clean.includes('ram');
+    title: "Exercise 1.1: Hardware vs. Software, and the Resource Bottleneck",
+    problem: "Before touching any code, you need to know what's physically running your game versus what's just instructions telling it what to do — and how to spot which physical resource is struggling when something feels slow.",
+    instruction: "1) Plan: classify each of these as HARDWARE or SOFTWARE: the CPU, the game code (game.js), the RAM, the operating system, the monitor, the web browser. 2) Prompt: ask an AI to explain, in beginner terms, what a 'bottleneck' is, using this real resource snapshot as the example: CPU usage 91%, RAM usage 38%, Disk usage 12% — and ask it to name which resource is the bottleneck. 3) Explain: paste the AI's answer into Output, then explain in your own words why CPU (not RAM or Disk) is the bottleneck here.",
+    planPlaceholder: "Label each item HARDWARE or SOFTWARE: CPU, game.js, RAM, the OS, the monitor, the browser.",
+    promptPlaceholder: "Write the prompt: ask the AI what a 'bottleneck' is and which resource is the bottleneck given CPU 91%, RAM 38%, Disk 12%.",
+    outputCodePlaceholder: "Paste the AI's actual answer here.",
+    runnable: false,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('bottleneck') && p.includes('cpu') && p.includes('91');
+      const o = outputCode.toLowerCase();
+      const codeOk = o.includes('cpu') && (o.includes('bottleneck') || o.includes('91'));
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('cpu') && e.trim().length > 15;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Hardware = physical parts you can touch (CPU, RAM, monitor). Software = instructions running on that hardware (the OS, the browser, game.js).",
-    reference: "🖥️ HARDWARE = physical, touchable parts (CPU, RAM, GPU, monitor, keyboard). 💻 SOFTWARE = instructions that run ON that hardware (operating system, browser, game code)."
+    hint: {
+      prompt: "Mention 'bottleneck', 'CPU', and the 91% figure.",
+      code: "Paste an answer that actually names CPU as the bottleneck.",
+      explain: "Say WHY CPU specifically (not RAM or Disk) is the bottleneck here."
+    }
   },
   {
     num: 2,
-    title: "Exercise 1.2: [Write AI Prompt] Requesting a Plain-English Explanation",
-    problem: "A precise prompt gets a precise, useful answer — a vague one gets a vague one.",
-    instruction: "Write an AI prompt asking an AI IDE to explain, in one sentence, the difference between RAM and storage (like an SSD) — using a racing game's saved replay files vs. the game currently running as the example.",
-    preloaded: "/* Write your AI Prompt here: */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('ram') && (clean.includes('storage') || clean.includes('ssd')) && clean.includes('difference');
+    title: "Exercise 1.2: The Out-of-Memory Crash",
+    problem: "Bug: the racing game loads 500 full-resolution, uncompressed car images into memory all at once before the race even starts, then crashes on low-end laptops.",
+    instruction: "1) Plan: explain in your own words why loading 500 large images into memory at once could overload a low-end laptop. 2) Prompt: ask the AI to propose ONE software-side fix that reduces memory usage without buying new hardware — paste its real suggestion into Output. 3) Explain: why does that fix (compressing or lazy-loading) actually reduce memory usage?",
+    planPlaceholder: "In plain language: why does loading 500 large images at once strain RAM?",
+    promptPlaceholder: "Write the prompt asking the AI for ONE software-side fix (no new hardware) for a memory overload caused by loading too many images at once.",
+    outputCodePlaceholder: "Paste the AI's proposed fix here.",
+    runnable: false,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = (p.includes('ram') || p.includes('memory')) && (p.includes('fix') || p.includes('reduce'));
+      const o = outputCode.toLowerCase();
+      const codeOk = o.includes('compress') || o.includes('lazy');
+      const e = explain.toLowerCase();
+      const explainOk = (e.includes('ram') || e.includes('memory')) && (e.includes('compress') || e.includes('lazy'));
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Mention: RAM, storage/SSD, difference, and ask for one sentence using the racing game as an example.",
-    reference: "RAM = short-term active memory, cleared on restart. Storage (SSD/HDD) = long-term memory, keeps files after shutdown."
+    hint: {
+      prompt: "Mention 'RAM'/'memory' and ask for a 'fix'.",
+      code: "Needs a real fix: compress the images, or lazy-load them.",
+      explain: "Say why RAM/memory usage drops with that specific fix."
+    }
   },
   {
     num: 3,
-    title: "Exercise 1.3: [Review & Explain] Reading a System Resource Report",
-    problem: "A teammate says the racing game 'feels laggy' and pastes this resource snapshot: CPU usage: 91%. RAM usage: 38%. Disk usage: 12%.",
-    instruction: "Which hardware resource is the bottleneck causing the lag — CPU, RAM, or Disk?",
-    preloaded: "/* Write your answer here */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('cpu');
+    title: "Exercise 1.3: The Client-Server Request Cycle",
+    problem: "Every webpage load — including the Racing Car Game you'll start building next session — is really a conversation between two computers: your browser and a server.",
+    instruction: "1) Plan: describe the 4-part request cycle in your own words: Browser (Client) sends a request -> Server looks up the data -> Server sends back a response -> Browser displays the page. 2) Prompt: ask the AI to explain, beginner-friendly, what happens when a browser requests a web page — your prompt must mention client, server, request, and response. 3) Explain: paste the AI's explanation into Output, then explain in one sentence why the 'response' step matters.",
+    planPlaceholder: "Describe the 4-part cycle in your own words: Browser sends request -> Server looks up data -> Server responds -> Browser displays page.",
+    promptPlaceholder: "Write the prompt asking the AI to explain the browser/server request cycle, mentioning client, server, request, and response.",
+    outputCodePlaceholder: "Paste the AI's actual explanation here.",
+    runnable: false,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('client') && p.includes('server') && p.includes('request') && p.includes('response');
+      const o = outputCode.toLowerCase();
+      const codeOk = o.includes('request') && o.includes('response');
+      const explainOk = explain.trim().length > 15;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "CPU — it's the resource sitting near 100% usage, meaning the processor itself is the bottleneck, not memory or storage.",
-    reference: "CPU = the 'brain' doing calculations. RAM = short-term workspace. Disk = long-term storage & file reads/writes. High % on one = that resource is the bottleneck."
+    hint: {
+      prompt: "Mention all four words: client, server, request, response.",
+      code: "Paste an answer that actually covers the request AND the response.",
+      explain: "Say in one sentence why the response step matters."
+    }
   },
   {
     num: 4,
-    title: "Exercise 1.4: [Test & Break] The Out-of-Memory Crash",
-    problem: "Bug: the racing game loads 500 full-resolution, uncompressed car images into memory all at once before the race even starts, then crashes on low-end laptops.",
-    instruction: "Which hardware resource is being overloaded, causing the crash — CPU, RAM, or the network connection?",
-    preloaded: "/* Write your answer here */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('ram') || clean.includes('memory');
+    title: "Exercise 1.4: The Web Trio & the Missing-CSS Bug",
+    problem: "Every webpage is built from exactly three technologies, each with one job — and knowing those jobs lets you diagnose a real bug report: 'The page loads, I can see the text and buttons, but everything is plain black text on a white background with no layout or colors.'",
+    instruction: "1) Plan: in one short phrase each, state what HTML, CSS, and JavaScript are each responsible for. 2) Prompt: ask the AI to diagnose the bug report above and say which of HTML/CSS/JS most likely failed to load. 3) Explain: paste the AI's diagnosis into Output, then explain why CSS (not HTML or JS) is the likely culprit.",
+    planPlaceholder: "One phrase each: HTML = ___, CSS = ___, JavaScript = ___.",
+    promptPlaceholder: "Write the prompt: paste the bug report and ask the AI which of HTML/CSS/JS most likely failed to load.",
+    outputCodePlaceholder: "Paste the AI's actual diagnosis here.",
+    runnable: false,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('html') && p.includes('css') && p.includes('javascript');
+      const o = outputCode.toLowerCase();
+      const codeOk = o.includes('css');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('css') && e.trim().length > 10;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "RAM (memory) — loading hundreds of large images at once fills up available memory faster than the system can handle.",
-    reference: "Loading many large files into RAM at once is a classic memory bottleneck — the same failure mode as opening too many browser tabs."
+    hint: {
+      prompt: "Mention all three technologies: HTML, CSS, and JavaScript.",
+      code: "The diagnosis should name CSS as the likely failure.",
+      explain: "Say why CSS specifically explains 'content there, but no styling'."
+    }
   },
   {
     num: 5,
-    title: "Exercise 1.5: [Iterate & Improve] Optimizing the Load",
-    problem: "Now that you know RAM is the bottleneck from 1.4, the fix isn't 'buy more RAM' — it's changing how the software behaves.",
-    instruction: "Propose ONE software-side fix that reduces memory usage without needing new hardware (hint: does the game need all 500 images loaded before the race even starts?).",
-    preloaded: "/* Write your proposed fix here */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('compress') || clean.includes('lazy') || (clean.includes('load') && clean.includes('only'));
-    },
-    hint: "Compress the images, or lazy-load them (only load each car's image right before it's needed) instead of loading all 500 upfront.",
-    reference: "Common fixes: compress assets, lazy-load (only load what's needed, when it's needed), reuse objects instead of creating new ones."
-  },
-  {
-    num: 6,
-    title: "Exercise 1.6: [Plan & Design] Mapping the Request",
-    problem: "Before you can explain how the internet works, you need to know who talks to whom.",
-    instruction: "Describe the request cycle: the Browser (Client) sends a request, the Server looks up the data, the Server sends back a response, the Browser displays the page. Name all four parts in your answer.",
-    preloaded: "/* Write your answer here, naming all 4 parts */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('browser') && clean.includes('request') && clean.includes('server') && (clean.includes('response') || clean.includes('sends back') || clean.includes('sendsback'));
-    },
-    hint: "Order: 1) Browser (Client) sends a request 2) Server looks up the data 3) Server sends back the page (response) 4) Browser displays the page.",
-    reference: "Client-Server Model: Client (browser) = requests. Server = stores/processes data and responds. This request→response cycle repeats for every page load."
-  },
-  {
-    num: 7,
-    title: "Exercise 1.7: [Write AI Prompt] Explaining HTTP Requests",
-    problem: "You want the AI IDE to explain a concept, not write code yet — the prompt needs to ask for an explanation, precisely scoped.",
-    instruction: "Write an AI prompt asking to explain, in beginner-friendly terms, what happens when a browser requests a web page — make sure your prompt mentions client, server, request, and response.",
-    preloaded: "/* Write your AI Prompt here: */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('client') && clean.includes('server') && clean.includes('request') && clean.includes('response');
-    },
-    hint: "Mention: client, server, request, and response — those four words are what makes the prompt precise instead of vague.",
-    reference: "HTTP = HyperText Transfer Protocol, the request/response 'language' browsers and servers speak to each other."
-  },
-  {
-    num: 8,
-    title: "Exercise 1.8: [Review & Explain] The Web Trio's Jobs",
-    problem: "Every webpage — including the Racing Car Game you'll start building next session — is built from exactly three technologies, each with one job.",
-    instruction: "In one short phrase each, state what HTML, CSS, and JavaScript are each responsible for (e.g. 'HTML = ___, CSS = ___, JS = ___').",
-    preloaded: "/* Write your answer here */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      const hasHtml = clean.includes('html') && (clean.includes('structure') || clean.includes('content') || clean.includes('skeleton'));
-      const hasCss = clean.includes('css') && (clean.includes('style') || clean.includes('look') || clean.includes('visual') || clean.includes('design'));
-      const hasJs = (clean.includes('javascript') || clean.includes('js')) && (clean.includes('behavior') || clean.includes('logic') || clean.includes('interact'));
-      return hasHtml && hasCss && hasJs;
-    },
-    hint: "HTML = structure/content, CSS = style/appearance, JavaScript = behavior/interactivity.",
-    reference: "HTML = structure/content. CSS = style/appearance. JavaScript = behavior/interactivity. All three together = a complete webpage."
-  },
-  {
-    num: 9,
-    title: "Exercise 1.9: [Test & Break] The Site That \"Looks Broken\"",
-    problem: "Bug report: 'The racing game page loads — I can see the words \"Score: 0\" and the buttons — but everything is plain black text on a white background with no layout, no colors, no positioning at all.'",
-    instruction: "Which of the three web technologies (HTML, CSS, or JavaScript) most likely failed to load, based on this symptom?",
-    preloaded: "/* Write your answer here */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('css');
-    },
-    hint: "CSS — the content (HTML) is clearly there since you can read the text, but nothing is STYLED, which is exactly CSS's job.",
-    reference: "If text appears but styling doesn't, the CSS file failed to load or link — a very common real bug (wrong file path, typo in the <link> tag)."
-  },
-  {
-    num: 10,
-    title: "Exercise 1.10: [Iterate & Improve] The 5-Step Loop, Applied to This Course",
+    title: "Exercise 1.5: The 5-Step AI-Era Loop, Applied",
     problem: "Every session from here on — including your very next one — will use the same repeating process to work with an AI IDE.",
-    instruction: "Write the 5 steps of the AI-Era Development Loop, in order, that this course uses in every session (hint: it starts with Plan & Design and ends with Iterate & Improve).",
-    preloaded: "/* Write the 5 steps here, in order */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('plan') && clean.includes('prompt') && clean.includes('review') && clean.includes('test') && clean.includes('iterate');
+    instruction: "1) Plan: write the 5 steps of the AI-Era Development Loop, in order. 2) Prompt: ask the AI to explain, in one sentence each, what each of the 5 steps means in practice. 3) Explain: paste the AI's explanation into Output, then note which step you think will be hardest for you and why.",
+    planPlaceholder: "List the 5 steps in order (starts with Plan & Design, ends with Iterate & Improve).",
+    promptPlaceholder: "Write the prompt asking the AI to explain each of the 5 steps in one sentence.",
+    outputCodePlaceholder: "Paste the AI's actual explanation here.",
+    runnable: false,
+    validate: ({ prompt, outputCode, explain }) => {
+      const words = ['plan', 'prompt', 'review', 'test', 'iterate'];
+      const p = prompt.toLowerCase();
+      const promptOk = words.every(w => p.includes(w));
+      const o = outputCode.toLowerCase();
+      const codeOk = words.filter(w => o.includes(w)).length >= 3;
+      const explainOk = explain.trim().length > 15;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "1. Plan & Design 2. Write the AI Prompt 3. Review & Explain 4. Test & Break It 5. Iterate & Improve",
-    reference: "This 5-step loop repeats every single session for the rest of this course — memorize it now, since Session 2 uses it immediately."
+    hint: {
+      prompt: "Mention all 5 words: plan, prompt, review, test, iterate.",
+      code: "The AI's explanation should cover at least 3 of the 5 steps by name.",
+      explain: "Name the step you expect to find hardest, and why."
+    }
   }
 ];
 
 const S2_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 2.1: [Plan & Design] Game Arena Skeleton",
-    problem: "Before writing HTML, you must plan the container hierarchy. The main game arena needs a parent 'game-track' and a child 'player-car'. (You're not coding yet — just sketching which box goes inside which. The '>' means 'parent contains child', borrowed from CSS.)",
-    instruction: "Write a design blueprint path indicating that player-car is inside game-track. Use the format: game-track > player-car",
-    preloaded: "/* Write your structural plan here: e.g. parent > child */",
-    validate: (code) => {
-      const clean = code.toLowerCase().replace(/\s+/g, '');
-      return clean.includes('game-track>player-car') || (clean.includes('game-track') && clean.includes('player-car') && clean.includes('>'));
+    title: "Exercise 2.1: The Track & Car Skeleton",
+    problem: "Before writing HTML, you must plan the container hierarchy. The main game arena needs a parent 'game-track' and a child 'player-car'.",
+    instruction: "1) Plan: write the nesting in plain language, e.g. game-track > player-car. 2) Prompt: ask the AI to create a container div with id 'game-track' containing a nested div with id 'player-car' — paste its real HTML into Output Code. 3) Explain: why does player-car need to be nested INSIDE game-track, not just next to it?",
+    planPlaceholder: "Write the structural plan: e.g. game-track > player-car.",
+    promptPlaceholder: "Write the prompt asking for a div id='game-track' containing a nested div id='player-car'.",
+    outputCodePlaceholder: "Paste the actual HTML the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('game-track') && p.includes('player-car') && (p.includes('div') || p.includes('box') || p.includes('container'));
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('id="game-track"') && clean.includes('id="player-car"');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('nest') || e.includes('inside') || e.includes('child') || e.includes('parent');
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Write 'game-track > player-car' inside the workspace."
+    hint: {
+      prompt: "Mention 'game-track', 'player-car', and a box word ('div'/'box'/'container').",
+      code: "Needs id=\"game-track\" AND id=\"player-car\" both present.",
+      explain: "Say why player-car must be nested inside game-track (parent/child)."
+    }
   },
   {
     num: 2,
-    title: "Exercise 2.2: [Write AI Prompt] Requesting the Track",
-    problem: "Now you must instruct the AI to generate the track container exactly as planned. You don't need to know the HTML tag name yet — just describe what you want to see (a 'box' or 'container').",
-    instruction: "Write an AI prompt asking to create a box (container) with an ID of 'game-track' and a class of 'game-container'. Your prompt must contain the words: 'create', a box word ('box', 'container', or 'div'), 'id', and 'game-track'.",
-    preloaded: "/* Write your AI Prompt here: */",
-    // The editor holds a prompt (not renderable HTML), so on Verify the preview shows
-    // what the AI would generate from that prompt instead of the raw prompt text.
-    previewHtml: '<div id="game-track" class="game-container"></div>',
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      const hasBoxWord = clean.includes('box') || clean.includes('container') || clean.includes('div');
-      return clean.includes('create') && hasBoxWord && clean.includes('id') && clean.includes('game-track');
+    title: "Exercise 2.2: Selectors & the Scoreboard",
+    problem: "We need a dashboard panel to render scores — a box holding a heading, which holds the score number — and every element that needs to be found later by name needs a unique identifier.",
+    instruction: "1) Plan: write the nested plan in plain language: dashboard > heading > score number. 2) Prompt: ask the AI for a 'dashboard' div containing a heading with a small score span (id 'score-val') inside it — paste its real HTML into Output Code. 3) Explain: which attribute (id or class) uniquely identifies the score element, and why does it need to be unique?",
+    planPlaceholder: "Write the nested plan: dashboard > heading > score number.",
+    promptPlaceholder: "Write the prompt asking for a 'dashboard' div with a heading and a score span with id 'score-val'.",
+    outputCodePlaceholder: "Paste the actual HTML the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('dashboard') && (p.includes('heading') || p.includes('h2')) && p.includes('score-val');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('id="score-val"') && clean.includes('dashboard');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('id') && (e.includes('unique') || e.includes('one'));
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Describe what you want to see: a 'box' (or 'container') with the 'id' set to 'game-track'."
+    hint: {
+      prompt: "Mention 'dashboard', a heading word, and 'score-val'.",
+      code: "Needs id=\"score-val\" nested inside a dashboard element.",
+      explain: "Say that ID uniquely identifies one element, and why that matters here."
+    }
   },
   {
     num: 3,
-    title: "Exercise 2.3: [Review & Explain] Selector Audits",
-    problem: "The AI generated: `<section class='game-container' id='game-track'></section>`. Review this generated code. (This is where the vocabulary is earned: your 'box' from E2.2 became a real tag — here <section>, a box-type element; the most common box tag is <div>. From now on you can use 'div' directly.)",
-    instruction: "Explain which attribute (class or id) uniquely identifies this track element. Type the exact value of that unique identifier in plain text.",
-    preloaded: "/* Enter the unique identifier value: */",
-    validate: (code) => {
-      const clean = code.replace(/['"\s]+/g, '').toLowerCase();
-      return clean.includes('game-track');
+    title: "Exercise 2.3: The Unclosed Tag Bug Hunt",
+    problem: `Bug: the AI generated <div id="game-track"><div id="player-car"></div> — two divs opened, but only one closed, so the browser never knows where game-track ends.`,
+    instruction: "1) Plan: explain in your own words why an unclosed </div> breaks a page's structure. 2) Prompt: ask the AI to fix the broken code above — paste the corrected HTML into Output Code. 3) Explain: how many closing </div> tags does the fixed version need, and why?",
+    planPlaceholder: "Why does one missing closing </div> break the layout, even though the browser doesn't show an error?",
+    promptPlaceholder: 'Write the prompt asking the AI to fix: <div id="game-track"><div id="player-car"></div> (missing a closing tag).',
+    outputCodePlaceholder: 'Paste the AI\'s corrected HTML here, e.g.:\n<div id="game-track"><div id="player-car"></div></div>',
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('div') && (p.includes('close') || p.includes('fix'));
+      const clean = outputCode.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
+      const codeOk = clean === '<divid="game-track"><divid="player-car"></div></div>';
+      const explainOk = explain.includes('2') || explain.toLowerCase().includes('two');
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "The unique identifier is the ID. Enter its value: 'game-track'."
+    hint: {
+      prompt: "Mention 'div' and ask to 'fix'/'close' the broken tags.",
+      code: 'Needs exactly: <div id="game-track"><div id="player-car"></div></div>',
+      explain: "State the number: 2 closing </div> tags."
+    }
   },
   {
     num: 4,
-    title: "Exercise 2.4: [Test & Break] Spotting Rendering Leaks",
-    problem: "You tested the code, but the browser layout is broken because of an unclosed tag in the AI code: `<div id=\"game-track\"><div id=\"player-car\"></div>`. (Every div you open must be closed with a </div>. This code opens two divs but closes only one, so the browser never knows where game-track ends.)",
-    instruction: "Correct this broken HTML block by adding the missing closing </div> tag to clamp the track boundaries.",
-    preloaded: "<div id=\"game-track\"><div id=\"player-car\"></div>",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
-      return clean === '<divid="game-track"><divid="player-car"></div></div>';
+    title: "Exercise 2.4: Lane Dividers via Class",
+    problem: "The track needs a lane divider — but unlike game-track or player-car (each one-of-a-kind), a track can have several dividers, so this element needs a CLASS, not an ID.",
+    instruction: "1) Plan: explain why the lane divider should use a CLASS ('lane-divider') instead of an ID. 2) Prompt: ask the AI to nest a div with class 'lane-divider' inside the #game-track container, below the player car — paste its real HTML into Output Code. 3) Explain: what would go wrong if you used an ID instead, once the track needs multiple dividers?",
+    planPlaceholder: "Why class instead of id for something that can repeat many times on the page?",
+    promptPlaceholder: "Write the prompt asking for a div class='lane-divider' nested inside #game-track, below player-car.",
+    outputCodePlaceholder: "Paste the actual HTML the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('lane-divider') && p.includes('class');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('class="lane-divider"') && clean.includes('id="game-track"');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('id') && (e.includes('unique') || e.includes('once') || e.includes('duplicate') || e.includes('same') || e.includes('one'));
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Add an extra '</div>' to close the game-track div."
+    hint: {
+      prompt: "Mention 'lane-divider' and the word 'class'.",
+      code: 'Needs class="lane-divider" nested inside id="game-track".',
+      explain: "Say why an ID can't be reused for multiple dividers."
+    }
   },
   {
     num: 5,
-    title: "Exercise 2.5: [Iterate & Improve] Spawning Dividers",
-    problem: "Iterate on the track design to support lanes. You need to add a divider inside the track. (A div is a blank box; CSS later shapes it into a line. We use a class — not an id — because a track has many dividers.)",
-    instruction: "Nest a div element with a class of 'lane-divider' inside the '#game-track' container, directly below the player car.",
-    preloaded: "<div id=\"game-track\">\n  <div id=\"player-car\"></div>\n</div>",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('<divid="game-track">') && clean.includes('<divclass="lane-divider"></div>') && clean.includes('</div></div>');
+    title: "Exercise 2.5: The Complete Skeleton",
+    problem: "Combine every container from this session — the dashboard, the score display, and the track with its car and divider — into the single HTML file every later session's homework extends.",
+    instruction: "1) Plan: list every container this file needs: dashboard, score-val, game-track, player-car, lane-divider. 2) Prompt: ask the AI to combine your dashboard and game-track blocks into one complete, validly-closed HTML file — paste the real combined HTML into Output Code. 3) Explain: confirm every div is closed — how many closing </div> tags does your final file have?",
+    planPlaceholder: "List every container/id/class this file needs: dashboard, score-val, game-track, player-car, lane-divider.",
+    promptPlaceholder: "Write the prompt asking the AI to combine the dashboard and game-track blocks into one complete HTML file.",
+    outputCodePlaceholder: "Paste the AI's complete combined HTML here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('dashboard') && p.includes('game-track') && (p.includes('combine') || p.includes('complete') || p.includes('together'));
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('id="dashboard"') && clean.includes('id="score-val"') && clean.includes('id="game-track"') && clean.includes('id="player-car"') && clean.includes('class="lane-divider"') && (outputCode.match(/<\/div>/g) || []).length >= 4;
+      const explainOk = explain.replace(/[^0-9]/g, '').length > 0;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Insert '<div class=\"lane-divider\"></div>' inside the track container."
-  },
-  {
-    num: 6,
-    title: "Exercise 2.6: [Plan & Design] Dashboard HUD",
-    problem: "We need a dashboard panel to render scores. Plan a 3-level deep structure, in plain language: a dashboard box holding a heading, which holds the score number. (Same blueprint-first thinking as E2.1, now three levels deep. You don't need the exact tag names yet — those come later, in E2.8.)",
-    instruction: "Write the planned nested structure in plain language, using arrows to show what's inside what. Example: dashboard > heading > score number",
-    preloaded: "/* Enter your nested plan: */",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      const hasBoxWord = clean.includes('dashboard') || clean.includes('div') || clean.includes('box') || clean.includes('container');
-      const hasHeadingWord = clean.includes('heading') || clean.includes('h2') || clean.includes('title');
-      const hasScoreWord = clean.includes('score') || clean.includes('number') || clean.includes('span');
-      return hasBoxWord && hasHeadingWord && hasScoreWord && clean.includes('>');
-    },
-    hint: "Plan the nesting in plain words: 'dashboard > heading > score number'."
-  },
-  {
-    num: 7,
-    title: "Exercise 2.7: [Write AI Prompt] Score HUD Prompting",
-    problem: "Write a prompt to direct the AI to generate the scoreboard HUD block. You've now learned that a 'box' is called a div, so you can use that word here. You don't need tag names for the parts inside yet — just describe them (a heading, a score area). (Only the outer box is a div — a generic panel/frame shaped by CSS. The heading becomes its own tag, h2, since it has real meaning and gets automatic styling.)",
-    instruction: "Draft a prompt asking for a 'dashboard' (or 'scoreboard') box (div) that contains a heading, with a small score area (id 'score-val') inside it. Must contain: 'dashboard' or 'scoreboard', a box word ('div'/'box'/'container'), a heading word ('heading'/'h2'/'title'), and 'score-val'.",
-    preloaded: "/* Write your AI Prompt here: */",
-    previewHtml: '<div id="dashboard">\n  <h2>Score: <span id="score-val">0</span></h2>\n</div>',
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      const hasBoxWord = clean.includes('div') || clean.includes('box') || clean.includes('container');
-      const hasHeadingWord = clean.includes('heading') || clean.includes('h2') || clean.includes('title');
-      const hasDashboardWord = clean.includes('dashboard') || clean.includes('scoreboard');
-      return hasDashboardWord && hasBoxWord && hasHeadingWord && clean.includes('score-val');
-    },
-    hint: "Ask for a 'dashboard' (or 'scoreboard') box (div) with a 'heading' and a small score area with the id 'score-val'."
-  },
-  {
-    num: 8,
-    title: "Exercise 2.8: [Review & Explain] HTML Structure Audit",
-    problem: "The AI generated: `<div id=\"dashboard\"><h2>Score: <span id=\"score-val\">0</span></h2></div>`. Review this code. (Trace it left to right: <h2> opens, then <span> opens AND closes, then </h2> closes — so the span is fully nested inside the h2.)",
-    instruction: "Is the span element nested inside the h2 element? Answer with YES or NO.",
-    preloaded: "/* Type YES or NO: */",
-    validate: (code) => {
-      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
-      return clean === 'YES';
-    },
-    hint: "Since the <span> tag is opened and closed inside the <h2> bounds, the answer is 'YES'."
-  },
-  {
-    num: 9,
-    title: "Exercise 2.9: [Test & Break] Spotting Selector Failures",
-    problem: "You test the game, but the scoreboard value never changes. The JS selector expects 'score-val', but the AI generated: `<span id=\"scoreval\">0</span>`. (A one-character mismatch means the JavaScript can't find the element — nothing errors loudly, the score just silently never updates. Names must match exactly.)",
-    instruction: "Fix this selector failure by correcting the ID attribute in the code editor to match 'score-val'.",
-    preloaded: "<div id=\"dashboard\">\n  <h2>Score: <span id=\"scoreval\">0</span></h2>\n</div>",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('id="score-val"') || clean.includes("id='score-val'");
-    },
-    hint: "Rename 'scoreval' to 'score-val' inside the span ID."
-  },
-  {
-    num: 10,
-    title: "Exercise 2.10: [Iterate & Improve] Merging the Document",
-    problem: "Iterate to create the complete game structure. You must combine the dashboard and track arena blocks into a single valid file. (This assembles every piece from E2.1–E2.9 into one working file — proving you can combine parts without leaving a tag open. This becomes the real HTML skeleton the rest of Level 1 builds on.)",
-    instruction: "Combine your scoreboard dashboard and game-track HTML blocks. Ensure all containers (dashboard, track, player car, divider) are present and closed.",
-    preloaded: "<!-- Combine elements here: -->",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('id="dashboard"') && clean.includes('id="score-val"') && clean.includes('id="game-track"') && clean.includes('id="player-car"') && clean.includes('class="lane-divider"') && (code.match(/<\/div>/g) || []).length >= 4;
-    },
-    hint: "Make sure all div and span tags are closed. You should have 4 or more closing </div> tags in total."
+    hint: {
+      prompt: "Mention both 'dashboard' and 'game-track', and ask to combine them.",
+      code: "Needs all 5 pieces: dashboard, score-val, game-track, player-car, lane-divider — plus 4+ closing </div> tags.",
+      explain: "State the actual number of closing </div> tags in your file."
+    }
   }
 ];
 
 const S3_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 3.1: [Plan & Design] Dark Arena Specs",
-    problem: "You are planning layout styles for the track. Identify the target values needed, in plain language — you don't need CSS units or hex codes yet. (The 390-wide width isn't arbitrary — it holds exactly 3 lanes of 130 each, math that drives every coordinate in later sessions. The color is a dark gray, later written as the hex code #333.)",
-    instruction: "List the planned track arena specs in plain language: how wide, how tall, and what color. Example: 390 wide, 500 tall, dark gray.",
-    preloaded: "/* Planned Width:\n   Planned Height:\n   Planned Color: */",
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      const hasWidth = clean.includes('390') || clean.includes('wide') || clean.includes('width');
-      const hasHeight = clean.includes('500') || clean.includes('tall') || clean.includes('height');
-      const hasBackground = clean.includes('background') || clean.includes('gray') || clean.includes('grey') || clean.includes('dark') || clean.includes('#333');
-      return hasWidth && hasHeight && hasBackground;
+    title: "Exercise 3.1: Arena Sizing Specs",
+    problem: "You are planning layout styles for the track — the exact width, height, and color it should be, before writing any real CSS.",
+    instruction: "1) Plan: decide the track's width, height, and background color in plain language (e.g. 390 wide, 500 tall, dark gray — 390 divides evenly into 3 lanes of 130 each). 2) Prompt: ask the AI to style '#game-track' with your chosen width, height, and background color — paste its real CSS into Output Code. 3) Explain: why did you choose those dimensions?",
+    planPlaceholder: "Planned Width / Planned Height / Planned Color, in plain language.",
+    promptPlaceholder: "Write the prompt asking the AI to style #game-track with your chosen width, height, and background color.",
+    outputCodePlaceholder: "Paste the actual CSS the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('game-track') && (p.includes('width') || p.includes('wide')) && (p.includes('height') || p.includes('tall')) && (p.includes('background') || p.includes('color'));
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('#game-track{') && clean.includes('width:') && clean.includes('height:') && clean.includes('background');
+      const explainOk = explain.trim().length > 10;
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Describe the target in plain words: 390 wide, 500 tall, dark gray."
+    hint: {
+      prompt: "Mention 'game-track', a width, a height, and a background color.",
+      code: "Needs #game-track { width: ...; height: ...; background... } all three properties.",
+      explain: "Say why you picked those specific dimensions."
+    }
   },
   {
     num: 2,
-    title: "Exercise 3.2: [Write AI Prompt] Styling the Track",
-    problem: "Write a prompt instructing the AI to style the track. You haven't met the CSS property names yet, so just describe what you want to SEE — how wide, how tall, and what color. (The AI translates your words into real CSS properties like width, height, and background-color — you'll start writing those properties yourself in E3.4.)",
-    instruction: "Draft a prompt describing the game-track box: how wide (390), how tall (500), and its background color (dark gray). Must mention 'game-track', a width ('390'/'wide'/'width'), a height ('500'/'tall'/'height'), and a background color ('background'/'gray'/'dark').",
-    preloaded: "/* Write your AI Prompt here: */",
-    previewCss: '#game-track {\n  width: 390px;\n  height: 500px;\n  background-color: #333;\n}',
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      const hasWidth = clean.includes('390') || clean.includes('wide') || clean.includes('width');
-      const hasHeight = clean.includes('500') || clean.includes('tall') || clean.includes('height');
-      const hasBackground = clean.includes('background') || clean.includes('gray') || clean.includes('grey') || clean.includes('dark') || clean.includes('#333');
-      return clean.includes('game-track') && hasWidth && hasHeight && hasBackground;
+    title: "Exercise 3.2: Selectors — # vs. .",
+    problem: "CSS targets elements two different ways: a hash (#) targets the ONE element with that id; a dot (.) targets EVERY element with that class. Mixing them up is why styles seem to 'not apply'.",
+    instruction: "1) Plan: in your own words, when should you use an ID selector vs. a Class selector? 2) Prompt: ask the AI to explain the difference between # and . selectors with a short example. 3) Explain: paste the AI's explanation into Output, then say which one you'd use for something that appears many times on a page.",
+    planPlaceholder: "When should you use an ID selector (#) vs. a Class selector (.)?",
+    promptPlaceholder: "Write the prompt asking the AI to explain the difference between # and . selectors, with a short example.",
+    outputCodePlaceholder: "Paste the AI's actual explanation here.",
+    runnable: false,
+    validate: ({ prompt, outputCode, explain }) => {
+      const promptOk = prompt.includes('#') && prompt.includes('.');
+      const codeOk = outputCode.includes('#') && outputCode.includes('.');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('class') || e.includes('id');
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Describe the 'game-track' box in plain words: 390 wide, 500 tall, with a dark gray background."
+    hint: {
+      prompt: "Include both symbols: '#' and '.' in your prompt.",
+      code: "The AI's explanation should mention both '#' and '.'.",
+      explain: "Say which selector (id or class) fits something repeated many times."
+    }
   },
   {
     num: 3,
-    title: "Exercise 3.3: [Review & Explain] Selectors Review",
-    problem: "Review the CSS selectors rules. We target classes with dot (.) and IDs with hash (#). (A # targets the ONE element with that id; a . targets EVERY element with that class. Mixing them up is why styles seem to 'not apply'.)",
-    instruction: "Type the selector symbol used to target an ID, and the symbol used for a Class. (e.g. '#' and '.').",
-    preloaded: "/* ID selector: \n   Class selector: */",
-    validate: (code) => {
-      return code.includes('#') && code.includes('.');
+    title: "Exercise 3.3: The Drifting Car Bug",
+    problem: `Bug: the absolute-positioned player car drifts to the top of the whole browser window, because the parent #game-track { width: 390px; height: 500px; background-color: #333; } lacks a positioning anchor.`,
+    instruction: "1) Plan: explain why an absolutely-positioned child drifts to the browser window instead of staying inside its parent, when the parent lacks 'position: relative'. 2) Prompt: ask the AI to fix the CSS above by adding the missing anchor — paste the fixed CSS into Output Code. 3) Explain: what does 'position: relative' on the parent actually do for the child's coordinates?",
+    planPlaceholder: "Why does a missing 'position: relative' on the parent send the child to the corner of the whole browser window?",
+    promptPlaceholder: "Write the prompt asking the AI to add the missing position: relative to #game-track.",
+    outputCodePlaceholder: "Paste the AI's fixed CSS here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('relative') && p.includes('game-track');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('#game-track{') && clean.includes('position:relative');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('anchor') || e.includes('relative') || e.includes('parent');
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Type the '#' symbol and the '.' symbol in the editor."
+    hint: {
+      prompt: "Mention 'position: relative' and 'game-track'.",
+      code: "Needs #game-track { ... position: relative; ... }",
+      explain: "Explain that 'relative' anchors the child's offsets to the parent's own box."
+    }
   },
   {
     num: 4,
-    title: "Exercise 3.4: [Test & Break] Drifting Cars Debugger",
-    problem: "You run the page, but the absolute-positioned car drifts to the top of the browser screen because the parent '#game-track' lacks a positioning anchor. (An absolute-positioned child measures its offsets from the nearest positioned ancestor. Without position: relative on the parent, it measures from the whole browser window instead and flies to the corner.)",
-    instruction: "Fix this coordinate anchor bug by adding 'position: relative;' to the #game-track CSS block.",
-    preloaded: "#game-track {\n  width: 390px;\n  height: 500px;\n  background-color: #333;\n}",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('#game-track{') && clean.includes('position:relative');
+    title: "Exercise 3.4: Positioning the Car",
+    problem: "Using the example 390px-wide track and a 60px-wide car, the player car needs to sit centered near the bottom of the road.",
+    instruction: "1) Plan: calculate the left offset that centers a 60px-wide car inside a 390px track — show your math: (390 - 60) / 2. 2) Prompt: ask the AI to position '#player-car' absolutely at bottom 20px and your calculated left offset — paste the real CSS into Output Code. 3) Explain: walk through why (390 - 60) / 2 is the correct centering formula.",
+    planPlaceholder: "Show the math: (390 - 60) / 2 = ? What does that number represent?",
+    promptPlaceholder: "Write the prompt asking the AI to position #player-car absolute, bottom: 20px, left: 165px.",
+    outputCodePlaceholder: "Paste the actual CSS the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('player-car') && p.includes('absolute') && p.includes('bottom') && p.includes('left');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('#player-car{') && clean.includes('position:absolute') && clean.includes('bottom:20px') && clean.includes('left:165px');
+      const explainOk = explain.includes('165') && (explain.includes('390') || explain.includes('60'));
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Add position: relative; inside #game-track rules."
+    hint: {
+      prompt: "Mention 'player-car', 'absolute', 'bottom', and 'left'.",
+      code: "Needs #player-car { position: absolute; bottom: 20px; left: 165px; }",
+      explain: "Show the actual numbers: 390, 60, and 165 in your math."
+    }
   },
   {
     num: 5,
-    title: "Exercise 3.5: [Iterate & Improve] Dashed Lanes",
-    problem: "Iterate on the highway layout to define visual lanes for steering. (height: 100% makes the divider span the full track top-to-bottom; the dashed border draws the lane line. It's a class — not an id — because a road has many dividers.)",
-    instruction: "Style the '.lane-divider' class with: position absolute, height 100%, width 2px, and border-left '2px dashed white'.",
-    preloaded: ".lane-divider {\n  \n}",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('.lane-divider{') && clean.includes('position:absolute') && (clean.includes('border-left:2pxdashedwhite') || clean.includes('border-left:2pxdashed#fff'));
+    title: "Exercise 3.5: Dashed Divider & Flex Dashboard",
+    problem: "Two finishing touches this session: a dashed lane divider down the middle of the road, and a dashboard that lays its score out horizontally instead of stacking it.",
+    instruction: "1) Plan: describe the lane divider's look (a thin dashed white line) and the dashboard's layout (items spaced apart, side by side). 2) Prompt: ask the AI for BOTH: '.lane-divider' (position absolute, height 100%, dashed white left border) AND '#dashboard' (display flex, justify-content space-between) — paste the real CSS into Output Code. 3) Explain: what does 'justify-content: space-between' actually do to the dashboard's children?",
+    planPlaceholder: "Describe: the lane divider's look, and how the dashboard's items should be spaced.",
+    promptPlaceholder: "Write the prompt asking for BOTH .lane-divider (dashed) and #dashboard (flex, space-between) styles.",
+    outputCodePlaceholder: "Paste the actual CSS the AI generated from your prompt here.",
+    runnable: true,
+    validate: ({ prompt, outputCode, explain }) => {
+      const p = prompt.toLowerCase();
+      const promptOk = p.includes('lane-divider') && p.includes('dashboard') && p.includes('flex');
+      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
+      const codeOk = clean.includes('.lane-divider{') && clean.includes('position:absolute') && (clean.includes('border-left:2pxdashedwhite') || clean.includes('border-left:2pxdashed#fff')) && clean.includes('#dashboard{') && clean.includes('display:flex') && clean.includes('justify-content:space-between');
+      const e = explain.toLowerCase();
+      const explainOk = e.includes('space') || e.includes('between') || e.includes('apart');
+      return { promptOk, codeOk, explainOk };
     },
-    hint: "Declare position: absolute; height: 100%; border-left: 2px dashed white; inside the selector."
-  },
-  {
-    num: 6,
-    title: "Exercise 3.6: [Plan & Design] Car Offsets",
-    problem: "Plan the player car alignment offsets inside a 390px wide track container. The car needs to sit centered in the middle lane. (bottom: 20px sits the car near the bottom edge. left: 165px centers a 60px-wide car in a 390px track: (390 - 60) / 2 = 165.)",
-    instruction: "List the targeted bottom offset (20px) and center-left offset (165px).",
-    preloaded: "/* Bottom offset: \n   Left offset: */",
-    validate: (code) => {
-      return code.includes('20px') && code.includes('165px');
-    },
-    hint: "Specify bottom 20px and left 165px in the comments."
-  },
-  {
-    num: 7,
-    title: "Exercise 3.7: [Write AI Prompt] Positioning the Car",
-    problem: "Write a prompt to instruct the AI to position the player car at bottom 20px and left 165px. (Unlike E3.2, use the real CSS term 'absolute' here — you already wrote position: relative in E3.4 and position: absolute in E3.5, so this prompt uses the vocabulary you've earned.)",
-    instruction: "Draft a prompt. It must contain the words 'player-car', 'absolute', 'bottom', and 'left'.",
-    preloaded: "/* Write your AI Prompt here: */",
-    previewCss: '#player-car {\n  position: absolute;\n  bottom: 20px;\n  left: 165px;\n}',
-    validate: (code) => {
-      const clean = code.toLowerCase();
-      return clean.includes('player-car') && clean.includes('absolute') && clean.includes('bottom') && clean.includes('left');
-    },
-    hint: "Ask the AI to style '#player-car' using 'absolute' position with 'bottom' and 'left' offsets."
-  },
-  {
-    num: 8,
-    title: "Exercise 3.8: [Review & Explain] Bounding Boxes",
-    problem: "The AI placed an obstacle car at coordinates: `top: 50px; left: 40px;`. (left: 40px is well under the track's halfway point of 195px, so it sits near the LEFT edge. This spatial reading is what you'll need for collision detection later.)",
-    instruction: "Is this obstacle positioned near the LEFT or RIGHT side of the track lanes? Answer with LEFT or RIGHT.",
-    preloaded: "/* Answer LEFT or RIGHT: */",
-    validate: (code) => {
-      const clean = code.replace(/[^a-zA-Z]/g, '').toUpperCase();
-      return clean === 'LEFT';
-    },
-    hint: "A left offset of 40px is near the left edge. Answer 'LEFT'."
-  },
-  {
-    num: 9,
-    title: "Exercise 3.9: [Test & Break] Invisible Elements",
-    problem: "You tested the code, but the restart panel is hidden by default. The AI code has: `.hidden { display: none; }`. (display: none removes an element completely — useful once the game is finished, but a problem while you're building and need to SEE it. 'Invisible' is often a style choice, not a missing element.)",
-    instruction: "Fix this issue for layout testing. Temporarily override display to flex in the editor to make it visible.",
-    preloaded: ".hidden {\n  display: none;\n}",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('.hidden{') && clean.includes('display:flex');
-    },
-    hint: "Change 'display: none;' to 'display: flex;' inside the .hidden rule."
-  },
-  {
-    num: 10,
-    title: "Exercise 3.10: [Iterate & Improve] HUD Flex Alignment",
-    problem: "Iterate on the scoreboard dashboard styles to align scores horizontally. (display: flex lays the dashboard's children side by side; justify-content: space-between pushes them to opposite ends; padding adds breathing room.)",
-    instruction: "Select '#dashboard' and style it using flexbox layout: display flex, justify-content space-between, and padding 10px.",
-    preloaded: "#dashboard {\n  \n}",
-    validate: (code) => {
-      const clean = code.replace(/\s+/g, '').toLowerCase();
-      return clean.includes('#dashboard{') && clean.includes('display:flex') && clean.includes('justify-content:space-between');
-    },
-    hint: "Add display: flex; justify-content: space-between; and padding: 10px; to the dashboard rules."
+    hint: {
+      prompt: "Mention 'lane-divider', 'dashboard', and 'flex'.",
+      code: "Needs .lane-divider (absolute, dashed white border-left) AND #dashboard (display: flex; justify-content: space-between;).",
+      explain: "Say how space-between spreads the dashboard's children apart."
+    }
   }
 ];
 
@@ -1265,32 +1228,6 @@ const S4_EXERCISES = [
     }
   }
 ];
-
-// Escape a snippet so it renders as visible source code, not as live elements.
-function escapeHtmlSource(html) {
-  return html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-// Panel shown inside a prompt-step preview. The preview always sits one execution step
-// ahead of the Code Editor: on a PROMPT step, the editor holds a prompt, so the preview's
-// job is to reveal the source CODE the AI would generate from it (once Verify passes).
-// Before Verify it just nudges the student to write their prompt and check it.
-function promptPreviewPanel(codeSource, success, fileLabel) {
-  if (!success) {
-    return '<div style="color:#8899aa;font-family:monospace;padding:20px;text-align:center;line-height:1.6;">✍️ This step is a prompt.<br/>Write your prompt, then click <b>Verify</b> to see the ' + fileLabel + ' code the AI generates.</div>';
-  }
-  return '<div style="color:#8899aa;font-family:monospace;font-size:0.72rem;margin-bottom:6px;">✓ ' + fileLabel + ' — code the AI generated from your prompt:</div>'
-    + '<pre style="margin:0;background:#0d1526;border:1px solid #22314f;border-radius:4px;padding:12px;color:#00ffcc;font-family:monospace;font-size:0.85rem;white-space:pre-wrap;word-break:break-word;">'
-    + escapeHtmlSource(codeSource)
-    + '</pre>';
-}
-
-// Body for the S2 HTML "Interactive Live Preview" iframe:
-//   - Prompt step (ex.previewHtml set): show the generated HTML source (revealed on Verify).
-//   - Code step (no previewHtml): the editor holds real HTML, so RENDER it live.
-function buildHtmlPreviewBody(ex, codeInput, success) {
-  return ex.previewHtml ? promptPreviewPanel(ex.previewHtml, success, 'index.html') : codeInput;
-}
 
 // Canned "finished look" CSS for the S2 HTML sandbox preview and the Project Journal's
 // milestone Target Outcome preview. Session 2 only teaches HTML structure (no CSS yet),
@@ -1435,25 +1372,27 @@ const S3_PREVIEW_SKELETON = `
 
 // Base "scenery" CSS for the S3 CSS sandbox preview. Properties a given exercise is actually
 // teaching are deliberately left OUT of this base for that exercise number, so the visible
-// result comes from the student's own CSS (s3CodeInput) instead of a pre-baked default that
-// would make the preview look identical whether or not they wrote the correct rule:
-//   - Ex 3.4 teaches #game-track's `position: relative`, so it's omitted here on that exercise
+// result comes from the student's own CSS (s3OutputCodeInput) instead of a pre-baked default
+// that would make the preview look identical whether or not they wrote the correct rule:
+//   - Ex 3.3 teaches #game-track's `position: relative`, so it's omitted here on that exercise
 //     (everything else drifts to the top-left of the iframe until the student adds it — the
 //     exact bug the exercise describes).
+//   - Ex 3.4 teaches #player-car's own absolute position/offsets, so that rule is omitted
+//     entirely on that exercise (the car sits at the browser's default flow position until
+//     the student's own CSS output places it).
 //   - Ex 3.5 teaches the entire `.lane-divider` rule, so that rule is omitted entirely on that
 //     exercise (dividers render invisible/unstyled until the student writes it).
-//   - Ex 3.9 teaches `.hidden`'s display value, so that rule is omitted on that exercise (the
-//     restart panel starts however the student's own preloaded/typed `.hidden` rule says).
 function buildS3PreviewCss(exerciseNum) {
   return `
     body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
     #game-track {
-      ${exerciseNum === 4 ? '' : 'position: relative;'}
+      ${exerciseNum === 3 ? '' : 'position: relative;'}
       width: 100%;
       height: 260px;
       border: 2px dashed #444;
       background-color: #1a1a2e;
     }
+    ${exerciseNum === 4 ? '' : `
     #player-car {
       position: absolute;
       bottom: 20px;
@@ -1464,7 +1403,7 @@ function buildS3PreviewCss(exerciseNum) {
       color: white;
       text-align: center;
       border-radius: 4px;
-    }
+    }`}
     .obstacle {
       position: absolute;
       top: 30px;
@@ -1495,7 +1434,7 @@ function buildS3PreviewCss(exerciseNum) {
       font-weight: bold;
       z-index: 5;
     }
-    ${exerciseNum === 9 ? '' : '.hidden { display: none; }'}
+    .hidden { display: none; }
   `;
 }
 
@@ -4356,7 +4295,7 @@ const S12_EXERCISES = [
 // claimable once every one of its exercises has been passed (no jumping straight
 // to the final exercise), preserving the curriculum's "cognitive resistance" design.
 const EXERCISE_COUNTS = {
-  'l1-s1': 10, 'l1-s2': 10, 'l1-s3': 10, 'l1-s4': 5, 'l1-s5': 10, 'l1-s6': 10,
+  'l1-s1': 5, 'l1-s2': 5, 'l1-s3': 5, 'l1-s4': 5, 'l1-s5': 10, 'l1-s6': 10,
   'l1-s7': 10, 'l1-s8': 10, 'l1-s9': 10, 'l1-s10': 10, 'l1-s11': 10, 'l1-s12': 10,
   'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10, 'l2-s5': 10, 'l2-s6': 10, 'l2-s7': 10, 'l2-s8': 10,
   'l2-s9': 10, 'l2-s10': 10, 'l2-s11': 10, 'l2-s12': 10, 'l2-s13': 10
@@ -4524,21 +4463,33 @@ export default function App() {
   // typed instead of the preloaded/preset starting state.
   const [savedExerciseCode, setSavedExerciseCode] = useState({});
 
-  // Level 1 Session 1 (Systems Briefing) States
+  // Level 1 Session 1 (Systems Briefing) States — 3-box format:
+  // Plan & Design / Prompt+Output / Explain the Output
   const [s1ActiveExercise, setS1ActiveExercise] = useState(1);
-  const [s1CodeInput, setS1CodeInput] = useState('');
+  const [s1PlanInput, setS1PlanInput] = useState('');
+  const [s1PromptInput, setS1PromptInput] = useState('');
+  const [s1OutputCodeInput, setS1OutputCodeInput] = useState('');
+  const [s1ExplainInput, setS1ExplainInput] = useState('');
   const [s1Logs, setS1Logs] = useState([]);
   const [s1Success, setS1Success] = useState(false);
 
-  // Level 1 Session 2 (HTML Sandbox) States
+  // Level 1 Session 2 (HTML Sandbox) States — 3-box format:
+  // Plan & Design / Prompt+Output Code / Explain the Output Code
   const [s2ActiveExercise, setS2ActiveExercise] = useState(1);
-  const [s2CodeInput, setS2CodeInput] = useState('');
+  const [s2PlanInput, setS2PlanInput] = useState('');
+  const [s2PromptInput, setS2PromptInput] = useState('');
+  const [s2OutputCodeInput, setS2OutputCodeInput] = useState('');
+  const [s2ExplainInput, setS2ExplainInput] = useState('');
   const [s2Logs, setS2Logs] = useState([]);
   const [s2Success, setS2Success] = useState(false);
 
-  // Level 1 Session 3 (CSS Sandbox) States
+  // Level 1 Session 3 (CSS Sandbox) States — 3-box format:
+  // Plan & Design / Prompt+Output Code / Explain the Output Code
   const [s3ActiveExercise, setS3ActiveExercise] = useState(1);
-  const [s3CodeInput, setS3CodeInput] = useState('');
+  const [s3PlanInput, setS3PlanInput] = useState('');
+  const [s3PromptInput, setS3PromptInput] = useState('');
+  const [s3OutputCodeInput, setS3OutputCodeInput] = useState('');
+  const [s3ExplainInput, setS3ExplainInput] = useState('');
   const [s3Logs, setS3Logs] = useState([]);
   const [s3Success, setS3Success] = useState(false);
 
@@ -5668,7 +5619,10 @@ export default function App() {
       setSandboxInput('Plain-English answers and short AI prompts');
       setSandboxEdgeCases('Confusing hardware limits with software bugs, vague prompts that could apply to anything');
       setS1ActiveExercise(1);
-      setS1CodeInput(S1_EXERCISES[0].preloaded);
+      setS1PlanInput('');
+      setS1PromptInput('');
+      setS1OutputCodeInput('');
+      setS1ExplainInput('');
       setS1Logs([]);
       setS1Success(false);
     } else if (session.id === 'l1-s2') {
@@ -5678,7 +5632,10 @@ export default function App() {
       setSandboxInput('HTML source code');
       setSandboxEdgeCases('Unclosed elements, incorrect tag nesting, spelling mistakes in ids');
       setS2ActiveExercise(1);
-      setS2CodeInput(S2_EXERCISES[0].preloaded);
+      setS2PlanInput('');
+      setS2PromptInput('');
+      setS2OutputCodeInput('');
+      setS2ExplainInput('');
       setS2Logs([]);
       setS2Success(false);
     } else if (session.id === 'l1-s3') {
@@ -5688,7 +5645,10 @@ export default function App() {
       setSandboxInput('CSS styling definitions');
       setSandboxEdgeCases('Missing relative anchor positioning, coordinate boundaries overflow, missing display rules');
       setS3ActiveExercise(1);
-      setS3CodeInput(S3_EXERCISES[0].preloaded);
+      setS3PlanInput('');
+      setS3PromptInput('');
+      setS3OutputCodeInput('');
+      setS3ExplainInput('');
       setS3Logs([]);
       setS3Success(false);
     } else if (session.id === 'l1-s4') {
@@ -6928,19 +6888,23 @@ export default function App() {
                 {/* Main Content Area */}
                 <div style={{ flexGrow: 1, height: 'calc(100% - 60px)', minHeight: 0, overflowY: 'auto' }}>
               
-              {/* LEVEL 1 SESSION 1: SYSTEMS BRIEFING */}
+              {/* LEVEL 1 SESSION 1: SYSTEMS BRIEFING — 3-box trial format
+                  (Plan & Design / Prompt + Output / Explain the Output) */}
               {sandboxSessionId === 'l1-s1' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
-                  {/* Exercise selector tabs */}
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
                     {S1_EXERCISES.map((ex) => (
                       <button
                         key={ex.num}
                         className={`btn-cyber btn-small ${s1ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
-                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s1-${s1ActiveExercise}`]: s1CodeInput }));
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s1-${s1ActiveExercise}`]: { plan: s1PlanInput, prompt: s1PromptInput, outputCode: s1OutputCodeInput, explain: s1ExplainInput } }));
+                          const saved = savedExerciseCode[`l1-s1-${ex.num}`];
                           setS1ActiveExercise(ex.num);
-                          setS1CodeInput(savedExerciseCode[`l1-s1-${ex.num}`] ?? ex.preloaded);
+                          setS1PlanInput(saved?.plan ?? '');
+                          setS1PromptInput(saved?.prompt ?? '');
+                          setS1OutputCodeInput(saved?.outputCode ?? '');
+                          setS1ExplainInput(saved?.explain ?? '');
                           setS1Logs([]);
                           setS1Success(false);
                         }}
@@ -6950,119 +6914,165 @@ export default function App() {
                     ))}
                   </div>
 
-                  <div className="simulator-grid">
-                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div className="panel-header">
-                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S1_EXERCISES[s1ActiveExercise - 1].title}</h4>
-                        </div>
-                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                            <strong>Problem:</strong> {S1_EXERCISES[s1ActiveExercise - 1].problem}
-                          </p>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
-                            <strong>Instruction:</strong> {S1_EXERCISES[s1ActiveExercise - 1].instruction}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <button
-                          className={`btn-cyber ${s1Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                          onClick={() => {
-                            const ex = S1_EXERCISES[s1ActiveExercise - 1];
-                            const logs = [{ type: 'info', text: `Analyzing your answer for Exercise 1.${s1ActiveExercise}...` }];
-                            const pass = ex.validate(s1CodeInput);
-                            if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} verification passed.` });
-                              setS1Success(true);
-                              const prog = markExerciseComplete('l1-s1', s1ActiveExercise);
-                              if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 1 BRIEFING COMPLETE! You now have the systems knowledge to start building.' });
-                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                              } else {
-                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                              }
-                            } else {
-                              logs.push({ type: 'error', text: `✗ Not quite. Check your answer against the key concepts.` });
-                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
-                              setS1Success(false);
-                            }
-                            setS1Logs(logs);
-                          }}
-                        >
-                          {s1Success ? '✓ Exercise Complete' : 'Verify Answer'}
-                        </button>
-                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => setS1CodeInput(S1_EXERCISES[s1ActiveExercise - 1].preloaded)}>
-                          Reset Answer
-                        </button>
-                      </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header">
+                      <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S1_EXERCISES[s1ActiveExercise - 1].title}</h4>
                     </div>
+                    <div className="sim-panel-body" style={{ marginTop: '10px', padding: 0 }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                        <strong>Problem:</strong> {S1_EXERCISES[s1ActiveExercise - 1].problem}
+                      </p>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                        <strong>Instruction:</strong> {S1_EXERCISES[s1ActiveExercise - 1].instruction}
+                      </p>
+                    </div>
+                  </div>
 
-                    <div className="glass-panel sim-middle">
-                      <div className="panel-header">
-                        <h3>Answer Sheet</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>1. Plan &amp; Design</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s1PlanInput}
+                        onChange={(e) => setS1PlanInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder={S1_EXERCISES[s1ActiveExercise - 1].planPlaceholder}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>2. Write the AI Prompt &amp; Paste the Output</h3></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
+                      <div className="form-field">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            onClick={() => copyPromptToClipboard(s1PromptInput, `s1-ex-${s1ActiveExercise}`)}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {promptCopiedKey === `s1-ex-${s1ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                          </button>
+                        </div>
                         <textarea
-                          value={s1CodeInput}
-                          onChange={(e) => setS1CodeInput(e.target.value)}
-                          style={{
-                            width: '100%',
-                            height: '500px',
-                            background: 'rgba(6, 8, 20, 0.7)',
-                            color: '#00ffcc',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '4px',
-                            padding: '12px',
-                            fontFamily: 'var(--font-mono)',
-                            fontSize: '0.85rem',
-                            lineHeight: 1.5,
-                            resize: 'none'
-                          }}
-                          placeholder="Write your answer here..."
+                          value={s1PromptInput}
+                          onChange={(e) => setS1PromptInput(e.target.value)}
+                          style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S1_EXERCISES[s1ActiveExercise - 1].promptPlaceholder}
+                        />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          Copy your prompt, run it in your own AI tool (ChatGPT, Cursor, Copilot...), then paste the result into Output on the right.
+                        </span>
+                      </div>
+                      <div className="form-field">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output</label>
+                        <textarea
+                          value={s1OutputCodeInput}
+                          onChange={(e) => setS1OutputCodeInput(e.target.value)}
+                          style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S1_EXERCISES[s1ActiveExercise - 1].outputCodePlaceholder}
                         />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="glass-panel sim-right">
-                      <div className="panel-header">
-                        <h3>Field Reference</h3>
-                        {s1Success && <span className="badge-cyber badge-green">SOLVED (+100 XP)</span>}
-                      </div>
-                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <div style={{ padding: '10px 12px', background: 'rgba(0, 242, 254, 0.04)', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                          {S1_EXERCISES[s1ActiveExercise - 1].reference}
-                        </div>
-                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                          {s1Logs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your answer and click Verify.</div>
-                          ) : s1Logs.map((log, idx) => (
-                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                              {log.text}
-                            </div>
-                          ))}
-                        </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>3. Explain the Output</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s1ExplainInput}
+                        onChange={(e) => setS1ExplainInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder="Explain what the AI's answer means, in your own words."
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className={`btn-cyber ${s1Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                      onClick={() => {
+                        const ex = S1_EXERCISES[s1ActiveExercise - 1];
+                        const logs = [{ type: 'info', text: `Checking Exercise 1.${s1ActiveExercise}...` }];
+                        const filled = s1PlanInput.trim() && s1PromptInput.trim() && s1OutputCodeInput.trim() && s1ExplainInput.trim();
+                        const result = filled ? ex.validate({ plan: s1PlanInput, prompt: s1PromptInput, outputCode: s1OutputCodeInput, explain: s1ExplainInput }) : null;
+                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
+                        if (pass) {
+                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
+                          setS1Success(true);
+                          const prog = markExerciseComplete('l1-s1', s1ActiveExercise);
+                          if (prog.allDone) {
+                            logs.push({ type: 'success', text: '✓ SESSION 1 BRIEFING COMPLETE! You now have the systems knowledge to start building.' });
+                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                          } else {
+                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                          }
+                        } else if (!filled) {
+                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output, and Explanation — before verifying.' });
+                          setS1Success(false);
+                        } else {
+                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
+                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
+                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output: ${ex.hint.code}` });
+                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
+                          setS1Success(false);
+                        }
+                        setS1Logs(logs);
+                      }}
+                    >
+                      {s1Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                    </button>
+                    <button
+                      className="btn-cyber btn-cyber-red btn-small"
+                      onClick={() => {
+                        setS1PlanInput('');
+                        setS1PromptInput('');
+                        setS1OutputCodeInput('');
+                        setS1ExplainInput('');
+                        setS1Logs([]);
+                        setS1Success(false);
+                      }}
+                    >
+                      Reset Answer
+                    </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s1Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                        ) : s1Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 2: DETECTIVE HTML SANDBOX */}
+              {/* LEVEL 1 SESSION 2: DETECTIVE HTML SANDBOX — 3-box trial format
+                  (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s2' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
-                  {/* Exercise selector tabs */}
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
                     {S2_EXERCISES.map((ex) => (
-                      <button 
+                      <button
                         key={ex.num}
                         className={`btn-cyber btn-small ${s2ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
-                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s2-${s2ActiveExercise}`]: s2CodeInput }));
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s2-${s2ActiveExercise}`]: { plan: s2PlanInput, prompt: s2PromptInput, outputCode: s2OutputCodeInput, explain: s2ExplainInput } }));
+                          const saved = savedExerciseCode[`l1-s2-${ex.num}`];
                           setS2ActiveExercise(ex.num);
-                          setS2CodeInput(savedExerciseCode[`l1-s2-${ex.num}`] ?? ex.preloaded);
+                          setS2PlanInput(saved?.plan ?? '');
+                          setS2PromptInput(saved?.prompt ?? '');
+                          setS2OutputCodeInput(saved?.outputCode ?? '');
+                          setS2ExplainInput(saved?.explain ?? '');
                           setS2Logs([]);
                           setS2Success(false);
                         }}
@@ -7072,130 +7082,185 @@ export default function App() {
                     ))}
                   </div>
 
-                  <div className="simulator-grid">
-                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div className="panel-header">
-                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S2_EXERCISES[s2ActiveExercise - 1].title}</h4>
-                        </div>
-                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                            <strong>Problem:</strong> {S2_EXERCISES[s2ActiveExercise - 1].problem}
-                          </p>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
-                            <strong>Instruction:</strong> {S2_EXERCISES[s2ActiveExercise - 1].instruction}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <button 
-                          className={`btn-cyber ${s2Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`} 
-                          onClick={() => {
-                            const ex = S2_EXERCISES[s2ActiveExercise - 1];
-                            const logs = [{ type: 'info', text: `Analyzing HTML structure for Exercise 2.${s2ActiveExercise}...` }];
-                            const pass = ex.validate(s2CodeInput);
-                            if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} verification passed.` });
-                              setS2Success(true);
-                              const prog = markExerciseComplete('l1-s2', s2ActiveExercise);
-                              if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 2 CHALLENGES COMPLETE! You have built the HTML skeleton for the Racing Car Game!' });
-                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                              } else {
-                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                              }
-                            } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Preconditions or tag nesting rules violated.` });
-                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
-                              setS2Success(false);
-                            }
-                            setS2Logs(logs);
-                          }}
-                        >
-                          {s2Success ? '✓ Exercise Complete' : 'Verify HTML Code'}
-                        </button>
-                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => setS2CodeInput(S2_EXERCISES[s2ActiveExercise - 1].preloaded)}>
-                          Reset Code
-                        </button>
-                      </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header">
+                      <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S2_EXERCISES[s2ActiveExercise - 1].title}</h4>
                     </div>
+                    <div className="sim-panel-body" style={{ marginTop: '10px', padding: 0 }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                        <strong>Problem:</strong> {S2_EXERCISES[s2ActiveExercise - 1].problem}
+                      </p>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                        <strong>Instruction:</strong> {S2_EXERCISES[s2ActiveExercise - 1].instruction}
+                      </p>
+                    </div>
+                  </div>
 
-                    <div className="glass-panel sim-middle">
-                      <div className="panel-header">
-                        <h3>Code Editor (index.html)</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>1. Plan &amp; Design</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s2PlanInput}
+                        onChange={(e) => setS2PlanInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder={S2_EXERCISES[s2ActiveExercise - 1].planPlaceholder}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>2. Write the AI Prompt &amp; Paste the Output Code</h3></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
+                      <div className="form-field">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            onClick={() => copyPromptToClipboard(s2PromptInput, `s2-ex-${s2ActiveExercise}`)}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {promptCopiedKey === `s2-ex-${s2ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                          </button>
+                        </div>
                         <textarea
-                          value={s2CodeInput}
-                          onChange={(e) => setS2CodeInput(e.target.value)}
-                          style={{
-                            width: '100%',
-                            height: '500px',
-                            background: 'rgba(6, 8, 20, 0.7)',
-                            color: '#00ffcc',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '4px',
-                            padding: '12px',
-                            fontFamily: 'var(--font-mono)',
-                            fontSize: '0.85rem',
-                            lineHeight: 1.5,
-                            resize: 'none'
-                          }}
-                          placeholder="Write HTML here..."
+                          value={s2PromptInput}
+                          onChange={(e) => setS2PromptInput(e.target.value)}
+                          style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S2_EXERCISES[s2ActiveExercise - 1].promptPlaceholder}
+                        />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          Copy your prompt, run it in your own AI tool (ChatGPT, Cursor, Copilot...), then paste the result into Output Code on the right.
+                        </span>
+                      </div>
+                      <div className="form-field">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (index.html)</label>
+                        <textarea
+                          value={s2OutputCodeInput}
+                          onChange={(e) => setS2OutputCodeInput(e.target.value)}
+                          style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S2_EXERCISES[s2ActiveExercise - 1].outputCodePlaceholder}
                         />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="glass-panel sim-right">
-                      <div className="panel-header">
-                        <h3>Interactive Live Preview</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <iframe
-                          srcDoc={`
-                            <html>
-                              <head>
-                                <style>${S2_PREVIEW_STYLE_CSS}</style>
-                              </head>
-                              <body>
-                                ${buildHtmlPreviewBody(S2_EXERCISES[s2ActiveExercise - 1], s2CodeInput, s2Success)}
-                              </body>
-                            </html>
-                          `}
-                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                          title="HTML Sandbox Live Preview"
-                        />
-                        
-                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                          {s2Logs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Input code and click Verify to validate.</div>
-                          ) : s2Logs.map((log, idx) => (
-                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                              {log.text}
-                            </div>
-                          ))}
-                        </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Interactive Live Preview</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <iframe
+                        srcDoc={`
+                          <html>
+                            <head>
+                              <style>${S2_PREVIEW_STYLE_CSS}</style>
+                            </head>
+                            <body>
+                              ${s2OutputCodeInput}
+                            </body>
+                          </html>
+                        `}
+                        style={{ width: '100%', height: '260px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                        title="HTML Sandbox Live Preview"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>3. Explain the Output Code</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s2ExplainInput}
+                        onChange={(e) => setS2ExplainInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder="Explain what this code does, in your own words."
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className={`btn-cyber ${s2Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                      onClick={() => {
+                        const ex = S2_EXERCISES[s2ActiveExercise - 1];
+                        const logs = [{ type: 'info', text: `Checking Exercise 2.${s2ActiveExercise}...` }];
+                        const filled = s2PlanInput.trim() && s2PromptInput.trim() && s2OutputCodeInput.trim() && s2ExplainInput.trim();
+                        const result = filled ? ex.validate({ plan: s2PlanInput, prompt: s2PromptInput, outputCode: s2OutputCodeInput, explain: s2ExplainInput }) : null;
+                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
+                        if (pass) {
+                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
+                          setS2Success(true);
+                          const prog = markExerciseComplete('l1-s2', s2ActiveExercise);
+                          if (prog.allDone) {
+                            logs.push({ type: 'success', text: '✓ SESSION 2 CHALLENGES COMPLETE! You have built the HTML skeleton for the Racing Car Game!' });
+                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                          } else {
+                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                          }
+                        } else if (!filled) {
+                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                          setS2Success(false);
+                        } else {
+                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
+                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
+                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
+                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
+                          setS2Success(false);
+                        }
+                        setS2Logs(logs);
+                      }}
+                    >
+                      {s2Success ? '✓ Exercise Complete' : 'Verify HTML Code'}
+                    </button>
+                    <button
+                      className="btn-cyber btn-cyber-red btn-small"
+                      onClick={() => {
+                        setS2PlanInput('');
+                        setS2PromptInput('');
+                        setS2OutputCodeInput('');
+                        setS2ExplainInput('');
+                        setS2Logs([]);
+                        setS2Success(false);
+                      }}
+                    >
+                      Reset Code
+                    </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s2Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                        ) : s2Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 3: DETECTIVE CSS SANDBOX */}
+              {/* LEVEL 1 SESSION 3: DETECTIVE CSS SANDBOX — 3-box trial format
+                  (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s3' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
-                  {/* Exercise selector tabs */}
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
                     {S3_EXERCISES.map((ex) => (
-                      <button 
+                      <button
                         key={ex.num}
                         className={`btn-cyber btn-small ${s3ActiveExercise === ex.num ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                         onClick={() => {
-                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s3-${s3ActiveExercise}`]: s3CodeInput }));
+                          setSavedExerciseCode(prev => ({ ...prev, [`l1-s3-${s3ActiveExercise}`]: { plan: s3PlanInput, prompt: s3PromptInput, outputCode: s3OutputCodeInput, explain: s3ExplainInput } }));
+                          const saved = savedExerciseCode[`l1-s3-${ex.num}`];
                           setS3ActiveExercise(ex.num);
-                          setS3CodeInput(savedExerciseCode[`l1-s3-${ex.num}`] ?? ex.preloaded);
+                          setS3PlanInput(saved?.plan ?? '');
+                          setS3PromptInput(saved?.prompt ?? '');
+                          setS3OutputCodeInput(saved?.outputCode ?? '');
+                          setS3ExplainInput(saved?.explain ?? '');
                           setS3Logs([]);
                           setS3Success(false);
                         }}
@@ -7205,116 +7270,171 @@ export default function App() {
                     ))}
                   </div>
 
-                  <div className="simulator-grid">
-                    <div className="glass-panel sim-left" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div className="panel-header">
-                          <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S3_EXERCISES[s3ActiveExercise - 1].title}</h4>
-                        </div>
-                        <div className="sim-panel-body" style={{ marginTop: '10px' }}>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                            <strong>Problem:</strong> {S3_EXERCISES[s3ActiveExercise - 1].problem}
-                          </p>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
-                            <strong>Instruction:</strong> {S3_EXERCISES[s3ActiveExercise - 1].instruction}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <button 
-                          className={`btn-cyber ${s3Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`} 
-                          onClick={() => {
-                            const ex = S3_EXERCISES[s3ActiveExercise - 1];
-                            const logs = [{ type: 'info', text: `Analyzing stylesheet definitions for Exercise 3.${s3ActiveExercise}...` }];
-                            const pass = ex.validate(s3CodeInput);
-                            if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
-                              setS3Success(true);
-                              const prog = markExerciseComplete('l1-s3', s3ActiveExercise);
-                              if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 3 CHALLENGES COMPLETE! You have styled the Racing Car highway track!' });
-                                if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                              } else {
-                                logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                              }
-                            } else {
-                              logs.push({ type: 'error', text: `✗ Stylesheet validation failed. CSS property or selector target missing.` });
-                              logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
-                              setS3Success(false);
-                            }
-                            setS3Logs(logs);
-                          }}
-                        >
-                          {s3Success ? '✓ Exercise Complete' : 'Verify CSS Styles'}
-                        </button>
-                        <button className="btn-cyber btn-cyber-red btn-small" onClick={() => setS3CodeInput(S3_EXERCISES[s3ActiveExercise - 1].preloaded)}>
-                          Reset Styles
-                        </button>
-                      </div>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header">
+                      <h4 style={{ color: 'var(--accent-cyan)', margin: 0 }}>{S3_EXERCISES[s3ActiveExercise - 1].title}</h4>
                     </div>
+                    <div className="sim-panel-body" style={{ marginTop: '10px', padding: 0 }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                        <strong>Problem:</strong> {S3_EXERCISES[s3ActiveExercise - 1].problem}
+                      </p>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+                        <strong>Instruction:</strong> {S3_EXERCISES[s3ActiveExercise - 1].instruction}
+                      </p>
+                    </div>
+                  </div>
 
-                    <div className="glass-panel sim-middle">
-                      <div className="panel-header">
-                        <h3>Code Editor (styles.css)</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ height: '100%', padding: '10px' }}>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>1. Plan &amp; Design</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s3PlanInput}
+                        onChange={(e) => setS3PlanInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder={S3_EXERCISES[s3ActiveExercise - 1].planPlaceholder}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>2. Write the AI Prompt &amp; Paste the Output Code</h3></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '10px' }}>
+                      <div className="form-field">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Writing Prompt</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            onClick={() => copyPromptToClipboard(s3PromptInput, `s3-ex-${s3ActiveExercise}`)}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {promptCopiedKey === `s3-ex-${s3ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                          </button>
+                        </div>
                         <textarea
-                          value={s3CodeInput}
-                          onChange={(e) => setS3CodeInput(e.target.value)}
-                          style={{
-                            width: '100%',
-                            height: '500px',
-                            background: 'rgba(6, 8, 20, 0.7)',
-                            color: '#00ffcc',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '4px',
-                            padding: '12px',
-                            fontFamily: 'var(--font-mono)',
-                            fontSize: '0.85rem',
-                            lineHeight: 1.5,
-                            resize: 'none'
-                          }}
-                          placeholder="Write CSS here..."
+                          value={s3PromptInput}
+                          onChange={(e) => setS3PromptInput(e.target.value)}
+                          style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S3_EXERCISES[s3ActiveExercise - 1].promptPlaceholder}
+                        />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          Copy your prompt, run it in your own AI tool (ChatGPT, Cursor, Copilot...), then paste the result into Output Code on the right.
+                        </span>
+                      </div>
+                      <div className="form-field">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (styles.css)</label>
+                        <textarea
+                          value={s3OutputCodeInput}
+                          onChange={(e) => setS3OutputCodeInput(e.target.value)}
+                          style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                          placeholder={S3_EXERCISES[s3ActiveExercise - 1].outputCodePlaceholder}
                         />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="glass-panel sim-right">
-                      <div className="panel-header">
-                        <h3>Interactive Live Preview</h3>
-                      </div>
-                      <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Interactive Live Preview</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      {S3_EXERCISES[s3ActiveExercise - 1].runnable ? (
                         <iframe
                           srcDoc={`
                             <html>
                               <head>
                                 <style>
                                   ${buildS3PreviewCss(s3ActiveExercise)}
-                                  ${S3_EXERCISES[s3ActiveExercise - 1].previewCss ? '' : s3CodeInput}
+                                  ${s3OutputCodeInput}
                                 </style>
                               </head>
                               <body>
-                                ${S3_EXERCISES[s3ActiveExercise - 1].previewCss
-                                  ? promptPreviewPanel(S3_EXERCISES[s3ActiveExercise - 1].previewCss, s3Success, 'style.css')
-                                  : S3_PREVIEW_SKELETON}
+                                ${S3_PREVIEW_SKELETON}
                               </body>
                             </html>
                           `}
-                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          style={{ width: '100%', height: '260px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="CSS Sandbox Live Preview"
                         />
-                        
-                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                          {s3Logs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Input styles and click Verify to validate.</div>
-                          ) : s3Logs.map((log, idx) => (
-                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                              {log.text}
-                            </div>
-                          ))}
+                      ) : (
+                        <div style={{ color: '#8899aa', fontFamily: 'var(--font-mono)', padding: '20px', textAlign: 'center', lineHeight: 1.6, border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}>
+                          This step is a plan/prompt/explanation exercise — nothing to render yet.
                         </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>3. Explain the Output Code</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <textarea
+                        value={s3ExplainInput}
+                        onChange={(e) => setS3ExplainInput(e.target.value)}
+                        style={{ width: '100%', height: '110px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
+                        placeholder="Explain what this code does, in your own words."
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className={`btn-cyber ${s3Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
+                      onClick={() => {
+                        const ex = S3_EXERCISES[s3ActiveExercise - 1];
+                        const logs = [{ type: 'info', text: `Checking Exercise 3.${s3ActiveExercise}...` }];
+                        const filled = s3PlanInput.trim() && s3PromptInput.trim() && s3OutputCodeInput.trim() && s3ExplainInput.trim();
+                        const result = filled ? ex.validate({ plan: s3PlanInput, prompt: s3PromptInput, outputCode: s3OutputCodeInput, explain: s3ExplainInput }) : null;
+                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
+                        if (pass) {
+                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
+                          setS3Success(true);
+                          const prog = markExerciseComplete('l1-s3', s3ActiveExercise);
+                          if (prog.allDone) {
+                            logs.push({ type: 'success', text: '✓ SESSION 3 CHALLENGES COMPLETE! You have styled the Racing Car highway track!' });
+                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                          } else {
+                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                          }
+                        } else if (!filled) {
+                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                          setS3Success(false);
+                        } else {
+                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
+                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
+                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
+                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
+                          setS3Success(false);
+                        }
+                        setS3Logs(logs);
+                      }}
+                    >
+                      {s3Success ? '✓ Exercise Complete' : 'Verify CSS Styles'}
+                    </button>
+                    <button
+                      className="btn-cyber btn-cyber-red btn-small"
+                      onClick={() => {
+                        setS3PlanInput('');
+                        setS3PromptInput('');
+                        setS3OutputCodeInput('');
+                        setS3ExplainInput('');
+                        setS3Logs([]);
+                        setS3Success(false);
+                      }}
+                    >
+                      Reset Styles
+                    </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s3Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                        ) : s3Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -10023,11 +10143,14 @@ export default function App() {
                   
                   const isInitialized = selectedJournal && selectedJournal.id.endsWith('_' + currentSession.id);
 
-                  // L1S4 is a trial of a reduced 3-box Project Task format (Plan & Design /
+                  // L1 Sessions 1-4 use a reduced 3-box Project Task format (Plan & Design /
                   // Prompt & Output Code / Explain the Code) — Test & Iterate are dropped from
-                  // the UI for this session only; every other session keeps the original 5-tab
-                  // layout untouched.
-                  const isL1S4 = currentSession.id === 'l1-s4';
+                  // the UI for these sessions only; every other session keeps the original
+                  // 5-tab layout untouched.
+                  const isL1S4 = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4'].includes(currentSession.id);
+                  // l1-s1 is conceptual (no runnable code), so its Box 2 output is a written
+                  // AI answer, not code — label it accordingly and skip the live-preview panel.
+                  const journalOutputLabel = currentSession.id === 'l1-s1' ? 'Output' : 'Output Code';
                   // Guard against arriving on this session while a stale 'test'/'iterate' tab
                   // selection carried over from a previously viewed session.
                   const effectiveJournalTab = isL1S4 && !['plan', 'prompt', 'review'].includes(activeJournalTab) ? 'plan' : activeJournalTab;
@@ -10231,13 +10354,13 @@ export default function App() {
                           className={`btn-cyber btn-small ${effectiveJournalTab === 'prompt' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                           onClick={() => setActiveJournalTab('prompt')}
                         >
-                          {isL1S4 ? '2. Prompt & Output Code' : '2. Write AI Prompt'}
+                          {isL1S4 ? `2. Prompt & ${journalOutputLabel}` : '2. Write AI Prompt'}
                         </button>
                         <button
                           className={`btn-cyber btn-small ${effectiveJournalTab === 'review' ? 'btn-cyber-primary' : 'btn-cyber-secondary'}`}
                           onClick={() => setActiveJournalTab('review')}
                         >
-                          {isL1S4 ? '3. Explain the Code' : '3. Review & Explain'}
+                          {isL1S4 ? `3. Explain the ${journalOutputLabel}` : '3. Review & Explain'}
                         </button>
                         {!isL1S4 && (
                           <>
@@ -10376,7 +10499,7 @@ export default function App() {
                                     </span>
                                   </div>
                                   <div className="form-field">
-                                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code</label>
+                                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>{journalOutputLabel}</label>
                                     <textarea
                                       value={editingCodeOutput}
                                       onChange={e => setEditingCodeOutput(e.target.value)}
@@ -10385,30 +10508,56 @@ export default function App() {
                                     />
                                   </div>
                                 </div>
-                                <div className="glass-panel" style={{ padding: '12px' }}>
-                                  <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '6px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Console Output</span>
-                                  {/* No visual DOM preview here — this task's code is variables &
-                                      math, not graphics, so a game-screen graphic would be decorative,
-                                      not a real "actual output." The sandbox runs invisibly; the real
-                                      result is whatever the code prints via console.log. */}
-                                  <iframe
-                                    srcDoc={buildJsConsoleOnlyPreview(editingCodeOutput || '')}
-                                    style={{ display: 'none' }}
-                                    title="Project Task Execution Sandbox"
-                                  />
-                                  <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                                    {simConsoleLogs.length === 0 ? (
-                                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                                        No console output yet. This doesn't necessarily mean something's wrong — add console.log(...) to your Output Code if you want to see real values here.
-                                      </div>
-                                    ) : simConsoleLogs.map((log, idx) => (
-                                      <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                        {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                        {log.text}
-                                      </div>
-                                    ))}
+                                {/* Live preview / console kind depends on what this session's Output
+                                    actually is: l1-s1 is a written AI answer (nothing to render),
+                                    l1-s2/l1-s3 are real HTML/CSS (rendered live), l1-s4 is variables
+                                    & math (no visual DOM preview — the real result is console.log). */}
+                                {currentSession.id === 'l1-s2' && (
+                                  <div className="glass-panel" style={{ padding: '12px' }}>
+                                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '6px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Interactive Live Preview</span>
+                                    <iframe
+                                      srcDoc={`<html><head><style>${S2_PREVIEW_STYLE_CSS}</style></head><body>${editingCodeOutput || ''}</body></html>`}
+                                      style={{ width: '100%', height: '220px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                                      title="Project Task HTML Live Preview"
+                                    />
                                   </div>
-                                </div>
+                                )}
+                                {currentSession.id === 'l1-s3' && (
+                                  <div className="glass-panel" style={{ padding: '12px' }}>
+                                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '6px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Interactive Live Preview</span>
+                                    <iframe
+                                      srcDoc={`<html><head><style>${buildS3PreviewCss(0)}\n${editingCodeOutput || ''}</style></head><body>${S3_PREVIEW_SKELETON}</body></html>`}
+                                      style={{ width: '100%', height: '220px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                                      title="Project Task CSS Live Preview"
+                                    />
+                                  </div>
+                                )}
+                                {currentSession.id === 'l1-s4' && (
+                                  <div className="glass-panel" style={{ padding: '12px' }}>
+                                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '6px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Console Output</span>
+                                    {/* No visual DOM preview here — this task's code is variables &
+                                        math, not graphics, so a game-screen graphic would be decorative,
+                                        not a real "actual output." The sandbox runs invisibly; the real
+                                        result is whatever the code prints via console.log. */}
+                                    <iframe
+                                      srcDoc={buildJsConsoleOnlyPreview(editingCodeOutput || '')}
+                                      style={{ display: 'none' }}
+                                      title="Project Task Execution Sandbox"
+                                    />
+                                    <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                                      {simConsoleLogs.length === 0 ? (
+                                        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                                          No console output yet. This doesn't necessarily mean something's wrong — add console.log(...) to your Output Code if you want to see real values here.
+                                        </div>
+                                      ) : simConsoleLogs.map((log, idx) => (
+                                        <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                          {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                          {log.text}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
                               </>
                             ) : (
                               <div className="form-field">
@@ -10428,7 +10577,7 @@ export default function App() {
                         {effectiveJournalTab === 'review' && (
                           isL1S4 ? (
                             <div className="form-field">
-                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Explain the Output Code</label>
+                              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Explain the {journalOutputLabel}</label>
                               <textarea
                                 value={editingCodeReview}
                                 onChange={e => setEditingCodeReview(e.target.value)}
@@ -11290,6 +11439,51 @@ export default function App() {
                         </div>
                       </div>
                     );
+
+                    // L1 Sessions 1-4 use the reduced 3-box Project Task format (Plan & Design /
+                    // Prompt & Output Code / Explain the Code) in the editable Project Journal —
+                    // mirror that same 3-section shape here instead of always showing the fixed
+                    // 5-section layout, so the read-only view matches what the student actually sees.
+                    const use3Box = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4'].includes(item.id);
+                    const outputLabel = item.id === 'l1-s1' ? 'Output' : 'Output Code';
+
+                    if (use3Box) {
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                          <div>
+                            <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>1. Plan & Design</h4>
+                            {renderField(null, data.planSpecs)}
+                          </div>
+
+                          <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                              <h4 style={{ margin: 0, color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>2. Prompt & {outputLabel}</h4>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                {entry.history.map(h => (
+                                  <button
+                                    key={h.version}
+                                    className={`version-nav-btn ${viewingJournalVersion === h.version ? 'active' : ''}`}
+                                    onClick={() => setViewingJournalVersion(h.version)}
+                                    style={{ padding: '2px 8px', fontSize: '0.75rem' }}
+                                  >
+                                    v{h.version}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                              {renderField('Writing Prompt', selectedHist.prompt)}
+                              {renderField(outputLabel, data.codeOutput)}
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>3. Explain the {outputLabel}</h4>
+                            {renderField(null, data.codeReview)}
+                          </div>
+                        </div>
+                      );
+                    }
 
                     return (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
