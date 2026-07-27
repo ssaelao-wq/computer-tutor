@@ -4,90 +4,76 @@
 
 **Prerequisites:** None. Basic reading comprehension required.
 
-> **Restructure note (2026-07-13):** Level 1 is a *technical knowledge* level. The Racing Car theme frames every exercise and lab, but students do **not** build a cumulative game project at this level — the full game build is deliberately deferred to Levels 3–4, where the development process and the capstone build are taught. Each session below produces a small, **standalone** themed lab artifact.
+> **Format note (2026-07-27):** All 12 Level 1 sessions share one consistent **Sandbox + Project Task format**: **5 sandbox exercises** per session (not 10), each with 3 boxes — **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Project Task milestone (in the Project Journal tab) uses the same 3-box shape, but is always a related, more open-ended task than that session's exercises — see the Teacher Guideline's per-session "Project Task Milestone" sections for the exact expected answers. Sessions 4-12's Project Task `game.js` is one accumulating file — each session extends the previous session's own saved code via the app's "🔄 Pull Latest" mechanism, rather than starting from a fresh template every time. Session 1's topic was also rewritten (2026-07-20) from the original "Literal Logic & Digital Infiltration" autopilot-car content to a hardware/network/web-tech systems briefing — reflected below.
 
-### 🏎️ The Racing Car Theme: Concept-to-Lab Map (Sessions 2–12)
+### 🏎️ The Racing Car Theme: Concept-to-Lab Map (Sessions 1–12)
 
-All Level 1 sessions share the **2D Highway Racing** setting. Each session's Build Phase produces a standalone themed lab file (e.g., `lab_s5_steering.html`); when a lab exercises a concept from an earlier session, the tutor provides a fresh starter file — students never depend on carrying their own project forward. Together, the labs cover every concept a real racing game would need, which is exactly what makes the theme motivating:
+All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build the HTML/CSS skeleton; Sessions 4-12's Project Task extends one accumulating `game.js` file session to session. Together, the labs cover every concept a real racing game would need, which is exactly what makes the theme motivating:
 
-| Session | Core Concept | Standalone Lab Artifact |
+| Session | Core Concept | Lab Artifact |
 |---------|-------------|------------------------|
+| 1 | Hardware, networks, the web stack, the AI-Era loop | Project Kickoff & Roadmap (planning only, no code) |
 | 2 | HTML structure & nesting | Track/car/dashboard container skeleton |
 | 3 | CSS sizing, positioning & layout | Styled 3-lane track with lane dashes |
-| 4 | JS variables, types & math | Game-state variable registry with live traces |
-| 5 | Keyboard event listeners | Steering input handler |
-| 6 | Conditionals & boundary logic | Lane-boundary safety guards |
-| 7 | Loops & iteration | Highway-marker spawner |
-| 8 | Functions, parameters & scope | Modular movement controller |
-| 9 | Timers & animation frames | Mini game-loop with stop gate |
-| 10 | 2D collision math (AABB) | Collision sensor drill |
-| 11 | DOM manipulation & validation | Score HUD with restart overlay |
-| 12 | Assessment | Concept-mastery labs + diagnostics |
+| 4 | JS variables, types & math | Game-state variable registry (starts `game.js`) |
+| 5 | Keyboard event listeners | Steering input handler (extends `game.js`) |
+| 6 | Conditionals & boundary logic | Lane-boundary safety guards (extends `game.js`) |
+| 7 | Loops & iteration | Highway-marker spawner (extends `game.js`) |
+| 8 | Functions, parameters & scope | Modular movement controller (extends `game.js`) |
+| 9 | Timers & animation frames | Mini game-loop with stop gate (extends `game.js`) |
+| 10 | 2D collision math (AABB) | Collision sensor wired to a lives system (extends `game.js`) |
+| 11 | DOM manipulation & validation | Score + lives HUD with restart overlay (extends `game.js`) |
+| 12 | Assessment | Config-driven capstone + Complete Game assembly |
 
 ### Module 1: Inputs, Processing, and Outputs (Sessions 1–3)
 
-#### Session 1: "Literal Logic & Digital Infiltration" (2 hours)
+#### Session 1: "Systems Briefing: Hardware, Networks & the AI-Era Dev Loop" (2 hours)
 
 **Learning Objectives:**
-- Understand that computers execute commands sequentially, literally, and without common sense
-- Map out input-process-output (IPO) data paths in the application
-- Create strict instruction chains to solve progressive navigation objectives
+- Identify the core hardware components of a computer (CPU, RAM, storage, GPU) and the roles of the operating system and application software
+- Explain how networks and the client-server model deliver a web page from a server to a browser
+- Identify the roles of HTML, CSS, and JavaScript, and how a browser renders them into what a player sees
+- Describe the 5-Step AI-Era Development Loop and preview the Level 1 Racing Car Game project this loop will be used to build
 
 **Lesson Timeline & Content Breakdown (2 hours):**
 
-1. **Warm-Up: The Tutor Car Autopilot Simulation (15 mins)**
-   - *Activity*: One-on-one interactive roleplay. The student plays the "Autopilot Controller" (coder) and the tutor plays the "Autonomous Vehicle" (computer).
-   - *Action*: The student gives step-by-step driving and parking instructions to the tutor to park a vehicle.
-   - *Constraint*: The tutor follows commands **strictly literally** (e.g., if told to "accelerate" without shifting gears first, they rev the engine in Neutral. If told to "turn right" while standing still, they turn the steering wheel but stay parked).
-   - *Debrief*: Highlight that computers do not assume intent. If instructions are out of order, the program crashes or triggers a logic error.
+1. **Warm-Up: Case File Briefing (15 mins)**
+   - *Activity*: Discuss as a class/one-on-one: when you press a key on your keyboard, what physically happens between that keypress and something appearing on screen?
+   - *Action*: The tutor traces the chain out loud — keyboard hardware → CPU/RAM → network → server → HTML/CSS/JS rendering → pixels on screen.
+   - *Debrief*: Today's "case" is the machine and network itself — a briefing before any code is written.
 
-2. **Core Concept Board Lesson: The IPO Model & Sequential Control (20 mins)**
-   - *Topic 1*: The Input-Process-Output (IPO) framework. Trace everyday examples on the app screen (e.g. card key reader: input=ID badge, process=validate lookup, output=unlocked light).
-   - *Topic 2*: Linear command chains and order dependency. Show how step $N$ depends on step $N-1$.
-   - *Topic 3*: Variables as labeled registers containing one state value.
+2. **Core Concept Board Lesson: From Silicon to Screen (20 mins)**
+   - *Topic 1*: Hardware (CPU, RAM, storage, GPU) vs. software (OS, browser, game code) that runs on it. Resource bottlenecks — high CPU% vs. high RAM use mean different problems.
+   - *Topic 2*: The client-server model: Browser (Client) sends a request → Server looks up data → Server sends back a response → Browser displays the page.
+   - *Topic 3*: The web trio — HTML (structure), CSS (style), JavaScript (behavior) — and the 5-Step AI-Era Development Loop (Plan & Design → Write the AI Prompt → Review & Explain → Test & Break It → Iterate & Improve) that every remaining session uses.
 
-3. **Digital Concept Practice: The In-App Sequence Blueprint (25 mins)**
-   - *Activity*: In the application's digital learning panel, the student interacts with a flowchart sequencer.
-   - *Action*: The student arranges digital driving-command blocks (`Check P/N Gear`, `Depress Brake`, `Start Engine`, `Shift to Drive`, `Release Handbrake`, `Press Gas`) in the exact logical order to safely start and drive the vehicle.
-   - *Self-Audit*: The student runs the autopilot simulator to see whether the sequence trips a safety lockout or drives off successfully.
+3. **Design Phase: System & Network Field Map (25 mins)**
+   - *Activity*: Sketch a diagram tracing a request from the player's browser, across the network, to a server, and back — labeling which parts are hardware, which are software, and which web-stack layer produces each visual result.
+   - *Action*: Preview the Level 1 Racing Car Game's session roadmap (Sessions 2-12) to see the whole build ahead.
 
-4. **Digital Sandbox Lab: Car Autopilot Sequencer Simulator (30 mins)**
-   - *Activity*: Student launches Level 1 Session 1 Sandbox.
-   - *Action*: Complete five progressive exercises:
-     - **Exercise 1.1 (Basic Start & Move)**: Observe the handbrake starting condition (already released). Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_brake` ➔ `press_gas`) to safely start and drive forward, skipping handbrake release.
-     - **Exercise 1.2 (Basic Start & Reverse)**: Observe the handbrake starting condition (engaged). Click commands in the correct sequence (`check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`) to safely start and reverse.
-     - **Exercise 1.3 (Sequence Correction)**: Debug an incorrect, preloaded sequence that fails safety switches by rearranging the sequence order.
-     - **Exercise 1.4 (Code Cleanup)**: Identify and delete an incorrect, extra command (`shift_r` in the middle of driving forward) to prevent a collision.
-     - **Exercise 1.5 (Emergency Halt)**: Sequence driving actions and verify that depressing the footbrake pedal instantly stops the moving vehicle.
-     - Earning $+100$ XP on completion.
+4. **Digital Sandbox Lab: 5 Plan/Prompt/Explain Exercises (30 mins)**
+   - *Activity*: Student launches Level 1 Session 1 Sandbox — 5 exercises, each with 3 boxes: Plan & Design, Write the AI Prompt & Paste the Output, Explain the Output. This session is purely conceptual — there is no code to run.
+   - *Action*: Complete exercises on the hardware/software bottleneck, the out-of-memory crash, the client-server request cycle, the web trio + missing-CSS bug, and the 5-Step Loop itself.
+   - Earning $+100$ XP on completion.
 
-5. **Assessment & Debrief: Log Auditing (20 mins)**
-   - *Activity*: The tutor displays three different failed execution logs from the Car Autopilot.
-   - *Challenge*: The student inspects the output messages, identifies the logical step that failed, and explains *why* the order was illegal.
+5. **Assessment & Debrief: Reviewing AI Answers (20 mins)**
+   - *Activity*: The tutor reviews the student's pasted AI answers against the case-file scenarios (bottleneck diagnosis, request cycle, missing-CSS bug).
+   - *Challenge*: The student explains, in their own words, why each answer is correct — not just that it matched the AI's wording.
 
 6. **Ethics & Automation Discussion (10 mins)**
-   - *Topic*: If a self-driving delivery car crashes because of a logic error in its code, who is responsible? The coder who wrote the sequence, the company that deployed it, or the driver who clicked "Run"?
-   - *Real-World Case*: In 2018, an Uber self-driving test vehicle struck and killed a pedestrian in Arizona due to a software logic error in the object classification sequence.
+   - *Topic*: Developers increasingly paste AI-suggested code straight into real products without fully reviewing it, and some of those bugs have shipped as real security vulnerabilities. If an AI coding tool generates code with a flaw that causes real harm, who is responsible — the AI tool's maker, the developer who used it, or the company that shipped it?
+   - *Discussion*: This is exactly why Step 3 (Review & Explain) exists in the 5-step loop.
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: Open the application's Journal tab and complete the "Household IPO Blueprint". Write a process to warm up food from a plate using a microwave (+50 XP). Write down a step-by-step sequential algorithm for its operation. Identify preconditions, inputs, processing logic, and outputs, and submit the response digitally through the app.
+- **In-App Project Task ("Lab 0: Project Kickoff & Roadmap")**: In the Journal tab, sketch the whole Racing Car Game to be built across Sessions 2-12 — its parts, its look, and the session-by-session build plan — before writing a single line of code (+50 XP). This is a planning document; there's no code yet, and no AI-generation step is required.
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 1)
-- **Exercise 1.1 (Basic Start & Move) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_brake` ➔ `press_gas`.
-  - *Tutor Guide*: Show how chronological sequencing works. If they start engine or shift gear without pressing the footbrake pedal or checking P/N gear first, it fails safety lockout switches. Note: `release_handbrake` is skipped since it starts as released.
-- **Exercise 1.2 (Basic Start & Reverse) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_r` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
-  - *Tutor Guide*: Show how chronological sequencing works with different target states and environment conditions (handbrake is engaged at start). This matches Exercise 1.1's logical start sequence but uses Reverse (R) instead of Drive (D).
-- **Exercise 1.3 (Sequence Correction) Solution**: Scrambled preloaded sequence: Rearrange to: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas`.
-  - *Tutor Guide*: Students debug sequence ordering using safety switch reports in terminal logs.
-- **Exercise 1.4 (Code Cleanup / Debugging Extra Steps) Solution**: Preloaded steps include an extra `shift_r` card in the middle of driving forward. Click the `×` button to delete it, reducing the sequence to Exercise 1.1's basic start & move.
-  - *Tutor Guide*: Demonstrates identifying and removing redundant or invalid blocks of instructions to resolve logical conflicts.
-- **Exercise 1.5 (Emergency Halt) Solution**: Sequence: `check_gear_pn` ➔ `press_brake` ➔ `start_engine` ➔ `shift_d` ➔ `release_handbrake` ➔ `release_brake` ➔ `press_gas` ➔ `press_brake`.
-  - *Tutor Guide*: Highlight continuous safety condition checks—depressing the footbrake pedal instantly changes speed to 0.
-- **Homework Evaluation**: Ensure the student's submitted text lists:
-  - *Preconditions*: powerState is "ON".
-  - *Input*: Keypad inputs (time duration string), door sensor state (Boolean), start button.
-  - *Process*: Checking timer counter limits in a loop, comparing door sensor state variables to halt.
-  - *Output*: Activating magnetron waves, countdown timer display, audio alarm beeps.
+- **Exercise 1.1 (Hardware vs. Software, and the Resource Bottleneck)**: Plan labels each item HARDWARE/SOFTWARE; prompt mentions `bottleneck`, `CPU`, `91`; output names CPU as the bottleneck; explanation covers why CPU (not RAM/Disk).
+- **Exercise 1.2 (The Out-of-Memory Crash)**: Plan explains why loading 500 images strains RAM; prompt asks for ONE software-side fix; output proposes compressing or lazy-loading; explanation covers why RAM usage drops.
+- **Exercise 1.3 (The Client-Server Request Cycle)**: Plan states the 4-part cycle; prompt mentions client, server, request, AND response; output covers both request and response; explanation states in one sentence why the response step matters.
+- **Exercise 1.4 (The Web Trio & the Missing-CSS Bug)**: Plan gives one phrase each for HTML/CSS/JS; prompt mentions all three technologies; output diagnoses CSS as the likely culprit; explanation covers why CSS specifically.
+- **Exercise 1.5 (The 5-Step AI-Era Loop, Applied)**: Plan lists all 5 steps in order; prompt mentions all 5 words; output covers at least 3 of the 5 steps; explanation names the step the student expects to find hardest.
+- **Homework Evaluation**: Ensure the student's roadmap lists all the major visual parts of the finished game (track, player car, obstacles, scoreboard, game-over screen), can name which technology builds which part, and can point to which session number will first make something appear on screen.
 
 ---
 
@@ -133,28 +119,13 @@ All Level 1 sessions share the **2D Highway Racing** setting. Each session's Bui
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 2)
 
-Each session contains exactly 10 progressive sandbox exercises designed to follow the 5-step AI-Era workflow:
+5 exercises, each with 3 boxes (Plan & Design / Write the AI Prompt & Paste the Output Code / Explain the Output Code):
 
-- **Exercise 2.1 [Plan & Design]**: Specify container structures for `#game-track` holding `#player-car`.
-  * *Solution:* Write `game-track > player-car` in comments.
-- **Exercise 2.2 [Write AI Prompt]**: Draft an AI prompt asking to create a div element with an ID of 'game-track'.
-  * *Solution:* "Create a div container with an ID of game-track"
-- **Exercise 2.3 [Review & Explain]**: Explain which attribute (class or id) uniquely identifies this track element.
-  * *Solution:* ID value: `game-track`
-- **Exercise 2.4 [Test & Break]**: Correct an unclosed tag bug in the track block: `<div id="game-track"><div id="player-car"></div>`.
-  * *Solution:* `<div id="game-track"><div id="player-car"></div></div>`
-- **Exercise 2.5 [Iterate & Improve]**: Nest a div element with class 'lane-divider' inside the '#game-track' container.
-  * *Solution:* `<div id="game-track"><div id="player-car"></div><div class="lane-divider"></div></div>`
-- **Exercise 2.6 [Plan & Design]**: Plan a 3-level deep tag structure: a dashboard parent holding an h2 header, which holds a span.
-  * *Solution:* `div > h2 > span`
-- **Exercise 2.7 [Write AI Prompt]**: Write a prompt to direct the AI to generate the scoreboard HUD block.
-  * *Solution:* "Create a scoreboard dashboard panel showing score heading h2 with score-val span inside"
-- **Exercise 2.8 [Review & Explain]**: Review if the span tag is nested inside the h2 tag.
-  * *Solution:* Type `YES` or `NO` (Correct answer is `YES`).
-- **Exercise 2.9 [Test & Break]**: Spot why scoreboard updates fail (wrong ID name spelling `scoreval` vs `score-val`).
-  * *Solution:* Correct ID to `score-val` inside the span tag.
-- **Exercise 2.10 [Iterate & Improve]**: Combine your scoreboard dashboard and game-track HTML blocks into a single valid file.
-  * *Solution:* Merge dashboard div and track div blocks with proper closing tags.
+- **Exercise 2.1 (The Track & Car Skeleton)**: Plan states `game-track > player-car`; prompt mentions `game-track`, `player-car`, a box word; output includes `id="game-track"` AND `id="player-car"` nested; explanation covers why player-car must nest inside game-track.
+- **Exercise 2.2 (Selectors & the Scoreboard)**: Plan states `dashboard > heading > score number`; prompt mentions `dashboard`, a heading word, `score-val`; output includes `id="score-val"` nested inside a dashboard element; explanation covers why id uniquely identifies an element.
+- **Exercise 2.3 (The Unclosed Tag Bug Hunt)**: Plan explains why an unclosed `</div>` breaks structure with no visible error; output is exactly `<div id="game-track"><div id="player-car"></div></div>`; explanation states 2 closing tags needed.
+- **Exercise 2.4 (Lane Dividers via Class)**: Plan explains class vs. id for a repeatable element; prompt mentions `lane-divider` and `class`; output includes `class="lane-divider"` nested inside `id="game-track"`; explanation covers what breaks if an id were used instead.
+- **Exercise 2.5 (The Complete Skeleton)**: Plan lists all 5 pieces (dashboard, score-val, game-track, player-car, lane-divider); output includes all 5 plus 4+ closing `</div>` tags; explanation states the actual closing-tag count.
 
 - **Homework Evaluation**: Ensure student has created a custom dashboard wrapper utilizing multiple nested panels.
 
@@ -202,28 +173,13 @@ Each session contains exactly 10 progressive sandbox exercises designed to follo
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 3)
 
-Each session contains exactly 10 progressive sandbox exercises designed to follow the 5-step AI-Era workflow:
+5 exercises, each with 3 boxes (Plan & Design / Write the AI Prompt & Paste the Output Code / Explain the Output Code):
 
-- **Exercise 3.1 [Plan & Design]**: Define width (390px), height (500px), and background-color (#333) specs for the track container.
-  * *Solution:* List 390px, 500px, and #333 in comment blocks.
-- **Exercise 3.2 [Write AI Prompt]**: Draft a prompt requesting the styling specifications for '#game-track'.
-  * *Solution:* "Style game-track with width 390px, height 500px, background dark gray"
-- **Exercise 3.3 [Review & Explain]**: Identify Class selectors (.) vs ID selectors (#) symbols.
-  * *Solution:* ID: `#`, Class: `.`
-- **Exercise 3.4 [Test & Break]**: Fix the coordinate drift by adding relative positioning on `#game-track`.
-  * *Solution:* Add `position: relative;` to the `#game-track` rule.
-- **Exercise 3.5 [Iterate & Improve]**: Style lane dividers with position absolute and dashed borders.
-  * *Solution:* `.lane-divider { position: absolute; height: 100%; border-left: 2px dashed white; }`
-- **Exercise 3.6 [Plan & Design]**: Map out absolute coordinates for centering the player car in the middle lane.
-  * *Solution:* Bottom 20px, left 165px.
-- **Exercise 3.7 [Write AI Prompt]**: Write a prompt to position the player car at bottom 20px and left 165px.
-  * *Solution:* "Style player-car with absolute positioning, bottom 20px, left 165px"
-- **Exercise 3.8 [Review & Explain]**: Review if obstacle car top 50px left 40px coordinates are on the left or right side of the track.
-  * *Solution:* Answer `LEFT`.
-- **Exercise 3.9 [Test & Break]**: Temporarily override `.hidden` helper styles to reveal display elements for rendering checks.
-  * *Solution:* Change `display: none;` to `display: flex;` in the `.hidden` class rule.
-- **Exercise 3.10 [Iterate & Improve]**: Align dashboard HUD horizontally using flexbox parameters.
-  * *Solution:* Apply `display: flex; justify-content: space-between; padding: 10px;` to `#dashboard`.
+- **Exercise 3.1 (Arena Sizing Specs)**: Plan lists width/height/color in plain language; prompt mentions `game-track`, a width, a height, a background color; output includes `#game-track { width: ...; height: ...; background... }`; explanation covers why those dimensions.
+- **Exercise 3.2 (Selectors — # vs. .)**: Plan states when to use each selector; prompt/output mention both `#` and `.`; explanation covers which fits a repeated element. (Conceptual — no code to run.)
+- **Exercise 3.3 (The Drifting Car Bug)**: Plan explains why absolute-positioned children drift without a positioned parent; output includes `position: relative;` on `#game-track`; explanation covers what `relative` does for the child's coordinates.
+- **Exercise 3.4 (Positioning the Car)**: Plan shows the centering math `(390 - 60) / 2 = 165`; prompt mentions `player-car`, `absolute`, `bottom`, `left`; output includes `#player-car { position: absolute; bottom: 20px; left: 165px; }`; explanation states the actual numbers 390/60/165.
+- **Exercise 3.5 (Dashed Divider & Flex Dashboard)**: Plan describes the divider's look and the dashboard's layout; prompt mentions `lane-divider`, `dashboard`, `flex`; output includes both `.lane-divider` (dashed) and `#dashboard` (`display: flex; justify-content: space-between;`); explanation covers what `space-between` does.
 
 - **Homework Evaluation**: Check that the student uses relative/absolute positioning correctly so the child car stays aligned within the parent track lanes.
 
@@ -330,28 +286,13 @@ Each session contains exactly 10 progressive sandbox exercises designed to follo
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 5)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal):
+5 exercises, each with 3 boxes (Plan & Design / Write the AI Prompt & Paste the Output Code / Explain the Output Code). All 5 run live in the Racing Game Preview:
 
-- **Exercise 5.1 [Plan & Design]**: Plan how the browser reports the pressed key.
-  * *Solution:* `keydown > event.key`
-- **Exercise 5.2 [Write AI Prompt]**: Prompt for a keydown listener logging the pressed key.
-  * *Solution:* Prompt mentions `addEventListener`, `keydown`, and `console.log`.
-- **Exercise 5.3 [Review & Explain]**: Which callback parameter carries the key information?
-  * *Solution:* `event`
-- **Exercise 5.4 [Test & Break]**: The Silent Input Fail — `if (event.key === "left")` never fires.
-  * *Solution:* `event.key === "ArrowLeft"` (browsers report the exact string `"ArrowLeft"`), keeping `carX -= 130`.
-- **Exercise 5.5 [Iterate & Improve]**: Acknowledge the other direction.
-  * *Solution:* Add `else if (event.key === "ArrowRight") { console.log("Steering right"); }`
-- **Exercise 5.6 [Plan & Design]**: Plan the steering deltas.
-  * *Solution:* `ArrowLeft: carX -= 130 | ArrowRight: carX += 130`
-- **Exercise 5.7 [Write AI Prompt]**: Prompt to wire movement to the DOM.
-  * *Solution:* Prompt mentions `carX`, `style.left`, `ArrowLeft`, and `ArrowRight`.
-- **Exercise 5.8 [Review & Explain]**: Why concatenate a unit onto `carX` when setting `style.left`?
-  * *Solution:* `px` (CSS position values require a unit).
-- **Exercise 5.9 [Test & Break]**: The Missing Unit — `carElement.style.left = carX;` makes the car vanish.
-  * *Solution:* `carElement.style.left = carX + "px";`
-- **Exercise 5.10 [Iterate & Improve]**: Complete steering handler.
-  * *Solution:* `addEventListener("keydown", ...)` branching on `ArrowLeft`/`ArrowRight`, updating `carX`, writing `style.left = carX + "px"`.
+- **Exercise 5.1 (Reading the Key Pressed)**: Plan describes how the browser reports the pressed key; prompt mentions `addEventListener`, `keydown`, `console.log`; output includes a keydown listener logging the key; explanation names `event` as the parameter carrying `.key`.
+- **Exercise 5.2 (The Silent Input Fail)**: Plan explains why `"left"` instead of `"ArrowLeft"` fails silently; output includes `event.key === "ArrowLeft"` and `carX -= 130`; explanation covers why it's silent (false comparison, no error).
+- **Exercise 5.3 (Steering Both Directions)**: Plan states the 130px delta each direction; prompt mentions `ArrowRight` and `130`; output includes an ArrowRight branch with `console.log`; explanation covers why `else if`.
+- **Exercise 5.4 (Wiring Movement to the DOM)**: Plan explains why a bare number isn't valid CSS; prompt mentions the missing `"px"` unit; output includes `carElement.style.left = carX + "px";`; explanation covers what happens visually when the unit is missing.
+- **Exercise 5.5 (The Complete Steering Handler)**: Plan lists every piece needed; prompt mentions `ArrowLeft`, `ArrowRight`, `style.left`; output is the full handler; explanation walks the chain from keypress to car movement.
 
 - **Homework Evaluation**: Ensure the handler validates `event.key` matches `"s"` and executes actions.
 
@@ -399,28 +340,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 6)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal). Lane coordinates are 35/165/295 (consistent with Session 3's `left: 165px` car position):
+5 exercises, each with 3 boxes. Lane coordinates are 35/165/295 (consistent with Session 3's `left: 165px` car position):
 
-- **Exercise 6.1 [Plan & Design]**: Plan the boundary coordinates.
-  * *Solution:* `left boundary = 35 | right boundary = 295`
-- **Exercise 6.2 [Write AI Prompt]**: Prompt for the left-edge safety guard.
-  * *Solution:* Prompt mentions `carX`, `ArrowLeft`, and the condition `> 35`.
-- **Exercise 6.3 [Review & Explain]**: With `if (carX > 35)`, what happens at carX = 35 when ArrowLeft is pressed?
-  * *Solution:* `BLOCKED` (the guard is false, so the inner block never runs).
-- **Exercise 6.4 [Test & Break]**: The Infinite Teleporting Bug — guard changed to `carX >= -130`, car teleports off-screen.
-  * *Solution:* Restore `if (carX > 35)`.
-- **Exercise 6.5 [Iterate & Improve]**: Mirror the guard on the right side.
-  * *Solution:* `else if (event.key === "ArrowRight") { if (carX < 295) { carX += 130; } }`
-- **Exercise 6.6 [Plan & Design]**: Plan the overheat threshold rule.
-  * *Solution:* `IF speed > 120 THEN speed = 100`
-- **Exercise 6.7 [Write AI Prompt]**: Prompt for the overheat clamp.
-  * *Solution:* Prompt mentions `speed`, `120`, and `100`.
-- **Exercise 6.8 [Review & Explain]**: Does `if (speed > 120)` trigger when speed is exactly 120?
-  * *Solution:* `NO` (`>` is strict).
-- **Exercise 6.9 [Test & Break]**: Reset value written as a String — `speed = "100";`.
-  * *Solution:* `speed = 100;` (remove the quotes).
-- **Exercise 6.10 [Iterate & Improve]**: Complete boundary system.
-  * *Solution:* All four checks — `carX > 35`, `carX < 295`, `speed > 120`, `speed = 100`.
+- **Exercise 6.1 (Track Boundary Coordinates & the Left Guard)**: Plan names 35/295; prompt mentions `carX`, `ArrowLeft`, `> 35`; output includes the guard `carX > 35`; explanation covers what happens at exactly 35 (blocked).
+- **Exercise 6.2 (The Infinite Teleporting Bug)**: Plan explains why `carX >= -130` lets the car fly off; prompt mentions the correct boundary; output includes `carX > 35` and NOT the broken `>= -130`; explanation states both numbers.
+- **Exercise 6.3 (Adding the Right Guard)**: Plan states the mirrored right guard; prompt mentions `ArrowRight`, `295`; output includes `carX < 295` guarding `carX += 130`; explanation covers the mirroring.
+- **Exercise 6.4 (The Overheat Guard and a Type Bug)**: Plan states the overheat rule and whether exactly 120 triggers it; prompt mentions `speed`, `120`, `100`; output includes `speed > 120` and `speed = 100` as a real Number; explanation covers why a quoted `"100"` would break later math.
+- **Exercise 6.5 (The Complete Boundary System)**: Plan lists all three guards; prompt mentions both `carX` and `speed`; output includes all four checks (`carX > 35`, `carX < 295`, `speed > 120`, `speed = 100`); explanation covers which values protect what.
 
 - **Homework Evaluation**: Ensure the student's code compares variables correctly and acts as a boundary clamp (`speed = 100`).
 
@@ -472,28 +398,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 7)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal):
+5 exercises, each with 3 boxes. Exercise 7.2 is deliberately non-runnable — its seeded bug is a missing loop increment (infinite loop), and running it live would hang the preview:
 
-- **Exercise 7.1 [Plan & Design]**: Plan the marker spacing.
-  * *Solution:* `count = 5 | spacing = 120`
-- **Exercise 7.2 [Write AI Prompt]**: Prompt for the marker-spawning loop.
-  * *Solution:* Prompt mentions a `for loop`, the formula `i * 120`, and running `5` times.
-- **Exercise 7.3 [Review & Explain]**: Which part of `for (let i = 0; i < 5; i++)` advances the loop?
-  * *Solution:* `i++`
-- **Exercise 7.4 [Test & Break]**: Browser Freezes — the increment was removed, leaving `for (let i = 0; i < 5; )`.
-  * *Solution:* Restore `i++` as the third part of the loop header.
-- **Exercise 7.5 [Iterate & Improve]**: Log each marker's position.
-  * *Solution:* `console.log("Highway Marker position: " + markerY);` inside the loop body.
-- **Exercise 7.6 [Plan & Design]**: Plan how each position becomes a visible element.
-  * *Solution:* `create div > class marker-dash > style.top = markerY`
-- **Exercise 7.7 [Write AI Prompt]**: Prompt for the DOM append inside the loop.
-  * *Solution:* Prompt mentions `marker-dash`, `appendChild`, and `#game-track`.
-- **Exercise 7.8 [Review & Explain]**: How many lines change if 20 markers were hand-written instead of looped?
-  * *Solution:* `20` (any answer ≥ 15 accepted — the point is the scale of the manual approach).
-- **Exercise 7.9 [Test & Break]**: The Off-Track Marker — spacing formula typo `markerY = i * 12`.
-  * *Solution:* `markerY = i * 120;`
-- **Exercise 7.10 [Iterate & Improve]**: Complete marker loop.
-  * *Solution:* `for (let i = 0; i < 5; i++)` computing `i * 120`, creating a `marker-dash` div, and `appendChild` onto `#game-track`.
+- **Exercise 7.1 (Marker Spacing Plan & the Loop)**: Plan states `count = 5 | spacing = 120`; prompt mentions `for loop`, `i * 120`, `5`; output includes `for(...i<5...i++)` with `markerY = i * 120`; explanation names all 3 loop-header parts.
+- **Exercise 7.2 (Browser Freezes — the Missing Increment)**: Plan explains why a missing `i++` runs forever; prompt mentions the missing increment/infinite loop; output restores `...i < 5; i++) {`; explanation covers why the page locks up.
+- **Exercise 7.3 (Logging Each Marker)**: Plan states what to log; prompt mentions `console.log`, `markerY`; output includes a `console.log` inside the loop; explanation predicts all 5 values (0, 120, 240, 360, 480).
+- **Exercise 7.4 (Rendering the Markers)**: Plan describes create → style → place; prompt mentions `marker-dash`, `appendChild`, `#game-track`; output includes a `marker-dash` div appended inside the loop; explanation covers why `appendChild` is needed after `createElement`.
+- **Exercise 7.5 (The Off-Track Marker Bug & Complete Loop)**: Plan explains why `i * 12` bunches markers; prompt mentions `i * 120`, `marker-dash`; output is the full fixed loop; explanation states the correct final values.
 
 - **Homework Evaluation**: Ensure the loop outputs correct coordinate calculations (0, 50, 100, 150, 200, 250).
 
@@ -541,28 +452,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 8)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal):
+5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview:
 
-- **Exercise 8.1 [Plan & Design]**: Decompose the steering script into single-purpose functions.
-  * *Solution:* `updatePlayerPosition() | moveLeft() | moveRight()`
-- **Exercise 8.2 [Write AI Prompt]**: Prompt for the shared rendering function.
-  * *Solution:* Prompt mentions `function`, `updatePlayerPosition`, and `style.left`.
-- **Exercise 8.3 [Review & Explain]**: How many parameters does `updatePlayerPosition()` take?
-  * *Solution:* `0` (the parentheses are empty).
-- **Exercise 8.4 [Test & Break]**: Scope Access Violation — `carX` declared inside `moveLeft()` is invisible to `updatePlayerPosition()`.
-  * *Solution:* Move `let carX = 165;` outside (before) both function declarations.
-- **Exercise 8.5 [Iterate & Improve]**: Wire the handler to the modular function.
-  * *Solution:* `if (event.key === "ArrowLeft") { moveLeft(); }` — no inline boundary logic.
-- **Exercise 8.6 [Plan & Design]**: Plan the mirror function.
-  * *Solution:* `moveRight() -> IF carX < 295 THEN carX += 130, then call updatePlayerPosition()`
-- **Exercise 8.7 [Write AI Prompt]**: Prompt for both movement functions.
-  * *Solution:* Prompt mentions `moveLeft`, `moveRight`, and `updatePlayerPosition`.
-- **Exercise 8.8 [Review & Explain]**: With a shared clamp helper, how many function bodies need fixing when a clamp bug is found?
-  * *Solution:* `1`
-- **Exercise 8.9 [Test & Break]**: The Duplicate Render Call — `updatePlayerPosition()` called twice in `moveLeft()`.
-  * *Solution:* Delete one call so it runs exactly once per `moveLeft()`.
-- **Exercise 8.10 [Iterate & Improve]**: Complete modular controller.
-  * *Solution:* `updatePlayerPosition()`, `moveLeft()`, `moveRight()`, plus a `keydown` listener calling them.
+- **Exercise 8.1 (Decomposing & Requesting the Render Function)**: Plan names the three pieces; prompt mentions `function`, `updatePlayerPosition`, `style.left`; output includes `function updatePlayerPosition()` writing to `style.left`; explanation covers 0 parameters (reads shared `carX`).
+- **Exercise 8.2 (The Scope Access Violation Bug)**: Plan explains local vs. shared scope; prompt mentions `carX` and `scope`; output declares `let carX = 165;` before both functions; explanation covers local vs. outer scope.
+- **Exercise 8.3 (Wiring moveLeft() to the Handler)**: Plan describes replacing inline logic with a call; prompt mentions `ArrowLeft`, `moveLeft`; output includes the ArrowLeft branch calling `moveLeft()`; explanation covers the benefit of a named call.
+- **Exercise 8.4 (Requesting moveLeft() and moveRight())**: Plan states the mirror function; prompt mentions `moveLeft`, `moveRight`, `updatePlayerPosition`; output includes both functions calling the shared renderer; explanation states 1 fix needed with a shared helper.
+- **Exercise 8.5 (The Duplicate Render Call & Complete Controller)**: Plan explains the waste of calling twice; prompt mentions all four pieces; output is the complete controller with no duplicate calls; explanation states it should run once per move.
 
 - **Homework Evaluation**: Ensure function correctly takes parameters, performs math operations, and uses `return` statements.
 
@@ -610,28 +506,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 9)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal). Note the reset threshold is **500** (the track height defined in Session 3), not 600:
+5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview. Note the reset threshold is **500** (the track height defined in Session 3):
 
-- **Exercise 9.1 [Plan & Design]**: Plan the game loop lifecycle.
-  * *Solution:* `gameLoop() -> update state -> render -> requestAnimationFrame(gameLoop)`
-- **Exercise 9.2 [Write AI Prompt]**: Prompt for the recursive loop.
-  * *Solution:* Prompt mentions `function`, `gameLoop`, and `requestAnimationFrame`.
-- **Exercise 9.3 [Review & Explain]**: What does calling `requestAnimationFrame(gameLoop)` at the end do?
-  * *Solution:* `SCHEDULES_NEXT_FRAME` (reschedules gameLoop on the next repaint).
-- **Exercise 9.4 [Test & Break]**: The Unstoppable Speed Bug — the gameActive check was removed.
-  * *Solution:* `if (!gameActive) { return; }` as the first line of `gameLoop()`.
-- **Exercise 9.5 [Iterate & Improve]**: Make the halt visible.
-  * *Solution:* `console.log("Loop halted");` before the return in the guard.
-- **Exercise 9.6 [Plan & Design]**: Plan the obstacle movement and reset.
-  * *Solution:* `obstacleY += speed | IF obstacleY > 500 THEN obstacleY = -100, score += 10`
-- **Exercise 9.7 [Write AI Prompt]**: Prompt for `moveObstacles()`.
-  * *Solution:* Prompt mentions `moveObstacles`, `obstacleY`, `500`, and `score`.
-- **Exercise 9.8 [Review & Explain]**: obstacleY is 490 and speed is 5 — value after `obstacleY += speed;`?
-  * *Solution:* `495`
-- **Exercise 9.9 [Test & Break]**: The Frozen Scoreboard — the reset block never increments score.
-  * *Solution:* Add `score += 10;` inside the `if (obstacleY > 500)` block.
-- **Exercise 9.10 [Iterate & Improve]**: Complete animation engine.
-  * *Solution:* `gameLoop()` with the gameActive gate + `requestAnimationFrame`, and `moveObstacles()` updating/resetting `obstacleY` with the score increment.
+- **Exercise 9.1 (The Game Loop Lifecycle & Recursive Loop)**: Plan describes the frame cycle; prompt mentions `function`, `gameLoop`, `requestAnimationFrame`; output includes `function gameLoop()` calling `requestAnimationFrame(gameLoop)`; explanation covers what that call does.
+- **Exercise 9.2 (The Unstoppable Speed Bug)**: Plan explains why a missing `gameActive` check is unstoppable; prompt mentions `gameActive`; output includes the guard `if (!gameActive) { ...return; }`; explanation covers the loop exiting.
+- **Exercise 9.3 (Obstacle Movement & Reset)**: Plan states the scroll-and-wrap behavior; prompt mentions `moveObstacles`, `obstacleY`, `500`, `score`; output includes the update/wrap/score logic; explanation predicts `obstacleY` after `490 + 5` (495).
+- **Exercise 9.4 (The Frozen Scoreboard Bug)**: Plan explains why resetting alone doesn't score; prompt mentions `score`; output includes `score += 10` inside the reset block; explanation confirms both happen together.
+- **Exercise 9.5 (The Complete Animation Engine)**: Plan lists every piece; prompt mentions `gameLoop`, `gameActive`, `moveObstacles`; output is the full gated loop; explanation walks the per-frame sequence.
 
 - **Homework Evaluation**: Student loop must contain gate validation (`if (!gameActive)`) to prevent animation after stop alerts.
 
@@ -679,28 +560,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 10)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal). The sandbox drill uses small illustrative sprite sizes (player 30×50, obstacle 25×40); the full-size themed labs use the actual car CSS (60×100 from Sessions 2-3), so the collision math is identical but the box numbers differ:
+5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview. This session's core skill is **auditing AI-generated math**:
 
-- **Exercise 10.1 [Plan & Design]**: Plan the overlap condition.
-  * *Solution:* All four bounds compared — `player.right > obstacle.left AND player.left < obstacle.right AND player.bottom > obstacle.top AND player.top < obstacle.bottom`
-- **Exercise 10.2 [Write AI Prompt]**: Prompt for `checkCollision(rect1, rect2)`.
-  * *Solution:* Prompt mentions `checkCollision`, `width`, and `height`.
-- **Exercise 10.3 [Review & Explain]**: Would checking only `player.x === obstacle.x` ever register a realistic collision?
-  * *Solution:* `NO` (exact equality almost never occurs; dimensions matter).
-- **Exercise 10.4 [Test & Break]**: The Ghost Car Bug — one comparison operator flipped.
-  * *Solution:* `rect1.x + rect1.width > rect2.x` (was `<`).
-- **Exercise 10.5 [Iterate & Improve]**: Stop the game on collision.
-  * *Solution:* `if (checkCollision(player, obstacle)) { gameActive = false; console.log("Collision detected!"); }` inside `gameLoop()`.
-- **Exercise 10.6 [Plan & Design]**: Plan the bounding-box dimensions.
-  * *Solution:* `player width=30 height=50 | obstacle width=25 height=40`
-- **Exercise 10.7 [Write AI Prompt]**: Prompt for the two rect objects.
-  * *Solution:* Prompt mentions `carX`, `obstacleY`, `width`, and `height`.
-- **Exercise 10.8 [Review & Explain]**: Edges touch exactly (`rect1.x + rect1.width === rect2.x`) — does a strict `>` register a collision?
-  * *Solution:* `NO` (strict comparison requires actual overlap).
-- **Exercise 10.9 [Test & Break]**: The Axis Swap Bug — first condition compares `rect1.y` against a horizontal bound.
-  * *Solution:* `rect1.x < rect2.x + rect2.width` (change the swapped `rect1.y` to `rect1.x`).
-- **Exercise 10.10 [Iterate & Improve]**: Complete collision system.
-  * *Solution:* Full 4-condition `checkCollision()` plus `gameActive = false` wired up on a hit.
+- **Exercise 10.1 (The Overlap Condition & Requesting checkCollision())**: Plan states both axes; prompt mentions `checkCollision`, `width`, `height`; output includes the function using width/height; explanation covers why dimensions matter over bare x/y.
+- **Exercise 10.2 (The Ghost Car Bug)**: Plan explains why a flipped comparison never fires; prompt mentions `checkCollision`/the flip; output includes `rect1.x + rect1.width > rect2.x`; explanation covers the correct direction.
+- **Exercise 10.3 (The Axis Swap Bug)**: Plan explains why x vs. y comparisons are nonsense geometry; output includes `rect1.x < rect2.x + rect2.width` (not `rect1.y`); explanation confirms every x compares to x, y to y.
+- **Exercise 10.4 (Wiring Collision into the Loop)**: Plan states what should happen on a hit; prompt mentions `checkCollision`, `gameActive`; output sets `gameActive = false` and logs; explanation answers the exact-touch edge case (NO, under strict `>`).
+- **Exercise 10.5 (The Complete Collision System)**: Plan states box sizes (player 30×50, obstacle 25×40) and every piece needed; output is the full system; explanation walks detection through to consequence.
 
 - **Homework Evaluation**: Ensure the student correctly integrates logical checks across coordinates and handles edge overlaps.
 
@@ -748,28 +614,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 11)
 
-Each session contains exactly 10 progressive sandbox exercises following the 5-step AI-Era workflow (matching the in-app Exercises Journal). The app standardizes on `textContent` (safer than `innerHTML`/`innerText`) and a `.hidden` CSS class for the overlay:
+5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview. **Key detail:** the spacebar's real `event.key` value is a single space `" "`, not the word `"Space"`:
 
-- **Exercise 11.1 [Plan & Design]**: Plan the DOM update pipeline.
-  * *Solution:* `score changes -> #score-val.textContent = score | collision -> remove hidden from #restart-panel`
-- **Exercise 11.2 [Write AI Prompt]**: Prompt for the scoreboard updater.
-  * *Solution:* Prompt mentions `function`, `textContent`, and `score-val`.
-- **Exercise 11.3 [Review & Explain]**: Why is `textContent` safer than `innerHTML` for score display?
-  * *Solution:* `SCRIPT_INJECTION` (innerHTML parses its input as HTML/scripts).
-- **Exercise 11.4 [Test & Break]**: The Negative Score Leak — scoreboard shows "score: -5".
-  * *Solution:* `if (score < 0) { score = 0; }` before writing to the DOM.
-- **Exercise 11.5 [Iterate & Improve]**: Reveal the game-over overlay.
-  * *Solution:* `function triggerGameOverScreen() { document.getElementById("restart-panel").classList.remove("hidden"); }`
-- **Exercise 11.6 [Plan & Design]**: Plan the restart flow.
-  * *Solution:* `press Space -> reset score to 0 -> reset carX -> hide restart-panel -> gameActive = true`
-- **Exercise 11.7 [Write AI Prompt]**: Prompt for the restart handler.
-  * *Solution:* Prompt mentions `Space`, `gameActive`, and `addEventListener`.
-- **Exercise 11.8 [Review & Explain]**: What if the `.hidden` class is never removed after restart?
-  * *Solution:* `STAYS_HIDDEN` (`display: none` keeps applying).
-- **Exercise 11.9 [Test & Break]**: The Frozen Restart — handler never re-enables the game.
-  * *Solution:* Add `gameActive = true;` inside the Space-key branch.
-- **Exercise 11.10 [Iterate & Improve]**: Complete HUD & restart system.
-  * *Solution:* `updateScoreboard()` (with the negative-score guard), `triggerGameOverScreen()`, and a keydown handler checking `event.key === " "` (the spacebar reports a literal space character, not the word "Space") that resets and sets `gameActive = true`.
+- **Exercise 11.1 (The DOM Update Pipeline & Scoreboard Updater)**: Plan maps state changes to screen updates; prompt mentions `function`, `textContent`, `score-val`; output sets `#score-val`'s textContent; explanation covers why `textContent` beats `innerHTML`.
+- **Exercise 11.2 (The Negative Score Leak)**: Plan explains why "score: -5" looks broken; output includes `if (score < 0) { score = 0; }`; explanation confirms the clamp runs before the DOM write.
+- **Exercise 11.3 (Revealing the Restart Panel)**: Plan states the full restart sequence; prompt mentions `restart-panel`, `hidden`; output includes `classList.remove("hidden")`; explanation covers what happens if the class isn't removed.
+- **Exercise 11.4 (The Frozen Restart Bug)**: Plan explains why a visual reset isn't a functional one; prompt mentions `gameActive`; output includes `gameActive = true;` in the handler; explanation covers `gameLoop()`'s gate.
+- **Exercise 11.5 (The Complete HUD & Restart System)**: Plan lists every piece; prompt mentions `updateScoreboard`, `triggerGameOverScreen`; output includes `score-val`, `restart-panel`, `gameActive`, and a Space-key check; explanation walks the full restart sequence.
 
 - **Homework Evaluation**: Check selectors targets syntax, and ensure validation checks block negative integers.
 
@@ -823,28 +674,13 @@ Each session contains exactly 10 progressive sandbox exercises following the 5-s
 
 ##### In-App Capstone Sandbox Exercises (Session 12)
 
-The app's Exercises Journal additionally provides 10 capstone exercises for this session:
+The app's Exercises Journal provides 5 capstone exercises for this session, each with 3 boxes, all running live in the Racing Game Preview:
 
-- **Exercise 12.1 [Plan & Design]**: Plan the configuration object.
-  * *Solution:* `const CONFIG = { startSpeed, difficultyMultiplier, maxSpeed }`
-- **Exercise 12.2 [Write AI Prompt]**: Prompt for difficulty scaling using CONFIG.
-  * *Solution:* Prompt mentions `CONFIG`, `speed`, and clamping to a `max`.
-- **Exercise 12.3 [Review & Explain]**: With startSpeed 5, multiplier 0.1, score 50 — value of `startSpeed + score * difficultyMultiplier`?
-  * *Solution:* `10`
-- **Exercise 12.4 [Test & Break]**: The Unbounded Speed Bug.
-  * *Solution:* `speed = Math.min(speed, CONFIG.maxSpeed);`
-- **Exercise 12.5 [Iterate & Improve]**: Refactor magic numbers.
-  * *Solution:* Replace `35`/`295` with `CONFIG.leftBound`/`CONFIG.rightBound`.
-- **Exercise 12.6 [Plan & Design]**: Plan the final QA sweep.
-  * *Solution:* `variables | boundaries | collision | restart`
-- **Exercise 12.7 [Write AI Prompt]**: Prompt for the smoke-test script.
-  * *Solution:* Prompt mentions `test`, `console.log`, and `pass`.
-- **Exercise 12.8 [Review & Explain]**: Could mixing `> 35` and `>= 35` guards create edge-case gaps?
-  * *Solution:* `YES`
-- **Exercise 12.9 [Test & Break]**: The final seeded diagnostic (flipped operator in collision check).
-  * *Solution:* `rect1.x < rect2.x + rect2.width` (first condition uses `<`, not `>`).
-- **Exercise 12.10 [Iterate & Improve]**: Capstone reflection.
-  * *Solution:* Free response (at least one full sentence describing a specific bug and how tracing variables located it).
+- **Exercise 12.1 (The Configuration Object & Difficulty Scaling)**: Plan lists CONFIG's fields; prompt mentions `CONFIG`, `speed`, `clamp`/`max`; output references CONFIG clamped to `maxSpeed`; explanation evaluates `startSpeed + score * difficultyMultiplier` at score 50 (`10`).
+- **Exercise 12.2 (The Unbounded Speed Bug)**: Plan explains why the ramp needs a ceiling; output includes `Math.min(speed, CONFIG.maxSpeed)`; explanation confirms speed is capped.
+- **Exercise 12.3 (Refactoring Magic Numbers)**: Plan states what `35`/`295` become; output includes `CONFIG.leftBound`/`CONFIG.rightBound` replacing the hardcoded numbers; explanation covers maintainability.
+- **Exercise 12.4 (The Final Diagnostic)**: Plan considers whether mixing `>`/`>=` guards creates an edge-case gap (YES); prompt mentions `checkCollision`/flip; output includes the corrected `rect1.x < rect2.x + rect2.width`; explanation names the operator fix.
+- **Exercise 12.5 (Capstone Reflection & the Final QA Sweep)**: Plan lists the 4 core systems (variables, boundaries, collision, restart); prompt mentions `test`, `console.log`, `pass`; output logs PASS/FAIL; explanation is a free-response reflection (≥20 characters) naming a specific bug and how tracing values found it.
 
 ---
 
