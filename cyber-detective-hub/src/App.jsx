@@ -5539,8 +5539,21 @@ export default function App() {
       setPoints(prev => prev + xpValue);
     });
 
-    const journalId = 'journal_' + Date.now();
     const sessionDetails = activeLevelSessions.find(s => s.id === sessionId) || CURRICULUM_DATA.find(s => s.id === sessionId);
+
+    // Only auto-log a journal entry the first time this session is claimed. Without this
+    // guard, re-completing a session's exercises (or a student who already has a proper
+    // "Initialize Project Journal" entry for it) creates ANOTHER entry with a random id and
+    // the raw curriculum title — that stray entry doesn't follow the `${userId}_${sessionId}`
+    // convention the Project Journal picker and detail panel rely on, so it can shadow the
+    // real entry in the session list and make the session look like it has no journal at all.
+    const alreadyLogged = journalEntries.some(j =>
+      j.id.endsWith('_' + sessionId) || j.id === sessionId ||
+      (sessionDetails && j.title.toLowerCase().includes(sessionDetails.title.toLowerCase()))
+    );
+    if (alreadyLogged) return;
+
+    const journalId = 'journal_' + Date.now();
     const journalTitle = sessionDetails ? sessionDetails.title : 'New Quest Log';
     const journalPrompt = `ROLE: ${sandboxRole}\nTASK: ${sandboxTask}\nCONSTRAINTS: ${sandboxConstraints}\nINPUTS: ${sandboxInput}\nEDGE CASES: ${sandboxEdgeCases}`;
     const journalCode = sandboxCodeOutput || '// No code output saved.';
@@ -10076,11 +10089,16 @@ export default function App() {
                   </div>
                   
                   {CURRICULUM_DATA.filter(s => s.level === curriculumLevel).map(session => {
-                    const matchingJournal = journalEntries.find(j => 
-                      j.id.endsWith('_' + session.id) || 
-                      j.id === session.id || 
-                      j.title.toLowerCase().includes(session.title.toLowerCase())
-                    );
+                    // Prefer an entry whose id actually follows the `${userId}_${sessionId}`
+                    // convention (what "Initialize Project Journal" creates, and what the detail
+                    // panel below strictly requires to resolve `currentSession`). Only fall back
+                    // to a fuzzy title match for legacy entries that predate that convention —
+                    // otherwise a stray auto-logged entry (see claimCaseEvidence) with a random
+                    // id and the raw curriculum title can shadow the real entry here even though
+                    // the detail panel can't open it, making the session look journal-less.
+                    const matchingJournal =
+                      journalEntries.find(j => j.id.endsWith('_' + session.id) || j.id === session.id) ||
+                      journalEntries.find(j => j.title.toLowerCase().includes(session.title.toLowerCase()));
                     const isSelected = selectedJournal && (selectedJournal.id === matchingJournal?.id || (matchingJournal === undefined && selectedJournalId === `${currentUser?.id}_${session.id}`));
                     
                     return (
