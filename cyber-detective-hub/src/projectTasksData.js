@@ -115,30 +115,31 @@ export const PROJECT_TASKS = {
   },
   "l1-s5": {
     partNum: "Lab 5",
-    partTitle: "Keyboard Control Interfaces",
+    partTitle: "Keyboard & Click Control Interfaces",
     objectives: [
       "Extend last session's game.js — don't restart it",
-      "Make the car respond to the player's keyboard input",
       "Reuse your own carX and LANE_WIDTH from Session 4 instead of new hardcoded numbers",
-      "Confirm the car actually moves on screen when you press keys"
+      "Add two on-screen buttons (◀ / ▶) that steer the car exactly like the arrow keys do",
+      "Write the steering move ONCE and have both the keyboard and the buttons call it"
     ],
     planSpecs: {
-      vision: "Same car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering.",
-      parts: "Goal: work out, in your own words, what pieces this feature needs — what has to listen for something, what has to change when it does, and what has to visually update. Your game.js above already has carX and LANE_WIDTH from Session 4 — reuse them rather than inventing new numbers or names.",
-      flow: "Goal: describe your own step-by-step logic, in plain English or your own flowchart, for how a single keypress should end up moving the car on screen. Work it out yourself before writing any code."
+      vision: "Same car, same LEFT/RIGHT steering from the exercises — but now add two on-screen buttons, '◀' and '▶', below the track. Clicking '◀' should move the car exactly the same way pressing ArrowLeft does; clicking '▶' the same as ArrowRight. A player should be able to steer with the keyboard, the buttons, or both, and get identical behavior either way.",
+      parts: "Goal: work out, in your own words, what changes now that there are TWO ways to trigger the same movement. Should the actual steering logic live inside the keydown handler where the buttons can't reach it, or somewhere both the keydown handler and the button clicks can call it? What do you need to add to the page itself for the buttons to exist?",
+      flow: "Goal: describe your own step-by-step logic — one shared action that moves the car one lane in a given direction, then two different triggers that each call it: the existing keydown check, and a click listener on each button. Work this out before writing any code."
     },
     chainFrom: "l1-s4",
-    promptGuide: "Write your own prompt for the steering behavior you planned above, in your own words. Just make sure it tells the AI to reuse your existing carX and LANE_WIDTH from Session 4 rather than redeclaring them.",
+    promptGuide: "Write your own prompt for adding on-screen left/right buttons that steer the car the same way your existing arrow keys do, in your own words. Make sure it tells the AI to reuse a single shared movement action instead of writing the steering logic three separate times (once for keys, once per button), and to reuse your existing carX/LANE_WIDTH from Session 4.",
     codeReviewGuide: [
-      "Does your handler correctly detect which key was pressed?",
-      "Does the step size actually reuse your existing LANE_WIDTH constant instead of a new hardcoded number?",
-      "Socratic Question: How does the browser know a key was pressed? What is the event object and what properties does it pass to our handler?"
+      "Is the steering move written once (e.g. as its own function) and called from both the keydown handler and the two button click handlers, or copy-pasted three times?",
+      "Do the buttons move the car by the same LANE_WIDTH as the keyboard, using your existing constant?",
+      "Do the buttons actually exist as clickable elements on the page, not just referenced in code?",
+      "Socratic Question: if you later fixed a bug in how the car moves, would clicking a button and pressing a key both get the fix automatically? What does your answer depend on?"
     ],
-    sampleGeneratedHtml: '// game.js — adds keyboard steering on top of Session 4\'s registry\n// (carX, LANE_WIDTH, etc. already exist above this — not repeated here)\nconst carElement = document.getElementById("player-car");\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    carX -= LANE_WIDTH;\n  } else if (event.key === "ArrowRight") {\n    carX += LANE_WIDTH;\n  }\n  carElement.style.left = carX + "px";\n  console.log("Steering:", event.key, "-> carX =", carX);\n});',
-    testCasesGuide: "- Press ArrowLeft: verify console logs the key and carX updates by your LANE_WIDTH\n- Press ArrowRight: verify console logs key and carX increases by your LANE_WIDTH\n- Verify #player-car moves visually on screen when keys are pressed",
-    iterationGuide: "Confirm that pressing keys repeatedly does not trigger rendering locks. Plan on screen controls (buttons) for accessibility.",
-    targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car" style="left: 8%;"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "The car can now be steered left/right with the Arrow keys — shown here parked in the left lane after pressing ArrowLeft. This is your Session 4 file, still growing."
+    sampleGeneratedHtml: '// game.js — adds on-screen steering buttons alongside keyboard steering\n// (carX, LANE_WIDTH, etc. already exist above this — not repeated here)\nconst carElement = document.getElementById("player-car");\n\nfunction steerCar(direction) {\n  if (direction === "left") {\n    carX -= LANE_WIDTH;\n  } else if (direction === "right") {\n    carX += LANE_WIDTH;\n  }\n  carElement.style.left = carX + "px";\n  console.log("Steering:", direction, "-> carX =", carX);\n}\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    steerCar("left");\n  } else if (event.key === "ArrowRight") {\n    steerCar("right");\n  }\n});\n\ndocument.getElementById("btn-left").addEventListener("click", function() {\n  steerCar("left");\n});\ndocument.getElementById("btn-right").addEventListener("click", function() {\n  steerCar("right");\n});',
+    testCasesGuide: "- Press ArrowLeft and separately click the '◀' button: verify both move the car left by the same LANE_WIDTH\n- Press ArrowRight and separately click the '▶' button: verify both move the car right by the same LANE_WIDTH\n- Check your own code: is the actual left/right movement written in one place, or repeated for each trigger?",
+    iterationGuide: "If a key and its matching button don't move the car by exactly the same amount, that's a sign the movement logic got duplicated instead of shared — refactor so both call the same function.",
+    targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car" style="left: 8%;"></div><div class="lane-divider"></div></div><div id="control-buttons"><button id="btn-left">◀</button><button id="btn-right">▶</button></div>',
+    targetOutcomeCaption: "The car can now be steered by keyboard OR by clicking the ◀/▶ buttons below the track — both trigger the exact same movement. This is your Session 4 file, still growing."
   },
   "l1-s6": {
     partNum: "Lab 6",

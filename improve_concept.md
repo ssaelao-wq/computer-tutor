@@ -22,7 +22,7 @@
 - **`POST /api/generate-code`** — optional "🤖 Generate Code" button beside "Copy Prompt"; deliberately secondary to using a real external AI IDE per the Hybrid Model.
 - **Exercise counts:** S1 = 5; **S2–S6 = 4** (each dropped its redundant "combine everything" capstone, which duplicated its own Project Task). Each drop was individually investigated, not assumed.
 - **Project Tasks** for `l1-s2`, `l1-s3`, `l1-s5`, `l1-s6` rewritten from prompt templates to goal statements. `l1-s4`'s was already goal-oriented.
-- **Bug fixes found by real testing:** Live Preview console/verification log split; preview height (260px→360px); Exercise 5.1 scope gap.
+- **Bug fixes found by real testing:** Live Preview console/verification log split; preview height (260px→360px); Exercise 5.1 scope gap; L1S5 Project Task duplicated its own exercises (same "steer left/right" objective as 5.1-5.4). First fix (a held-key auto-repeat bug) was rejected — teacher didn't want a "find a bug" framing, wanted genuinely different *behavior* instead. Rebuilt around on-screen ◀/▶ buttons that trigger the same steering as the keyboard, forcing the student to factor movement into one shared action instead of duplicating it — ties into the session's own accessibility Ethics discussion. Teacher Guideline synced to match.
 - **S7–S12 and all of L2 are untouched** — original keyword `validate()`, 5 exercises each.
 
 ### What is NOT built despite being described in the docs
