@@ -283,6 +283,158 @@ async function requireTeacher(req, res, next) {
   }
 }
 
+// AI Auditor — grades PROMPT QUALITY ONLY (2026-07-30 redesign, replacing an earlier
+// version that graded full-submission correctness against a private rubric). The teacher
+// found that even a genuinely well-written prompt still failed whenever it targeted the
+// "wrong" specific requirement (e.g. a clear, precise prompt asking to detect ArrowDown
+// failed outright, because the exercise actually needed ArrowLeft/ArrowRight) — which
+// still felt like "checking wording/correctness," not evaluating prompt-writing skill.
+// Decision: Verify now grades ONLY whether the student's prompt demonstrates real
+// prompt-engineering skill (clarity, specificity, completeness) — NOT whether it happens
+// to solve the exercise's specific intended scenario. Plan/Output Code/Explain are still
+// required fields (the student still practices the whole loop) but are no longer
+// evaluated for correctness at all. Pilot scope: L1 Sessions 1, 5, 6. See
+// improve_concept.md (one directory above this repo) for the full design.
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+
+async function auditPromptQuality({ prompt, context, priorSessionCode }) {
+  const systemPrompt = `You are coaching a young student (roughly age 12-16) on PROMPT ENGINEERING — the skill of writing clear, precise instructions to an AI coding assistant. You are evaluating ONLY the quality of the prompt itself, as a piece of writing meant to instruct an AI. You are NOT checking whether it happens to solve any specific intended problem, and you are NOT checking any other part of the student's work — only this prompt.
+
+Judge the prompt on these prompt-engineering qualities:
+1. Clarity — would an AI reading this immediately know exactly what to do, with no ambiguity?
+2. Specificity — does it give concrete, actionable detail rather than a vague request ("make it work," "fix this," "do the thing")?
+3. Completeness — does it state the desired behavior/outcome clearly enough that a competent AI could act on it without having to guess?
+4. Structure — is it phrased as a direct, actionable instruction (not a bare question or sentence fragment)?
+${priorSessionCode ? `\n5. Integration awareness — since this prompt is for extending the student's own existing code (given below), does it show awareness of that existing code (e.g. asking the AI to build on it / not redeclare things) rather than ignoring it entirely? This is part of writing a good prompt for real, existing code — not a check of whether the resulting code is "correct."\n` : ''}
+CRITICAL RULE: Do NOT fail or penalize this prompt for targeting the "wrong" specific requirement, wrong number, wrong key, or wrong detail relative to any particular exercise's intended answer. A prompt that is clear, specific, and complete is a GOOD prompt even if a human grader would say it solves a different (but equally well-specified) problem than intended. Only fail a prompt that is genuinely vague, ambiguous, incomplete, or unclear as an instruction to an AI.
+
+Give the student 2-3 concrete, specific tips on how to make THIS prompt (or their prompt-writing in general) even better — practical, reusable prompt-engineering advice, not generic praise.
+
+Respond with ONLY strict JSON, no markdown, in exactly this shape:
+{"pass": boolean, "feedback": "one specific sentence assessing this prompt's clarity/specificity/completeness", "tips": ["tip 1", "tip 2", "tip 3"]}`;
+
+  const userPrompt = `Context this prompt was written for: ${context || 'A beginner JS/HTML/CSS exercise in a learning sandbox.'}
+${priorSessionCode ? `\n--- The student's own existing code this prompt should build on ---\n${priorSessionCode}\n` : ''}
+--- The student's prompt to evaluate ---
+${prompt}`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+  try {
+    const dsRes = await fetch(DEEPSEEK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.2
+      }),
+      signal: controller.signal
+    });
+
+    if (!dsRes.ok) {
+      const errText = await dsRes.text();
+      throw new Error(`DeepSeek API returned ${dsRes.status}: ${errText.slice(0, 300)}`);
+    }
+
+    const data = await dsRes.json();
+    const raw = data.choices?.[0]?.message?.content;
+    if (!raw) throw new Error('DeepSeek response had no content');
+    return JSON.parse(raw);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+app.post('/api/audit-submission', authenticateToken, async (req, res) => {
+  const { prompt, context, priorSessionCode } = req.body;
+  if (!prompt || !prompt.trim()) {
+    return res.status(400).json({ error: 'A prompt is required' });
+  }
+  if (!process.env.DEEPSEEK_API_KEY) {
+    return res.status(500).json({ error: 'DEEPSEEK_API_KEY is not configured on the server' });
+  }
+  try {
+    const verdict = await auditPromptQuality({ prompt, context, priorSessionCode });
+    res.json(verdict);
+  } catch (error) {
+    res.status(502).json({ error: `Auditor unavailable: ${error.message}` });
+  }
+});
+
+// AI Code Generation — an OPTIONAL, in-platform convenience added 2026-07-30, separate
+// from the Auditor role above. The Hybrid Model (PRJ_KNOWLEDGE.md §6) deliberately keeps
+// code generation external (Cursor/ChatGPT/Copilot) as a required professional skill —
+// this does not replace that. It exists for a quick in-platform check; "Copy Prompt" is
+// kept alongside it everywhere it appears. Pilot scope: L1 Sessions 1, 5, 6 only, same as
+// the Auditor pilot. Deliberately does NOT receive expectedConcepts (the private grading
+// rubric) — it only sees what a real external AI tool would see: the student's own prompt
+// plus the same student-visible context (problem/vision), so the generated code reflects
+// the prompt's actual quality, not a rubric-aware shortcut.
+async function generateCodeWithAI({ prompt, context }) {
+  const systemPrompt = `You are acting as a student's general-purpose AI assistant (like ChatGPT, Cursor, or Copilot) for a beginner learning JavaScript/HTML/CSS in a 2D racing-car-game themed sandbox — respond to their prompt exactly the way that kind of tool would. If the prompt asks for code, return real, working code satisfying it as written (don't add features/checks they didn't ask for; assume any globals the prompt references, like carX/speed/#player-car, already exist elsewhere in the file) with no markdown fences and no commentary before or after. If the prompt asks a conceptual/explanatory question instead, answer it directly and concisely in plain prose, the way a helpful AI chat assistant would — don't force a code answer where none was asked for.`;
+
+  const userPrompt = `Context: ${context || 'A beginner exercise in a JS/HTML/CSS learning sandbox.'}\n\nStudent's prompt:\n${prompt}`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+  try {
+    const dsRes = await fetch(DEEPSEEK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.3
+      }),
+      signal: controller.signal
+    });
+
+    if (!dsRes.ok) {
+      const errText = await dsRes.text();
+      throw new Error(`DeepSeek API returned ${dsRes.status}: ${errText.slice(0, 300)}`);
+    }
+
+    const data = await dsRes.json();
+    let raw = data.choices?.[0]?.message?.content;
+    if (!raw) throw new Error('DeepSeek response had no content');
+    // Defensive cleanup: strip a markdown code fence if the model added one anyway.
+    raw = raw.trim().replace(/^```[a-zA-Z]*\n?/, '').replace(/```\s*$/, '').trim();
+    return raw;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+app.post('/api/generate-code', authenticateToken, async (req, res) => {
+  const { prompt, context } = req.body;
+  if (!prompt || !prompt.trim()) {
+    return res.status(400).json({ error: 'A prompt is required' });
+  }
+  if (!process.env.DEEPSEEK_API_KEY) {
+    return res.status(500).json({ error: 'DEEPSEEK_API_KEY is not configured on the server' });
+  }
+  try {
+    const code = await generateCodeWithAI({ prompt, context });
+    res.json({ code });
+  } catch (error) {
+    res.status(502).json({ error: `Code generation unavailable: ${error.message}` });
+  }
+});
+
 // API Routes
 
 // Authentication Login

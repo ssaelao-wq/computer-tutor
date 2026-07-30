@@ -41,7 +41,7 @@ export const PROJECT_TASKS = {
       flow: "Browser loads index.html sequentially.\nDOM elements are created in memory in a parent-child hierarchy.\nParent containers constrain child positions."
     },
     chainFrom: null,
-    promptGuide: "The sandbox drill only asked for the track, the car, and the scoreboard — but your actual game needs its whole foundation in one file, since every session from here on extends this exact file. Draft an AI prompt asking for all of that PLUS two elements the drill never covered: an oncoming obstacle car (its own div, id 'obstacle') and a game-over overlay (id 'restart-panel', starting hidden via a class named 'hidden') that a later session will reveal. Also ask the AI to add an HTML comment at the top naming your player car and your obstacle — this is your game now, give them names.",
+    promptGuide: "Write your own prompt for the complete foundation this file needs, in your own words. The sandbox drill only covered the track, car, and scoreboard — your actual game also needs two things the drill never asked for: an obstacle car (id 'obstacle') and a hidden game-over overlay (id 'restart-panel', hidden via a class named 'hidden') that a later session will reveal. These exact names matter, since every later session's code looks for them. Also ask the AI to add a comment at the top naming your player car and your obstacle — this is your game now.",
     codeReviewGuide: [
       "Check if all HTML tags open and close properly (especially divs).",
       "Verify that player-car is nested inside game-track, and that obstacle and restart-panel exist too.",
@@ -71,7 +71,7 @@ export const PROJECT_TASKS = {
       flow: "Parent relative positioning establishes coordinate system origin (0,0) at top-left.\nChild absolute positioning uses (left, top, bottom, right) parameters relative to parent bounds."
     },
     referenceSessions: [{ id: "l1-s2", label: "Session 2's HTML structure — the exact elements you're styling here, not a generic spec" }],
-    promptGuide: "Open your own Session 2 file (shown above) — you're styling that file, not a fresh blank one. Draft an AI prompt to give '#game-track' relative positioning and dimensions of your choosing (390-430px wide, 480-520px tall). Position '#player-car' absolutely so it sits centered near the bottom of YOUR track width. Add a dashed '.lane-divider' down the center. Then style '#obstacle' (it can reuse most of the player-car's look) and '#restart-panel' as a full-screen dark overlay — remember it must stay invisible until a later session removes its 'hidden' class.",
+    promptGuide: "Write your own prompt to style your own Session 2 file (shown above) — you're styling that file, not a fresh blank one. You choose the track's exact dimensions (something in the 390-430px wide, 480-520px tall range) and need #player-car absolutely positioned, centered near the bottom of YOUR chosen width. You'll also need a dashed .lane-divider down the center, plus styles for #obstacle and #restart-panel — the two elements the sandbox drill never covered. Remember #restart-panel must stay invisible until a later session removes its 'hidden' class.",
     codeReviewGuide: [
       "Does `#game-track` have `position: relative`? If not, the absolute elements will drift out.",
       "Is `#player-car` absolute-positioned, and does its left offset actually center it inside YOUR chosen track width (not necessarily 165px)?",
@@ -118,22 +118,20 @@ export const PROJECT_TASKS = {
     partTitle: "Keyboard Control Interfaces",
     objectives: [
       "Extend last session's game.js — don't restart it",
-      "Bind keyboard keydown listeners to the browser window",
-      "Capture ArrowLeft and ArrowRight event properties",
-      "Trigger coordinate updates based on keyboard inputs",
-      "Update DOM style properties dynamically when variables shift"
+      "Make the car respond to the player's keyboard input",
+      "Reuse your own carX and LANE_WIDTH from Session 4 instead of new hardcoded numbers",
+      "Confirm the car actually moves on screen when you press keys"
     ],
     planSpecs: {
       vision: "Same car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering.",
-      parts: "Parts needed: a way to listen for arrow key presses. Information to track: which key was pressed, and how far the car should shift each time (your own LANE_WIDTH constant from last session).",
-      flow: "User presses keyboard key -> keydown Event fires -> JavaScript captures event.key -> IF key is ArrowLeft, decrease carX -> update #player-car.style.left coordinate"
+      parts: "Goal: work out, in your own words, what pieces this feature needs — what has to listen for something, what has to change when it does, and what has to visually update. Your game.js above already has carX and LANE_WIDTH from Session 4 — reuse them rather than inventing new numbers or names.",
+      flow: "Goal: describe your own step-by-step logic, in plain English or your own flowchart, for how a single keypress should end up moving the car on screen. Work it out yourself before writing any code."
     },
     chainFrom: "l1-s4",
-    promptGuide: "Your game.js above already declares carX and LANE_WIDTH from Session 4 — don't ask the AI to redeclare them. Ask it to bind a keydown listener to the window that subtracts your LANE_WIDTH from carX on 'ArrowLeft' and adds it on 'ArrowRight', updating '#player-car''s left style to match each time, and logging every key press to the console.",
+    promptGuide: "Write your own prompt for the steering behavior you planned above, in your own words. Just make sure it tells the AI to reuse your existing carX and LANE_WIDTH from Session 4 rather than redeclaring them.",
     codeReviewGuide: [
-      "Is `window.addEventListener('keydown')` used correctly?",
-      "Does the handler inspect `event.key` for exact key strings?",
-      "Does the step size actually reuse your existing `LANE_WIDTH` constant instead of a new hardcoded number?",
+      "Does your handler correctly detect which key was pressed?",
+      "Does the step size actually reuse your existing LANE_WIDTH constant instead of a new hardcoded number?",
       "Socratic Question: How does the browser know a key was pressed? What is the event object and what properties does it pass to our handler?"
     ],
     sampleGeneratedHtml: '// game.js — adds keyboard steering on top of Session 4\'s registry\n// (carX, LANE_WIDTH, etc. already exist above this — not repeated here)\nconst carElement = document.getElementById("player-car");\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    carX -= LANE_WIDTH;\n  } else if (event.key === "ArrowRight") {\n    carX += LANE_WIDTH;\n  }\n  carElement.style.left = carX + "px";\n  console.log("Steering:", event.key, "-> carX =", carX);\n});',
@@ -154,11 +152,11 @@ export const PROJECT_TASKS = {
     ],
     planSpecs: {
       vision: "Same steering car — but now it can't be steered off the edges of the road. Holding an arrow key at the edge just keeps it pinned at the outer lane instead of sliding off-screen.",
-      parts: "Parts needed: a safety check that runs every time a key is pressed, plus a cap on how fast speed is allowed to climb. Information to track: the leftmost and rightmost positions your car is allowed to reach (derived from your own TRACK_WIDTH), and a maximum playable speed.",
-      flow: "IF key is ArrowLeft:\n  IF carX > LeftLimit:\n    carX -= LANE_WIDTH\nIF key is ArrowRight:\n  IF carX < RightLimit:\n    carX += LANE_WIDTH"
+      parts: "Goal: work out, in your own words, what safety checks this needs and what they should be based on. Don't hardcode 35/295 — your own TRACK_WIDTH and car width should determine the real left/right limits for YOUR track. You'll also need a separate cap on how fast speed is allowed to climb.",
+      flow: "Goal: describe your own step-by-step logic, in plain English or your own flowchart, for how the boundary checks and the speed cap should work together with your existing steering handler. Work it out yourself before writing any code."
     },
     chainFrom: "l1-s5",
-    promptGuide: "Your keydown handler above already moves the car with no limits — ask the AI to add guards to it, not replace it. The car must stay locked inside the lanes YOUR track actually has (compute the left and right limits from your own TRACK_WIDTH and car width, don't assume 35/295). If the user presses left, only move the car if it's not already at the leftmost limit — same idea for right. Separately, add a small safety clamp: if 'speed' ever climbs past a maximum you choose, cap it back down and log a warning.",
+    promptGuide: "Write your own prompt for the safety checks you planned above, in your own words. Make sure it tells the AI to add guards to your EXISTING keydown handler (not replace it), to derive the limits from your own TRACK_WIDTH/car width rather than fixed numbers, and to add the speed cap as a separate check.",
     codeReviewGuide: [
       "Do the boundary checks derive their limits from your own TRACK_WIDTH/car width, not a hardcoded 35/295?",
       "Does the car snap back or lock cleanly when boundaries are breached?",

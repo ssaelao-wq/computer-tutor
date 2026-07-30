@@ -37,7 +37,13 @@ Before running classes, tutors must familiarize themselves with the administrati
 
 ## 🏎️ Level 1 Racing Car Theme: Lab Track (Sessions 1–12)
 
-> **Format note (2026-07-27):** All 12 Level 1 sessions now share one consistent **Sandbox + Project Task format**: **5 sandbox exercises** per session (not 10), each with 3 boxes — **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code** — graded on all three boxes being filled in plus a lightweight keyword check (not exact string matching, since real AI output varies). The **Project Task** milestone (in the Project Journal tab) uses the same 3-box shape, but is always a **related, more open-ended task** than that session's exercises, not a copy of them — see each session's own "Project Task Milestone" section below for exactly how. This replaced the older 10-exercise, single-answer-box format (first trialed on Session 4 on 2026-07-22, then rolled out to the rest of Level 1 on 2026-07-27).
+> **Format note (2026-07-27):** All 12 Level 1 sessions share one consistent **Sandbox + Project Task format**: sandbox exercises per session (5, or 4 where noted below), each with 3 boxes — **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The **Project Task** milestone (in the Project Journal tab) uses the same 3-box shape, but is always a **related, more open-ended task** than that session's exercises, not a copy of them — see each session's own "Project Task Milestone" section below for exactly how. This replaced the older 10-exercise, single-answer-box format (first trialed on Session 4 on 2026-07-22, then rolled out to the rest of Level 1 on 2026-07-27).
+>
+> **Grading note (2026-07-30, Sessions 1, 5, 6 only so far):** these three sessions' exercises and Project Tasks are graded by a real AI Auditor (DeepSeek). Their instructions were also rewritten to state the **goal**, not the answer: a student is asked "what should this achieve" and expected to plan and prompt in their own words, rather than being told the exact code/logic to ask for. Sessions 2-4 and 7-12 are unchanged for now (still the original keyword-checked format) pending validation of this pilot with real students. Alongside this, an **optional "🤖 Generate Code" / "🤖 Generate Answer"** button now sits next to "Copy Prompt" in these three sessions only — it calls the same AI server-side as a quick in-platform check, but "Copy Prompt" and the requirement to actually practice with a real AI IDE (ChatGPT/Cursor/Copilot) are unchanged and still the primary path.
+>
+> **Grading redesign (2026-07-30, later same day):** real student testing found that grading all four boxes for correctness still failed genuinely well-written prompts whenever they targeted a different specific detail than the exercise's intended answer (e.g. a clear, precise prompt correctly detecting a key still failed outright for naming the "wrong" key) — this still felt like a wording/correctness check, not a measure of prompt-writing skill. **Verify now grades ONLY the Prompt box**, on prompt-engineering quality — clarity, specificity, completeness — and gives 2-3 concrete tips for writing better prompts. Plan, Output Code, and Explain remain required fields (the student still practices the whole loop) but are **no longer evaluated for correctness at all**. A prompt is not penalized for happening to solve a different, equally well-specified version of the problem than the one intended.
+>
+> **Milestone note (2026-07-30):** Sessions 5 and 6 are now explicitly framed as one two-week capability arc — *"the car remembers itself, responds to you, and stays safe"* — rather than two disconnected topic weeks (keydown events, then conditionals). Each session's sandbox exercises also dropped their old 5th "combine everything into one capstone" exercise (both are now **4 exercises**, not 5) — that final integration now happens exactly once, for real, in the session's own Project Task, rather than being rehearsed on a throwaway sandbox file first and then repeated on the real one.
 >
 > **Project continuity:** Sessions 2-3 build the HTML/CSS skeleton (`index.html`, `styles.css`). Starting at Session 4, the Project Task's `game.js` is **one accumulating file** — each session from 4 through 12 opens the *previous* session's own saved code (via the in-app "🔄 Pull Latest" mechanism) and extends it, rather than starting from a fresh template. This is intentional: it's closer to how real software gets built, and it's what lets Session 12's "Complete Game — Assembled" section pull a genuinely working, student-authored build out of their own journal history. The Sandbox *exercises* (separate from the Project Task) remain self-contained per session — each exercise's own Plan/Prompt/Output/Explain boxes don't depend on a previous exercise's answer.
 
@@ -46,8 +52,8 @@ The lab track, aligned to each session's core concept:
 - **Lab 1 (Session 2)**: *HTML Document Skeleton* — Base containers (Track Arena, Player Car, Dashboard Panel).
 - **Lab 2 (Session 3)**: *CSS Sizing & Coordinates Layout* — Sizing '#game-track', absolute position '#player-car' and styled road dividers with white dashes.
 - **Lab 4 (Session 4)**: *Difficulty-Scaling State System* — Variables for position state, speed metrics, score registers, and a lives count, plus a student-designed score-driven difficulty rule.
-- **Lab 5 (Session 5)**: *Keyboard Control Interfaces* — Keydown listeners registering steering moves (Arrows), extending Session 4's game.js.
-- **Lab 6 (Session 6)**: *Safety Guards & Boundary Clamps* — Boundary checks clamping coordinates to keep the player on the road, derived from the student's own track width.
+- **Lab 5 (Session 5)**: *Keyboard Control Interfaces* — Keydown listeners registering steering moves (Arrows), extending Session 4's game.js. First half of the "car remembers itself and responds to you" milestone (see note above); 4 sandbox exercises, not 5.
+- **Lab 6 (Session 6)**: *Safety Guards & Boundary Clamps* — Boundary checks clamping coordinates to keep the player on the road, derived from the student's own track width. Second half of the milestone begun in Session 5; 4 sandbox exercises, not 5.
 - **Lab 7 (Session 7)**: *Obstacle Loop Generation* — Spawning highway lane markers dynamically using loops, spaced to the student's own track height.
 - **Lab 8 (Session 8)**: *Modular Control Functions* — Refactoring movement logic into a namespaced Controller object.
 - **Lab 9 (Session 9)**: *Timer Loops & Animations* — requestAnimationFrame recursive loops for redraw rendering.
@@ -59,7 +65,7 @@ The lab track, aligned to each session's core concept:
 
 ## Session 1: "Systems Briefing: Hardware, Networks & the AI-Era Dev Loop"
 
-> **Content note (2026-07-27):** This session's topic and sandbox format were both rewritten from the original "Literal Logic & Digital Infiltration" autopilot-car content. The topic changed on 2026-07-20 (a systems/hardware/network briefing that sets up the whole Racing Car Game project); the sandbox format changed on 2026-07-27 along with the rest of Level 1 (see the **Lab Track** note above) — 5 exercises in the reduced Plan/Prompt+Output/Explain shape instead of 10 single-answer exercises. Both updates are reflected below.
+> **Content note (2026-07-27, updated 2026-07-30):** This session's topic and sandbox format were both rewritten from the original "Literal Logic & Digital Infiltration" autopilot-car content. The topic changed on 2026-07-20 (a systems/hardware/network briefing that sets up the whole Racing Car Game project); the sandbox format changed on 2026-07-27 along with the rest of Level 1 (see the **Lab Track** note above) — 5 exercises in the reduced Plan/Prompt+Output/Explain shape instead of 10 single-answer exercises. On 2026-07-30, this session was one of the first three (with Sessions 5 and 6) moved to real AI-Auditor grading and goal-stated instructions — see the **Grading note** above.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Case File Briefing — tracing a keypress from hardware to screen
@@ -83,42 +89,32 @@ The lab track, aligned to each session's core concept:
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design** (a plain-language answer), **2) Write the AI Prompt & Paste the Output** (the prompt the student would give an AI, then the AI's actual written answer pasted into Output), **3) Explain the Output** (the student's own summary of what the AI said). This session is purely conceptual — there is no code to run, so there is no live-preview panel; "Verify" checks all three boxes plus a lightweight keyword match on each.
+Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design** (a plain-language answer, in the student's own words), **2) Write the AI Prompt & Paste the Output** (the student's own prompt, then the AI's actual written answer pasted into Output — an optional "🤖 Generate Answer" button can also fill Output directly as a quick check, alongside "Copy Prompt" for running it in a real AI tool), **3) Explain the Output** (the student's own summary of what the AI said). This session is purely conceptual — there is no code to run, so there is no live-preview panel. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not whether it names any specific word/number, and not the Plan/Output/Explain boxes (those remain practice, ungraded).
 
 * **Exercise 1.1: Hardware vs. Software, and the Resource Bottleneck**
-  * *Plan box expects:* labeling the CPU, game.js, RAM, the OS, the monitor, and the browser as HARDWARE or SOFTWARE.
-  * *Prompt box must mention:* `bottleneck`, `CPU`, and `91` (the example CPU 91%/RAM 38%/Disk 12% snapshot).
-  * *Output box must include:* an answer naming CPU as the bottleneck.
-  * *Explain box must cover:* why CPU specifically (not RAM or Disk) is the bottleneck here.
+  * *Goal given to the student:* figure out which physical resource is actually struggling, given a real snapshot (CPU 91%, RAM 38%, Disk 12%), and justify the answer.
+  * *A strong answer shows:* the Plan box correctly sorts the CPU, game.js, RAM, the OS, the monitor, and the browser into HARDWARE vs. SOFTWARE; the Prompt/Output/Explain boxes correctly identify CPU as the constrained resource and explain why (relative to its own capacity, not the others) — in the student's own words, not a fixed phrase.
   * *Why:* Diagnosing a bottleneck from a resource snapshot is the first real "read the system, not just the code" skill of the course.
 * **Exercise 1.2: The Out-of-Memory Crash**
-  * *Plan box expects:* why loading 500 large images at once strains RAM.
-  * *Prompt box must mention:* RAM/memory and a request for a "fix".
-  * *Output box must include:* a real fix — compress the images, or lazy-load them.
-  * *Explain box must cover:* why RAM/memory usage drops with that specific fix.
+  * *Goal given to the student:* figure out why loading 500 large images at once could overload a low-end laptop, and propose a real software-side fix.
+  * *A strong answer shows:* a plan/explanation that correctly reasons all 500 images sit in RAM at once even though only a few are visible, and a fix that's genuinely compress-the-images or lazy-load-them (not "buy more RAM").
   * *Why:* The fix isn't "buy more RAM" — it's changing *how the software behaves*, the software-side half of hardware/software thinking.
 * **Exercise 1.3: The Client-Server Request Cycle**
-  * *Plan box expects:* the 4-part cycle in the student's own words: Browser sends request → Server looks up data → Server responds → Browser displays page.
-  * *Prompt box must mention:* client, server, request, AND response.
-  * *Output box must include:* an explanation covering both the request and the response.
-  * *Explain box must cover:* in one sentence, why the response step matters.
+  * *Goal given to the student:* understand what actually happens between the browser asking for a page and it appearing on screen.
+  * *A strong answer shows:* the plan correctly sequences client sends request → server looks up data → server responds → browser displays the page, and the explanation says why the response step specifically matters — described in the student's own words, not a memorized four-word list.
   * *Why:* Every webpage load — including the Racing Car Game — is this exact conversation between two computers.
 * **Exercise 1.4: The Web Trio & the Missing-CSS Bug**
-  * *Plan box expects:* one phrase each for HTML/CSS/JavaScript's job.
-  * *Prompt box must mention:* all three technologies (HTML, CSS, JavaScript), diagnosing the "unstyled page" bug report.
-  * *Output box must include:* a diagnosis naming CSS.
-  * *Explain box must cover:* why CSS (not HTML or JS) is the likely culprit for "content there, no styling."
+  * *Goal given to the student:* diagnose which of HTML/CSS/JS most likely failed, given a bug report ("content and buttons visible, but plain black-on-white with no layout").
+  * *A strong answer shows:* correctly describing each technology's job, and an explanation that correctly names CSS as the culprit *because* the symptom is purely visual, not structural or behavioral.
   * *Why:* Connects the web-trio concept directly to a real, recognizable bug symptom.
 * **Exercise 1.5: The 5-Step AI-Era Loop, Applied**
-  * *Plan box expects:* all 5 steps, in order.
-  * *Prompt box must mention:* all 5 words: plan, prompt, review, test, iterate.
-  * *Output box must include:* an explanation covering at least 3 of the 5 steps by name.
-  * *Explain box must cover:* which step the student expects to find hardest, and why.
+  * *Goal given to the student:* know the 5-step process well enough to describe it before relying on it next session.
+  * *A strong answer shows:* the Plan box correctly names all 5 steps in order (this one genuinely is a recall task); the Explain box gives a specific, personal reflection on which step the student expects to find hardest, and why — there's no single correct answer to that part, only a genuine one.
   * *Why:* This loop repeats every session for the rest of the course — memorizing it now pays off immediately in Session 2.
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
-The **Project Journal** milestone card ("Lab 0: Project Kickoff & Roadmap") is a **planning document, not an AI-generation step** — there is no code yet. It uses the same 3-box shape as the sandbox above, but Box 2's "Output" is the student's own written project brief (an AI prompt is optional scaffolding here, not a requirement), not AI-generated code.
+The **Project Journal** milestone card ("Lab 0: Project Kickoff & Roadmap") is a **planning document, not an AI-generation step** — there is no code yet. It uses the same 3-box shape as the sandbox above, but Box 2's "Output" is the student's own written project brief (an AI prompt is optional scaffolding here, not a requirement), not AI-generated code. An optional "🤖 Get AI Feedback" button (advisory only — it never blocks Save) gives the student the same AI-Auditor read on their roadmap before the tutor reviews it.
 
 1. **Plan & Design** (single box)
    - *Expected:* "A top-down 2D highway racing game: a scrolling road with lane dividers, a player car controlled with the arrow keys, oncoming obstacle cars to dodge, a live score counter, and a game-over screen when you crash. Parts needed: the road/track, the player's car, obstacle cars, a scoreboard, a game-over overlay, and the game state (score, speed, whether the game is running). Sessions 2-3 build the visual pieces (HTML/CSS); Sessions 4-12 build the behavior (JavaScript)."
@@ -136,6 +132,8 @@ The **Project Journal** milestone card ("Lab 0: Project Kickoff & Roadmap") is a
 ---
 
 ## Session 2: "Starting the Game: HTML Structure & Basic Elements"
+
+> **Content note (2026-07-30):** This session was moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above) — **Verify now grades the Prompt box only**, on clarity/specificity/completeness, not whether it names any specific word. Its old 5th "combine everything" capstone exercise (2.5, "The Complete Skeleton") was dropped as a duplicate of this session's own Project Task, which already asked for the same combined structure plus more (the obstacle car and hidden overlay). The sandbox now has **4 exercises**, not 5.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: DOM Tree Construction Game
@@ -156,50 +154,36 @@ The **Project Journal** milestone card ("Lab 0: Project Kickoff & Roadmap") is a
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The student pastes the *real* HTML their AI tool generated into Output Code (not a typed "model answer"), and the Interactive Live Preview always renders that pasted HTML live. "Verify" requires all three boxes filled in plus a lightweight keyword check on each.
+Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The student pastes the *real* HTML their AI tool generated into Output Code (not a typed "model answer"), and the Interactive Live Preview always renders that pasted HTML live. **Verify grades the Prompt box only** — clarity, specificity, completeness — not the Plan/Output Code/Explain boxes, and not whether it names any specific word.
 
 * **Exercise 2.1: The Track & Car Skeleton**
-  * *Plan box expects:* the nesting plan in plain language, e.g. `game-track > player-car`.
-  * *Prompt box must mention:* `game-track`, `player-car`, and a box word (`div`/`box`/`container`).
-  * *Output Code box must include:* `id="game-track"` AND `id="player-car"`, nested.
-  * *Explain box must cover:* why `player-car` needs to be nested inside `game-track`, not just next to it.
-  * *Why:* Same blueprint-first thinking as before — decide the nesting before a tag is written, then verify the AI actually nested it correctly.
+  * *Goal given to the student:* create the nested structure a browser needs — a game-track container with a player-car nested inside it.
+  * *What a good prompt looks like:* clearly describes the parent/child relationship (game-track containing player-car), in the student's own words.
+  * *Why:* Same blueprint-first thinking as before — decide the nesting before a tag is written.
 * **Exercise 2.2: Selectors & the Scoreboard**
-  * *Plan box expects:* the nested plan `dashboard > heading > score number`.
-  * *Prompt box must mention:* `dashboard`, a heading word, and `score-val`.
-  * *Output Code box must include:* `id="score-val"` nested inside a dashboard element.
-  * *Explain box must cover:* which attribute (id or class) uniquely identifies the score element, and why that matters.
+  * *Goal given to the student:* build a scoreboard structure where the score number is uniquely identifiable (id score-val).
+  * *What a good prompt looks like:* describes the dashboard/heading/score nesting and that the score element needs a unique id.
   * *Why:* Cements "id = the one unique thing" — `score-val` needs to be unique because later JavaScript searches for that exact id to update the score.
 * **Exercise 2.3: The Unclosed Tag Bug Hunt**
-  * *Plan box expects:* why an unclosed `</div>` breaks a page's structure with no visible error.
-  * *Prompt box must mention:* `div` and a request to `close`/`fix` the broken tags.
-  * *Output Code box must include:* the exact fix — `<div id="game-track"><div id="player-car"></div></div>`.
-  * *Explain box must cover:* the number of closing `</div>` tags needed (2) and why.
+  * *Goal given to the student:* given the exact buggy code (`<div id="game-track"><div id="player-car"></div>` — one closing tag missing), diagnose and fix it.
+  * *What a good prompt looks like:* names the specific bug (a missing closing tag) and asks for a fix, not just "fix the HTML."
   * *Why:* The most common real HTML bug — an unclosed tag with no console error, only a broken layout.
 * **Exercise 2.4: Lane Dividers via Class**
-  * *Plan box expects:* why the lane divider should use a CLASS, not an ID (a track can have many dividers).
-  * *Prompt box must mention:* `lane-divider` and the word `class`.
-  * *Output Code box must include:* `class="lane-divider"` nested inside `id="game-track"`.
-  * *Explain box must cover:* what would go wrong using an ID instead, once the track needs multiple dividers.
+  * *Goal given to the student:* add a lane divider using the right kind of attribute for something that can repeat (a class, not an id).
+  * *What a good prompt looks like:* specifically asks for a class-based (not id-based) element and explains why.
   * *Why:* Rule of thumb: id = the one unique thing; class = a repeated category of things.
-* **Exercise 2.5: The Complete Skeleton**
-  * *Plan box expects:* every container/id/class the file needs: dashboard, score-val, game-track, player-car, lane-divider.
-  * *Prompt box must mention:* both `dashboard` and `game-track`, asking to combine them.
-  * *Output Code box must include:* all 5 pieces present, plus 4+ closing `</div>` tags.
-  * *Explain box must cover:* the actual number of closing `</div>` tags in the student's own file.
-  * *Why:* This is the complete HTML skeleton (Lab 1) — the same structure the Project Task below extends, and that later sessions' fresh starter files are based on.
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
-The **Project Journal** milestone card ("Lab 1: HTML Document Skeleton") tracks the student's own project file, separate from the Sandbox exercises above. It uses the same 3-box shape: **1) Plan & Design** (single box), **2) Prompt & Output Code** (side by side, with a live HTML preview), **3) Explain the Code**.
+The **Project Journal** milestone card ("Lab 1: HTML Document Skeleton") tracks the student's own project file, separate from the Sandbox exercises above, and is now the **one place** the complete skeleton comes together (the sandbox no longer rehearses this same combination first). It uses the same 3-box shape: **1) Plan & Design** (single box), **2) Prompt & Output Code** (side by side, with a live HTML preview and an optional "🤖 Generate Code" quick-check button alongside "Copy Prompt"), **3) Explain the Code**.
 
 1. **Plan & Design**
    - *Expected:* "A highway-view racing screen: a vertical road area taking up most of the screen, with a small scoreboard panel above it showing the score. Parts needed: a road area, a player's car, an obstacle car, a lane divider line, a hidden game-over overlay, and a scoreboard panel. Information to track: the score, how fast the car is going, and whether the game is currently running."
    - *Why:* Same plain-language, no-tag-names constraint as before — describe what's needed and what to remember before any markup.
 
 2. **Prompt & Output Code**
-   - *Expected prompt:* "The sandbox drill only asked for the track, the car, and the scoreboard — but the real game needs its whole foundation in one file. Ask the AI for all of that PLUS an oncoming obstacle car (its own div, id 'obstacle') and a game-over overlay (id 'restart-panel', starting hidden via a class named 'hidden') that a later session will reveal. Add an HTML comment at the top naming the player car and the obstacle."
-   - *Expected Output Code:* the AI's real generated HTML, pasted in and rendered live in the preview — including `#game-track`, `#player-car`, `#obstacle`, `.lane-divider`, `#restart-panel.hidden`, and `#dashboard`/`#score-val`.
+   - *Goal given to the student:* write your own prompt for the complete foundation this file needs, going beyond the sandbox drill by including two things it never covered — an obstacle car (id `obstacle`) and a hidden game-over overlay (id `restart-panel`, hidden via a class named `hidden`) that a later session will reveal. These exact names matter, since every later session's code looks for them.
+   - *Expected Output Code:* the AI's real generated HTML, pasted in and rendered live in the preview — including `#game-track`, `#player-car`, `#obstacle`, `.lane-divider`, `#restart-panel.hidden`, and `#dashboard`/`#score-val`. (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
    - *Why:* The Project Task deliberately asks for **more than the exercises covered** — the obstacle and hidden restart panel aren't in any sandbox exercise, so a straight copy-paste from the exercises is visibly incomplete here.
 
 3. **Explain the Code**
@@ -211,6 +195,8 @@ The **Project Journal** milestone card ("Lab 1: HTML Document Skeleton") tracks 
 ---
 
 ## Session 3: "Styling the Track & Player Car: CSS Lanes & Visuals"
+
+> **Content note (2026-07-30):** This session was moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above) — **Verify now grades the Prompt box only**. Its old 5th exercise (3.5, "Dashed Divider & Flex Dashboard") was dropped: both techniques it taught (a dashed lane divider, a flex-laid-out dashboard) were already independently required by this session's own Project Task, so — consistent with how the Project Task already teaches the obstacle/restart-panel styling the sandbox never covers — these two now live exclusively in the Project Task's own guidance. The sandbox has **4 exercises**, not 5.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Match CSS Selectors to Visual Elements
@@ -232,50 +218,36 @@ The **Project Journal** milestone card ("Lab 1: HTML Document Skeleton") tracks 
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Interactive Live Preview renders the pasted CSS live against the track/car skeleton for every exercise except Exercise 3.2, which is a conceptual selectors question with no code to run.
+Students complete **4 exercises** (the old 5th exercise was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Interactive Live Preview renders the pasted CSS live against the track/car skeleton for every exercise except Exercise 3.2, which is a conceptual selectors question with no code to run. **Verify grades the Prompt box only** — clarity, specificity, completeness.
 
 * **Exercise 3.1: Arena Sizing Specs**
-  * *Plan box expects:* the track's planned width, height, and background color in plain language (e.g. 390 wide, 500 tall, dark gray — 390 divides evenly into 3 lanes of 130).
-  * *Prompt box must mention:* `game-track`, a width, a height, and a background color.
-  * *Output Code box must include:* `#game-track { width: ...; height: ...; background... }` with all three properties.
-  * *Explain box must cover:* why the student picked those specific dimensions.
+  * *Goal given to the student:* decide on and apply your own track dimensions (width, height, background color).
+  * *What a good prompt looks like:* states specific chosen dimensions and colors, not a vague "style the track."
   * *Why:* Decide the target numbers before writing CSS syntax — the same design-first thinking as every other session.
 * **Exercise 3.2: Selectors — # vs. .**
-  * *Plan box expects:* when to use an ID selector (#) vs a Class selector (.).
-  * *Prompt box must mention:* both symbols `#` and `.`, asking for an explanation with an example.
-  * *Output box must include:* an explanation mentioning both `#` and `.`.
-  * *Explain box must cover:* which selector fits something that appears many times on a page.
+  * *Goal given to the student:* understand when to use an id selector (#) vs a class selector (.).
+  * *What a good prompt looks like:* asks for an explanation of both selector types with an example, not just "explain CSS selectors."
   * *Why:* A `#` targets the ONE element with that id; a `.` targets EVERY element with that class — mixing them up is why styles "don't apply."
 * **Exercise 3.3: The Drifting Car Bug**
-  * *Plan box expects:* why an absolutely-positioned child drifts to the whole browser window when the parent lacks `position: relative`.
-  * *Prompt box must mention:* `position: relative` and `game-track`.
-  * *Output Code box must include:* `#game-track { ... position: relative; ... }`.
-  * *Explain box must cover:* what `position: relative` on the parent actually does for the child's coordinates.
+  * *Goal given to the student:* given the exact buggy CSS (`#game-track { width: 390px; height: 500px; background-color: #333; }`, car drifts to the browser window), diagnose and fix it.
+  * *What a good prompt looks like:* names the specific missing property, not just "fix the CSS."
   * *Why:* An absolute-positioned element measures from the nearest *positioned* ancestor — without one, it measures from the whole browser window and flies to the corner.
 * **Exercise 3.4: Positioning the Car**
-  * *Plan box expects:* the centering math — `(390 - 60) / 2 = 165` — and what that number represents.
-  * *Prompt box must mention:* `player-car`, `absolute`, `bottom`, and `left`.
-  * *Output Code box must include:* `#player-car { position: absolute; bottom: 20px; left: 165px; }`.
-  * *Explain box must cover:* the actual numbers 390, 60, and 165 in the math.
-  * *Why:* `bottom: 20px` sits the car near the bottom edge; `left: 165px` centers a 60px-wide car in a 390px track.
-* **Exercise 3.5: Dashed Divider & Flex Dashboard**
-  * *Plan box expects:* the lane divider's look (thin dashed white line) and the dashboard's layout (items spaced apart).
-  * *Prompt box must mention:* `lane-divider`, `dashboard`, and `flex`.
-  * *Output Code box must include:* both `.lane-divider` (absolute, dashed white left border) AND `#dashboard` (`display: flex; justify-content: space-between;`).
-  * *Explain box must cover:* how `space-between` spreads the dashboard's children apart.
-  * *Why:* Two finishing touches in one exercise — the dashed lane line and the flexbox HUD polish, the same combination the Project Task below builds on.
+  * *Goal given to the student:* position the car centered near the bottom of your own chosen track width from Exercise 3.1.
+  * *What a good prompt looks like:* shows the student's own centering math and states the exact position values that follow from it.
+  * *Why:* `bottom: 20px` sits the car near the bottom edge; centering math changes with whatever track width the student chose.
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
-The **Project Journal** milestone card ("Lab 2: CSS Sizing & Coordinates Layout") tracks the student's own stylesheet, styling their **own Session 2 file** (not a fresh starter). It uses the same 3-box shape: **1) Plan & Design** (single box, shown alongside a read-only reference to the student's Session 2 HTML), **2) Prompt & Output Code** (side by side, with a live CSS preview), **3) Explain the Code**.
+The **Project Journal** milestone card ("Lab 2: CSS Sizing & Coordinates Layout") tracks the student's own stylesheet, styling their **own Session 2 file** (not a fresh starter), and is now the **one place** the dashed divider and flex dashboard are taught at all (the sandbox drill never covers them — consistent with how it already never covered the obstacle/restart-panel styling either). It uses the same 3-box shape: **1) Plan & Design** (single box, shown alongside a read-only reference to the student's Session 2 HTML), **2) Prompt & Output Code** (side by side, with a live CSS preview and an optional "🤖 Generate Code" quick-check button alongside "Copy Prompt"), **3) Explain the Code**.
 
 1. **Plan & Design**
    - *Expected:* "A dark 2-lane-divider highway, sized however I like (390-430px wide, 480-520px tall), with a white dashed line down the middle. A car sits near the bottom-center, an obstacle car styled the same way, and a full-screen game-over overlay waits invisible behind everything. The scoreboard sits above the road as a small horizontal bar."
    - *Why:* Unlike the sandbox (which hands the student 390/500 as the example), the Project Task explicitly invites the student to choose their **own** track dimensions within a range — testing whether they understand the *centering formula*, not just the specific numbers 390/165.
 
 2. **Prompt & Output Code**
-   - *Expected prompt:* "Open my own Session 2 file — I'm styling that file, not a fresh blank one. Give '#game-track' relative positioning and my own chosen dimensions (390-430px wide, 480-520px tall). Position '#player-car' absolutely so it sits centered near the bottom of MY track width. Add a dashed '.lane-divider' down the center. Then style '#obstacle' (it can reuse most of the player-car's look) and '#restart-panel' as a full-screen dark overlay that stays invisible until a later session removes its 'hidden' class."
-   - *Expected Output Code:* the AI's real generated CSS, pasted and rendered live — including the student's own track width/height, a correctly-centered `#player-car`, `#obstacle`, `.lane-divider`, and `#restart-panel`.
+   - *Goal given to the student:* write your own prompt to style your own Session 2 file (not a fresh blank one). Choose the track's exact dimensions, center #player-car near the bottom of that width, add a dashed .lane-divider down the center, and style #obstacle and #restart-panel — the two elements the sandbox drill never covered.
+   - *Expected Output Code:* the AI's real generated CSS, pasted and rendered live — including the student's own track width/height, a correctly-centered `#player-car`, `#obstacle`, `.lane-divider`, `#restart-panel`, and the dashboard laid out with flex. (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
    - *Why:* Because the student chose their own track width in Step 1, their `#player-car` centering offset will differ from the sandbox's 165px — the Review step below specifically checks that the math was actually redone, not copied.
 
 3. **Explain the Code**
@@ -306,46 +278,32 @@ The **Project Journal** milestone card ("Lab 2: CSS Sizing & Coordinates Layout"
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-**Format note (Session 4 trial):** Session 4 is running a trial of a new, reduced sandbox format — **5 exercises** instead of 10, each with **3 input boxes** rather than one: (1) **Plan & Design**, (2) **Writing Prompt** and **Output Code** side by side, (3) **Explain the Output Code**. There is no separate Test & Break / Iterate & Improve step in the UI for this session — running the pasted Output Code live and explaining what it actually did covers both. The student pastes the *real* code their AI tool generated into Output Code (not a typed "model answer" like other sessions), so grading is a hybrid: "Verify" requires all 3 boxes to be filled in **and** a lightweight keyword check on the prompt/output/explanation text (not exact string matching, since real AI output varies). **Note on the live preview:** the preview no longer shows the racing-game track/car graphic used elsewhere in Level 1 — this session's code is variables & math only and never touches the DOM, so a car image would never change regardless of what the student wrote. Instead the preview panel is a **Console Output** box showing only real `console.log`/error text captured from running the pasted code; some exercises legitimately produce no printed output at all (declarations with no `console.log` are still a valid, complete answer — a blank Console Output is not a failure state here).
+**Format note (updated 2026-07-30):** Session 4 has **4 exercises** (the old 5th, "The Complete Variable Registry," was dropped as a duplicate of work the Project Task already assumes — see below), each with **3 input boxes**: (1) **Plan & Design**, (2) **Writing Prompt** and **Output Code** side by side, (3) **Explain the Output Code**. The student pastes the *real* code their AI tool generated into Output Code. **Verify grades the Prompt box only** — clarity, specificity, completeness, not exact wording (see the Lab Track's **Grading note** above). **Note on the live preview:** the preview shows a **Console Output** panel (left) and a **Verification Feedback** panel (right), split so the two never interleave — this session's code is variables & math only and never touches the DOM, so there's no racing-game graphic here; the real result is whatever the code prints via `console.log` (a blank Console Output is not a failure — not every exercise needs to print something).
 
-* **Exercise 4.1: The Core State Variables** — Declare `carX` (165), `speed` (0), `score` (0), `gameActive` (false).
-  * *Plan box expects:* which values change vs. stay fixed during play (all four change here — nothing fixed yet).
-  * *Prompt box must mention:* `let`, `carX`, `165`.
-  * *Output Code box must include:* `let` declarations for `carX`, `speed`, `score`, `gameActive` (correct Number/Boolean types, no quotes).
-  * *Explain box must cover:* why all four are `let` rather than `const` (they change during play).
-  * *Why:* Same design thinking as the old plan/prompt pair, now inside one exercise: name what changes, ask the AI for it with real starting values, and paste back the actual result instead of typing a model answer into a shared box.
-* **Exercise 4.2: Constants and the Lives Count** — Add `const TRACK_WIDTH`/`LANE_WIDTH` and a `let lives = 3` — the lives count is new; no earlier drill covers it.
-  * *Plan box expects:* naming the fixed values (track/lane width) and what `lives` starts at and whether it changes.
-  * *Prompt box must mention:* `const`, `lives`, `3`.
-  * *Output Code box must include:* a `const` declaration plus `lives`.
-  * *Explain box must cover:* why `TRACK_WIDTH`/`LANE_WIDTH` are `const` while `lives` is `let`, even though `3` looks like a fixed number.
+* **Exercise 4.1: The Core State Variables** — Declare `carX`, `speed`, `score`, `gameActive`.
+  * *Goal given to the student:* declare the game's core mutable state — the values that change during play.
+  * *What a good prompt looks like:* names each value it wants declared and states they're all mutable (`let`), not just "make some variables."
+  * *Why:* Name what changes before asking the AI for it — design-first thinking, now inside one exercise.
+* **Exercise 4.2: Constants and the Lives Count** — Fixed track/lane width plus a new `lives` value.
+  * *Goal given to the student:* declare the fixed values plus a new mutable lives count.
+  * *What a good prompt looks like:* distinguishes which values are fixed (`const`) from the new mutable `lives` value, and states its starting count.
   * *Why:* Tests that "starts at a fixed-looking number" isn't the same as "never changes" — `lives` will decrement on a crash in a later session.
-* **Exercise 4.3: Math Increments on Game State** — `score++` (or `score += 1`) and `speed += 10`, logged to the console.
-  * *Plan box expects:* a plain-language description of how `score`/`speed` change — the specific amounts ("up by 1"/"up by 10") are expected, not just "they increase."
-  * *Prompt box must mention:* `score`, `speed`, `console.log`.
-  * *Output Code box must include:* `score++`/`score += 1` and `speed += 10`.
-  * *Explain box must predict:* the resulting values — `score = 1`, `speed = 10` (starting from 0).
-  * *Why:* Predicting a result by *reading* code before running it is the core Review skill; the pasted Output Code's console.log then lets the student confirm their own prediction against a real run, not a hypothetical.
+* **Exercise 4.3: Math Increments on Game State** — Score and speed changing during play, in a way the student decides.
+  * *Goal given to the student:* make score and speed change during play, in a way you decide.
+  * *What a good prompt looks like:* states specific amounts/operations for score and speed, not just "make them go up."
+  * *Why:* Predicting a result by *reading* code before running it is the core Review skill; the pasted Output Code's console.log then lets the student confirm their own prediction against a real run.
 * **Exercise 4.4: The Quoted-Number Bug Hunt** — `let speed = "10"; speed += 5;` produces `"105"` instead of `15`. Fix it.
-  * *Plan box expects:* in the student's own words, why a quoted `"10"` behaves differently from a plain `10` in math.
-  * *Prompt box must mention:* `speed` plus one of `number`/`quote`/`string`.
-  * *Output Code box must include:* the corrected declaration, `let speed = 10;` (no quotes).
-  * *Explain box must mention:* both the buggy result (`"105"`) and the fixed result (`15`).
-  * *Why:* This is the session's signature bug made concrete: with a String, `+=` glues text instead of adding. Seeing the wrong and right outputs side by side (both named in the explanation) is what makes "data types matter" stick better than any lecture.
-* **Exercise 4.5: The Complete Variable Registry** — Assemble every declaration from the session (`carX`, `speed`, `score`, `gameActive`, `lives`, `TRACK_WIDTH`, `LANE_WIDTH`) into one registry. **Declarations only — no math or increments this time** (that was already proven in 4.3).
-  * *Plan box expects:* the full list of what to declare and which is `let` vs `const`.
-  * *Prompt box must mention:* `let`, `const`, `lives`.
-  * *Output Code box must include:* all seven declarations, correctly typed, no quoted numbers, **no math statements**.
-  * *Explain box must cover:* why each one is `let` vs `const`.
-  * *Why:* Deliberately narrowed to declarations-only so this exercise's answer doesn't double as a ready-made solution to the Project Task below — the Project Task is the only place in this session that asks the student to design and defend their own conditional logic. A copy-paste from this exercise into the Project Task will visibly be missing that entire layer.
+  * *Goal given to the student:* given the exact buggy code, figure out why it produces the wrong result, then fix it.
+  * *What a good prompt looks like:* names the specific bug (a quoted number) and the desired fix, not just "fix the math."
+  * *Why:* This is the session's signature bug made concrete: with a String, `+=` glues text instead of adding.
 
-* **Homework Evaluation Checklist**: All 3 boxes filled in per exercise; Output Code pastes read like real AI output (not the sandbox's own placeholder text); Explain boxes name the *reason*, not just the result (e.g. E4.4's explanation should say *why* the quotes broke the math, not just restate "105 became 15").
+* **Homework Evaluation Checklist**: All four boxes filled in per exercise; Output Code pastes read like real AI output (not the sandbox's own placeholder text); Explain boxes name the *reason*, not just the result (e.g. E4.4's explanation should say *why* the quotes broke the math, not just restate "105 became 15").
 
-### 4. Project Task Milestone — Expected Student Answers (Session 4 trial format)
+### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
-**Format note:** Session 4's Project Task also uses the trial 3-box format (not the standard 5-tab Plan/Prompt/Review/Test/Iterate layout every other session uses) — **Plan & Design**, **Prompt & Output Code** (with a live Console Output panel, the same execution sandbox as the exercises above), and **Explain the Code**. The milestone card is "Lab 4: Difficulty-Scaling State System."
+The **Project Journal** milestone card is "Lab 4: Difficulty-Scaling State System" — **Plan & Design**, **Prompt & Output Code** (with a live Console Output panel, the same execution sandbox as the exercises above, plus an optional "🤖 Generate Code" quick-check button alongside "Copy Prompt"), and **Explain the Code**.
 
-Unlike the sandbox exercises (which hand the student every value to declare), this task is deliberately open-ended: extend the session's registry with **one new value the student designs themselves** — e.g. a `difficultyLevel` — that changes once `score` crosses a threshold the student picks, and that visibly affects another value (commonly `speed`). No exercise spells out the exact rule, so a straight copy of Exercise 4.5's registry does **not** satisfy this task on its own — it's missing the entire conditional-logic layer being graded here.
+Unlike the sandbox exercises (which each declare one piece of the registry), this task is deliberately open-ended: extend the session's registry with **one new value the student designs themselves** — e.g. a `difficultyLevel` — that changes once `score` crosses a threshold the student picks, and that visibly affects another value (commonly `speed`). No exercise spells out the exact rule, so simply combining the exercises' own declarations does **not** satisfy this task on its own — it's missing the entire conditional-logic layer being graded here.
 
 1. **Plan & Design** (single box)
    - *Expected:* the student names their own new value (e.g. `difficultyLevel`), states what score threshold triggers it, and what it should affect and by how much — e.g. "every 50 points, difficultyLevel goes up by 1, and speed increases by 5 per level."
@@ -353,18 +311,20 @@ Unlike the sandbox exercises (which hand the student every value to declare), th
 
 2. **Prompt & Output Code** (side by side, with live Console Output below)
    - *Expected prompt:* describes the student's own rule in plain language and asks the AI to implement it as an extension of the existing registry (`carX`, `speed`, `score`, `gameActive`, `lives`).
-   - *Expected Output Code:* a new `let` value plus a conditional (`if`) that checks `score` against the student's chosen threshold and updates another value — pasted from what the AI actually generated, then run live in the Console Output panel to confirm it actually executes/prints as expected.
+   - *Expected Output Code:* a new `let` value plus a conditional (`if`) that checks `score` against the student's chosen threshold and updates another value — pasted from what the AI actually generated, then run live in the Console Output panel to confirm it actually executes/prints as expected. (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
    - *Why:* the AI can write the code, but only the student can supply the design decision (which threshold, which effect) — that's the part a generic prompt can't produce on its own.
 
 3. **Explain the Code**
    - *Expected:* the student walks through their own conditional in plain words and defends their threshold choice.
    - *Expected Socratic answer* — *"What happens to your rule if score can jump by more than 1 at a time (e.g. a bonus of +5)?"* → A plain `===` threshold check can be skipped over entirely; the fix is a `>=` comparison (or an explicit "already triggered" flag) so the rule still fires even if score jumps past the exact threshold value.
 
-* **Homework Evaluation Checklist**: the new value is genuinely the student's own design (a threshold/effect not lifted from Exercise 4.5), it's declared with `let` (since it changes), it visibly affects a second value when run in the Console Output panel, and the explanation defends the student's specific numbers rather than restating the assignment.
+* **Homework Evaluation Checklist**: the new value is genuinely the student's own design (a threshold/effect not lifted from any exercise), it's declared with `let` (since it changes), it visibly affects a second value when run in the Console Output panel, and the explanation defends the student's specific numbers rather than restating the assignment.
 
 ---
 
 ## Session 5: "Steering the Car: JS Keydown Event Listeners"
+
+> **Content note (2026-07-30):** This session (with Session 6) now forms one explicit two-session capability milestone — *"the car remembers itself, responds to you, and stays safe"* — rather than two separate, disconnected topic weeks. It was also moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above), and its old 5th "combine everything" capstone exercise was dropped: the sandbox now has **4 exercises**, and that final integration happens exactly once, for real, in the Project Task below.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Intercepting Inputs Keyboard Mapping
@@ -384,61 +344,53 @@ Unlike the sandbox exercises (which hand the student every value to declare), th
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Interactive Live Preview is the **Live Racing Game Preview** (click inside it, then press arrow keys to steer) — the student's pasted Output Code runs live against the real racing-game DOM.
+Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Interactive Live Preview is the **Live Racing Game Preview** (click inside it, then press arrow keys to steer) — the student's pasted Output Code runs live against the real racing-game DOM, split into a left "Console Output" panel and a right "Verification Feedback" panel so the two never interleave. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word/number.
+
+> **Content note (2026-07-30, later same day):** Real student testing showed Exercise 5.1's AI-generated solution already produces a near-complete steering handler (detects the key, handles both directions, moves the DOM element) — because the exercise now correctly requires reacting to both ArrowLeft/ArrowRight. That made the original Exercises 5.2-5.4 (the "left" vs "ArrowLeft" string bug, adding the ArrowRight branch, the missing `px` unit) redundant — the student had usually already solved all three inside their own Exercise 5.1 answer. The teacher pointed out that a first attempt at replacing them ("Ignoring the Other Keys") was itself hollow — "do nothing for other keys" requires no code at all, since an unhandled key is already a no-op. Exercises 5.2-5.4 were rewritten a second time, per the teacher's own direction, around genuinely new key-handling and DOM ground.
 
 * **Exercise 5.1: Reading the Key Pressed**
-  * *Plan box expects:* how the browser reports which key was pressed, in plain language.
-  * *Prompt box must mention:* `addEventListener`, `keydown`, and `console.log`.
-  * *Output Code box must include:* a keydown listener bound to `window` that logs the key.
-  * *Explain box must cover:* naming the callback's parameter (`event`) and that it carries `.key`.
+  * *Goal given to the student:* make your code detect exactly which key was pressed, and prove it works.
+  * *What a good prompt looks like:* clear and specific about the outcome — e.g. asking for a keydown listener that reports the key, in the student's own words. (Verify grades the Prompt box only — see the Grading redesign note above.)
   * *Why:* Every keypress fires a `keydown` event and the browser hands the code an object with the key name — the one fact this whole session depends on.
-* **Exercise 5.2: The Silent Input Fail**
-  * *Plan box expects:* why comparing `event.key` to `"left"` instead of `"ArrowLeft"` fails with no visible error.
-  * *Prompt box must mention:* the wrong string `"left"` or the fix `"ArrowLeft"`.
-  * *Output Code box must include:* `event.key === "ArrowLeft"` and `carX -= 130`.
-  * *Explain box must cover:* why it's silent — a false comparison just skips the block, no crash.
-  * *Why:* Browsers report the arrow keys as the exact strings `"ArrowLeft"`/`"ArrowRight"`, never `"left"` — a wrong string makes the check always-false with no error.
-* **Exercise 5.3: Steering Both Directions**
-  * *Plan box expects:* how far the car moves each press, in both directions (130 each way).
-  * *Prompt box must mention:* `ArrowRight` and the `130` delta.
-  * *Output Code box must include:* an ArrowRight branch with a `console.log`.
-  * *Explain box must cover:* why `else if` (not two separate `if`s) is used here.
-  * *Why:* `else if` adds a second, mutually-exclusive branch — the standard shape for handling multiple keys.
-* **Exercise 5.4: Wiring Movement to the DOM**
-  * *Plan box expects:* why a bare number like `165` isn't a valid CSS position value.
-  * *Prompt box must mention:* the missing `"px"` unit.
-  * *Output Code box must include:* `carElement.style.left = carX + "px";`.
-  * *Explain box must cover:* what happens visually when the unit is missing, and why (the browser discards the whole rule).
-  * *Why:* `carX` is a bare number; `carX + "px"` builds the string the style engine actually understands.
-* **Exercise 5.5: The Complete Steering Handler**
-  * *Plan box expects:* every piece the complete handler needs (listener, both key branches, `carX` updates, `style.left` write).
-  * *Prompt box must mention:* `ArrowLeft`, `ArrowRight`, and `style.left`.
-  * *Output Code box must include:* the full handler — listener, both branches, `carX`, and `style.left`.
-  * *Explain box must cover:* the full chain, in order, from keypress to the car moving on screen.
-  * *Why:* This is the real steering control the rest of the game reuses.
+* **Exercise 5.2: Detecting All Four Directions**
+  * *Goal given to the student:* extend your Exercise 5.1 detection to also recognize ArrowUp and ArrowDown, proving all four arrow keys are correctly identified — a practice drill; the real game still only steers left/right.
+  * *What a good prompt looks like:* specific about extending the existing handler to two more named keys, not just "handle more keys."
+  * *Why:* Practicing recognition of more than two keys, and extending existing code rather than rewriting it from scratch.
+* **Exercise 5.3: Different Distances Per Direction**
+  * *Goal given to the student:* track a horizontal and a vertical running number separately — left/right change it by 20, up/down by 10 — and log both after every keypress (no visual up/down movement exists in this sandbox, so this is tracked and logged, not rendered).
+  * *What a good prompt looks like:* names both tracked values, their starting points, and the exact amount each direction changes them by.
+  * *Why:* Each direction carrying its own distinct numeric behavior, and managing two independent pieces of state from one handler.
+* **Exercise 5.4: Pause with Spacebar**
+  * *Goal given to the student:* given the sandbox's existing hidden overlay element (`#restart-panel`, currently "GAME OVER, Press Space to Restart"), make pressing Space reveal it with a "Paused" message instead.
+  * *What a good prompt looks like:* specifies both the visibility change (removing the hidden state) and the text change (to "Paused"), not just "add pause."
+  * *Why:* Reusing an existing DOM element for a new purpose (toggle visibility + change text) — a preview of the Space-key restart mechanic Session 11 builds for real.
+  * *Why:* Introduces the DRY/named-constant habit in a self-contained way — a lead-in to reusing a real named constant (`LANE_WIDTH`) in the Project Task below, and in Session 7+'s constants.
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
-The **Project Journal** milestone card ("Lab 4: Keyboard Control Interfaces") tracks the student's own project script — this session **extends the student's own game.js from Session 4**, not a fresh starter. It uses the same 3-box shape: **1) Plan & Design**, **2) Prompt & Output Code** (with the live Racing Game Preview), **3) Explain the Code**.
+The **Project Journal** milestone card ("Lab 5: Keyboard Control Interfaces") tracks the student's own project script — this session **extends the student's own game.js from Session 4**, not a fresh starter, and is now the **one place** the full steering handler comes together for real (the sandbox no longer rehearses this same combination first). It uses the same 3-box shape: **1) Plan & Design**, **2) Prompt & Output Code** (with the live Racing Game Preview and an optional "🤖 Generate Code" quick-check button alongside "Copy Prompt"), **3) Explain the Code**.
 
 1. **Plan & Design**
-   - *Expected:* "Same car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering. Parts needed: a way to listen for arrow key presses. Information to track: which key was pressed, and how far the car should shift each time (using my own LANE_WIDTH constant from Session 4)."
+   - *Goal given to the student:* work out, in your own words, what pieces this feature needs — don't invent new numbers or names, reuse your own `carX`/`LANE_WIDTH` from Session 4.
+   - *A strong answer shows:* "Same car on the dark road — but now pressing the LEFT and RIGHT arrow keys slides the car sideways between lanes, like steering," identifying the need to listen for keys, react to both directions, and reuse the existing `LANE_WIDTH`/`carX` rather than hardcoding new values.
    - *Why:* Traces input → event → state change → screen update, the pipeline every later interactive feature reuses.
 
 2. **Prompt & Output Code**
-   - *Expected prompt:* "My game.js above already declares carX and LANE_WIDTH from Session 4 — don't redeclare them. Bind a keydown listener to the window that subtracts LANE_WIDTH from carX on 'ArrowLeft' and adds it on 'ArrowRight', updating #player-car's left style to match each time, and logging every key press to the console."
-   - *Expected Output Code:* the AI's real code, pasted and run live in the preview — reusing the student's own `LANE_WIDTH` constant, not a hardcoded 130.
-   - *Why:* The prompt explicitly protects the student's existing Session 4 declarations from being overwritten — extending, not restarting, is the whole point of the accumulating file.
+   - *Goal given to the student:* write your own prompt for the steering behavior you planned, making sure it tells the AI to reuse the existing `carX`/`LANE_WIDTH` rather than redeclaring them.
+   - *A strong answer shows:* Output Code that actually combines a keydown listener, both ArrowLeft/ArrowRight branches, `carX` updates, and a `style.left` write with a `px` unit — reusing the student's own `LANE_WIDTH`, not a hardcoded `130`. (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
+   - *Why:* Reusing — not redeclaring — the student's existing Session 4 state is the whole point of the accumulating file; a real AI Auditor check can now verify this reuse directly, not just that the code "looks plausible."
 
 3. **Explain the Code**
-   - *Expected checklist:* `window.addEventListener('keydown', ...)` used correctly; the handler inspects `event.key` for exact key strings; the step size reuses the student's own `LANE_WIDTH` constant, not a new hardcoded number.
+   - *A strong answer shows:* the explanation walks the full chain in order — keypress → `event.key` check → `carX` update → `style.left` write → car moves on screen — and correctly identifies that the code reuses (not reinvents) the student's own Session 4 constants.
    - *Expected Socratic answer* — *"How does the browser know a key was pressed? What is the event object and what properties does it pass to our handler?"* → The browser's event loop detects the hardware keypress and calls every registered `keydown` listener, passing a fresh event object whose `.key` property holds the pressed key's name.
 
-* **Homework Evaluation Checklist**: the student's Project Journal shows a keydown listener that checks `event.key` against the exact `"ArrowLeft"`/`"ArrowRight"` strings, reuses their own `LANE_WIDTH` constant (not a hardcoded number), and writes the updated `carX` back to `#player-car` with a `px` unit.
+* **Homework Evaluation Checklist**: the student's Project Journal shows a keydown listener that checks `event.key` against the exact `"ArrowLeft"`/`"ArrowRight"` strings, reuses their own `LANE_WIDTH` constant (not a hardcoded number — the AI Auditor's "🤖 Get AI Feedback" button flags reinvention directly), and writes the updated `carX` back to `#player-car` with a `px` unit.
 
 ---
 
 ## Session 6: "Track Boundaries: JS Conditionals & Safety Guards"
+
+> **Content note (2026-07-30):** This session completes the two-session capability milestone begun in Session 5 — *"the car remembers itself, responds to you, and stays safe"* (see Session 5's Content note and the Lab Track's **Grading/Milestone notes** above). It was moved to real AI-Auditor grading and goal-stated instructions, and its old 5th "combine everything" capstone exercise was dropped: the sandbox now has **4 exercises**, not 5.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Clamping Coordinates Paper Exercises
@@ -458,57 +410,44 @@ The **Project Journal** milestone card ("Lab 4: Keyboard Control Interfaces") tr
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Interactive Live Preview is the Live Racing Game Preview — the pasted Output Code runs live and the boundary guards can be tested by steering to both edges.
+Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Interactive Live Preview is the Live Racing Game Preview — the pasted Output Code runs live and the boundary guards can be tested by steering to both edges (the preview also now seeds a `speed` variable so Exercise 6.4's code runs without a reference error), split into a left "Console Output" panel and a right "Verification Feedback" panel so the two never interleave. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word/number.
 
 * **Exercise 6.1: Track Boundary Coordinates & the Left Guard**
-  * *Plan box expects:* the leftmost and rightmost positions the car may reach (35 and 295).
-  * *Prompt box must mention:* `carX`, `ArrowLeft`, and `> 35`.
-  * *Output Code box must include:* the guard `carX > 35` wrapping the ArrowLeft movement.
-  * *Explain box must cover:* what happens if carX is already 35 and ArrowLeft is pressed again.
+  * *Goal given to the student:* stop the car from steering past the left edge (lanes sit at 35/165/295 — given as a track fact).
+  * *A strong answer shows:* reasoning that `carX` must stay above 35 before allowing further leftward movement; working code implementing that guard; an explanation that correctly describes the movement being blocked once the car is already at the edge.
   * *Why:* A guard needs exactly two numbers — the smallest and largest legal `carX`. The three lanes sit at 35/165/295, so 35 and 295 are the outer walls.
 * **Exercise 6.2: The Infinite Teleporting Bug**
-  * *Plan box expects:* why `carX >= -130` lets the car fly off-screen instead of stopping at the edge.
-  * *Prompt box must mention:* the correct boundary (35).
-  * *Output Code box must include:* `carX > 35`, NOT the broken `carX >= -130`.
-  * *Explain box must cover:* both numbers — the broken -130 bound vs. the correct 35 bound.
+  * *Goal given to the student:* given the exact buggy change (boundary check loosened from `carX > 35` to `carX >= -130`, car teleports off-screen), figure out why and fix it.
+  * *A strong answer shows:* a hypothesis that correctly identifies the looser comparison lets `carX` travel deep into negative territory before ever failing the check; the fix restores `carX > 35`; the explanation contrasts the two boundary values.
   * *Why:* A guard existed but pointed at the wrong number — a boundary check is only as good as the value it compares against.
 * **Exercise 6.3: Adding the Right Guard**
-  * *Plan box expects:* the mirrored right guard — which boundary (295) and which comparison protects it.
-  * *Prompt box must mention:* `ArrowRight` and `295`.
-  * *Output Code box must include:* `carX < 295` guarding `carX += 130` on ArrowRight.
-  * *Explain box must cover:* that it mirrors the left guard, just flipped in direction and boundary.
+  * *Goal given to the student:* stop the car from steering past the right edge (295), mirroring how the left edge is already protected.
+  * *A strong answer shows:* reasoning that the right guard should mirror the left guard's structure in the opposite direction; working code adding that guard; an explanation of why this guard mirrors the left one rather than needing new logic.
   * *Why:* Every movable direction needs its own boundary — the right guard is the mirror image of the left.
 * **Exercise 6.4: The Overheat Guard (and a Type Bug)**
-  * *Plan box expects:* the overheat rule (speed > 120 → reset to 100) and whether exactly 120 should trigger it.
-  * *Prompt box must mention:* `speed`, `120`, and `100`.
-  * *Output Code box must include:* `speed > 120` and `speed = 100` as a real Number (no quotes).
-  * *Explain box must cover:* why resetting speed to the String `"100"` would break later math (string concatenation instead of addition).
+  * *Goal given to the student:* cap `speed` so it can't climb past 120, resetting safely without reintroducing the Session 4 string-concatenation bug.
+  * *A strong answer shows:* the rule stated correctly (strict `>`, so exactly 120 does not trigger it) and reset to the Number 100, not a quoted string; an explanation that correctly says why a quoted `"100"` would break later math (string concatenation, not addition).
   * *Why:* `>` is strict — 120 is not greater than 120 — and a quoted `"100"` re-introduces the Session 4 type bug.
-* **Exercise 6.5: The Complete Boundary System**
-  * *Plan box expects:* all three guards this system needs (left, right, overheat).
-  * *Prompt box must mention:* both `carX` and `speed`.
-  * *Output Code box must include:* all four checks — `carX > 35`, `carX < 295`, `speed > 120`, `speed = 100`.
-  * *Explain box must cover:* which values protect `carX` and which protects `speed`.
-  * *Why:* Left guard, right guard, and overheat clamp together keep the game inside safe, playable limits.
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
-The **Project Journal** milestone card ("Lab 5: Safety Guards & Boundary Clamps") tracks the student's own project script, extending the student's own Session 5 steering code. It uses the same 3-box shape: **1) Plan & Design**, **2) Prompt & Output Code** (with the live Racing Game Preview), **3) Explain the Code**.
+The **Project Journal** milestone card ("Lab 6: Safety Guards & Boundary Clamps") tracks the student's own project script, extending the student's own Session 5 steering code, and is now the **one place** all three guards come together for real (the sandbox no longer rehearses this same combination first). It uses the same 3-box shape: **1) Plan & Design**, **2) Prompt & Output Code** (with the live Racing Game Preview and an optional "🤖 Generate Code" quick-check button alongside "Copy Prompt"), **3) Explain the Code**.
 
 1. **Plan & Design**
-   - *Expected:* "Same steering car — but now it can't be steered off the edges of the road. Holding an arrow key at the edge just keeps it pinned at the outer lane instead of sliding off-screen. Parts needed: a safety check that runs every time a key is pressed, plus a cap on how fast speed is allowed to climb — derived from my own TRACK_WIDTH from Session 4, not assumed to be 35/295."
+   - *Goal given to the student:* work out, in your own words, what safety checks this needs and what they should be based on — don't hardcode 35/295, derive real left/right limits from your own `TRACK_WIDTH`/car width from Session 4, and plan a separate speed cap.
+   - *A strong answer shows:* "Same steering car — but now it can't be steered off the edges of the road," correctly identifying that limits must come from the student's own `TRACK_WIDTH`, not the sandbox's fixed numbers, plus a separate overheat cap.
    - *Why:* This is the first session where the design is a *rule* rather than a new visual element.
 
 2. **Prompt & Output Code**
-   - *Expected prompt:* "My keydown handler above already moves the car with no limits — add guards to it, don't replace it. The car must stay locked inside the lanes MY track actually has (compute left/right limits from my own TRACK_WIDTH and car width, not 35/295). Separately, add a safety clamp: if speed ever climbs past a maximum I choose, cap it back down and log a warning."
-   - *Expected Output Code:* the AI's real code, pasted and tested live by steering to both edges — the boundary limits derived from the student's own `TRACK_WIDTH`, not hardcoded.
-   - *Why:* Since Session 3 let students choose their own track width, a correct guard here computes its limits from that width rather than assuming the sandbox's 35/295.
+   - *Goal given to the student:* write your own prompt for the safety checks you planned, making sure it tells the AI to add guards to the EXISTING keydown handler (not replace it), derive limits from the student's own `TRACK_WIDTH`/car width, and add the speed cap as a separate check.
+   - *A strong answer shows:* Output Code with boundary limits genuinely computed from the student's own `TRACK_WIDTH` (not a hardcoded 35/295) and a separate speed clamp. (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
+   - *Why:* Since Session 3 let students choose their own track width, a correct guard here computes its limits from that width rather than assuming the sandbox's 35/295 — and the AI Auditor can now verify this reuse directly, not just that the code "looks plausible."
 
 3. **Explain the Code**
-   - *Expected checklist:* the boundary checks derive their limits from the student's own `TRACK_WIDTH`/car width, not a hardcoded 35/295; the car snaps/locks cleanly at each edge; the speed clamp is separate from the steering guards.
+   - *A strong answer shows:* the boundary checks correctly derive their limits from the student's own `TRACK_WIDTH`/car width, not a hardcoded number; the car snaps/locks cleanly at each edge; the speed clamp is described as separate from the steering guards.
    - *Expected Socratic answer* — *"If the left guard used `>= 0` instead of your real left limit, where would the player car end up visually?"* → The car could keep moving left until `carX` hit 0, well past the actual left lane limit, so it would visually slide off the left edge of the track — the guard's *value* matters as much as its existence.
 
-* **Homework Evaluation Checklist**: the student's Project Journal shows both lane guards derived from their own `TRACK_WIDTH`, a separate speed clamp, and demonstrates that pressing a direction key at the edge leaves the car pinned rather than driving off the track.
+* **Homework Evaluation Checklist**: the student's Project Journal shows both lane guards derived from their own `TRACK_WIDTH` (the AI Auditor's "🤖 Get AI Feedback" button flags a hardcoded/reinvented boundary directly), a separate speed clamp, and demonstrates that pressing a direction key at the edge leaves the car pinned rather than driving off the track.
 
 ---
 
