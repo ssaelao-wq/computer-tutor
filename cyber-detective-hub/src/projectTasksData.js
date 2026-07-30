@@ -145,30 +145,29 @@ export const PROJECT_TASKS = {
     partNum: "Lab 6",
     partTitle: "Safety Guards & Boundary Clamps",
     objectives: [
-      "Extend last session's steering logic — don't rewrite it from zero",
-      "Implement conditional boundary checkpoints using logic gates",
-      "Construct left-side and right-side limit guards from your own track width",
-      "Evaluate compound logic checks to lock steering inside lanes",
-      "Add a speed overheat clamp the sandbox drill doesn't cover"
+      "Extend Session 5's game.js — including its steerCar() function and ◀/▶ buttons — don't rewrite it from zero",
+      "Construct left-side and right-side limit guards from your own track width, not hardcoded 35/295",
+      "Put the guard inside steerCar() itself, so BOTH the keyboard AND the on-screen buttons respect it",
+      "Bring in the speed overheat clamp you already built in Exercise 6.4"
     ],
     planSpecs: {
-      vision: "Same steering car — but now it can't be steered off the edges of the road. Holding an arrow key at the edge just keeps it pinned at the outer lane instead of sliding off-screen.",
-      parts: "Goal: work out, in your own words, what safety checks this needs and what they should be based on. Don't hardcode 35/295 — your own TRACK_WIDTH and car width should determine the real left/right limits for YOUR track. You'll also need a separate cap on how fast speed is allowed to climb.",
-      flow: "Goal: describe your own step-by-step logic, in plain English or your own flowchart, for how the boundary checks and the speed cap should work together with your existing steering handler. Work it out yourself before writing any code."
+      vision: "Same steering car — but now it can't be steered off the edges of the road, no matter which input caused the move. Session 5 gave you TWO ways to steer — the arrow keys and the ◀/▶ buttons — both calling one shared steerCar() function. If you only guard the keydown handler, holding the edge lane and clicking a button would still push the car off-screen; the guard has to live where BOTH paths already go through.",
+      parts: "Goal: work out, in your own words, WHERE the boundary check has to live so it protects both input paths at once — not copied into the keydown handler and each button's click handler separately. Then work out how to calculate the real left/right limits from your own TRACK_WIDTH and car width, instead of the exercises' fixed 35/295.",
+      flow: "Goal: describe your own step-by-step logic for how steerCar(direction) should check the limit BEFORE moving carX, for whichever direction was requested — regardless of whether a keypress or a button click triggered the call. Work it out yourself before writing any code."
     },
     chainFrom: "l1-s5",
-    promptGuide: "Write your own prompt for the safety checks you planned above, in your own words. Make sure it tells the AI to add guards to your EXISTING keydown handler (not replace it), to derive the limits from your own TRACK_WIDTH/car width rather than fixed numbers, and to add the speed cap as a separate check.",
+    promptGuide: "Write your own prompt for the boundary guard you planned above, in your own words. Make sure it tells the AI to add the check INSIDE your existing steerCar() function (not duplicated separately in the keydown handler and each button handler), to derive the limits from your own TRACK_WIDTH/car width rather than fixed numbers, and to bring in the speed overheat clamp you built in Exercise 6.4.",
     codeReviewGuide: [
-      "Do the boundary checks derive their limits from your own TRACK_WIDTH/car width, not a hardcoded 35/295?",
-      "Does the car snap back or lock cleanly when boundaries are breached?",
-      "Is the speed clamp separate from the steering guards, not accidentally merged into the same if/else chain?",
-      "Socratic Question: If the left guard used `>= 0` instead of your real left limit, where would the player car end up visually?"
+      "Is the boundary check written once, inside steerCar() itself, so both the keyboard and the buttons are protected the same way?",
+      "Do the limits come from your own TRACK_WIDTH/car width, not a hardcoded 35/295?",
+      "Does the speed overheat clamp reset speed to a Number, not a quoted string (reusing what you fixed in Exercise 6.4)?",
+      "Socratic Question: if the guard were only added inside the keydown handler, what would happen if the player held the boundary lane with the keyboard, then clicked the ▶ button instead of pressing a key again?"
     ],
-    sampleGeneratedHtml: '// game.js — adds boundary guards on top of Session 5\'s steering\n// (LEFT_LIMIT/RIGHT_LIMIT below are an EXAMPLE — derive them from YOUR track width)\nconst LEFT_LIMIT = (TRACK_WIDTH % LANE_WIDTH === 0) ? 0 : Math.floor((TRACK_WIDTH % LANE_WIDTH) / 2);\nconst RIGHT_LIMIT = TRACK_WIDTH - LANE_WIDTH - LEFT_LIMIT;\n\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    if (carX > LEFT_LIMIT) {\n      carX -= LANE_WIDTH;\n    }\n  } else if (event.key === "ArrowRight") {\n    if (carX < RIGHT_LIMIT) {\n      carX += LANE_WIDTH;\n    }\n  }\n  document.getElementById("player-car").style.left = carX + "px";\n});\n\n// overheat clamp: keep speed playable, not in the sandbox drill\nconst MAX_SPEED = 120;\nif (speed > MAX_SPEED) {\n  speed = MAX_SPEED;\n  console.warn("Overheat! Speed clamped to", MAX_SPEED);\n}',
-    testCasesGuide: "- Start at your center lane, press ArrowLeft repeatedly: verify the car locks at your own left limit instead of sliding off-screen\n- Start at center, press ArrowRight repeatedly: verify it locks at your own right limit\n- Push speed above your chosen MAX_SPEED: verify it clamps and logs a warning",
-    iterationGuide: "Test boundary limits. Refine prompt to reject negative values or out-of-range overrides.",
-    targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car" style="left: 2%;"></div><div class="lane-divider"></div></div>',
-    targetOutcomeCaption: "Boundary clamps now stop the car from sliding off the track — even holding ArrowLeft, it locks cleanly at the left edge instead of driving off-screen. Still Session 4's file, still growing."
+    sampleGeneratedHtml: '// game.js — adds boundary guards INSIDE Session 5\'s shared steerCar()\n// (carX, LANE_WIDTH, TRACK_WIDTH, the keydown handler, and the ◀/▶ buttons\n// that already call steerCar() all exist above this — not repeated here)\nconst LEFT_LIMIT = (TRACK_WIDTH % LANE_WIDTH === 0) ? 0 : Math.floor((TRACK_WIDTH % LANE_WIDTH) / 2);\nconst RIGHT_LIMIT = TRACK_WIDTH - LANE_WIDTH - LEFT_LIMIT;\n\nfunction steerCar(direction) {\n  if (direction === "left" && carX > LEFT_LIMIT) {\n    carX -= LANE_WIDTH;\n  } else if (direction === "right" && carX < RIGHT_LIMIT) {\n    carX += LANE_WIDTH;\n  } else {\n    return; // blocked at the edge — keyboard AND buttons both stop here\n  }\n  document.getElementById("player-car").style.left = carX + "px";\n  console.log("Steering:", direction, "-> carX =", carX);\n}\n\n// overheat clamp, reused from Exercise 6.4\nconst MAX_SPEED = 120;\nif (speed > MAX_SPEED) {\n  speed = MAX_SPEED;\n  console.warn("Overheat! Speed clamped to", MAX_SPEED);\n}',
+    testCasesGuide: "- Press ArrowLeft repeatedly to the left edge: verify the car locks at your own left limit\n- At that same left edge, click the ▶ button then ◀ again: verify clicking behaves identically to the keyboard at the boundary\n- Push speed above your chosen MAX_SPEED: verify it clamps to a Number and logs a warning",
+    iterationGuide: "If clicking a button pushes the car past an edge that the keyboard correctly blocks (or vice-versa), that's a sign the guard was added to only one input path instead of inside steerCar() itself — move it there.",
+    targetOutcomeHtml: '<div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div><div id="game-track"><div id="player-car" style="left: 2%;"></div><div class="lane-divider"></div></div><div id="control-buttons"><button id="btn-left">◀</button><button id="btn-right">▶</button></div>',
+    targetOutcomeCaption: "Boundary clamps now stop the car from sliding off the track — from the keyboard OR the buttons, since the guard lives inside the one shared steerCar() function. Still Session 4's file, still growing."
   },
   "l1-s7": {
     partNum: "Lab 7",
