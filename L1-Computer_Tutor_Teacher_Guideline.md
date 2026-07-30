@@ -377,7 +377,7 @@ The **Project Journal** milestone card ("Lab 5: Keyboard & Click Control Interfa
 
 2. **Prompt & Output Code**
    - *Goal given to the student:* write your own prompt for adding the on-screen buttons, making sure it tells the AI to reuse a single shared movement action instead of writing the steering logic three separate times, and to reuse existing `carX`/`LANE_WIDTH` from Session 4.
-   - *A strong answer shows:* Output Code with one function (e.g. `steerCar(direction)`) containing the `carX`/`style.left` update, called from both the `keydown` handler's ArrowLeft/ArrowRight branches AND a `click` listener on each button — plus the two `<button>` elements actually present on the page. (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
+   - *A strong answer shows:* Output Code with one function (e.g. `steerCar(direction)`) containing the `carX`/`style.left` update, called from both the `keydown` handler's ArrowLeft/ArrowRight branches AND a `click` listener on each button — plus the two `<button>` elements actually created via `document.createElement` and appended to the page (this session has no separate HTML file to edit, so the buttons must be built in game.js itself). (An optional "🤖 Generate Code" button can fill this in as a quick in-platform check; "Copy Prompt" + a real AI tool is still the primary path.)
    - *Why:* Reusing — not redeclaring — the student's existing Session 4 state is still required, but the new skill being graded is recognizing that "two triggers, one action" calls for a shared function — something no S5 exercise asked for.
 
 3. **Explain the Code**
