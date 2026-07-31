@@ -10984,7 +10984,11 @@ export default function App() {
                                               });
                                               const data = await res.json();
                                               if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
-                                              setEditingCodeOutput(data.code);
+                                              // Chained sessions (see PROJECT_TASKS[id].chainFrom) seed this box
+                                              // with the full prior session's code on Initialize — appending here
+                                              // (instead of replacing) keeps that base code intact, since the new
+                                              // snippet is written assuming it already exists (e.g. LANE_WIDTH).
+                                              setEditingCodeOutput(prev => (prev && prev.trim() ? `${prev}\n\n${data.code}` : data.code));
                                             } catch (err) {
                                               setProjectTaskAuditResult({ pass: false, error: `Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` });
                                             } finally {
