@@ -2986,7 +2986,7 @@ const S5_EXERCISES = [
   {
     num: 4,
     title: "Exercise 5.4: Pause with Spacebar",
-    problem: "This sandbox already has a hidden overlay element (id restart-panel) built for showing a message over the track — right now it's hidden and its text says 'GAME OVER, Press Space to Restart.'",
+    problem: "This sandbox already has a hidden overlay element (id restart-panel) built for showing a message over the track — right now it's hidden and its text says 'GAME OVER, Press Space to Restart.' It's hidden by being given a CSS class called 'hidden' (not by an inline style) — setting the element's own display style directly won't override that class, so the reveal has to defeat the class itself.",
     instruction: "Goal: make pressing the Spacebar reveal that overlay showing a 'Paused' message instead. 1) Plan: in your own words, what needs to change about that element when Space is pressed — its visibility, its text, or both? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: press Space in the preview and describe what appears.",
     planPlaceholder: "What needs to change about the overlay element when Space is pressed — visibility, text, or both?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
@@ -3177,615 +3177,267 @@ const S8_EXERCISES = [
   {
     num: 1,
     title: "Exercise 8.1: Decomposing & Requesting the Render Function",
-    problem: "One giant block that does everything is hard to fix; splitting it into named functions — one to render, one to move left, one to move right — gives each piece a single, testable job.",
-    instruction: "1) Plan: name the single-purpose pieces to split the steering script into. 2) Prompt: ask the AI for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px' — paste its real code into Output Code. 3) Explain: how many parameters does updatePlayerPosition() take, and why does it need none?",
+    problem: "One giant block that does everything is hard to fix; splitting it into named functions — one to render, one to move left, one to move right — gives each piece a single, testable job. This sandbox is DOM-based, not canvas-based — there's no canvas element here. Since this Output Code box runs standalone, also have the AI call the new function once right after defining it, so you can confirm it actually moves the car in the Preview.",
+    instruction: "Goal: split out a single-purpose render function. 1) Plan: name the single-purpose pieces to split the steering script into. 2) Prompt: ask the AI for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px' — paste its real code into Output Code. 3) Explain: how many parameters does updatePlayerPosition() take, and why does it need none?",
     planPlaceholder: "Name the pieces to split into: one to update position, one to move left, one to move right.",
-    promptPlaceholder: "Write the prompt asking for function updatePlayerPosition() that sets #player-car style.left to carX + 'px'.",
+    promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('function') && p.includes('updateplayerposition') && p.includes('style.left');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('function') && clean.includes('updateplayerposition') && clean.includes('style.left');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('0') && (e.includes('carx') || e.includes('shared') || e.includes('global'));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'function', 'updatePlayerPosition', and 'style.left'.",
-      code: "Needs function updatePlayerPosition() writing carX to #player-car's style.left.",
-      explain: "Say it takes 0 parameters because it just reads the shared carX variable."
-    }
+    expectedConcepts: "updatePlayerPosition() should be a function taking 0 parameters, since it just reads the already-shared carX variable and writes it to #player-car's style.left. The explanation should correctly say it needs 0 parameters because carX is accessible without being passed in. Don't require the literal function name or exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 8.2: The Scope Access Violation Bug",
     problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'. A variable declared inside a function is local — for two functions to share carX, it must be declared once outside both.`,
-    instruction: "1) Plan: explain why declaring carX inside moveLeft() breaks updatePlayerPosition()'s access to it. 2) Prompt: ask the AI to move the carX declaration outside both functions so they can share it — paste the fixed code into Output Code. 3) Explain: what's the difference between a local variable and a shared/outer-scope variable?",
+    instruction: "Goal: fix the scope bug so both functions can read carX. 1) Plan: explain why declaring carX inside moveLeft() breaks updatePlayerPosition()'s access to it. 2) Prompt: ask the AI to move the carX declaration outside both functions so they can share it — paste the fixed code into Output Code. 3) Explain: what's the difference between a local variable and a shared/outer-scope variable?",
     planPlaceholder: "Why can't updatePlayerPosition() read a carX that was declared inside moveLeft()?",
-    promptPlaceholder: "Write the prompt asking the AI to move 'let carX = 165;' outside of moveLeft() so both functions can share it.",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('carx') && (p.includes('scope') || p.includes('share') || p.includes('outside'));
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = /letcarX=165;.*functionmoveleft\(\)\{/i.test(clean) && !/functionmoveleft\(\)\{letcarx/i.test(clean);
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('local') && (e.includes('shar') || e.includes('outer') || e.includes('global'));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'carX' and 'scope' or 'share'.",
-      code: "Needs 'let carX = 165;' declared BEFORE both function declarations.",
-      explain: "Contrast local (only visible inside one function) vs shared/outer scope."
-    }
+    expectedConcepts: "carX must be declared once, outside both moveLeft() and updatePlayerPosition(), so both functions read/write the same shared variable — a variable declared inside one function is local to that function only. The explanation should correctly contrast local scope (visible only inside its own function) with shared/outer scope. Don't require the literal 'let carX = 165;' or exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 8.3: Wiring moveLeft() to the Handler",
-    problem: "Once moveLeft() owns the boundary-check logic, the handler just calls it by name — same behavior, but the logic lives in one place instead of being copied into the listener.",
-    instruction: "1) Plan: plan replacing the inline ArrowLeft logic with a function call. 2) Prompt: ask the AI to rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() — paste its real code into Output Code. 3) Explain: what's the benefit of calling a named function here instead of repeating the logic inline?",
+    problem: "Once moveLeft() owns the boundary-check logic, the handler just calls it by name — same behavior, but the logic lives in one place instead of being copied into the listener. Since this Output Code box is tested on its own (not chained to Exercise 8.2's code), ask for the COMPLETE keydown listener — not just the ArrowLeft line — plus a working moveLeft() definition, so the snippet runs standalone without errors.",
+    instruction: "Goal: wire the ArrowLeft branch to call moveLeft() instead of repeating its logic. 1) Plan: plan replacing the inline ArrowLeft logic with a function call. 2) Prompt: ask the AI to rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() — paste its real code into Output Code. 3) Explain: what's the benefit of calling a named function here instead of repeating the logic inline?",
     planPlaceholder: "Plan: instead of repeating the boundary-check logic inline, what should the ArrowLeft branch do?",
-    promptPlaceholder: "Write the prompt asking for the ArrowLeft branch to simply call moveLeft() instead of repeating its logic.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('arrowleft') && p.includes('moveleft');
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('ArrowLeft') && clean.includes('moveLeft()');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('reuse') || e.includes('one place') || e.includes('duplicat') || e.includes('fix') || e.includes('maintain');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'ArrowLeft' and 'moveLeft'.",
-      code: "Needs the ArrowLeft branch calling moveLeft().",
-      explain: "Say it avoids duplicating logic — a fix only needs to happen in one place."
-    }
+    expectedConcepts: "The ArrowLeft branch of the keydown handler should call moveLeft() by name instead of repeating the boundary-check logic inline — same behavior, but the logic now lives in one reusable place. The explanation should identify that a future fix only needs to happen once, not everywhere the logic was duplicated. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 8.4: Requesting moveLeft() and moveRight()",
-    problem: "Each function clamps carX to its own boundary, then calls updatePlayerPosition() — reusing the shared renderer instead of each writing its own style.left line.",
-    instruction: "1) Plan: plan the moveRight() mirror function for the right lane. 2) Prompt: ask the AI for both moveLeft() and moveRight(), each clamping carX and calling updatePlayerPosition() — paste its real code into Output Code and run it. 3) Explain: if a bug is found in the boundary-clamp logic, how many function bodies need fixing if both call a shared clamp helper?",
+    problem: "Each function clamps carX to its own boundary, then calls updatePlayerPosition() — reusing the shared renderer instead of each writing its own style.left line. Since updatePlayerPosition() isn't defined in this standalone snippet, also include a working definition of it (matching Exercise 8.1: it sets #player-car style.left to carX + 'px'), and call moveLeft() once so you can see the effect in the Preview.",
+    instruction: "Goal: build the moveRight() mirror function alongside moveLeft(). 1) Plan: plan the moveRight() mirror function for the right lane. 2) Prompt: ask the AI for both moveLeft() and moveRight(), each clamping carX and calling updatePlayerPosition() — paste its real code into Output Code and run it. 3) Explain: if a bug is found in the boundary-clamp logic, how many function bodies need fixing if both call a shared clamp helper?",
     planPlaceholder: "Plan moveRight(): which boundary (295), and what does it call afterward (updatePlayerPosition)?",
-    promptPlaceholder: "Write the prompt asking for moveLeft() and moveRight(), each clamping carX to its boundary and calling updatePlayerPosition().",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('moveleft') && p.includes('moveright') && p.includes('updateplayerposition');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('moveleft') && clean.includes('moveright') && clean.includes('updateplayerposition');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('1') || e.includes('one');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'moveLeft', 'moveRight', and 'updatePlayerPosition'.",
-      code: "Needs both moveLeft() and moveRight(), each calling updatePlayerPosition().",
-      explain: "Say only 1 function body needs the fix if both share a clamp helper."
-    }
-  },
-  {
-    num: 5,
-    title: "Exercise 8.5: The Duplicate Render Call & Complete Controller",
-    problem: `Bug: moveLeft() calls updatePlayerPosition() twice by accident, wasting a render cycle every keypress. Combine the fix with everything from this session into the final modular controller.`,
-    instruction: "1) Plan: explain what's wasteful about calling updatePlayerPosition() twice per move. 2) Prompt: ask the AI for the COMPLETE modular controller — updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler calling them, with no duplicate render calls — paste its real code into Output Code and run it. 3) Explain: confirm exactly how many times updatePlayerPosition() should run per keypress.",
-    planPlaceholder: "What's wasteful about calling updatePlayerPosition() twice in a row for one keypress?",
-    promptPlaceholder: "Write the prompt asking for the COMPLETE controller: updatePlayerPosition(), moveLeft(), moveRight(), and a keydown handler — no duplicate render calls.",
-    outputCodePlaceholder: "Paste the AI's complete controller code here.",
-    runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('updateplayerposition') && p.includes('moveleft') && p.includes('moveright') && p.includes('keydown');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('function') && clean.includes('updateplayerposition') && clean.includes('moveleft') && clean.includes('moveright') && clean.includes('addeventlistener') && clean.includes('keydown');
-      const matches = outputCode.match(/updatePlayerPosition\(\)/g) || [];
-      const noDuplicate = matches.length <= 3; // one def reference is fine; guard against an obviously doubled call inside one function
-      const e = explain.toLowerCase();
-      const explainOk = noDuplicate && (e.includes('once') || e.includes('1') || e.includes('one time'));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention all of: updatePlayerPosition, moveLeft, moveRight, keydown.",
-      code: "Needs all four pieces, with updatePlayerPosition() called only once per move.",
-      explain: "Say it should run exactly once per keypress/move."
-    }
+    expectedConcepts: "moveLeft() and moveRight() should mirror each other structurally — each clamping carX to its own boundary (35 left / 295 right), then calling the shared updatePlayerPosition() renderer instead of writing its own style.left line. The explanation should correctly say only 1 function body needs fixing if both share a clamp helper. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   }
+  // Note (2026-08-05): a 5th "combine everything into the final controller" capstone
+  // exercise used to live here, but it duplicated this session's Project Task (Lab 8),
+  // which already asks for more than the exercises (grouping the three functions under
+  // one namespaced Controller object) — see PROJECT_TASKS['l1-s8'] in projectTasksData.js.
 ];
 
 const S9_EXERCISES = [
   {
     num: 1,
     title: "Exercise 9.1: The Game Loop Lifecycle & Recursive Loop",
-    problem: "A game is an animation: each frame updates the state, redraws, then schedules the next frame — a loop that calls itself ~60 times a second via requestAnimationFrame.",
-    instruction: "1) Plan: describe the repeating frame cycle in plain language. 2) Prompt: ask the AI for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame — paste its real code into Output Code. 3) Explain: what does calling requestAnimationFrame(gameLoop) at the end actually do?",
+    problem: "A game is an animation: each frame updates the state, redraws, then schedules the next frame — a loop that calls itself ~60 times a second via requestAnimationFrame. obstacleY isn't a pre-existing global in this sandbox — have the AI declare and initialize it too (starting at -100, matching the #obstacle element's own default position), and call gameLoop() once at the end so you can watch it animate in the Preview.",
+    instruction: "Goal: understand and build the repeating frame cycle. 1) Plan: describe the repeating frame cycle in plain language. 2) Prompt: ask the AI for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame — paste its real code into Output Code and run it. 3) Explain: what does calling requestAnimationFrame(gameLoop) at the end actually do?",
     planPlaceholder: "Describe the frame cycle: each frame, update the state, redraw, then...?",
-    promptPlaceholder: "Write the prompt asking for function gameLoop() that moves the obstacle then calls requestAnimationFrame(gameLoop).",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('function') && p.includes('gameloop') && p.includes('requestanimationframe');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('function') && clean.includes('gameloop') && clean.includes('requestanimationframe');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('schedul') || e.includes('again') || e.includes('next frame') || e.includes('repeat');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'function', 'gameLoop', and 'requestAnimationFrame'.",
-      code: "Needs function gameLoop() calling requestAnimationFrame(gameLoop).",
-      explain: "Say it schedules gameLoop to run again on the next frame."
-    }
+    expectedConcepts: "gameLoop() should move the obstacle (updating its own obstacleY and the #obstacle element's position), then call requestAnimationFrame(gameLoop) to schedule itself again next frame. Explanation should correctly say requestAnimationFrame schedules gameLoop to run again on the next frame, creating the animation loop. Don't require literal code or the exact variable name in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 9.2: The Unstoppable Speed Bug",
-    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends. Without a guard that returns early when gameActive is false, Game Over becomes impossible.",
-    instruction: "1) Plan: explain why a missing gameActive check makes the loop unstoppable. 2) Prompt: ask the AI to add a guard at the top of gameLoop() that returns immediately if gameActive is false, plus a console.log(\"Loop halted\") right before the return — paste its real code into Output Code. 3) Explain: confirm what happens to the loop once gameActive becomes false.",
+    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends. Without a guard that returns early when gameActive is false, Game Over becomes impossible. Since this Output Code box is tested on its own, ask for the complete gameLoop() function — not just the guard line — plus a gameActive variable and obstacleY (there's a single #obstacle element, not an array), and a call to start the loop, so the snippet runs standalone.",
+    instruction: "Goal: add the missing gameActive guard. 1) Plan: explain why a missing gameActive check makes the loop unstoppable. 2) Prompt: ask the AI to add a guard at the top of gameLoop() that returns immediately if gameActive is false, plus a console.log(\"Loop halted\") right before the return — paste its real code into Output Code and run it. 3) Explain: confirm what happens to the loop once gameActive becomes false.",
     planPlaceholder: "Why does gameLoop() never stop without a gameActive check?",
-    promptPlaceholder: 'Write the prompt asking for: if (!gameActive) { console.log("Loop halted"); return; } at the top of gameLoop().',
-    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
+    outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('gameactive') && (p.includes('return') || p.includes('halt') || p.includes('stop'));
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('if(!gameActive)') && clean.includes('return') && clean.toLowerCase().includes('console.log');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('stop') || e.includes('halt') || e.includes('exit') || e.includes("doesn't run");
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'gameActive' and 'return'/'halt'.",
-      code: "Needs if (!gameActive) { ...console.log... return; } as the guard.",
-      explain: "Say the loop exits/halts and requestAnimationFrame never gets called again."
-    }
+    expectedConcepts: "gameLoop() needs a guard at its top — if gameActive is false, log something like 'Loop halted' and return immediately, before doing anything else or scheduling the next frame. Explanation should correctly say the loop exits/halts and requestAnimationFrame never gets called again once gameActive is false. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 9.3: Obstacle Movement & Reset",
-    problem: "Each frame adds speed to obstacleY to scroll it down; once it passes the bottom (500), it wraps back to the top (-100) and the score goes up — the illusion of endless oncoming traffic.",
-    instruction: "1) Plan: plan the scroll-and-wrap behavior (down, wrap at 500 to -100, score += 10). 2) Prompt: ask the AI for a function moveObstacles() implementing this — paste its real code into Output Code and run it. 3) Explain: if obstacleY is 490 and speed is 5, what is obstacleY right after this line runs (before any reset check)?",
+    problem: "Each frame adds speed to obstacleY to scroll it down; once it passes the bottom (500), it wraps back to the top (-100) and the score goes up — the illusion of endless oncoming traffic. obstacleY and score aren't pre-existing globals in this sandbox — have the AI declare and initialize both in this same snippet, and log obstacleY after calling moveObstacles() once so you can confirm it changed.",
+    instruction: "Goal: build the scroll-and-wrap behavior. 1) Plan: plan the scroll-and-wrap behavior (down, wrap at 500 to -100, score += 10). 2) Prompt: ask the AI for a function moveObstacles() implementing this — paste its real code into Output Code and run it. 3) Explain: if obstacleY is 490 and speed is 5, what is obstacleY right after this line runs (before any reset check)?",
     planPlaceholder: "Plan: obstacleY += speed each frame; what happens once it passes 500?",
-    promptPlaceholder: "Write the prompt asking for moveObstacles(): obstacleY += speed, reset to -100 and score += 10 once obstacleY > 500.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('moveobstacles') && p.includes('obstacley') && p.includes('500') && p.includes('score');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('obstacley') && clean.includes('500') && clean.includes('-100') && clean.includes('score');
-      const e = explain.replace(/[^0-9]/g, '');
-      const explainOk = e.includes('495');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'moveObstacles', 'obstacleY', '500', and 'score'.",
-      code: "Needs obstacleY updated, a 500/-100 wrap, and a score increment.",
-      explain: "Compute 490 + 5 = 495."
-    }
+    expectedConcepts: "moveObstacles() should add speed to obstacleY each call, and once obstacleY passes 500, reset it to -100 and add 10 to score. Explanation should correctly compute 490 + 5 = 495 for the given scenario. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 9.4: The Frozen Scoreboard Bug",
-    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen. The score bump must live inside the same reset block.`,
-    instruction: "1) Plan: explain why resetting obstacleY alone doesn't increase the score. 2) Prompt: ask the AI to add the missing score increment inside the reset block — paste its real code into Output Code. 3) Explain: confirm both obstacleY and score are handled together now.",
+    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen. The score bump must live inside the same reset block. Since this Output Code box is tested on its own, ask for the complete moveObstacles() function (with the reset block AND the fix) — not just the missing line — plus obstacleY/score declared and initialized, so the snippet runs standalone and you can watch score actually increment.`,
+    instruction: "Goal: fix the missing score increment. 1) Plan: explain why resetting obstacleY alone doesn't increase the score. 2) Prompt: ask the AI to add the missing score increment inside the reset block — paste its real code into Output Code and run it. 3) Explain: confirm both obstacleY and score are handled together now.",
     planPlaceholder: "Why doesn't resetting obstacleY alone make the score go up?",
-    promptPlaceholder: "Write the prompt asking the AI to add the missing 'score += 10;' inside the obstacleY > 500 reset block.",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('score') && (p.includes('reset') || p.includes('500'));
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('obstacleY>500') && (clean.includes('score+=10') || clean.includes('score+=1'));
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('score') && e.includes('obstacley');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'score' and the reset condition.",
-      code: "Needs obstacleY > 500 with score += 10 inside the same block.",
-      explain: "Confirm both the reset AND the score bump happen together."
-    }
-  },
-  {
-    num: 5,
-    title: "Exercise 9.5: The Complete Animation Engine",
-    problem: "Combine every piece from this session into the complete animation engine — the beating heart that makes the road scroll, the score climb, and the game stoppable.",
-    instruction: "1) Plan: list every piece the engine needs (gameLoop, gameActive gate, moveObstacles, reset, score). 2) Prompt: ask the AI for the complete engine — paste its real code into Output Code and run it. 3) Explain: walk through what happens on a single frame, in order.",
-    planPlaceholder: "List every piece: gameLoop(), the gameActive gate, moveObstacles(), the obstacleY reset, the score increment.",
-    promptPlaceholder: "Write the prompt asking for the COMPLETE engine: gameLoop() with gameActive gate, requestAnimationFrame, and moveObstacles() with reset+score.",
-    outputCodePlaceholder: "Paste the AI's complete engine code here.",
-    runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('gameloop') && p.includes('gameactive') && p.includes('moveobstacles');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('gameloop') && clean.includes('gameactive') && clean.includes('requestanimationframe') && clean.includes('moveobstacles') && clean.includes('obstacley') && clean.includes('score');
-      const explainOk = explain.trim().length > 20;
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'gameLoop', 'gameActive', and 'moveObstacles'.",
-      code: "Needs gameLoop() gated on gameActive, calling moveObstacles(), which updates obstacleY/score.",
-      explain: "Walk through: gate check -> move obstacle -> maybe reset+score -> schedule next frame."
-    }
+    expectedConcepts: "The score increment must live inside the same reset block as the obstacleY > 500 check — both the position reset AND the score bump happen together, not one without the other. Explanation should correctly confirm both are now handled in the same block. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   }
+  // Note (2026-08-05): a 5th "combine everything into the complete animation engine"
+  // capstone exercise used to live here, but it duplicated this session's Project Task
+  // (Lab 9), which already asks for more than the exercises (animating the student's own
+  // real #obstacle element from Session 2-3, using their own track height instead of a
+  // fixed 500) — see PROJECT_TASKS['l1-s9'] in projectTasksData.js.
 ];
 
 const S10_EXERCISES = [
   {
     num: 1,
     title: "Exercise 10.1: The Overlap Condition & Requesting checkCollision()",
-    problem: "Two rectangles overlap only when they overlap on BOTH axes at once — so the check is four comparisons joined by AND: right/left on the X axis, top/bottom on the Y axis.",
-    instruction: "1) Plan: describe when two boxes overlap (both axes at once). 2) Prompt: ask the AI for a function checkCollision(rect1, rect2) that returns true if the x/y/width/height bounds overlap — paste its real code into Output Code. 3) Explain: why does the check need width/height, not just x/y center coordinates?",
+    problem: "Two rectangles overlap only when they overlap on BOTH axes at once — so the check is four comparisons joined by AND: right/left on the X axis, top/bottom on the Y axis. Call the function once with two example rectangles and log the result, so you can confirm it works in the Preview.",
+    instruction: "Goal: build the AABB overlap check. 1) Plan: describe when two boxes overlap (both axes at once). 2) Prompt: ask the AI for a function checkCollision(rect1, rect2) that returns true if the x/y/width/height bounds overlap — paste its real code into Output Code and run it. 3) Explain: why does the check need width/height, not just x/y center coordinates?",
     planPlaceholder: "Describe when two boxes overlap: right vs left AND top vs bottom.",
-    promptPlaceholder: "Write the prompt asking for function checkCollision(rect1, rect2) using x/y/width/height.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('checkcollision') && p.includes('width') && p.includes('height');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('checkcollision') && clean.includes('width') && clean.includes('height');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('size') || e.includes('width') || e.includes('height') || e.includes('align');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'checkCollision', 'width', and 'height'.",
-      code: "Needs a checkCollision(rect1, rect2) function using width/height.",
-      explain: "Say exact-x-equality almost never happens; comparing box edges catches real overlaps."
-    }
+    expectedConcepts: "checkCollision(rect1, rect2) should return true only when both the X-axis and Y-axis ranges overlap, using each rect's width/height (not just x/y center points) — four comparisons joined by AND. Explanation should correctly say exact-x-equality almost never happens, so comparing box edges (accounting for size) is what catches real overlaps. Don't require literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 10.2: The Ghost Car Bug",
     problem: `Bug: the tutor flipped one comparison operator, so the obstacle drives right through the player car with no crash registered. Flip even one of the 4 AABB comparisons and the combined AND can never be true.`,
-    instruction: "1) Plan: explain why a single flipped comparison makes collisions never fire. 2) Prompt: ask the AI to fix the flipped comparison in checkCollision() so it correctly checks rect1.x + rect1.width > rect2.x — paste the fixed code into Output Code. 3) Explain: confirm which direction that comparison should point and why.",
+    instruction: "Goal: fix the flipped comparison. 1) Plan: explain why a single flipped comparison makes collisions never fire. 2) Prompt: ask the AI to fix the flipped comparison in checkCollision() so it correctly checks rect1.x + rect1.width > rect2.x — paste the fixed code into Output Code. 3) Explain: confirm which direction that comparison should point and why.",
     planPlaceholder: "Why does flipping one of the four AABB comparisons make the AND condition never true?",
-    promptPlaceholder: "Write the prompt asking the AI to fix the flipped comparison so rect1.x + rect1.width > rect2.x (not <).",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed checkCollision() code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('flip') || p.includes('checkcollision') || p.includes('comparison');
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('rect1.x+rect1.width>rect2.x');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('>') || e.includes('greater');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'checkCollision' and the flipped comparison.",
-      code: "Needs rect1.x + rect1.width > rect2.x (with '>', not '<').",
-      explain: "Say the comparison must use '>' (greater than) to detect real overlap."
-    }
+    expectedConcepts: "The comparison rect1.x + rect1.width > rect2.x must use '>' (greater than), not the flipped '<' — a flipped comparison makes the combined AND condition never true, so collisions never register. Explanation should correctly confirm the comparison needs to point toward '>' and why. Don't require the exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 10.3: The Axis Swap Bug",
     problem: `Bug: the first condition accidentally compares rect1.y (not rect1.x) against rect2's horizontal bound, swapping the X and Y axes — nonsense geometry that makes crashes register in the wrong place or not at all.`,
-    instruction: "1) Plan: explain why comparing an x value against a y bound is nonsense geometry. 2) Prompt: ask the AI to fix the axis-swap bug so the first condition correctly compares rect1.x — paste the fixed code into Output Code. 3) Explain: confirm x is compared with x, and y with y throughout the function.",
+    instruction: "Goal: fix the axis-swap bug. 1) Plan: explain why comparing an x value against a y bound is nonsense geometry. 2) Prompt: ask the AI to fix the axis-swap bug so the first condition correctly compares rect1.x — paste the fixed code into Output Code. 3) Explain: confirm x is compared with x, and y with y throughout the function.",
     planPlaceholder: "Why does comparing rect1.y against a horizontal (x) bound break the collision check?",
-    promptPlaceholder: "Write the prompt asking the AI to fix the axis-swap bug: rect1.y should be rect1.x in the first condition.",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed checkCollision() code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('axis') || p.includes('rect1.x') || p.includes('rect1.y');
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('rect1.x<rect2.x+rect2.width');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('x') && e.includes('y');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'axis' or the rect1.x/rect1.y swap.",
-      code: "Needs rect1.x < rect2.x + rect2.width (not rect1.y).",
-      explain: "Confirm every x-comparison uses x values, every y-comparison uses y values."
-    }
+    expectedConcepts: "The first condition must compare rect1.x (not rect1.y) against rect2's horizontal bound — mixing an x value into a y comparison is nonsense geometry that breaks detection. Explanation should correctly confirm every x-comparison uses x values and every y-comparison uses y values throughout the function. Don't require the exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 10.4: Wiring Collision into the Loop",
-    problem: "Detecting a crash is useless unless something happens: calling checkCollision() inside the loop and setting gameActive = false on a hit is what turns 'they touched' into 'game over'.",
-    instruction: "1) Plan: plan what should happen when a collision is detected. 2) Prompt: ask the AI to add a call to checkCollision(player, obstacle) inside gameLoop() that sets gameActive to false and logs 'Collision detected!' — paste its real code into Output Code. 3) Explain: if two box edges touch exactly (no real overlap), does a strict '>' comparison register a hit?",
+    problem: "Detecting a crash is useless unless something happens: calling checkCollision() inside the loop and setting gameActive = false on a hit is what turns 'they touched' into 'game over'. Since this Output Code box is tested on its own, ask for a working checkCollision() definition, example player/obstacle rect objects that actually overlap, a gameActive variable, and a call to gameLoop() once, so you can see it detect the collision in the Preview.",
+    instruction: "Goal: wire collision detection into the game loop. 1) Plan: plan what should happen when a collision is detected. 2) Prompt: ask the AI to add a call to checkCollision(player, obstacle) inside gameLoop() that sets gameActive to false and logs 'Collision detected!' — paste its real code into Output Code and run it. 3) Explain: if two box edges touch exactly (no real overlap), does a strict '>' comparison register a hit?",
     planPlaceholder: "What should happen when checkCollision() returns true? (hint: stop the game, log it)",
-    promptPlaceholder: "Write the prompt asking to wire checkCollision(player, obstacle) into gameLoop(), setting gameActive = false and logging on a hit.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('checkcollision') && p.includes('gameactive');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('checkcollision') && clean.includes('gameactive=false') && clean.includes('console.log');
-      const e = explain.toUpperCase();
-      const explainOk = e.includes('NO');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'checkCollision' and 'gameActive'.",
-      code: "Needs checkCollision(player, obstacle) setting gameActive = false and logging.",
-      explain: "Answer NO — touching exactly isn't 'greater than', so a strict '>' doesn't count it."
-    }
-  },
-  {
-    num: 5,
-    title: "Exercise 10.5: The Complete Collision System",
-    problem: "Combine every piece from this session — real box dimensions, the fixed comparisons, and loop wiring — into the complete collision-detection system: the sensor that finally gives the racing game real stakes.",
-    instruction: "1) Plan: plan the exact box sizes (player 30x50, obstacle 25x40) and list every piece the system needs. 2) Prompt: ask the AI for the complete system — checkCollision(), the rect objects, and the loop wiring — paste its real code into Output Code and run it. 3) Explain: walk through how a collision is detected and what happens next.",
-    planPlaceholder: "Plan the box sizes (player 30x50, obstacle 25x40) and list every piece: checkCollision(), rect objects, loop wiring.",
-    promptPlaceholder: "Write the prompt asking for the COMPLETE collision system: checkCollision(), playerRect/obsRect objects, and gameLoop() wiring.",
-    outputCodePlaceholder: "Paste the AI's complete collision system code here.",
-    runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('checkcollision') && (p.includes('rect') || p.includes('carx') || p.includes('obstacley'));
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('checkcollision') && clean.includes('gameactive=false') && clean.includes('width') && clean.includes('height');
-      const explainOk = explain.trim().length > 20;
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'checkCollision' and the rect objects (carX/obstacleY).",
-      code: "Needs a full checkCollision() plus gameActive = false wired into the loop.",
-      explain: "Walk through: rects built each frame -> checkCollision() -> gameActive set false on a hit."
-    }
+    expectedConcepts: "gameLoop() should call checkCollision(player, obstacle), and on a hit set gameActive to false and log something like 'Collision detected!'. Explanation should correctly answer NO — touching exactly isn't 'greater than', so a strict '>' comparison does not register a hit at the exact boundary. Don't require the exact code in the plan/prompt prose — judge the reasoning."
   }
+  // Note (2026-08-05): a 5th "combine everything into the complete collision system"
+  // capstone exercise used to live here, but it duplicated this session's Project Task
+  // (Lab 10), which already asks for more than the exercises (spending a life per
+  // collision instead of ending the game immediately) — see PROJECT_TASKS['l1-s10'] in
+  // projectTasksData.js.
 ];
 
 const S11_EXERCISES = [
   {
     num: 1,
     title: "Exercise 11.1: The DOM Update Pipeline & Scoreboard Updater",
-    problem: "A variable changing in memory is invisible until you push it into the page: score changes should show on the scoreboard, and a crash should reveal the restart panel.",
-    instruction: "1) Plan: map each state change to what appears on screen. 2) Prompt: ask the AI for a function updateScoreboard() that sets '#score-val' textContent to match the score variable — paste its real code into Output Code. 3) Explain: why is textContent safer than innerHTML for this?",
+    problem: "A variable changing in memory is invisible until you push it into the page: score changes should show on the scoreboard, and a crash should reveal the restart panel. score isn't a pre-existing global in this sandbox — have the AI declare it too (e.g. starting at 0), and call updateScoreboard() once so you can see #score-val actually update in the Preview.",
+    instruction: "Goal: push score changes onto the visible scoreboard. 1) Plan: map each state change to what appears on screen. 2) Prompt: ask the AI for a function updateScoreboard() that sets '#score-val' textContent to match the score variable — paste its real code into Output Code and run it. 3) Explain: why is textContent safer than innerHTML for this?",
     planPlaceholder: "Map state changes to screen updates: score changes -> ?; a crash -> ?",
-    promptPlaceholder: "Write the prompt asking for function updateScoreboard() setting #score-val's textContent to the score variable.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('function') && p.includes('textcontent') && p.includes('score-val');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('textcontent') && clean.includes('score-val');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('script') || e.includes('inject') || e.includes('html') || e.includes('safe');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'function', 'textContent', and 'score-val'.",
-      code: "Needs #score-val's textContent set to score.",
-      explain: "Say innerHTML could run injected HTML/scripts; textContent treats it as plain text."
-    }
+    expectedConcepts: "updateScoreboard() should set #score-val's textContent to the score variable. Explanation should correctly say innerHTML could run injected HTML/scripts, while textContent treats the value as plain text, which is safer here. Don't require literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 11.2: The Negative Score Leak",
-    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5". A defensive clamp — if score < 0, snap it to 0 — keeps the display sensible no matter what the math does.`,
-    instruction: "1) Plan: explain why a negative score looks broken to players. 2) Prompt: ask the AI to add a clamp so score never goes below 0 before it's written to the DOM — paste its real code into Output Code. 3) Explain: confirm the clamp runs BEFORE the textContent write, not after.",
+    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5". A defensive clamp — if score < 0, snap it to 0 — keeps the display sensible no matter what the math does. Since this Output Code box is tested on its own, ask for score declared (starting negative, e.g. -5, to prove the clamp works) and the clamped result written to #score-val, so the snippet runs standalone and you can see the fix work.`,
+    instruction: "Goal: clamp score so it never displays negative. 1) Plan: explain why a negative score looks broken to players. 2) Prompt: ask the AI to add a clamp so score never goes below 0 before it's written to the DOM — paste its real code into Output Code and run it. 3) Explain: confirm the clamp runs BEFORE the textContent write, not after.",
     planPlaceholder: "Why does showing 'score: -5' look broken, even if the math technically produced it?",
-    promptPlaceholder: "Write the prompt asking the AI to add: if (score < 0) { score = 0; } before writing to the DOM.",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('negative') || p.includes('score<0') || p.includes('score < 0') || p.includes('clamp');
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('score<0') && clean.includes('score=0');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('before');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'negative' or 'clamp' for score.",
-      code: "Needs if (score < 0) { score = 0; }",
-      explain: "Confirm the clamp happens BEFORE the DOM write."
-    }
+    expectedConcepts: "If score < 0, it should be reset to 0 BEFORE that value is written to the DOM — a defensive clamp that keeps the display sensible no matter what the math produced. Explanation should correctly confirm the clamp happens before the DOM write, not after. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 11.3: Revealing the Restart Panel",
     problem: "The restart panel already exists in the HTML but is hidden by a 'hidden' class; removing that class with classList.remove is what makes it appear.",
-    instruction: "1) Plan: plan the full restart sequence (Space -> reset score, reset car, hide panel, gameActive = true). 2) Prompt: ask the AI for a function triggerGameOverScreen() that removes the 'hidden' class from '#restart-panel' — paste its real code into Output Code. 3) Explain: what happens if you forget to remove that class after a restart?",
+    instruction: "Goal: reveal the restart panel correctly. 1) Plan: plan the full restart sequence (Space -> reset score, reset car, hide panel, gameActive = true). 2) Prompt: ask the AI for a function triggerGameOverScreen() that removes the 'hidden' class from '#restart-panel' — paste its real code into Output Code and run it. 3) Explain: what happens if you forget to remove that class after a restart?",
     planPlaceholder: "Plan the restart sequence: press Space -> reset score -> reset car -> hide panel -> gameActive = true.",
-    promptPlaceholder: "Write the prompt asking for function triggerGameOverScreen() removing the 'hidden' class from #restart-panel.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('restart-panel') && p.includes('hidden');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('restart-panel') && clean.includes('remove') && clean.includes('hidden');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('stay') && e.includes('hid');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'restart-panel' and 'hidden'.",
-      code: "Needs classList.remove(\"hidden\") on #restart-panel.",
-      explain: "Say the panel stays hidden (display: none keeps applying) if the class isn't removed."
-    }
+    expectedConcepts: "triggerGameOverScreen() should remove the 'hidden' class from #restart-panel (classList.remove), not just set an inline style — the panel is hidden via that CSS class, so the class itself has to be defeated. Explanation should correctly say the panel stays hidden (display: none keeps applying) if the class isn't removed. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 11.4: The Frozen Restart Bug",
-    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true — the game stays frozen. Without gameActive = true, requestAnimationFrame is never re-armed.`,
-    instruction: "1) Plan: explain why the screen can look reset while the game loop stays frozen. 2) Prompt: ask the AI to add the missing gameActive = true inside the restart handler — paste the fixed code into Output Code. 3) Explain: why must gameActive specifically be set back to true for the game to actually resume?",
+    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true — the game stays frozen. Without gameActive = true, requestAnimationFrame is never re-armed. Since this Output Code box is tested on its own, ask for the complete Space-key restart handler — not just the missing line — including gameActive and score declared, and using classList on the real #restart-panel element (there is no separate 'game-over-panel' element — it's called restart-panel), so the snippet runs standalone without errors.`,
+    instruction: "Goal: fix the frozen restart. 1) Plan: explain why the screen can look reset while the game loop stays frozen. 2) Prompt: ask the AI to add the missing gameActive = true inside the restart handler — paste the fixed code into Output Code and run it. 3) Explain: why must gameActive specifically be set back to true for the game to actually resume?",
     planPlaceholder: "Why can the screen LOOK reset (score=0, panel hidden) while the game is still frozen?",
-    promptPlaceholder: "Write the prompt asking the AI to add the missing 'gameActive = true;' inside the Space-key restart handler.",
+    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('gameactive');
-      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
-      const codeOk = clean.includes('gameactive=true');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('gameactive') || e.includes('loop') || e.includes('animationframe');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'gameActive'.",
-      code: "Needs gameActive = true; inside the restart handler.",
-      explain: "Say gameLoop()'s gate reads gameActive — it must be true for the loop to run again."
-    }
-  },
-  {
-    num: 5,
-    title: "Exercise 11.5: The Complete HUD & Restart System",
-    problem: "Combine every piece from this session — live score updates, the game-over panel, and Space-to-restart — into the loop that turns a single run into a replayable game.",
-    instruction: "1) Plan: list every piece the complete system needs. 2) Prompt: ask the AI for the complete code — updateScoreboard() (with the negative-score guard), triggerGameOverScreen(), and a Space-key restart handler — paste its real code into Output Code and run it. 3) Explain: walk through the full restart sequence, in order.",
-    planPlaceholder: "List every piece: updateScoreboard() (with clamp), triggerGameOverScreen(), and the Space-key restart handler.",
-    promptPlaceholder: "Write the prompt asking for the COMPLETE system: updateScoreboard(), triggerGameOverScreen(), and a Space-key restart handler.",
-    outputCodePlaceholder: "Paste the AI's complete HUD & restart code here.",
-    runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('updatescoreboard') && p.includes('triggergameoverscreen');
-      const clean = outputCode.replace(/\s+/g, '').replace(/'/g, '"').toLowerCase();
-      // The real DOM value for the spacebar key is a single space character (" "), not the
-      // word "Space" — after whitespace-stripping and quote-normalizing, a correct
-      // `key === " "` (or `' '`) check collapses to `.key===""`.
-      const codeOk = clean.includes('score-val') && clean.includes('restart-panel') && clean.includes('gameactive') && clean.includes('.key===""');
-      const explainOk = explain.trim().length > 20;
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'updateScoreboard' and 'triggerGameOverScreen'.",
-      code: 'Needs score-val, restart-panel, gameActive, and a Space-key (event.key === " ") check.',
-      explain: "Walk through: collision -> gameActive false -> panel shows -> Space -> reset -> gameActive true."
-    }
+    expectedConcepts: "The Space-key restart handler must set gameActive = true after resetting score and re-hiding #restart-panel — without it, gameLoop()'s gate never re-arms requestAnimationFrame. Explanation should correctly say gameActive specifically gates whether the loop keeps scheduling itself. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   }
+  // Note (2026-08-05): a 5th "combine everything into the complete HUD & restart system"
+  // capstone exercise used to live here, but it duplicated this session's Project Task
+  // (Lab 11), which already asks for more than the exercises (a lives readout alongside
+  // score, not score alone) — see PROJECT_TASKS['l1-s11'] in projectTasksData.js.
 ];
 
+// Note (2026-08-05): unlike S6-S11's dropped 5th "combine everything" capstone
+// (superseded by that session's Project Task), S12 keeps all 5 exercises — 12.5 is a
+// personal reflection + self-diagnostic across the WHOLE level, not a duplicate of
+// Project Task Lab 12's CONFIG-refactor + Complete Game assembly.
 const S12_EXERCISES = [
   {
     num: 1,
     title: "Exercise 12.1: The Configuration Object & Difficulty Scaling",
     problem: "Scattering magic numbers across the code makes them hard to find and change. A CONFIG object gathers every tunable value — starting speed, difficulty ramp, top speed — in one place.",
-    instruction: "1) Plan: plan the CONFIG object's fields. 2) Prompt: ask the AI for a difficulty-scaling function using CONFIG.difficultyMultiplier, clamped to CONFIG.maxSpeed — paste its real code into Output Code. 3) Explain: given CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 } and score = 50, what does startSpeed + score * difficultyMultiplier equal?",
+    instruction: "Goal: gather tunable values into a CONFIG object. 1) Plan: plan the CONFIG object's fields. 2) Prompt: ask the AI for a difficulty-scaling function using CONFIG.difficultyMultiplier, clamped to CONFIG.maxSpeed — paste its real code into Output Code. 3) Explain: given CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 } and score = 50, what does startSpeed + score * difficultyMultiplier equal?",
     planPlaceholder: "Plan CONFIG's fields: startSpeed, difficultyMultiplier, maxSpeed (and anything else tunable).",
-    promptPlaceholder: "Write the prompt asking for a function scaling speed with CONFIG.difficultyMultiplier, clamped to CONFIG.maxSpeed.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('config') && p.includes('speed') && (p.includes('clamp') || p.includes('max'));
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('config') && clean.includes('speed') && (clean.includes('math.min') || clean.includes('maxspeed'));
-      const e = explain.replace(/[^0-9]/g, '');
-      const explainOk = e.includes('10');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'CONFIG', 'speed', and 'clamp'/'max'.",
-      code: "Needs CONFIG referenced, with the result clamped to CONFIG.maxSpeed.",
-      explain: "Compute 5 + (50 * 0.1) = 10."
-    }
+    expectedConcepts: "A difficulty-scaling function should read from a CONFIG object (e.g. CONFIG.difficultyMultiplier, CONFIG.maxSpeed) rather than hardcoded numbers, clamping its result to CONFIG.maxSpeed. Explanation should correctly compute 5 + (50 * 0.1) = 10 for the given scenario. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 12.2: The Unbounded Speed Bug",
-    problem: "Bug: at very high scores, the computed speed exceeds CONFIG.maxSpeed, making the game unplayably fast. A ramp with no ceiling eventually breaks the game.",
-    instruction: "1) Plan: explain why the difficulty ramp needs a ceiling. 2) Prompt: ask the AI to add a Math.min clamp so speed never exceeds CONFIG.maxSpeed — paste its real code into Output Code. 3) Explain: confirm what value speed becomes once the raw formula exceeds CONFIG.maxSpeed.",
+    problem: "Bug: at very high scores, the computed speed exceeds CONFIG.maxSpeed, making the game unplayably fast. A ramp with no ceiling eventually breaks the game. Since this Output Code box is tested on its own, ask for CONFIG (with a maxSpeed field) and speed declared and initialized in this same snippet (starting above maxSpeed, to prove the clamp works), plus a log of the clamped result.",
+    instruction: "Goal: cap speed at CONFIG.maxSpeed. 1) Plan: explain why the difficulty ramp needs a ceiling. 2) Prompt: ask the AI to add a Math.min clamp so speed never exceeds CONFIG.maxSpeed — paste its real code into Output Code and run it. 3) Explain: confirm what value speed becomes once the raw formula exceeds CONFIG.maxSpeed.",
     planPlaceholder: "Why does an unlimited difficulty ramp eventually make the game unplayable?",
-    promptPlaceholder: "Write the prompt asking the AI to clamp speed with Math.min(speed, CONFIG.maxSpeed).",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('math.min') || p.includes('clamp') || p.includes('maxspeed');
-      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
-      const codeOk = clean.includes('math.min') && clean.includes('config.maxspeed');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('maxspeed') || e.includes('cap') || e.includes('clamp') || e.includes('ceiling');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'Math.min' or 'clamp' with 'maxSpeed'.",
-      code: "Needs Math.min(speed, CONFIG.maxSpeed).",
-      explain: "Say speed gets capped at CONFIG.maxSpeed, never higher."
-    }
+    expectedConcepts: "speed should be clamped with Math.min(speed, CONFIG.maxSpeed) so it never exceeds the configured ceiling. Explanation should correctly say speed gets capped at CONFIG.maxSpeed, never higher, once the raw formula exceeds it. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 12.3: Refactoring Magic Numbers",
-    problem: "The literal 35 and 295 boundary values from Session 6 become CONFIG.leftBound and CONFIG.rightBound — same behavior, but now every tunable number lives in one central object.",
-    instruction: "1) Plan: plan replacing the hardcoded 35/295 boundary numbers with CONFIG fields. 2) Prompt: ask the AI to rewrite the boundary guards using CONFIG.leftBound/CONFIG.rightBound instead of hardcoded numbers — paste its real code into Output Code. 3) Explain: why does pulling these into CONFIG make the game easier to maintain?",
+    problem: "The literal 35 and 295 boundary values from Session 6 become CONFIG.leftBound and CONFIG.rightBound — same behavior, but now every tunable number lives in one central object. Since this Output Code box is tested on its own, ask for CONFIG (with leftBound/rightBound fields) declared in this same snippet, carX set outside a boundary to prove the clamp works, and a log of the result.",
+    instruction: "Goal: replace hardcoded boundary numbers with CONFIG fields. 1) Plan: plan replacing the hardcoded 35/295 boundary numbers with CONFIG fields. 2) Prompt: ask the AI to rewrite the boundary guards using CONFIG.leftBound/CONFIG.rightBound instead of hardcoded numbers — paste its real code into Output Code and run it. 3) Explain: why does pulling these into CONFIG make the game easier to maintain?",
     planPlaceholder: "Plan: what should '35' and '295' become? (CONFIG.leftBound, CONFIG.rightBound)",
-    promptPlaceholder: "Write the prompt asking the AI to replace 35 with CONFIG.leftBound and 295 with CONFIG.rightBound in the boundary guards.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('config.leftbound') || p.includes('config.rightbound') || (p.includes('35') && p.includes('295'));
-      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
-      const codeOk = clean.includes('config.leftbound') && clean.includes('config.rightbound');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('one place') || e.includes('maintain') || e.includes('change') || e.includes('find');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention CONFIG.leftBound/rightBound or the numbers 35/295.",
-      code: "Needs CONFIG.leftBound and CONFIG.rightBound replacing the hardcoded numbers.",
-      explain: "Say every tunable number now lives in one place, easy to find and change."
-    }
+    expectedConcepts: "The boundary guards should read from CONFIG.leftBound and CONFIG.rightBound instead of the hardcoded 35/295. Explanation should correctly say every tunable number now lives in one place, easy to find and change. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 12.4: The Final Diagnostic",
     problem: "One last collision logic error is seeded into this assessment lab: a single flipped operator in the AABB check — the same class of bug from Session 10, now to be caught fast under exam conditions.",
-    instruction: "1) Plan: explain the malicious-QA-officer scenario — if a boundary guard used '> 35' in one place but '>= 35' in another, could that inconsistency let the car overlap the edge? 2) Prompt: ask the AI to diagnose and fix the seeded flipped comparison in checkCollision() — paste the fixed code into Output Code. 3) Explain: which comparison was flipped, and what's the corrected version?",
+    instruction: "Goal: catch and fix the seeded flipped comparison. 1) Plan: explain the malicious-QA-officer scenario — if a boundary guard used '> 35' in one place but '>= 35' in another, could that inconsistency let the car overlap the edge? 2) Prompt: ask the AI to diagnose and fix the seeded flipped comparison in checkCollision() — paste the fixed code into Output Code. 3) Explain: which comparison was flipped, and what's the corrected version?",
     planPlaceholder: "Could inconsistent boundary operators (> vs >=) create a rare edge-case gap? Explain why.",
-    promptPlaceholder: "Write the prompt asking the AI to diagnose and fix a flipped comparison operator in checkCollision().",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed checkCollision() code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('checkcollision') && (p.includes('flip') || p.includes('operator') || p.includes('fix'));
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('rect1.x<rect2.x+rect2.width');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('<') || e.includes('less');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'checkCollision' and 'flip'/'operator'/'fix'.",
-      code: "Needs rect1.x < rect2.x + rect2.width (the corrected operator).",
-      explain: "Say the first condition needed '<' (less than), not '>'."
-    }
+    expectedConcepts: "The first AABB comparison must use rect1.x < rect2.x + rect2.width (correct direction), not a flipped operator. Explanation should correctly identify which comparison was flipped and confirm the corrected version. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 5,
     title: "Exercise 12.5: Capstone Reflection & the Final QA Sweep",
     problem: "Reflect across every Racing Car Game lab you've built this level — variables, boundaries, collision, restart — and confirm the whole game still works together, not just the last thing you touched.",
-    instruction: "1) Plan: list the 4 core systems this final QA sweep must verify. 2) Prompt: ask the AI for a diagnostic script that logs PASS or FAIL for each core system — paste its real code into Output Code. 3) Explain: write a one-sentence reflection on the trickiest bug you fixed across this level's labs, and how tracing variable values helped you find it.",
+    instruction: "Goal: write a self-diagnostic and reflect on the level. 1) Plan: list the 4 core systems this final QA sweep must verify. 2) Prompt: ask the AI for a diagnostic script that logs PASS or FAIL for each core system — paste its real code into Output Code and run it. 3) Explain: write a one-sentence reflection on the trickiest bug you fixed across this level's labs, and how tracing variable values helped you find it.",
     planPlaceholder: "List the 4 core systems to verify: variables, boundaries, collision, restart.",
-    promptPlaceholder: "Write the prompt asking for a diagnostic script logging PASS/FAIL for each core system via console.log.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the AI's diagnostic script here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('test') && p.includes('console.log') && p.includes('pass');
-      const clean = outputCode.toLowerCase();
-      const codeOk = clean.includes('console.log') && (clean.includes('pass') || clean.includes('fail'));
-      const explainOk = explain.trim().length >= 20;
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'test', 'console.log', and 'pass'.",
-      code: "Needs console.log statements reporting PASS/FAIL.",
-      explain: "Write at least a full sentence naming a specific bug and how tracing values found it."
-    }
+    expectedConcepts: "The diagnostic script should check the 4 core systems (variables, boundaries, collision, restart) and log a PASS or FAIL for each via console.log. The explanation is a personal reflection with no single correct answer — judge only whether it's a genuine, specific reflection naming an actual bug and how tracing values helped find it, not a placeholder answer. Don't require literal code in the plan/prompt prose."
   }
 ];
 
@@ -4080,6 +3732,8 @@ export default function App() {
   const [s8ExplainInput, setS8ExplainInput] = useState('');
   const [s8Logs, setS8Logs] = useState([]);
   const [s8Success, setS8Success] = useState(false);
+  const [s8Verifying, setS8Verifying] = useState(false);
+  const [s8Generating, setS8Generating] = useState(false);
 
   // Level 1 Sessions 9-12: JS Sandbox exercise states (Animations, Collision, DOM HUD, Capstone Assessment)
   // 3-box format: Plan & Design / Prompt+Output Code / Explain the Output Code
@@ -4090,6 +3744,8 @@ export default function App() {
   const [s9ExplainInput, setS9ExplainInput] = useState('');
   const [s9Logs, setS9Logs] = useState([]);
   const [s9Success, setS9Success] = useState(false);
+  const [s9Verifying, setS9Verifying] = useState(false);
+  const [s9Generating, setS9Generating] = useState(false);
 
   const [s10ActiveExercise, setS10ActiveExercise] = useState(1);
   const [s10PlanInput, setS10PlanInput] = useState('');
@@ -4098,6 +3754,8 @@ export default function App() {
   const [s10ExplainInput, setS10ExplainInput] = useState('');
   const [s10Logs, setS10Logs] = useState([]);
   const [s10Success, setS10Success] = useState(false);
+  const [s10Verifying, setS10Verifying] = useState(false);
+  const [s10Generating, setS10Generating] = useState(false);
 
   const [s11ActiveExercise, setS11ActiveExercise] = useState(1);
   const [s11PlanInput, setS11PlanInput] = useState('');
@@ -4106,6 +3764,8 @@ export default function App() {
   const [s11ExplainInput, setS11ExplainInput] = useState('');
   const [s11Logs, setS11Logs] = useState([]);
   const [s11Success, setS11Success] = useState(false);
+  const [s11Verifying, setS11Verifying] = useState(false);
+  const [s11Generating, setS11Generating] = useState(false);
 
   const [s12ActiveExercise, setS12ActiveExercise] = useState(1);
   const [s12PlanInput, setS12PlanInput] = useState('');
@@ -4114,6 +3774,8 @@ export default function App() {
   const [s12ExplainInput, setS12ExplainInput] = useState('');
   const [s12Logs, setS12Logs] = useState([]);
   const [s12Success, setS12Success] = useState(false);
+  const [s12Verifying, setS12Verifying] = useState(false);
+  const [s12Generating, setS12Generating] = useState(false);
 
   // Live console.log()/error output forwarded from the JS Sandbox preview iframes (Sessions 4-12)
   const [simConsoleLogs, setSimConsoleLogs] = useState([]);
@@ -8175,13 +7837,44 @@ export default function App() {
                         </span>
                       </div>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            disabled={s8Generating || !s8PromptInput.trim()}
+                            onClick={async () => {
+                              setS8Generating(true);
+                              try {
+                                const ex = S8_EXERCISES[s8ActiveExercise - 1];
+                                const res = await fetch('/api/generate-code', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                  body: JSON.stringify({ prompt: s8PromptInput, context: ex.problem })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
+                                setS8OutputCodeInput(data.code);
+                              } catch (err) {
+                                setS8Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                              } finally {
+                                setS8Generating(false);
+                              }
+                            }}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {s8Generating ? 'Generating…' : '🤖 Generate Code'}
+                          </button>
+                        </div>
                         <textarea
                           value={s8OutputCodeInput}
                           onChange={(e) => setS8OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S8_EXERCISES[s8ActiveExercise - 1].outputCodePlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -8194,15 +7887,33 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                        {[...s8Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code, click inside the preview, press arrow keys, and click Verify.</div>
-                        ) : [...s8Logs, ...simConsoleLogs].map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {simConsoleLogs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            ) : simConsoleLogs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {s8Logs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                            ) : s8Logs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -8222,36 +7933,57 @@ export default function App() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       className={`btn-cyber ${s8Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                      onClick={() => {
+                      disabled={s8Verifying}
+                      onClick={async () => {
                         const ex = S8_EXERCISES[s8ActiveExercise - 1];
-                        const logs = [{ type: 'info', text: `Checking Exercise 8.${s8ActiveExercise}...` }];
                         const filled = s8PlanInput.trim() && s8PromptInput.trim() && s8OutputCodeInput.trim() && s8ExplainInput.trim();
-                        const result = filled ? ex.validate({ plan: s8PlanInput, prompt: s8PromptInput, outputCode: s8OutputCodeInput, explain: s8ExplainInput }) : null;
-                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
-                        if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
-                          setS8Success(true);
-                          const prog = markExerciseComplete('l1-s8', s8ActiveExercise);
-                          if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ SESSION 8 CHALLENGES COMPLETE! Your steering logic is now fully modular!' });
-                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                          } else {
-                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                          }
-                        } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                        if (!filled) {
+                          setS8Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
                           setS8Success(false);
-                        } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
-                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
-                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
-                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
-                          setS8Success(false);
+                          return;
                         }
-                        setS8Logs(logs);
+                        setS8Verifying(true);
+                        setS8Logs([{ type: 'info', text: `Checking prompt quality for Exercise 8.${s8ActiveExercise}...` }]);
+                        try {
+                          const res = await fetch('/api/audit-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({
+                              prompt: s8PromptInput,
+                              context: `${ex.problem} ${ex.instruction}`
+                            })
+                          });
+                          const verdict = await res.json();
+                          if (!res.ok) throw new Error(verdict.error || `Auditor request failed (${res.status})`);
+
+                          const logs = [];
+                          if (verdict.pass) {
+                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'info', text: verdict.feedback });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            setS8Success(true);
+                            const prog = markExerciseComplete('l1-s8', s8ActiveExercise);
+                            if (prog.allDone) {
+                              logs.push({ type: 'success', text: '✓ SESSION 8 CHALLENGES COMPLETE! Your steering logic is now fully modular!' });
+                              if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                            } else {
+                              logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                            }
+                          } else {
+                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            setS8Success(false);
+                          }
+                          setS8Logs(logs);
+                        } catch (err) {
+                          setS8Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS8Success(false);
+                        } finally {
+                          setS8Verifying(false);
+                        }
                       }}
                     >
-                      {s8Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s8Verifying ? 'Checking prompt quality…' : s8Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8350,13 +8082,44 @@ export default function App() {
                         </span>
                       </div>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            disabled={s9Generating || !s9PromptInput.trim()}
+                            onClick={async () => {
+                              setS9Generating(true);
+                              try {
+                                const ex = S9_EXERCISES[s9ActiveExercise - 1];
+                                const res = await fetch('/api/generate-code', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                  body: JSON.stringify({ prompt: s9PromptInput, context: ex.problem })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
+                                setS9OutputCodeInput(data.code);
+                              } catch (err) {
+                                setS9Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                              } finally {
+                                setS9Generating(false);
+                              }
+                            }}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {s9Generating ? 'Generating…' : '🤖 Generate Code'}
+                          </button>
+                        </div>
                         <textarea
                           value={s9OutputCodeInput}
                           onChange={(e) => setS9OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S9_EXERCISES[s9ActiveExercise - 1].outputCodePlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -8369,15 +8132,33 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                        {[...s9Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code and click Verify.</div>
-                        ) : [...s9Logs, ...simConsoleLogs].map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {simConsoleLogs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            ) : simConsoleLogs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {s9Logs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                            ) : s9Logs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -8397,36 +8178,57 @@ export default function App() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       className={`btn-cyber ${s9Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                      onClick={() => {
+                      disabled={s9Verifying}
+                      onClick={async () => {
                         const ex = S9_EXERCISES[s9ActiveExercise - 1];
-                        const logs = [{ type: 'info', text: `Checking Exercise 9.${s9ActiveExercise}...` }];
                         const filled = s9PlanInput.trim() && s9PromptInput.trim() && s9OutputCodeInput.trim() && s9ExplainInput.trim();
-                        const result = filled ? ex.validate({ plan: s9PlanInput, prompt: s9PromptInput, outputCode: s9OutputCodeInput, explain: s9ExplainInput }) : null;
-                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
-                        if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
-                          setS9Success(true);
-                          const prog = markExerciseComplete('l1-s9', s9ActiveExercise);
-                          if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ SESSION 9 CHALLENGES COMPLETE! Your obstacles now animate down the track!' });
-                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                          } else {
-                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                          }
-                        } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                        if (!filled) {
+                          setS9Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
                           setS9Success(false);
-                        } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
-                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
-                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
-                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
-                          setS9Success(false);
+                          return;
                         }
-                        setS9Logs(logs);
+                        setS9Verifying(true);
+                        setS9Logs([{ type: 'info', text: `Checking prompt quality for Exercise 9.${s9ActiveExercise}...` }]);
+                        try {
+                          const res = await fetch('/api/audit-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({
+                              prompt: s9PromptInput,
+                              context: `${ex.problem} ${ex.instruction}`
+                            })
+                          });
+                          const verdict = await res.json();
+                          if (!res.ok) throw new Error(verdict.error || `Auditor request failed (${res.status})`);
+
+                          const logs = [];
+                          if (verdict.pass) {
+                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'info', text: verdict.feedback });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            setS9Success(true);
+                            const prog = markExerciseComplete('l1-s9', s9ActiveExercise);
+                            if (prog.allDone) {
+                              logs.push({ type: 'success', text: '✓ SESSION 9 CHALLENGES COMPLETE! Your obstacles now animate down the track!' });
+                              if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                            } else {
+                              logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                            }
+                          } else {
+                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            setS9Success(false);
+                          }
+                          setS9Logs(logs);
+                        } catch (err) {
+                          setS9Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS9Success(false);
+                        } finally {
+                          setS9Verifying(false);
+                        }
                       }}
                     >
-                      {s9Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s9Verifying ? 'Checking prompt quality…' : s9Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8525,13 +8327,44 @@ export default function App() {
                         </span>
                       </div>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            disabled={s10Generating || !s10PromptInput.trim()}
+                            onClick={async () => {
+                              setS10Generating(true);
+                              try {
+                                const ex = S10_EXERCISES[s10ActiveExercise - 1];
+                                const res = await fetch('/api/generate-code', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                  body: JSON.stringify({ prompt: s10PromptInput, context: ex.problem })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
+                                setS10OutputCodeInput(data.code);
+                              } catch (err) {
+                                setS10Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                              } finally {
+                                setS10Generating(false);
+                              }
+                            }}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {s10Generating ? 'Generating…' : '🤖 Generate Code'}
+                          </button>
+                        </div>
                         <textarea
                           value={s10OutputCodeInput}
                           onChange={(e) => setS10OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S10_EXERCISES[s10ActiveExercise - 1].outputCodePlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -8544,15 +8377,33 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                        {[...s10Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code and click Verify.</div>
-                        ) : [...s10Logs, ...simConsoleLogs].map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {simConsoleLogs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            ) : simConsoleLogs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {s10Logs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                            ) : s10Logs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -8572,36 +8423,57 @@ export default function App() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       className={`btn-cyber ${s10Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                      onClick={() => {
+                      disabled={s10Verifying}
+                      onClick={async () => {
                         const ex = S10_EXERCISES[s10ActiveExercise - 1];
-                        const logs = [{ type: 'info', text: `Checking Exercise 10.${s10ActiveExercise}...` }];
                         const filled = s10PlanInput.trim() && s10PromptInput.trim() && s10OutputCodeInput.trim() && s10ExplainInput.trim();
-                        const result = filled ? ex.validate({ plan: s10PlanInput, prompt: s10PromptInput, outputCode: s10OutputCodeInput, explain: s10ExplainInput }) : null;
-                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
-                        if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
-                          setS10Success(true);
-                          const prog = markExerciseComplete('l1-s10', s10ActiveExercise);
-                          if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ SESSION 10 CHALLENGES COMPLETE! Collisions are now detected correctly!' });
-                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                          } else {
-                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                          }
-                        } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                        if (!filled) {
+                          setS10Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
                           setS10Success(false);
-                        } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
-                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
-                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
-                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
-                          setS10Success(false);
+                          return;
                         }
-                        setS10Logs(logs);
+                        setS10Verifying(true);
+                        setS10Logs([{ type: 'info', text: `Checking prompt quality for Exercise 10.${s10ActiveExercise}...` }]);
+                        try {
+                          const res = await fetch('/api/audit-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({
+                              prompt: s10PromptInput,
+                              context: `${ex.problem} ${ex.instruction}`
+                            })
+                          });
+                          const verdict = await res.json();
+                          if (!res.ok) throw new Error(verdict.error || `Auditor request failed (${res.status})`);
+
+                          const logs = [];
+                          if (verdict.pass) {
+                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'info', text: verdict.feedback });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            setS10Success(true);
+                            const prog = markExerciseComplete('l1-s10', s10ActiveExercise);
+                            if (prog.allDone) {
+                              logs.push({ type: 'success', text: '✓ SESSION 10 CHALLENGES COMPLETE! Collisions are now detected correctly!' });
+                              if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                            } else {
+                              logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                            }
+                          } else {
+                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            setS10Success(false);
+                          }
+                          setS10Logs(logs);
+                        } catch (err) {
+                          setS10Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS10Success(false);
+                        } finally {
+                          setS10Verifying(false);
+                        }
                       }}
                     >
-                      {s10Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s10Verifying ? 'Checking prompt quality…' : s10Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8700,13 +8572,44 @@ export default function App() {
                         </span>
                       </div>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            disabled={s11Generating || !s11PromptInput.trim()}
+                            onClick={async () => {
+                              setS11Generating(true);
+                              try {
+                                const ex = S11_EXERCISES[s11ActiveExercise - 1];
+                                const res = await fetch('/api/generate-code', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                  body: JSON.stringify({ prompt: s11PromptInput, context: ex.problem })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
+                                setS11OutputCodeInput(data.code);
+                              } catch (err) {
+                                setS11Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                              } finally {
+                                setS11Generating(false);
+                              }
+                            }}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {s11Generating ? 'Generating…' : '🤖 Generate Code'}
+                          </button>
+                        </div>
                         <textarea
                           value={s11OutputCodeInput}
                           onChange={(e) => setS11OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S11_EXERCISES[s11ActiveExercise - 1].outputCodePlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -8719,15 +8622,33 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                        {[...s11Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code and click Verify.</div>
-                        ) : [...s11Logs, ...simConsoleLogs].map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {simConsoleLogs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            ) : simConsoleLogs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {s11Logs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                            ) : s11Logs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -8747,36 +8668,57 @@ export default function App() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       className={`btn-cyber ${s11Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                      onClick={() => {
+                      disabled={s11Verifying}
+                      onClick={async () => {
                         const ex = S11_EXERCISES[s11ActiveExercise - 1];
-                        const logs = [{ type: 'info', text: `Checking Exercise 11.${s11ActiveExercise}...` }];
                         const filled = s11PlanInput.trim() && s11PromptInput.trim() && s11OutputCodeInput.trim() && s11ExplainInput.trim();
-                        const result = filled ? ex.validate({ plan: s11PlanInput, prompt: s11PromptInput, outputCode: s11OutputCodeInput, explain: s11ExplainInput }) : null;
-                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
-                        if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
-                          setS11Success(true);
-                          const prog = markExerciseComplete('l1-s11', s11ActiveExercise);
-                          if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ SESSION 11 CHALLENGES COMPLETE! The HUD and restart flow are fully wired up!' });
-                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                          } else {
-                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                          }
-                        } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                        if (!filled) {
+                          setS11Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
                           setS11Success(false);
-                        } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
-                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
-                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
-                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
-                          setS11Success(false);
+                          return;
                         }
-                        setS11Logs(logs);
+                        setS11Verifying(true);
+                        setS11Logs([{ type: 'info', text: `Checking prompt quality for Exercise 11.${s11ActiveExercise}...` }]);
+                        try {
+                          const res = await fetch('/api/audit-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({
+                              prompt: s11PromptInput,
+                              context: `${ex.problem} ${ex.instruction}`
+                            })
+                          });
+                          const verdict = await res.json();
+                          if (!res.ok) throw new Error(verdict.error || `Auditor request failed (${res.status})`);
+
+                          const logs = [];
+                          if (verdict.pass) {
+                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'info', text: verdict.feedback });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            setS11Success(true);
+                            const prog = markExerciseComplete('l1-s11', s11ActiveExercise);
+                            if (prog.allDone) {
+                              logs.push({ type: 'success', text: '✓ SESSION 11 CHALLENGES COMPLETE! The HUD and restart flow are fully wired up!' });
+                              if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                            } else {
+                              logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                            }
+                          } else {
+                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            setS11Success(false);
+                          }
+                          setS11Logs(logs);
+                        } catch (err) {
+                          setS11Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS11Success(false);
+                        } finally {
+                          setS11Verifying(false);
+                        }
                       }}
                     >
-                      {s11Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s11Verifying ? 'Checking prompt quality…' : s11Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8875,13 +8817,44 @@ export default function App() {
                         </span>
                       </div>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            disabled={s12Generating || !s12PromptInput.trim()}
+                            onClick={async () => {
+                              setS12Generating(true);
+                              try {
+                                const ex = S12_EXERCISES[s12ActiveExercise - 1];
+                                const res = await fetch('/api/generate-code', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                  body: JSON.stringify({ prompt: s12PromptInput, context: ex.problem })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
+                                setS12OutputCodeInput(data.code);
+                              } catch (err) {
+                                setS12Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                              } finally {
+                                setS12Generating(false);
+                              }
+                            }}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {s12Generating ? 'Generating…' : '🤖 Generate Code'}
+                          </button>
+                        </div>
                         <textarea
                           value={s12OutputCodeInput}
                           onChange={(e) => setS12OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S12_EXERCISES[s12ActiveExercise - 1].outputCodePlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -8894,15 +8867,33 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                        {[...s12Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code and click Verify.</div>
-                        ) : [...s12Logs, ...simConsoleLogs].map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {simConsoleLogs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            ) : simConsoleLogs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
+                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                            {s12Logs.length === 0 ? (
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                            ) : s12Logs.map((log, idx) => (
+                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.text}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -8922,36 +8913,57 @@ export default function App() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       className={`btn-cyber ${s12Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                      onClick={() => {
+                      disabled={s12Verifying}
+                      onClick={async () => {
                         const ex = S12_EXERCISES[s12ActiveExercise - 1];
-                        const logs = [{ type: 'info', text: `Running capstone diagnostic for Exercise 12.${s12ActiveExercise}...` }];
                         const filled = s12PlanInput.trim() && s12PromptInput.trim() && s12OutputCodeInput.trim() && s12ExplainInput.trim();
-                        const result = filled ? ex.validate({ plan: s12PlanInput, prompt: s12PromptInput, outputCode: s12OutputCodeInput, explain: s12ExplainInput }) : null;
-                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
-                        if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
-                          setS12Success(true);
-                          const prog = markExerciseComplete('l1-s12', s12ActiveExercise);
-                          if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ LEVEL 1 CAPSTONE COMPLETE! The Racing Car Game is fully certified. Onward to Level 2!' });
-                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                          } else {
-                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                          }
-                        } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                        if (!filled) {
+                          setS12Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
                           setS12Success(false);
-                        } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
-                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
-                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
-                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
-                          setS12Success(false);
+                          return;
                         }
-                        setS12Logs(logs);
+                        setS12Verifying(true);
+                        setS12Logs([{ type: 'info', text: `Checking prompt quality for Exercise 12.${s12ActiveExercise}...` }]);
+                        try {
+                          const res = await fetch('/api/audit-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({
+                              prompt: s12PromptInput,
+                              context: `${ex.problem} ${ex.instruction}`
+                            })
+                          });
+                          const verdict = await res.json();
+                          if (!res.ok) throw new Error(verdict.error || `Auditor request failed (${res.status})`);
+
+                          const logs = [];
+                          if (verdict.pass) {
+                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'info', text: verdict.feedback });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            setS12Success(true);
+                            const prog = markExerciseComplete('l1-s12', s12ActiveExercise);
+                            if (prog.allDone) {
+                              logs.push({ type: 'success', text: '✓ LEVEL 1 CAPSTONE COMPLETE! The Racing Car Game is fully certified. Onward to Level 2!' });
+                              if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                            } else {
+                              logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                            }
+                          } else {
+                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            setS12Success(false);
+                          }
+                          setS12Logs(logs);
+                        } catch (err) {
+                          setS12Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS12Success(false);
+                        } finally {
+                          setS12Verifying(false);
+                        }
                       }}
                     >
-                      {s12Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s12Verifying ? 'Checking prompt quality…' : s12Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -10968,7 +10980,7 @@ export default function App() {
                                   <div className="form-field">
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                                       <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>{journalOutputLabel}</label>
-                                      {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6'].includes(currentSession.id) && (
+                                      {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id) && (
                                         <button
                                           type="button"
                                           className="btn-cyber btn-small btn-cyber-secondary"
@@ -11007,7 +11019,7 @@ export default function App() {
                                       style={{ width: '100%', height: '280px', background: '#030409', color: '#c5cdd8', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}
                                       placeholder={PROJECT_TASKS[currentSession.id]?.sampleGeneratedHtml ? "Paste the actual code the AI generated from your prompt here. Example of what this milestone's AI output might look like:\n\n" + PROJECT_TASKS[currentSession.id].sampleGeneratedHtml : "Paste the actual code the AI generated from your prompt here."}
                                     />
-                                    {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6'].includes(currentSession.id) && (
+                                    {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id) && (
                                       <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                                         "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
                                       </span>
@@ -11227,10 +11239,10 @@ export default function App() {
 
                       </div>
 
-                      {/* Project Task AI Auditor feedback panel — pilot scope: L1 Sessions
-                          1, 5, 6 only (2026-07-30, see improve_concept.md Part II).
+                      {/* Project Task AI Auditor feedback panel — all of L1 S1-S12
+                          (2026-07-30 pilot on S1/5/6, extended to S2-S4/S7-S12 2026-08-05).
                           Advisory: shows AI feedback but never blocks Save Changes below. */}
-                      {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6'].includes(currentSession.id) && projectTaskAuditResult && (
+                      {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id) && projectTaskAuditResult && (
                         <div className="glass-panel" style={{ padding: '14px', marginTop: 16 }}>
                           <div className="panel-header"><h4 style={{ margin: 0, color: projectTaskAuditResult.pass ? 'var(--accent-green, #4ade80)' : 'var(--accent-cyan)' }}>
                             {projectTaskAuditResult.error ? '✗ AI Auditor unavailable' : projectTaskAuditResult.pass ? '✓ Prompt quality: good' : 'Prompt quality feedback'}
@@ -11268,7 +11280,7 @@ export default function App() {
                             Save as New Version
                           </button>
                         )}
-                        {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6'].includes(currentSession.id) && (
+                        {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id) && (
                           <button
                             className="btn-cyber btn-cyber-secondary"
                             disabled={projectTaskAuditing}

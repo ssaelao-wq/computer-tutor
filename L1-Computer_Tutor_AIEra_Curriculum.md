@@ -6,7 +6,7 @@
 
 > **Format note (2026-07-27):** All 12 Level 1 sessions share one consistent **Sandbox + Project Task format**: sandbox exercises per session (5, or 4 where noted below), each with 3 boxes — **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. The Project Task milestone (in the Project Journal tab) uses the same 3-box shape, but is always a related, more open-ended task than that session's exercises — see the Teacher Guideline's per-session "Project Task Milestone" sections for the exact expected answers. Sessions 4-12's Project Task `game.js` is one accumulating file — each session extends the previous session's own saved code via the app's "🔄 Pull Latest" mechanism, rather than starting from a fresh template every time. Session 1's topic was also rewritten (2026-07-20) from the original "Literal Logic & Digital Infiltration" autopilot-car content to a hardware/network/web-tech systems briefing — reflected below.
 >
-> **Grading note (2026-07-30, Sessions 1-6 so far):** these six sessions are graded by a real AI Auditor (DeepSeek), replacing the lightweight-keyword check — Sessions 7-12 are unchanged pending validation of this pilot. Instructions now state the **goal**, not the answer, and each session also gained an optional "🤖 Generate Code"/"🤖 Generate Answer" button next to "Copy Prompt" (a quick in-platform check; the external-AI-tool requirement is unchanged). Sessions 2, 3, 4, 5, and 6 each dropped their old 5th "combine everything" capstone exercise (4 exercises, not 5 — Session 1's exercises were never a capstone-duplication pattern, so it stays at 5): that final integration now happens once, for real, in each session's own Project Task. Sessions 5 and 6 together also form one explicit capability milestone — *"the car remembers itself, responds to you, and stays safe."*
+> **Grading note (2026-07-30, Sessions 1-6; extended 2026-08-05 to Sessions 8-12):** these eleven sessions are graded by a real AI Auditor (DeepSeek), replacing the lightweight-keyword check — **Session 7 is the only session still unchanged**, pending validation of this pilot. Instructions now state the **goal**, not the answer, and each of these sessions also gained an optional "🤖 Generate Code"/"🤖 Generate Answer" button next to "Copy Prompt" (a quick in-platform check; the external-AI-tool requirement is unchanged). Sessions 2, 3, 4, 5, 6, 8, 9, 10, and 11 each dropped their old 5th "combine everything" capstone exercise (4 exercises, not 5 — Session 1's exercises were never a capstone-duplication pattern, so it stays at 5): that final integration now happens once, for real, in each session's own Project Task. **Session 12 is the one exception that keeps all 5** — its 5th exercise is a personal reflection/whole-level QA sweep, not a duplicate of its Project Task. Sessions 5 and 6 together also form one explicit capability milestone — *"the car remembers itself, responds to you, and stays safe."* The 2026-08-05 pass also fixed real bugs found by testing "🤖 Generate Code" against the live AI — see each of Sessions 8, 9, 11's Tutor Manual notes below for what broke and how it was fixed.
 >
 > **Grading redesign (2026-07-30, later same day):** real student testing showed grading all four boxes for correctness still failed genuinely well-written prompts whenever they targeted a different specific detail than intended (a clear, precise prompt still failed for naming the "wrong" key) — still felt like a wording check, not a measure of prompt-writing skill. **Verify now grades ONLY the Prompt box**, on clarity/specificity/completeness, with 2-3 concrete prompt-writing tips — Plan/Output Code/Explain remain required practice fields but are no longer evaluated for correctness. Session 5's Exercises 5.2-5.4 were also rewritten the same day: 5.1's solution already covers both directions + DOM movement, so the original replacements had become redundant or hollow — the final versions are "Detecting All Four Directions," "Different Distances Per Direction," and "Pause with Spacebar."
 
@@ -121,7 +121,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"Why is it important to define screen text labels for screen readers? How does clean code support everyone?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: Create a simple HTML document containing a sidebar and main container layout representing a garage dashboard. Save to Journal under "Session 2 Homework".
+- **In-App Project Task ("Lab 1: HTML Document Skeleton")**: In the Journal tab, build the complete racing-game skeleton — going beyond the sandbox exercises above by also including an obstacle car (id `obstacle`) and a hidden game-over overlay (id `restart-panel`, hidden via a class named `hidden`) that a later session will reveal. These exact ids matter, since every later session's code looks for them (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 2)
 
@@ -174,7 +174,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"If our background is dark gray and our obstacle car is dark blue, what happens to visually impaired users? How do we style responsively for accessibility?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 3 Homework", write a CSS stylesheet styling a grid representation of a 3-lane road with a dotted yellow center divider line.
+- **In-App Project Task ("Lab 2: CSS Sizing & Coordinates Layout")**: In the Journal tab, style your own Session 2 file (not a fresh starter) — choose your own track dimensions, center the car within them, and style the obstacle/restart-panel/dashboard, none of which the sandbox exercises cover (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 3)
 
@@ -280,7 +280,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"If a player cannot press physical arrow keys, how can we adapt our input controls? Should we generate on-screen mouse click buttons?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 5 Homework", write an event handler script that triggers an alert box stating `"Engine Started"` when the student presses the `"s"` key.
+- **In-App Project Task ("Lab 5: Keyboard & Click Control Interfaces")**: In the Journal tab, extend your own Session 4 `game.js` with two on-screen ◀/▶ buttons that steer the car exactly like the arrow keys — reusing one shared movement action for both input paths instead of duplicating the steering logic (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 5)
 
@@ -289,7 +289,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 - **Exercise 5.1 (Reading the Key Pressed)**: goal is detecting and proving which key was pressed.
 - **Exercise 5.2 (Detecting All Four Directions)**: extend detection to ArrowUp/ArrowDown too, proving all four arrow keys are recognized — a practice drill; the real game still only steers left/right.
 - **Exercise 5.3 (Different Distances Per Direction)**: track horizontal and vertical running numbers separately — left/right by 20, up/down by 10 — logged after every keypress (tracked and logged, not visually rendered).
-- **Exercise 5.4 (Pause with Spacebar)**: reuse the sandbox's existing hidden `#restart-panel` overlay so pressing Space reveals it with a "Paused" message instead of its default "GAME OVER" text.
+- **Exercise 5.4 (Pause with Spacebar)**: reuse the sandbox's existing hidden `#restart-panel` overlay so pressing Space reveals it with a "Paused" message instead of its default "GAME OVER" text. The overlay is hidden via a CSS class, not an inline style, so a good prompt asks the AI to remove that class (`classList.remove`) rather than just set `style.display` — the exercise text flags this directly, since a plain `style.display` change silently does nothing against the sandbox's `.hidden { display: none !important; }` rule (found and fixed 2026-08-05).
 
 - **Homework Evaluation**: Ensure the handler validates `event.key` matches `"s"` and executes actions.
 
@@ -333,7 +333,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"Autonomous vehicles rely on boundaries to stay in lanes. What happens if a safety check script has a logic typo? Why do developers write redundant checks?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 6 Homework", write a conditional validation block that checks if `speed` is greater than `120` (overheating threshold) and resets speed to `100` if true, logging a warning.
+- **In-App Project Task ("Lab 6: Safety Guards & Boundary Clamps")**: In the Journal tab, extend your own Session 5 `game.js` (including its `steerCar()` function and ◀/▶ buttons) with a boundary guard placed INSIDE `steerCar()` itself, so both the keyboard and the buttons respect it — deriving the limits from your own `TRACK_WIDTH`, not the exercises' fixed 35/295 (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 6)
 
@@ -390,7 +390,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"If we run a loop 1,000,000 times a second to draw lanes, what happens to our user's device battery? Why must loop performance be optimized?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 7 Homework", write a JS `for` loop that logs the text `"Highway Marker position: X"` for positions incrementing by 50 up to 250.
+- **In-App Project Task ("Lab 7: Obstacle Loop Generation")**: In the Journal tab, add repeating highway marker dashes to your own Session 6 `game.js` using a `for` loop — spacing them by dividing YOUR OWN track height (from Session 3) by however many dashes you pick (4-6), not a hardcoded spacing number (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 7)
 
@@ -444,19 +444,18 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"Why is write-once, hard-to-read code a problem for engineering teams? How does structuring code into logical functions help others?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 8 Homework", write a function `calculateScore(distance, speedMultiplier)` that multiplies the parameters and returns the score value, declaring local variables.
+- **In-App Project Task ("Lab 8: Modular Control Functions")**: In the Journal tab, refactor your own Sessions 5-6 steering code into one namespaced `Controller` object (`Controller.updatePosition`/`moveLeft`/`moveRight`), instead of three loose global functions — behavior unchanged, structure improved (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 8)
 
-5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview:
+**Content note (2026-08-05):** moved to real AI-Auditor grading and goal-stated instructions (see the Grading note above). Its old 5th "combine everything" capstone exercise ("The Duplicate Render Call & Complete Controller") was dropped as a duplicate of the Project Task above, which already asks for more (the namespaced `Controller` object). **4 exercises**, not 5, graded on the Prompt box's clarity/specificity/completeness only. Testing "🤖 Generate Code" against the live AI found two of the original five exercises' solutions broke the Live Preview: 8.3's fix came back as a bare, un-wrapped fragment (`event` undefined, crashing on load); 8.5 (now dropped) hallucinated canvas-API code that doesn't exist in this DOM-based sandbox. 8.1, 8.3, and 8.4 now explicitly say the Output Code box runs standalone, so the AI must write a complete, self-contained snippet — including a demo call so the effect is visible in the Preview:
 
-- **Exercise 8.1 (Decomposing & Requesting the Render Function)**: Plan names the three pieces; prompt mentions `function`, `updatePlayerPosition`, `style.left`; output includes `function updatePlayerPosition()` writing to `style.left`; explanation covers 0 parameters (reads shared `carX`).
-- **Exercise 8.2 (The Scope Access Violation Bug)**: Plan explains local vs. shared scope; prompt mentions `carX` and `scope`; output declares `let carX = 165;` before both functions; explanation covers local vs. outer scope.
-- **Exercise 8.3 (Wiring moveLeft() to the Handler)**: Plan describes replacing inline logic with a call; prompt mentions `ArrowLeft`, `moveLeft`; output includes the ArrowLeft branch calling `moveLeft()`; explanation covers the benefit of a named call.
-- **Exercise 8.4 (Requesting moveLeft() and moveRight())**: Plan states the mirror function; prompt mentions `moveLeft`, `moveRight`, `updatePlayerPosition`; output includes both functions calling the shared renderer; explanation states 1 fix needed with a shared helper.
-- **Exercise 8.5 (The Duplicate Render Call & Complete Controller)**: Plan explains the waste of calling twice; prompt mentions all four pieces; output is the complete controller with no duplicate calls; explanation states it should run once per move.
+- **Exercise 8.1 (Decomposing & Requesting the Render Function)**: goal is a self-contained `updatePlayerPosition()` writing `carX` to `#player-car`'s `style.left`, called once to prove it in the Preview; explanation covers 0 parameters (reads shared `carX`).
+- **Exercise 8.2 (The Scope Access Violation Bug)**: goal is fixing the scope bug — `carX` declared once, outside both `moveLeft()` and `updatePlayerPosition()`; explanation contrasts local vs. shared/outer scope.
+- **Exercise 8.3 (Wiring moveLeft() to the Handler)**: goal is the ArrowLeft branch calling `moveLeft()` — since this box runs standalone, the AI should write the complete keydown listener plus a working `moveLeft()`, not just the changed line; explanation covers the benefit of a named call.
+- **Exercise 8.4 (Requesting moveLeft() and moveRight())**: goal is both mirror functions calling the shared `updatePlayerPosition()` (also declared here, since it isn't pre-existing), demonstrated with a call; explanation states 1 fix needed with a shared helper.
 
-- **Homework Evaluation**: Ensure function correctly takes parameters, performs math operations, and uses `return` statements.
+- **Homework Evaluation**: Ensure the Project Task's `Controller` object groups all three functions (not three separate globals) and steering behavior is unchanged from before the refactor.
 
 ---
 
@@ -498,19 +497,18 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"How do fast feedback loops in games keep users hooked? What is our responsibility as designers in creating balanced systems?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 9 Homework", write a game loop structure containing an active check gate that prints `"Tick"` to console, recursion, and a method to halt execution.
+- **In-App Project Task ("Lab 9: Timer Loops & Animations")**: In the Journal tab, add a `requestAnimationFrame`-driven `gameLoop()` on top of your own Sessions 7-8 code, animating your own real `#obstacle` element (from Session 2) down YOUR OWN track height (from Session 3), not a fixed 500 (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 9)
 
-5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview. Note the reset threshold is **500** (the track height defined in Session 3):
+**Content note (2026-08-05):** moved to real AI-Auditor grading and goal-stated instructions (see the Grading note above). Its old 5th "combine everything" capstone exercise ("The Complete Animation Engine") was dropped as a duplicate of the Project Task above, which already asks for more (the student's own track height and real `#obstacle` element). **4 exercises**, not 5, graded on the Prompt box's clarity/specificity/completeness only. This session's shared JS sandbox only pre-declares `carX`/`speed` as globals — `obstacleY`, `score`, and `gameActive` aren't pre-existing, and each exercise's box is tested standalone, so 9.1, 9.2, and 9.4 now say so explicitly and ask the AI to declare/initialize those values (plus a demo call) so the Preview runs instead of throwing a "not defined" error. Note the reset threshold is **500** (the track height defined in Session 3):
 
-- **Exercise 9.1 (The Game Loop Lifecycle & Recursive Loop)**: Plan describes the frame cycle; prompt mentions `function`, `gameLoop`, `requestAnimationFrame`; output includes `function gameLoop()` calling `requestAnimationFrame(gameLoop)`; explanation covers what that call does.
-- **Exercise 9.2 (The Unstoppable Speed Bug)**: Plan explains why a missing `gameActive` check is unstoppable; prompt mentions `gameActive`; output includes the guard `if (!gameActive) { ...return; }`; explanation covers the loop exiting.
-- **Exercise 9.3 (Obstacle Movement & Reset)**: Plan states the scroll-and-wrap behavior; prompt mentions `moveObstacles`, `obstacleY`, `500`, `score`; output includes the update/wrap/score logic; explanation predicts `obstacleY` after `490 + 5` (495).
-- **Exercise 9.4 (The Frozen Scoreboard Bug)**: Plan explains why resetting alone doesn't score; prompt mentions `score`; output includes `score += 10` inside the reset block; explanation confirms both happen together.
-- **Exercise 9.5 (The Complete Animation Engine)**: Plan lists every piece; prompt mentions `gameLoop`, `gameActive`, `moveObstacles`; output is the full gated loop; explanation walks the per-frame sequence.
+- **Exercise 9.1 (The Game Loop Lifecycle & Recursive Loop)**: goal is a self-contained `gameLoop()` (declaring `obstacleY`) that moves the obstacle and calls `requestAnimationFrame(gameLoop)`, called once to animate it in the Preview; explanation covers what that call does.
+- **Exercise 9.2 (The Unstoppable Speed Bug)**: goal is the complete, self-contained `gameLoop()` with the `gameActive` guard added at its top — not just the guard line, since this box runs standalone; explanation covers the loop exiting once `gameActive` is false. (Fixed 2026-08-05: a standalone-generated answer previously hallucinated a nonexistent `obstacles` array instead of the real single `#obstacle` element.)
+- **Exercise 9.3 (Obstacle Movement & Reset)**: goal is a self-contained `moveObstacles()` (declaring `obstacleY`/`score`) implementing the scroll-and-wrap behavior, logged after one call; explanation predicts `obstacleY` after `490 + 5` (495).
+- **Exercise 9.4 (The Frozen Scoreboard Bug)**: goal is the complete, self-contained `moveObstacles()` with the missing `score += 10` fixed inside the reset block — not just the missing line; explanation confirms both happen together. (Fixed 2026-08-05: a standalone-generated answer previously was a bare fragment referencing undeclared `obstacleY`/`score` — a ReferenceError, not a fix.)
 
-- **Homework Evaluation**: Student loop must contain gate validation (`if (!gameActive)`) to prevent animation after stop alerts.
+- **Homework Evaluation**: Student's Project Task `gameLoop()` must contain gate validation (`if (!gameActive)`), animate the real `#obstacle` element, and use the student's own track height for the reset boundary.
 
 ---
 
@@ -552,19 +550,18 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"If a self-driving sensor program fails to register an obstacle overlap, critical injury occurs. Why do developers write automated unit tests checking coordinates?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 10 Homework", write a JS function `isOverlapping(x1, y1, w1, h1, x2, y2, w2, h2)` returning a Boolean checking bounding overlaps.
+- **In-App Project Task ("Lab 10: Collision Detection Overlap Math")**: In the Journal tab, add collision checking into your own Session 8 animation loop — but instead of ending the game outright, a crash should cost one life (already tracked since Session 4), only ending once lives reach 0 (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 10)
 
-5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview. This session's core skill is **auditing AI-generated math**:
+**Content note (2026-08-05):** moved to real AI-Auditor grading and goal-stated instructions (see the Grading note above). Its old 5th "combine everything" capstone exercise ("The Complete Collision System") was dropped as a duplicate of the Project Task above, which already asks for more (the lives system, not game-over-on-any-hit). **4 exercises**, not 5, graded on the Prompt box's clarity/specificity/completeness only. This session's core skill is **auditing AI-generated math**. 10.1 and 10.4 now ask for a quick demo call/log (e.g. testing `checkCollision()` against two example rectangles) so the answer visibly proves itself in the Preview instead of just defining an unused function:
 
-- **Exercise 10.1 (The Overlap Condition & Requesting checkCollision())**: Plan states both axes; prompt mentions `checkCollision`, `width`, `height`; output includes the function using width/height; explanation covers why dimensions matter over bare x/y.
-- **Exercise 10.2 (The Ghost Car Bug)**: Plan explains why a flipped comparison never fires; prompt mentions `checkCollision`/the flip; output includes `rect1.x + rect1.width > rect2.x`; explanation covers the correct direction.
-- **Exercise 10.3 (The Axis Swap Bug)**: Plan explains why x vs. y comparisons are nonsense geometry; output includes `rect1.x < rect2.x + rect2.width` (not `rect1.y`); explanation confirms every x compares to x, y to y.
-- **Exercise 10.4 (Wiring Collision into the Loop)**: Plan states what should happen on a hit; prompt mentions `checkCollision`, `gameActive`; output sets `gameActive = false` and logs; explanation answers the exact-touch edge case (NO, under strict `>`).
-- **Exercise 10.5 (The Complete Collision System)**: Plan states box sizes (player 30×50, obstacle 25×40) and every piece needed; output is the full system; explanation walks detection through to consequence.
+- **Exercise 10.1 (The Overlap Condition & Requesting checkCollision())**: goal is a self-contained `checkCollision(rect1, rect2)` using width/height, demonstrated with a call against two example rectangles; explanation covers why dimensions matter over bare x/y.
+- **Exercise 10.2 (The Ghost Car Bug)**: goal is fixing the flipped comparison so `checkCollision()` correctly checks `rect1.x + rect1.width > rect2.x`; explanation covers the correct direction.
+- **Exercise 10.3 (The Axis Swap Bug)**: goal is fixing the axis swap so the first condition compares `rect1.x < rect2.x + rect2.width` (not `rect1.y`); explanation confirms every x compares to x, y to y.
+- **Exercise 10.4 (Wiring Collision into the Loop)**: goal is a self-contained demo — `checkCollision()`, example overlapping rects, `gameActive`, and a call to `gameLoop()` that sets `gameActive = false` and logs on a hit; explanation answers the exact-touch edge case (NO, under strict `>`).
 
-- **Homework Evaluation**: Ensure the student correctly integrates logical checks across coordinates and handles edge overlaps.
+- **Homework Evaluation**: Ensure the Project Task's collision check decrements lives on a hit (not always ending the game), and only ends the game once `lives <= 0`.
 
 ---
 
@@ -606,19 +603,18 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"When users enter usernames on leaderboards, how do we protect privacy? What details should not be collected?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Homework Quest**: In the Journal tab under "Session 11 Homework", write a script that updates an HTML element displaying `lane-alert` to read `"Danger"` when the player car coordinate reaches the leftmost lane (`35px`).
+- **In-App Project Task ("Lab 11: DOM HUD Visual Updates")**: In the Journal tab, build on your own lives-based collision logic from Session 10 — keep BOTH a score readout AND a lives readout in sync with the DOM, not score alone, and wire up the full Space-to-restart sequence (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 11)
 
-5 exercises, each with 3 boxes. All 5 run live in the Racing Game Preview. **Key detail:** the spacebar's real `event.key` value is a single space `" "`, not the word `"Space"`:
+**Content note (2026-08-05):** moved to real AI-Auditor grading and goal-stated instructions (see the Grading note above). Its old 5th "combine everything" capstone exercise ("The Complete HUD & Restart System") was dropped as a duplicate of the Project Task above, which already asks for more (a lives readout, not score alone). **4 exercises**, not 5, graded on the Prompt box's clarity/specificity/completeness only. 11.1 and 11.2 now note `score` isn't pre-existing in this sandbox, so the AI should declare/initialize it so the fix is visibly proven. **Exercise 11.4 was found and fixed 2026-08-05**: a standalone-generated answer to "add the missing `gameActive = true`" hallucinated a nonexistent `#game-over-panel` element and reversed hide/show logic instead of touching the real `#restart-panel` — the exercise text now names the real element and asks for the complete handler. **Key detail:** the spacebar's real `event.key` value is a single space `" "`, not the word `"Space"`:
 
-- **Exercise 11.1 (The DOM Update Pipeline & Scoreboard Updater)**: Plan maps state changes to screen updates; prompt mentions `function`, `textContent`, `score-val`; output sets `#score-val`'s textContent; explanation covers why `textContent` beats `innerHTML`.
-- **Exercise 11.2 (The Negative Score Leak)**: Plan explains why "score: -5" looks broken; output includes `if (score < 0) { score = 0; }`; explanation confirms the clamp runs before the DOM write.
-- **Exercise 11.3 (Revealing the Restart Panel)**: Plan states the full restart sequence; prompt mentions `restart-panel`, `hidden`; output includes `classList.remove("hidden")`; explanation covers what happens if the class isn't removed.
-- **Exercise 11.4 (The Frozen Restart Bug)**: Plan explains why a visual reset isn't a functional one; prompt mentions `gameActive`; output includes `gameActive = true;` in the handler; explanation covers `gameLoop()`'s gate.
-- **Exercise 11.5 (The Complete HUD & Restart System)**: Plan lists every piece; prompt mentions `updateScoreboard`, `triggerGameOverScreen`; output includes `score-val`, `restart-panel`, `gameActive`, and a Space-key check; explanation walks the full restart sequence.
+- **Exercise 11.1 (The DOM Update Pipeline & Scoreboard Updater)**: goal is a self-contained, demonstrated `updateScoreboard()` setting `#score-val`'s textContent to `score`; explanation covers why `textContent` beats `innerHTML`.
+- **Exercise 11.2 (The Negative Score Leak)**: goal is a self-contained demo — `score` declared starting negative, clamped to 0 before the DOM write; explanation confirms the clamp runs before the write.
+- **Exercise 11.3 (Revealing the Restart Panel)**: goal is `triggerGameOverScreen()` using `classList.remove("hidden")` on `#restart-panel`, not an inline style; explanation covers what happens if the class isn't removed.
+- **Exercise 11.4 (The Frozen Restart Bug)**: goal is the complete, self-contained Space-key handler adding `gameActive = true;`, explicitly targeting the real `#restart-panel` (not a nonexistent "game-over-panel"); explanation covers `gameLoop()`'s gate.
 
-- **Homework Evaluation**: Check selectors targets syntax, and ensure validation checks block negative integers.
+- **Homework Evaluation**: Check that the Project Task updates BOTH score and lives via `textContent`, and that Space-to-restart resets every tracked variable, not just some.
 
 ---
 
@@ -670,13 +666,13 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 
 ##### In-App Capstone Sandbox Exercises (Session 12)
 
-The app's Exercises Journal provides 5 capstone exercises for this session, each with 3 boxes, all running live in the Racing Game Preview:
+**Content note (2026-08-05):** moved to real AI-Auditor grading and goal-stated instructions (see the Grading note above) — graded on the Prompt box's clarity/specificity/completeness only, with an optional "🤖 Generate Code" button next to "Copy Prompt". Unlike Sessions 8-11, **Session 12 keeps all 5 exercises** — 12.5 is a personal reflection and whole-level self-diagnostic, not a duplicate of the Project Task's CONFIG-refactor/Complete-Game-assembly work. 12.2 and 12.3 now note `CONFIG` isn't pre-existing in this sandbox, so the AI should declare it (with a demo value) so the fix is visibly proven in the Preview. The app's Exercises Journal provides these 5 capstone exercises, each with 3 boxes, all running live in the Racing Game Preview:
 
-- **Exercise 12.1 (The Configuration Object & Difficulty Scaling)**: Plan lists CONFIG's fields; prompt mentions `CONFIG`, `speed`, `clamp`/`max`; output references CONFIG clamped to `maxSpeed`; explanation evaluates `startSpeed + score * difficultyMultiplier` at score 50 (`10`).
-- **Exercise 12.2 (The Unbounded Speed Bug)**: Plan explains why the ramp needs a ceiling; output includes `Math.min(speed, CONFIG.maxSpeed)`; explanation confirms speed is capped.
-- **Exercise 12.3 (Refactoring Magic Numbers)**: Plan states what `35`/`295` become; output includes `CONFIG.leftBound`/`CONFIG.rightBound` replacing the hardcoded numbers; explanation covers maintainability.
-- **Exercise 12.4 (The Final Diagnostic)**: Plan considers whether mixing `>`/`>=` guards creates an edge-case gap (YES); prompt mentions `checkCollision`/flip; output includes the corrected `rect1.x < rect2.x + rect2.width`; explanation names the operator fix.
-- **Exercise 12.5 (Capstone Reflection & the Final QA Sweep)**: Plan lists the 4 core systems (variables, boundaries, collision, restart); prompt mentions `test`, `console.log`, `pass`; output logs PASS/FAIL; explanation is a free-response reflection (≥20 characters) naming a specific bug and how tracing values found it.
+- **Exercise 12.1 (The Configuration Object & Difficulty Scaling)**: goal is a difficulty-scaling function reading from CONFIG, clamped to `CONFIG.maxSpeed`; explanation evaluates `startSpeed + score * difficultyMultiplier` at score 50 (`10`).
+- **Exercise 12.2 (The Unbounded Speed Bug)**: goal is a self-contained demo — `CONFIG`/`speed` declared (starting above the cap), clamped with `Math.min(speed, CONFIG.maxSpeed)`, logged; explanation confirms speed is capped.
+- **Exercise 12.3 (Refactoring Magic Numbers)**: goal is a self-contained demo — `CONFIG` declared with `leftBound`/`rightBound`, `carX` set outside a boundary to prove the clamp, logged; explanation covers maintainability.
+- **Exercise 12.4 (The Final Diagnostic)**: goal is diagnosing and fixing the seeded flipped comparison, correcting it to `rect1.x < rect2.x + rect2.width`; explanation names the operator fix.
+- **Exercise 12.5 (Capstone Reflection & the Final QA Sweep)**: goal is a diagnostic script logging PASS/FAIL for the 4 core systems (variables, boundaries, collision, restart); explanation is a genuine, specific personal reflection naming an actual bug and how tracing values helped find it — there's no single correct answer, only a genuine one.
 
 ---
 

@@ -293,7 +293,8 @@ async function requireTeacher(req, res, next) {
 // prompt-engineering skill (clarity, specificity, completeness) — NOT whether it happens
 // to solve the exercise's specific intended scenario. Plan/Output Code/Explain are still
 // required fields (the student still practices the whole loop) but are no longer
-// evaluated for correctness at all. Pilot scope: L1 Sessions 1, 5, 6. See
+// evaluated for correctness at all. Piloted on L1 Sessions 1, 5, 6 (2026-07-30), extended
+// to Sessions 2-4 and 7-12 (2026-08-05) — now used across all of L1 S1-S12. See
 // improve_concept.md (one directory above this repo) for the full design.
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 
@@ -373,8 +374,9 @@ app.post('/api/audit-submission', authenticateToken, async (req, res) => {
 // from the Auditor role above. The Hybrid Model (PRJ_KNOWLEDGE.md §6) deliberately keeps
 // code generation external (Cursor/ChatGPT/Copilot) as a required professional skill —
 // this does not replace that. It exists for a quick in-platform check; "Copy Prompt" is
-// kept alongside it everywhere it appears. Pilot scope: L1 Sessions 1, 5, 6 only, same as
-// the Auditor pilot. Deliberately does NOT receive expectedConcepts (the private grading
+// kept alongside it everywhere it appears. Piloted on L1 Sessions 1, 5, 6 (2026-07-30),
+// extended to Sessions 2-4 and 7-12 (2026-08-05), same as the Auditor above. Deliberately
+// does NOT receive expectedConcepts (the private grading
 // rubric) — it only sees what a real external AI tool would see: the student's own prompt
 // plus the same student-visible context (problem/vision), so the generated code reflects
 // the prompt's actual quality, not a rubric-aware shortcut.
