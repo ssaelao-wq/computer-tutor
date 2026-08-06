@@ -1166,8 +1166,7 @@ function buildJsSandboxPreview(studentCode) {
       <body tabindex="0">
         <div id="dashboard"><h2>Score: <span id="score-val">0</span> | Speed: <span id="speed-val">0</span></h2></div>
         <div id="game-track">
-          <div class="lane-divider" style="left: 130px;"></div>
-          <div class="lane-divider" style="left: 260px;"></div>
+          <div class="lane-divider" style="left: 180px;"></div>
           <div id="player-car" style="left: 165px;">🏎️</div>
           <div id="obstacle" style="left: 165px;">🚧</div>
           <div id="restart-panel" class="hidden">GAME OVER<br/>Press Space to Restart</div>
@@ -6284,9 +6283,9 @@ export default function App() {
                       disabled={s1Verifying}
                       onClick={async () => {
                         const ex = S1_EXERCISES[s1ActiveExercise - 1];
-                        const filled = s1PlanInput.trim() && s1PromptInput.trim() && s1OutputCodeInput.trim() && s1ExplainInput.trim();
+                        const filled = s1PromptInput.trim();
                         if (!filled) {
-                          setS1Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output, and Explanation — before verifying.' }]);
+                          setS1Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS1Success(false);
                           return;
                         }
@@ -6353,7 +6352,7 @@ export default function App() {
                     <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
                       <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                         {s1Logs.length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : s1Logs.map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                             {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -6524,9 +6523,9 @@ export default function App() {
                       disabled={s2Verifying}
                       onClick={async () => {
                         const ex = S2_EXERCISES[s2ActiveExercise - 1];
-                        const filled = s2PlanInput.trim() && s2PromptInput.trim() && s2OutputCodeInput.trim() && s2ExplainInput.trim();
+                        const filled = s2PromptInput.trim();
                         if (!filled) {
-                          setS2Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS2Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS2Success(false);
                           return;
                         }
@@ -6593,7 +6592,7 @@ export default function App() {
                     <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
                       <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                         {s2Logs.length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : s2Logs.map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                             {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -6773,9 +6772,9 @@ export default function App() {
                       disabled={s3Verifying}
                       onClick={async () => {
                         const ex = S3_EXERCISES[s3ActiveExercise - 1];
-                        const filled = s3PlanInput.trim() && s3PromptInput.trim() && s3OutputCodeInput.trim() && s3ExplainInput.trim();
+                        const filled = s3PromptInput.trim();
                         if (!filled) {
-                          setS3Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS3Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS3Success(false);
                           return;
                         }
@@ -6842,7 +6841,7 @@ export default function App() {
                     <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
                       <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                         {s3Logs.length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : s3Logs.map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                             {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -7007,7 +7006,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s4Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s4Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -7038,9 +7037,9 @@ export default function App() {
                       disabled={s4Verifying}
                       onClick={async () => {
                         const ex = S4_EXERCISES[s4ActiveExercise - 1];
-                        const filled = s4PlanInput.trim() && s4PromptInput.trim() && s4OutputCodeInput.trim() && s4ExplainInput.trim();
+                        const filled = s4PromptInput.trim();
                         if (!filled) {
-                          setS4Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS4Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS4Success(false);
                           return;
                         }
@@ -7252,7 +7251,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s5Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s5Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -7283,9 +7282,9 @@ export default function App() {
                       disabled={s5Verifying}
                       onClick={async () => {
                         const ex = S5_EXERCISES[s5ActiveExercise - 1];
-                        const filled = s5PlanInput.trim() && s5PromptInput.trim() && s5OutputCodeInput.trim() && s5ExplainInput.trim();
+                        const filled = s5PromptInput.trim();
                         if (!filled) {
-                          setS5Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS5Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS5Success(false);
                           return;
                         }
@@ -7497,7 +7496,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s6Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s6Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -7528,9 +7527,9 @@ export default function App() {
                       disabled={s6Verifying}
                       onClick={async () => {
                         const ex = S6_EXERCISES[s6ActiveExercise - 1];
-                        const filled = s6PlanInput.trim() && s6PromptInput.trim() && s6OutputCodeInput.trim() && s6ExplainInput.trim();
+                        const filled = s6PromptInput.trim();
                         if (!filled) {
-                          setS6Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS6Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS6Success(false);
                           return;
                         }
@@ -7917,7 +7916,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s8Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s8Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -7948,9 +7947,9 @@ export default function App() {
                       disabled={s8Verifying}
                       onClick={async () => {
                         const ex = S8_EXERCISES[s8ActiveExercise - 1];
-                        const filled = s8PlanInput.trim() && s8PromptInput.trim() && s8OutputCodeInput.trim() && s8ExplainInput.trim();
+                        const filled = s8PromptInput.trim();
                         if (!filled) {
-                          setS8Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS8Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS8Success(false);
                           return;
                         }
@@ -8162,7 +8161,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s9Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s9Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -8193,9 +8192,9 @@ export default function App() {
                       disabled={s9Verifying}
                       onClick={async () => {
                         const ex = S9_EXERCISES[s9ActiveExercise - 1];
-                        const filled = s9PlanInput.trim() && s9PromptInput.trim() && s9OutputCodeInput.trim() && s9ExplainInput.trim();
+                        const filled = s9PromptInput.trim();
                         if (!filled) {
-                          setS9Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS9Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS9Success(false);
                           return;
                         }
@@ -8407,7 +8406,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s10Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s10Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -8438,9 +8437,9 @@ export default function App() {
                       disabled={s10Verifying}
                       onClick={async () => {
                         const ex = S10_EXERCISES[s10ActiveExercise - 1];
-                        const filled = s10PlanInput.trim() && s10PromptInput.trim() && s10OutputCodeInput.trim() && s10ExplainInput.trim();
+                        const filled = s10PromptInput.trim();
                         if (!filled) {
-                          setS10Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS10Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS10Success(false);
                           return;
                         }
@@ -8652,7 +8651,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s11Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s11Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -8683,9 +8682,9 @@ export default function App() {
                       disabled={s11Verifying}
                       onClick={async () => {
                         const ex = S11_EXERCISES[s11ActiveExercise - 1];
-                        const filled = s11PlanInput.trim() && s11PromptInput.trim() && s11OutputCodeInput.trim() && s11ExplainInput.trim();
+                        const filled = s11PromptInput.trim();
                         if (!filled) {
-                          setS11Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS11Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS11Success(false);
                           return;
                         }
@@ -8897,7 +8896,7 @@ export default function App() {
                           <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
                           <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                             {s12Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Fill in all four boxes, then click Verify.</div>
+                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s12Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                                 {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -8928,9 +8927,9 @@ export default function App() {
                       disabled={s12Verifying}
                       onClick={async () => {
                         const ex = S12_EXERCISES[s12ActiveExercise - 1];
-                        const filled = s12PlanInput.trim() && s12PromptInput.trim() && s12OutputCodeInput.trim() && s12ExplainInput.trim();
+                        const filled = s12PromptInput.trim();
                         if (!filled) {
-                          setS12Logs([{ type: 'error', text: '✗ Fill in all four boxes — Plan, Prompt, Output Code, and Explanation — before verifying.' }]);
+                          setS12Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS12Success(false);
                           return;
                         }
