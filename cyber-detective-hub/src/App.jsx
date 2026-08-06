@@ -1154,7 +1154,7 @@ function buildJsSandboxPreview(studentCode) {
           body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
           #dashboard { padding: 8px; background-color: #1a1a2e; border-radius: 6px; text-align: center; border: 1px solid #333; margin-bottom: 10px; }
           h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
-          #game-track { position: relative; width: 100%; height: 260px; background-color: #222; border: 3px solid #ffcc00; overflow: hidden; }
+          #game-track { position: relative; width: 100%; height: 260px; background-color: #222; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 4px, transparent 4px, transparent 40px); border: 3px solid #ffcc00; overflow: hidden; }
           .lane-divider { position: absolute; top: 0; height: 100%; width: 2px; border-left: 2px dashed #ffffff; }
           #player-car { position: absolute; bottom: 20px; width: 30px; height: 50px; background-color: #ff4d4d; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: left 0.15s ease; z-index: 2; }
           #obstacle { position: absolute; top: -100px; width: 25px; height: 40px; background-color: #ff9f43; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 1; }
@@ -1164,7 +1164,7 @@ function buildJsSandboxPreview(studentCode) {
         </style>
       </head>
       <body tabindex="0">
-        <div id="dashboard"><h2>Score: <span id="score-val">0</span></h2></div>
+        <div id="dashboard"><h2>Score: <span id="score-val">0</span> | Speed: <span id="speed-val">0</span></h2></div>
         <div id="game-track">
           <div class="lane-divider" style="left: 130px;"></div>
           <div class="lane-divider" style="left: 260px;"></div>
@@ -3005,49 +3005,61 @@ const S6_EXERCISES = [
     num: 1,
     title: "Exercise 6.1: Track Boundary Coordinates & the Left Guard",
     problem: "The three lane positions are 35px, 165px, and 295px (car starts centered at 165). Right now nothing stops the car from steering past the left edge of the track.",
-    instruction: "Goal: stop the car from steering past the left edge. 1) Plan: in your own words, what needs to be true about carX before you allow it to move further left? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: once it works, explain what happens if the car is already at the edge and ArrowLeft is pressed again.",
+    instruction: "Goal: stop the car from steering past the left edge. 1) Plan: in your own words, what needs to be true about carX before you allow it to move further left? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: once it works, explain what happens if the car is already at the edge and ArrowLeft is pressed again — and why a looser comparison like carX >= -130 would fail to protect that same edge.",
     planPlaceholder: "In your own words, what needs to be true about carX before allowing it to move further left?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The left boundary is 35 (leftmost lane). A guard should only allow carX -= 130 while carX > 35, blocking further movement once the car reaches the edge. Explanation should say the movement is blocked / nothing happens once carX is already at 35. Don't require the literal numbers 35/130 or the word 'guard' in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The left boundary is 35 (leftmost lane). A guard should only allow carX -= 130 while carX > 35, blocking further movement once the car reaches the edge. Explanation should say the movement is blocked / nothing happens once carX is already at 35, AND should recognize that a looser comparison like carX >= -130 would let the car travel deep into negative/off-screen territory before ever blocking it. Don't require the literal numbers 35/130/-130 or the word 'guard' in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
-    title: "Exercise 6.2: The Infinite Teleporting Bug",
-    problem: `Bug in this exact code: the boundary check was changed from carX > 35 to carX >= -130, and the car teleports off-screen when ArrowLeft is held.`,
-    instruction: "Goal: figure out why this specific change breaks the boundary, then fix it. 1) Plan: form your own hypothesis — why would a looser comparison let the car travel further than intended? 2) Prompt: describe the bug and the goal to the AI, in your own words. 3) Explain: contrast what the broken version allowed versus what the fix restores.",
-    planPlaceholder: "What's your hypothesis — why does this looser comparison let the car travel further than it should?",
-    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
-    outputCodePlaceholder: "Paste the AI's fixed code here.",
-    runnable: true,
-    expectedConcepts: "carX >= -130 is far looser than the correct carX > 35, so the car can travel deep into negative pixel territory (off-screen) before the check would ever stop it. The fix restores carX > 35. Explanation should contrast the two boundary values and why the looser one fails. Don't require the literal numbers 35/-130 in the plan/prompt prose — judge the reasoning."
-  },
-  {
-    num: 3,
-    title: "Exercise 6.3: Adding the Right Guard",
+    title: "Exercise 6.2: The Right Guard",
     problem: "The right edge of the track is at carX = 295. Right now ArrowRight can push the car past it with nothing to stop it.",
-    instruction: "Goal: stop the car from steering past the right edge, mirroring how the left edge is already protected. 1) Plan: in your own words, how should the right guard compare to the left guard you already built? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why does this guard mirror the left one instead of needing entirely different logic?",
+    instruction: "Goal: stop the car from steering past the right edge, mirroring how the left edge is already protected. 1) Plan: in your own words, how should the right guard compare to the left guard you already built in 6.1? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why does this guard mirror the left one instead of needing entirely different logic?",
     planPlaceholder: "How should the right guard compare to the left guard you already built — same idea, opposite direction?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The right guard should only allow carX += 130 while carX < 295 (mirroring the left guard's carX > 35 structure, opposite direction/boundary). Explanation should identify the structural symmetry with the left guard. Don't require the literal numbers 295/130 or the word 'mirror' in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The right guard should only allow carX += 130 while carX < 295 (mirroring the left guard's carX > 35 structure, opposite direction/boundary). Explanation should identify the structural symmetry with the left guard from 6.1. Don't require the literal numbers 295/130 or the word 'mirror' in the plan/prompt prose — judge the reasoning."
+  },
+  {
+    num: 3,
+    title: "Exercise 6.3: Accelerate & Decelerate (the Speed Range Guard)",
+    problem: `Holding ArrowUp should speed the car up — increasing speed, showing the live number in the HUD (#speed-val), and advancing roadOffset so the track's striped background scrolls, making it look like the car is driving forward. Holding ArrowDown should slow it back down the same way. But speed must stay inside its range: it can't climb past 120 (reset to 100 if it does — watch out, resetting to the String "100" would re-introduce the Session 4 string-concatenation bug), and it can't drop below 0 either.`,
+    instruction: "Goal: make ArrowUp increase speed and ArrowDown decrease it, with speed always staying between 0 and 120. 1) Plan: in your own words, what needs to be true about speed before you allow it to increase further? What needs to be true before you allow it to decrease further? 2) Prompt: describe both rules to the AI, in your own words — including the type concern. This snippet is tested on its own, so have it declare roadOffset itself and call both the accelerate and decelerate handlers a few times so you can see #speed-val and both guards actually work. 3) Explain: why is guarding the bottom of speed's range (0) just as necessary as guarding the top (120)?",
+    planPlaceholder: "What needs to be true about speed before allowing it to increase further? Before allowing it to decrease further?",
+    promptPlaceholder: "Describe both the acceleration and deceleration rules to the AI, in your own words — including the type concern.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
+    runnable: true,
+    expectedConcepts: "ArrowUp should increase speed (e.g. speed += 10) capped so it never exceeds 120 (resetting to the Number 100, not a string, if it would). ArrowDown should decrease speed (e.g. speed -= 10) floored so it never goes below 0. #speed-val's textContent should update, and roadOffset (declared by the snippet itself, since this box is tested standalone) should advance when accelerating, driving #game-track's style.backgroundPositionY. Explanation should recognize the 0 floor is exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range. Don't require the literal numbers 120/100/10/0 in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
-    title: "Exercise 6.4: The Overheat Guard (and a Type Bug)",
-    problem: `Plan a second safety rule: speed shouldn't be allowed to climb past 120 — it should reset back down to 100 if it does. Watch out: resetting speed to the String "100" would re-introduce the Session 4 string-concatenation bug.`,
-    instruction: "Goal: cap speed so it can't climb past 120, resetting safely without reintroducing the string bug. 1) Plan: state the rule in your own words, and note what should happen at exactly 120. 2) Prompt: describe the goal to the AI, making sure to flag the type concern. 3) Explain: why would resetting speed to a quoted string break later math?",
-    planPlaceholder: "State the overheat rule in your own words, and note whether exactly 120 should trigger it.",
-    promptPlaceholder: "Describe the goal to the AI, in your own words — including the type concern.",
+    title: "Exercise 6.4: The Reverse Handoff (Bottom Boundary)",
+    problem: "Once speed has been braked all the way down to 0 (from 6.3), holding ArrowDown shouldn't just do nothing — it should start moving the car backward instead, decreasing roadOffset. But roadOffset (how far along the road the car has driven) must never go below 0 either — reversing past where the road even starts.",
+    instruction: "Goal: once speed is already 0, make ArrowDown reverse the car instead — and stop it at the start of the road. 1) Plan: in your own words, how does ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before you allow it to decrease further? 2) Prompt: describe that handoff to the AI, in your own words. This snippet is tested on its own, so have it declare both speed (already at 0) and roadOffset itself (start it around 10, low enough that reversing hits the floor quickly), and call the ArrowDown handler enough times to see the floor guard work. 3) Explain: why does it make sense for the SAME key (ArrowDown) to mean two different things depending on whether speed is already 0?",
+    planPlaceholder: "How should ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before allowing it to decrease further?",
+    promptPlaceholder: "Describe the handoff to the AI, in your own words — braking vs. reversing.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "If speed > 120 (strict, so exactly 120 does not trigger it), reset speed to the Number 100 (not the string \"100\"). Explanation should correctly say a quoted \"100\" would make later math concatenate/glue text instead of adding. Don't require the literal numbers 120/100 or the word 'string' in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "When speed > 0, ArrowDown should decrease speed (braking, from 6.3). When speed is already 0, ArrowDown should instead decrease roadOffset (reversing), only while roadOffset > 0 — clamping at 0 so the car can't reverse past the start. Since this snippet is tested standalone, the code should declare both speed (at 0) and roadOffset itself and call the handler enough times to demonstrate the floor. Explanation should correctly identify that ArrowDown's meaning depends on the current speed — braking first, reversing only once already stopped. Don't require the literal numbers 10/0 in the plan/prompt prose — judge the reasoning."
   }
-  // Note (2026-07-30): a 5th "combine every guard into one system" capstone exercise
-  // used to live here — dropped as a duplicate of this session's Project Task (Lab 6),
-  // which now owns that final integration step. See improve_concept.md Part II.
+  // Note (2026-08-06): 6.1/6.2 (left/right) previously had a separate "Infinite Teleporting
+  // Bug" exercise between them that tested the exact same left-boundary comparison a second
+  // time — dropped as redundant; its core insight (a looser comparison fails to protect the
+  // edge) now lives inside 6.1's own Explain question instead of a whole separate exercise.
+  // 6.3/6.4 are new and deliberately ordered by dependency, not by the original left/right/
+  // bottom/uparrow request order: 6.3 builds the full speed range (ArrowUp accelerates,
+  // ArrowDown decelerates, floor+ceiling guards, #speed-val HUD, forward road-scroll via
+  // roadOffset), and 6.4 builds the "reverse once already stopped" handoff on top of it —
+  // that's the actual "bottom boundary" (roadOffset can't go below 0). Doing it the other
+  // order would have asked students to guard a reverse mechanic before the speed system it
+  // depends on existed. See buildJsSandboxPreview's #game-track striped background-image and
+  // #speed-val span for the shared harness pieces both exercises rely on. A 5th "combine
+  // everything" capstone exercise still doesn't live here — dropped as a duplicate of this
+  // session's Project Task (Lab 6), which owns that final integration step. See
+  // improve_concept.md Part II.
 ];
 
 const S7_EXERCISES = [

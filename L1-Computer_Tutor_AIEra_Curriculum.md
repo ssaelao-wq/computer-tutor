@@ -21,7 +21,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 | 3 | CSS sizing, positioning & layout | Styled 3-lane track with lane dashes |
 | 4 | JS variables, types & math | Game-state variable registry (starts `game.js`) |
 | 5 | Keyboard event listeners | Steering input handler (extends `game.js`) — 1st half of the "remembers & responds & stays safe" milestone with Session 6 |
-| 6 | Conditionals & boundary logic | Lane-boundary safety guards (extends `game.js`) — 2nd half of that milestone |
+| 6 | Conditionals & boundary logic | Lane-boundary safety guards + full accelerate/brake/reverse speed system (extends `game.js`) — 2nd half of that milestone |
 | 7 | Loops & iteration | Highway-marker spawner (extends `game.js`) |
 | 8 | Functions, parameters & scope | Modular movement controller (extends `game.js`) |
 | 9 | Timers & animation frames | Mini game-loop with stop gate (extends `game.js`) |
@@ -322,7 +322,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Action*: Prompt AI to generate boundary conditionals wrapping the lane steering script.
    - *Audit*: Audit conditionals blocks. Trace parameters step-by-step to verify the car locks at the outer lanes in the Prompt Journal.
 
-5. **Socratic Debugging: The Infinite Teleporting Bug (15 mins)**
+5. **Socratic Debugging: The Infinite Teleporting Bug (15 mins)** — a live, tutor-led classroom demo (not an in-app sandbox exercise; see the Content note below for how the platform now covers this insight)
    - *Activity*: Tutor loosens the comparison operator from `carX > 35` to `carX >= -130` (or breaks the assignment block), causing the car to teleport off-screen.
    - *Challenge*: Student corrects boundaries coordinates.
    - *Socratic Question*: *"Why did the car disappear when we pressed left repeatedly? What value did carX reach? Why did our boundary guard fail to catch it?"*
@@ -333,18 +333,20 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
    - *Discussion*: *"Autonomous vehicles rely on boundaries to stay in lanes. What happens if a safety check script has a logic typo? Why do developers write redundant checks?"*
 
 **📝 Homework (Practice at Home):**
-- **In-App Project Task ("Lab 6: Safety Guards & Boundary Clamps")**: In the Journal tab, extend your own Session 5 `game.js` (including its `steerCar()` function and ◀/▶ buttons) with a boundary guard placed INSIDE `steerCar()` itself, so both the keyboard and the buttons respect it — deriving the limits from your own `TRACK_WIDTH`, not the exercises' fixed 35/295 (+50 XP).
+- **In-App Project Task ("Lab 6: Safety Guards & the Full Control System")**: In the Journal tab, extend your own Session 5 `game.js` (including its `steerCar()` function and ◀/▶ buttons). Put a left/right boundary guard INSIDE `steerCar()` itself, deriving the limits from your own `TRACK_WIDTH` (not the exercises' fixed 35/295). Then add two new on-screen buttons, ▲ Accelerate and ▼ Brake, and build ONE shared speed function — containing the full accelerate/decelerate/overheat/reverse system from Exercises 6.3-6.4 — reused by both those buttons and the keyboard's ArrowUp/ArrowDown, updating a live speed readout and scrolling the track's background (+50 XP).
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 6)
 
+**Content note (2026-08-06):** two changes, same day, from teacher review. Exercise 6.2 used to be "The Infinite Teleporting Bug," re-testing 6.1's exact left-boundary comparison — dropped as redundant; that insight now lives inside 6.1's own Explain question. The old Exercise 6.4 ("The Overheat Guard") was rebuilt into a real accelerate/brake/reverse system across two exercises: ArrowUp speeds up, ArrowDown brakes back to 0, and once already stopped, ArrowDown reverses instead — with a live Speed HUD and a scrollable road background in the Preview, not just a silent variable check. The Project Task above was expanded to match, adding two new on-screen buttons and a shared speed function.
+
 **4 exercises** (the old 5th "combine everything" capstone was dropped — that integration now happens once, for real, in the Project Task), each with 3 boxes. Lane coordinates are 35/165/295 (consistent with Session 3's `left: 165px` car position). Graded by the AI Auditor for genuine understanding, not exact wording — instructions state the goal, the student plans/prompts in their own words:
 
-- **Exercise 6.1 (Track Boundary Coordinates & the Left Guard)**: goal is stopping the car steering past the left edge; a strong answer keeps `carX` above 35 before allowing further left movement and explains the block at the edge.
-- **Exercise 6.2 (The Infinite Teleporting Bug)**: given the exact bug (`carX >= -130`), goal is diagnosing and fixing it; a strong answer explains why the looser comparison lets the car travel off-screen and restores `carX > 35`.
-- **Exercise 6.3 (Adding the Right Guard)**: goal is mirroring the left guard for the right edge (295); a strong answer reasons the structural symmetry and implements it correctly.
-- **Exercise 6.4 (The Overheat Guard and a Type Bug)**: goal is capping `speed` at 120 without reintroducing the string-concatenation bug; a strong answer resets to the Number 100 (not a string) and explains why the type matters.
+- **Exercise 6.1 (Track Boundary Coordinates & the Left Guard)**: goal is stopping the car steering past the left edge; a strong answer keeps `carX` above 35 before allowing further left movement, explains the block at the edge, AND explains why a looser comparison like `carX >= -130` would fail to protect it.
+- **Exercise 6.2 (The Right Guard)**: goal is mirroring the left guard for the right edge (295); a strong answer reasons the structural symmetry and implements it correctly.
+- **Exercise 6.3 (Accelerate & Decelerate — the Speed Range Guard)**: goal is ArrowUp raising `speed` (capped at 120, reset to the Number 100) and ArrowDown lowering it (floored at 0), updating a live `#speed-val` HUD and scrolling the road as it accelerates; a strong answer treats the 0 floor as the same kind of guard as the 120 ceiling.
+- **Exercise 6.4 (The Reverse Handoff — Bottom Boundary)**: goal is, once `speed` is already 0, having ArrowDown reverse the car instead of braking — decreasing `roadOffset`, floored at 0 so it can't back up past the start of the road; a strong answer explains that ArrowDown's meaning depends on whether the car is already stopped.
 
-- **Homework Evaluation**: Ensure the student's code compares variables correctly and acts as a boundary clamp (`speed = 100`).
+- **Homework Evaluation**: Ensure the left/right guard lives inside `steerCar()` and the full speed system lives inside one shared function (neither duplicated per input path), limits/caps come from the student's own values (not hardcoded), the overheat reset uses a Number (not a string), and the two new ▲/▼ buttons exist and call that same shared function.
 
 ---
 
