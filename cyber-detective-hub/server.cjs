@@ -137,6 +137,24 @@ async function createTables() {
     )
   `);
 
+  // 5b. Sandbox Exercise Submissions Table (one row per exercise per user, upserted on every
+  // Verify click so Plan/Prompt/Output Code/Explain text survives navigation, logout, and
+  // switching devices — separate from exercise_progress, which only tracks pass/fail).
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS exercise_submissions (
+      user_id VARCHAR(50),
+      session_id VARCHAR(20),
+      exercise_num INT,
+      plan TEXT DEFAULT '',
+      prompt TEXT DEFAULT '',
+      output_code TEXT DEFAULT '',
+      explain TEXT DEFAULT '',
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id, session_id, exercise_num),
+      FOREIGN KEY (user_id) REFERENCES user_profile(id) ON DELETE CASCADE
+    )
+  `);
+
   // 6. Parent-Student Links Table (many-to-many: one parent account can link to multiple students)
   await db.query(`
     CREATE TABLE IF NOT EXISTS parent_links (
@@ -591,6 +609,52 @@ app.post('/api/user/exercise-progress', authenticateToken, async (req, res) => {
       progressMap[row.session_id].push(row.exercise_num);
     });
     res.json({ success: true, progress: progressMap });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 3d. Fetch Sandbox Exercise Submissions (Plan/Prompt/Output Code/Explain text saved on
+// each Verify click). Returned pre-keyed as `${sessionId}-${exerciseNum}` to match the
+// client's existing savedExerciseCode cache shape, so the response can be merged straight in.
+app.get('/api/user/exercise-submissions', authenticateToken, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT session_id, exercise_num, plan, prompt, output_code, explain FROM exercise_submissions WHERE user_id = $1",
+      [req.userId]
+    );
+    const submissionsMap = {};
+    result.rows.forEach(row => {
+      submissionsMap[`${row.session_id}-${row.exercise_num}`] = {
+        plan: row.plan || '',
+        prompt: row.prompt || '',
+        outputCode: row.output_code || '',
+        explain: row.explain || ''
+      };
+    });
+    res.json(submissionsMap);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 3e. Save (upsert) one exercise's Plan/Prompt/Output Code/Explain text — called on every
+// Verify click so students can refer back to what they wrote, regardless of pass/fail.
+app.post('/api/user/exercise-submission', authenticateToken, async (req, res) => {
+  const { sessionId, exerciseNum, plan, prompt, outputCode, explain } = req.body;
+  const exNum = parseInt(exerciseNum, 10);
+  if (!/^l\d+-s\d+$/.test(String(sessionId || '')) || !Number.isInteger(exNum) || exNum < 1 || exNum > 20) {
+    return res.status(400).json({ error: `Invalid sessionId/exerciseNum: ${JSON.stringify({ sessionId, exerciseNum })}` });
+  }
+  try {
+    await db.query(
+      `INSERT INTO exercise_submissions (user_id, session_id, exercise_num, plan, prompt, output_code, explain, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
+       ON CONFLICT (user_id, session_id, exercise_num)
+       DO UPDATE SET plan = $4, prompt = $5, output_code = $6, explain = $7, updated_at = CURRENT_TIMESTAMP`,
+      [req.userId, sessionId, exNum, plan || '', prompt || '', outputCode || '', explain || '']
+    );
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

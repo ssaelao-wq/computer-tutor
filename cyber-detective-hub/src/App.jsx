@@ -3970,6 +3970,47 @@ export default function App() {
       });
   }, [currentUser?.id, token]);
 
+  // Load per-user exercise submissions (Plan/Prompt/Output Code/Explain text saved on
+  // every Verify click — see saveExerciseSubmission below) once the user is known. Merges
+  // into savedExerciseCode, the same cache the exercise-switch buttons already read from,
+  // and pre-fills whichever exercise is currently active per session (exercise 1, since
+  // this runs at login before the student has navigated anywhere).
+  useEffect(() => {
+    if (!currentUser?.id) return;
+    fetch('/api/user/exercise-submissions', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load exercise submissions');
+        return res.json();
+      })
+      .then(submissionsMap => {
+        setSavedExerciseCode(prev => ({ ...prev, ...submissionsMap }));
+        const hydrateActive = (sessionId, activeExercise, setPlan, setPrompt, setOutputCode, setExplain) => {
+          const saved = submissionsMap[`${sessionId}-${activeExercise}`];
+          if (!saved) return;
+          setPlan(saved.plan || '');
+          setPrompt(saved.prompt || '');
+          setOutputCode(saved.outputCode || '');
+          setExplain(saved.explain || '');
+        };
+        hydrateActive('l1-s1', s1ActiveExercise, setS1PlanInput, setS1PromptInput, setS1OutputCodeInput, setS1ExplainInput);
+        hydrateActive('l1-s2', s2ActiveExercise, setS2PlanInput, setS2PromptInput, setS2OutputCodeInput, setS2ExplainInput);
+        hydrateActive('l1-s3', s3ActiveExercise, setS3PlanInput, setS3PromptInput, setS3OutputCodeInput, setS3ExplainInput);
+        hydrateActive('l1-s4', s4ActiveExercise, setS4PlanInput, setS4PromptInput, setS4OutputCodeInput, setS4ExplainInput);
+        hydrateActive('l1-s5', s5ActiveExercise, setS5PlanInput, setS5PromptInput, setS5OutputCodeInput, setS5ExplainInput);
+        hydrateActive('l1-s6', s6ActiveExercise, setS6PlanInput, setS6PromptInput, setS6OutputCodeInput, setS6ExplainInput);
+        hydrateActive('l1-s7', s7ActiveExercise, setS7PlanInput, setS7PromptInput, setS7OutputCodeInput, setS7ExplainInput);
+        hydrateActive('l1-s8', s8ActiveExercise, setS8PlanInput, setS8PromptInput, setS8OutputCodeInput, setS8ExplainInput);
+        hydrateActive('l1-s9', s9ActiveExercise, setS9PlanInput, setS9PromptInput, setS9OutputCodeInput, setS9ExplainInput);
+        hydrateActive('l1-s10', s10ActiveExercise, setS10PlanInput, setS10PromptInput, setS10OutputCodeInput, setS10ExplainInput);
+        hydrateActive('l1-s11', s11ActiveExercise, setS11PlanInput, setS11PromptInput, setS11OutputCodeInput, setS11ExplainInput);
+        hydrateActive('l1-s12', s12ActiveExercise, setS12PlanInput, setS12PromptInput, setS12OutputCodeInput, setS12ExplainInput);
+      })
+      .catch(err => console.warn('Failed to load exercise submissions from server:', err.message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?.id, token]);
+
   useEffect(() => {
     const handleSimMessage = (event) => {
       if (!event.data || !event.data.__sim) return;
@@ -4616,6 +4657,18 @@ export default function App() {
     }
     const allDone = nextDone.length >= total;
     return { allDone, doneCount: nextDone.length, total, locked: allDone && !solvedCases[sessionId] && isQuestLocked(sessionId) };
+  };
+
+  // Persists one exercise's Plan/Prompt/Output Code/Explain text on every Verify click
+  // (pass or fail), so students can refer back to what they wrote later — separate from
+  // markExerciseComplete above, which only records pass/fail. Fire-and-forget: a failed
+  // save just means this exercise's text isn't restored next login, not a broken Verify.
+  const saveExerciseSubmission = (sessionId, exerciseNum, fields) => {
+    fetch('/api/user/exercise-submission', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ sessionId, exerciseNum, ...fields })
+    }).catch(err => console.warn('Failed to save exercise submission:', err.message));
   };
 
   // Trigger simulated AI generation
@@ -6312,6 +6365,7 @@ export default function App() {
                       disabled={s1Verifying}
                       onClick={async () => {
                         const ex = S1_EXERCISES[s1ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s1', s1ActiveExercise, { plan: s1PlanInput, prompt: s1PromptInput, outputCode: s1OutputCodeInput, explain: s1ExplainInput });
                         const filled = s1PromptInput.trim();
                         if (!filled) {
                           setS1Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -6552,6 +6606,7 @@ export default function App() {
                       disabled={s2Verifying}
                       onClick={async () => {
                         const ex = S2_EXERCISES[s2ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s2', s2ActiveExercise, { plan: s2PlanInput, prompt: s2PromptInput, outputCode: s2OutputCodeInput, explain: s2ExplainInput });
                         const filled = s2PromptInput.trim();
                         if (!filled) {
                           setS2Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -6801,6 +6856,7 @@ export default function App() {
                       disabled={s3Verifying}
                       onClick={async () => {
                         const ex = S3_EXERCISES[s3ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s3', s3ActiveExercise, { plan: s3PlanInput, prompt: s3PromptInput, outputCode: s3OutputCodeInput, explain: s3ExplainInput });
                         const filled = s3PromptInput.trim();
                         if (!filled) {
                           setS3Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -7066,6 +7122,7 @@ export default function App() {
                       disabled={s4Verifying}
                       onClick={async () => {
                         const ex = S4_EXERCISES[s4ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s4', s4ActiveExercise, { plan: s4PlanInput, prompt: s4PromptInput, outputCode: s4OutputCodeInput, explain: s4ExplainInput });
                         const filled = s4PromptInput.trim();
                         if (!filled) {
                           setS4Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -7311,6 +7368,7 @@ export default function App() {
                       disabled={s5Verifying}
                       onClick={async () => {
                         const ex = S5_EXERCISES[s5ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s5', s5ActiveExercise, { plan: s5PlanInput, prompt: s5PromptInput, outputCode: s5OutputCodeInput, explain: s5ExplainInput });
                         const filled = s5PromptInput.trim();
                         if (!filled) {
                           setS5Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -7556,6 +7614,7 @@ export default function App() {
                       disabled={s6Verifying}
                       onClick={async () => {
                         const ex = S6_EXERCISES[s6ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s6', s6ActiveExercise, { plan: s6PlanInput, prompt: s6PromptInput, outputCode: s6OutputCodeInput, explain: s6ExplainInput });
                         const filled = s6PromptInput.trim();
                         if (!filled) {
                           setS6Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -7751,6 +7810,7 @@ export default function App() {
                       className={`btn-cyber ${s7Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
                       onClick={() => {
                         const ex = S7_EXERCISES[s7ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s7', s7ActiveExercise, { plan: s7PlanInput, prompt: s7PromptInput, outputCode: s7OutputCodeInput, explain: s7ExplainInput });
                         const logs = [{ type: 'info', text: `Checking Exercise 7.${s7ActiveExercise}...` }];
                         const filled = s7PlanInput.trim() && s7PromptInput.trim() && s7OutputCodeInput.trim() && s7ExplainInput.trim();
                         const result = filled ? ex.validate({ plan: s7PlanInput, prompt: s7PromptInput, outputCode: s7OutputCodeInput, explain: s7ExplainInput }) : null;
@@ -7976,6 +8036,7 @@ export default function App() {
                       disabled={s8Verifying}
                       onClick={async () => {
                         const ex = S8_EXERCISES[s8ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s8', s8ActiveExercise, { plan: s8PlanInput, prompt: s8PromptInput, outputCode: s8OutputCodeInput, explain: s8ExplainInput });
                         const filled = s8PromptInput.trim();
                         if (!filled) {
                           setS8Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -8221,6 +8282,7 @@ export default function App() {
                       disabled={s9Verifying}
                       onClick={async () => {
                         const ex = S9_EXERCISES[s9ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s9', s9ActiveExercise, { plan: s9PlanInput, prompt: s9PromptInput, outputCode: s9OutputCodeInput, explain: s9ExplainInput });
                         const filled = s9PromptInput.trim();
                         if (!filled) {
                           setS9Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -8466,6 +8528,7 @@ export default function App() {
                       disabled={s10Verifying}
                       onClick={async () => {
                         const ex = S10_EXERCISES[s10ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s10', s10ActiveExercise, { plan: s10PlanInput, prompt: s10PromptInput, outputCode: s10OutputCodeInput, explain: s10ExplainInput });
                         const filled = s10PromptInput.trim();
                         if (!filled) {
                           setS10Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -8711,6 +8774,7 @@ export default function App() {
                       disabled={s11Verifying}
                       onClick={async () => {
                         const ex = S11_EXERCISES[s11ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s11', s11ActiveExercise, { plan: s11PlanInput, prompt: s11PromptInput, outputCode: s11OutputCodeInput, explain: s11ExplainInput });
                         const filled = s11PromptInput.trim();
                         if (!filled) {
                           setS11Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
@@ -8956,6 +9020,7 @@ export default function App() {
                       disabled={s12Verifying}
                       onClick={async () => {
                         const ex = S12_EXERCISES[s12ActiveExercise - 1];
+                        saveExerciseSubmission('l1-s12', s12ActiveExercise, { plan: s12PlanInput, prompt: s12PromptInput, outputCode: s12OutputCodeInput, explain: s12ExplainInput });
                         const filled = s12PromptInput.trim();
                         if (!filled) {
                           setS12Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
