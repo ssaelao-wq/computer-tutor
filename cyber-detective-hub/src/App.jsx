@@ -1212,6 +1212,14 @@ function buildJsSandboxPreview(studentCode) {
               }
             }
           }, false);
+          // Every time this iframe's srcdoc is replaced (switching exercises, or
+          // clicking Generate Code again after editing the prompt), it's a fresh
+          // document with no focus of its own — the browser doesn't carry focus
+          // over from the previous version, and clicking "Generate Code" itself
+          // moves focus to that parent-page button. Without this, arrow keys
+          // silently stop doing anything until the student notices and re-clicks
+          // inside the preview, which reads as "the new code isn't running."
+          document.body.focus();
           var carX = 165;
           var speed = 0;
           try {
@@ -1290,6 +1298,10 @@ function buildCanvasSandboxPreview(studentCode) {
             parent.postMessage({ __sim: true, type: 'log', text: args.map(String).join(' ') }, '*');
             _origLog.apply(console, args);
           };
+          // See buildJsSandboxPreview's identical call for why: a fresh srcdoc
+          // document has no focus of its own, so without this, arrow keys silently
+          // stop reaching the preview after switching exercises until re-clicked.
+          document.body.focus();
           var canvas = document.getElementById("game-canvas");
           var ctx = canvas.getContext("2d");
           var ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };
@@ -6323,6 +6335,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS1OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS1Logs([{ type: 'error', text: `✗ Couldn't generate an answer (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -6544,6 +6557,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS2OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS2Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -6785,6 +6799,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS3OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS3Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -7036,6 +7051,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS4OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS4Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -7287,6 +7303,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS5OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS5Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -7533,6 +7550,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS6OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS6Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -7955,6 +7973,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS8OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS8Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8201,6 +8220,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS9OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS9Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8447,6 +8467,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS10OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS10Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8693,6 +8714,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS11OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS11Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8939,6 +8961,7 @@ export default function App() {
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS12OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
                               } catch (err) {
                                 setS12Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -11106,6 +11129,7 @@ export default function App() {
                                               // (instead of replacing) keeps that base code intact, since the new
                                               // snippet is written assuming it already exists (e.g. LANE_WIDTH).
                                               setEditingCodeOutput(prev => (prev && prev.trim() ? `${prev}\n\n${data.code}` : data.code));
+                                              setSimConsoleLogs([]);
                                             } catch (err) {
                                               setProjectTaskAuditResult({ pass: false, error: `Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` });
                                             } finally {
