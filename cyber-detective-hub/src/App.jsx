@@ -1188,9 +1188,28 @@ function buildJsSandboxPreview(studentCode) {
           // horizontal steering, which had no page overflow to scroll into), so
           // without this the browser's native scroll fires alongside the student's
           // own keydown handler regardless of what that handler does.
+          //
+          // Also drives the visible road-scroll directly off real ArrowUp/ArrowDown
+          // presses, independent of whether the student's AI-generated code ever
+          // touches #game-track's backgroundPositionY itself — whether it does
+          // depends entirely on how the student's own prompt was worded, which is
+          // too unreliable for "does the road visibly move" to hinge on. This way
+          // pressing ArrowUp always visibly scrolls the road, matching what the
+          // exercise describes, regardless of the generated code's coverage.
+          var _harnessRoadOffset = 0;
           window.addEventListener('keydown', function(e) {
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Spacebar'].indexOf(e.key) !== -1) {
               e.preventDefault();
+            }
+            var track = document.getElementById('game-track');
+            if (track) {
+              if (e.key === 'ArrowUp') {
+                _harnessRoadOffset += 8;
+                track.style.backgroundPositionY = _harnessRoadOffset + 'px';
+              } else if (e.key === 'ArrowDown') {
+                _harnessRoadOffset = Math.max(0, _harnessRoadOffset - 8);
+                track.style.backgroundPositionY = _harnessRoadOffset + 'px';
+              }
             }
           }, false);
           var carX = 165;
