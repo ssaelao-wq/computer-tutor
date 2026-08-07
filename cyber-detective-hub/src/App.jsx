@@ -1154,7 +1154,7 @@ function buildJsSandboxPreview(studentCode) {
           body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
           #dashboard { padding: 8px; background-color: #1a1a2e; border-radius: 6px; text-align: center; border: 1px solid #333; margin-bottom: 10px; }
           h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
-          #game-track { position: relative; width: 390px; max-width: 100%; height: 260px; background-color: #222; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 4px, transparent 4px, transparent 40px); border: 3px solid #ffcc00; overflow: hidden; }
+          #game-track { position: relative; width: 390px; max-width: 100%; height: 260px; background-color: #222; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 10px, transparent 10px, transparent 50px); border: 3px solid #ffcc00; overflow: hidden; }
           .lane-divider { position: absolute; top: 0; height: 100%; width: 2px; border-left: 2px dashed #ffffff; }
           #player-car { position: absolute; bottom: 20px; width: 30px; height: 50px; background-color: #ff4d4d; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: left 0.15s ease; z-index: 2; }
           #obstacle { position: absolute; top: -100px; width: 25px; height: 40px; background-color: #ff9f43; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 1; }
@@ -1183,6 +1183,16 @@ function buildJsSandboxPreview(studentCode) {
             parent.postMessage({ __sim: true, type: 'log', text: args.map(String).join(' ') }, '*');
             _origLog.apply(console, args);
           };
+          // Prevents ArrowUp/ArrowDown/etc from scrolling the page — this preview
+          // sits inside a page tall enough to actually scroll vertically (unlike
+          // horizontal steering, which had no page overflow to scroll into), so
+          // without this the browser's native scroll fires alongside the student's
+          // own keydown handler regardless of what that handler does.
+          window.addEventListener('keydown', function(e) {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Spacebar'].indexOf(e.key) !== -1) {
+              e.preventDefault();
+            }
+          }, false);
           var carX = 165;
           var speed = 0;
           try {
