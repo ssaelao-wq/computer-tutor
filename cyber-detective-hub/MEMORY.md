@@ -36,3 +36,21 @@ ArrowLeft (and all arrows) had no visible effect in the JS sandbox Live Preview 
   - Injected `${cleanedCode}` into the `<script>` tag.
 - **`server.cjs` — `generateCodeWithAI()`**:
   - Hardened system prompt: pure JS only (no HTML/CSS), never re-declare `carX`/`speed`, use `window.addEventListener`, assume DOM elements exist.
+
+---
+
+## [2026-08-13] Fix: Exercise Data Leaking Across User Logins
+
+### Problem
+Logging in as `student-a` and completing exercises, then logging out and logging in as `pete` caused `pete` to see `student-a`'s exercise inputs and submissions instead of their own.
+
+### Root Cause
+1. `handleLogout()` and token expiry effects cleared token/user/points but failed to reset `savedExerciseCode`, `exerciseProgress`, `journalEntries`, and the individual session input states (`s1...` through `s12...`, `l2s1...` through `l2s13...`).
+2. On login, `useEffect` ran `setSavedExerciseCode(prev => ({ ...prev, ...submissionsMap }))` — merging the incoming user submissions on top of the previous user's cached submissions. If the new user had no submissions, `prev` (the old user's work) was preserved.
+3. In `hydrateActive()`, `if (!saved) return;` prevented clearing inputs to empty strings for exercises the new user hadn't attempted yet, leaving the old user's text in React state.
+
+### Fix
+- **`src/App.jsx` — `resetAllUserSessionState()`**: Implemented a comprehensive state reset clearing `savedExerciseCode` (`{}`), `exerciseProgress` (`{}`), `journalEntries` (`[]`), all Level 1 (S1-S12) inputs/logs/statuses, all Level 2 (S1-S13) inputs/logs/statuses, sim console logs, and journal/project task edit fields.
+- Called `resetAllUserSessionState()` in `handleLogout()` and whenever auth token is missing or rejected.
+- Updated login `useEffect` for exercise submissions to replace `savedExerciseCode` directly with the authenticated user's `submissionsMap || {}` (no merging with `prev`), and hydrate active inputs with fallback to `''` or `.preloaded`.
+
