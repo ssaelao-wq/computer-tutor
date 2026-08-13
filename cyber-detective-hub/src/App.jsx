@@ -4007,12 +4007,14 @@ export default function App() {
   }, [currentUser?.id, token]);
 
   // Load per-user exercise submissions (Plan/Prompt/Output Code/Explain text saved on
-  // every Verify click — see saveExerciseSubmission below) once the user is known. Merges
-  // into savedExerciseCode, the same cache the exercise-switch buttons already read from,
-  // and pre-fills whichever exercise is currently active per session (exercise 1, since
-  // this runs at login before the student has navigated anywhere).
+  // every Verify click — see saveExerciseSubmission below) once the user is known. Replaces
+  // savedExerciseCode with the current user's data ONLY (preventing cross-user leakage),
+  // and pre-fills whichever exercise is currently active per session.
   useEffect(() => {
-    if (!currentUser?.id) return;
+    if (!currentUser?.id) {
+      setSavedExerciseCode({});
+      return;
+    }
     fetch('/api/user/exercise-submissions', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
@@ -4021,14 +4023,14 @@ export default function App() {
         return res.json();
       })
       .then(submissionsMap => {
-        setSavedExerciseCode(prev => ({ ...prev, ...submissionsMap }));
+        const safeSubmissions = submissionsMap || {};
+        setSavedExerciseCode(safeSubmissions);
         const hydrateActive = (sessionId, activeExercise, setPlan, setPrompt, setOutputCode, setExplain) => {
-          const saved = submissionsMap[`${sessionId}-${activeExercise}`];
-          if (!saved) return;
-          setPlan(saved.plan || '');
-          setPrompt(saved.prompt || '');
-          setOutputCode(saved.outputCode || '');
-          setExplain(saved.explain || '');
+          const saved = safeSubmissions[`${sessionId}-${activeExercise}`];
+          setPlan(saved?.plan || '');
+          setPrompt(saved?.prompt || '');
+          setOutputCode(saved?.outputCode || '');
+          setExplain(saved?.explain || '');
         };
         hydrateActive('l1-s1', s1ActiveExercise, setS1PlanInput, setS1PromptInput, setS1OutputCodeInput, setS1ExplainInput);
         hydrateActive('l1-s2', s2ActiveExercise, setS2PlanInput, setS2PromptInput, setS2OutputCodeInput, setS2ExplainInput);
@@ -4042,8 +4044,25 @@ export default function App() {
         hydrateActive('l1-s10', s10ActiveExercise, setS10PlanInput, setS10PromptInput, setS10OutputCodeInput, setS10ExplainInput);
         hydrateActive('l1-s11', s11ActiveExercise, setS11PlanInput, setS11PromptInput, setS11OutputCodeInput, setS11ExplainInput);
         hydrateActive('l1-s12', s12ActiveExercise, setS12PlanInput, setS12PromptInput, setS12OutputCodeInput, setS12ExplainInput);
+
+        setL2s1CodeInput(safeSubmissions['l2-s1-1']?.outputCode || L2S1_EXERCISES[0]?.preloaded || '');
+        setL2s2CodeInput(safeSubmissions['l2-s2-1']?.outputCode || L2S2_EXERCISES[0]?.preloaded || '');
+        setL2s3CodeInput(safeSubmissions['l2-s3-1']?.outputCode || L2S3_EXERCISES[0]?.preloaded || '');
+        setL2s4CodeInput(safeSubmissions['l2-s4-1']?.outputCode || L2S4_EXERCISES[0]?.preloaded || '');
+        setL2s5CodeInput(safeSubmissions['l2-s5-1']?.outputCode || L2S5_EXERCISES[0]?.preloaded || '');
+        setL2s6CodeInput(safeSubmissions['l2-s6-1']?.outputCode || L2S6_EXERCISES[0]?.preloaded || '');
+        setL2s7CodeInput(safeSubmissions['l2-s7-1']?.outputCode || L2S7_EXERCISES[0]?.preloaded || '');
+        setL2s8CodeInput(safeSubmissions['l2-s8-1']?.outputCode || L2S8_EXERCISES[0]?.preloaded || '');
+        setL2s9CodeInput(safeSubmissions['l2-s9-1']?.outputCode || L2S9_EXERCISES[0]?.preloaded || '');
+        setL2s10CodeInput(safeSubmissions['l2-s10-1']?.outputCode || L2S10_EXERCISES[0]?.preloaded || '');
+        setL2s11CodeInput(safeSubmissions['l2-s11-1']?.outputCode || L2S11_EXERCISES[0]?.preloaded || '');
+        setL2s12CodeInput(safeSubmissions['l2-s12-1']?.outputCode || L2S12_EXERCISES[0]?.preloaded || '');
+        setL2s13CodeInput(safeSubmissions['l2-s13-1']?.outputCode || L2S13_EXERCISES[0]?.preloaded || '');
       })
-      .catch(err => console.warn('Failed to load exercise submissions from server:', err.message));
+      .catch(err => {
+        console.warn('Failed to load exercise submissions from server:', err.message);
+        setSavedExerciseCode({});
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id, token]);
 
@@ -4123,6 +4142,7 @@ export default function App() {
   useEffect(() => {
     if (!token) {
       setCurrentUser(null);
+      resetAllUserSessionState();
       return;
     }
 
@@ -4142,6 +4162,7 @@ export default function App() {
         console.warn("Auth token verification failed:", err.message);
         setToken(null);
         localStorage.removeItem('detective_token');
+        resetAllUserSessionState();
       });
 
     fetch('/api/journal', {
@@ -4155,9 +4176,14 @@ export default function App() {
             setSelectedJournalId(data[0].id);
             setActiveJournalVersion(data[0].version);
           }
+        } else {
+          setJournalEntries([]);
         }
       })
-      .catch(err => console.warn("Failed to fetch journals:", err.message));
+      .catch(err => {
+        console.warn("Failed to fetch journals:", err.message);
+        setJournalEntries([]);
+      });
   }, [token]);
 
   // Load student list for teacher admin panel
@@ -4378,13 +4404,201 @@ export default function App() {
       });
   };
 
+  const resetAllUserSessionState = () => {
+    setSavedExerciseCode({});
+    setExerciseProgress({});
+    setPoints(0);
+    setSolvedCases({});
+    setJournalEntries([]);
+
+    // Level 1 Sessions 1-12 states
+    setS1ActiveExercise(1);
+    setS1PlanInput('');
+    setS1PromptInput('');
+    setS1OutputCodeInput('');
+    setS1ExplainInput('');
+    setS1Logs([]);
+    setS1Success(false);
+
+    setS2ActiveExercise(1);
+    setS2PlanInput('');
+    setS2PromptInput('');
+    setS2OutputCodeInput('');
+    setS2ExplainInput('');
+    setS2Logs([]);
+    setS2Success(false);
+
+    setS3ActiveExercise(1);
+    setS3PlanInput('');
+    setS3PromptInput('');
+    setS3OutputCodeInput('');
+    setS3ExplainInput('');
+    setS3Logs([]);
+    setS3Success(false);
+
+    setS4ActiveExercise(1);
+    setS4PlanInput('');
+    setS4PromptInput('');
+    setS4OutputCodeInput('');
+    setS4ExplainInput('');
+    setS4Logs([]);
+    setS4Success(false);
+
+    setS5ActiveExercise(1);
+    setS5PlanInput('');
+    setS5PromptInput('');
+    setS5OutputCodeInput('');
+    setS5ExplainInput('');
+    setS5Logs([]);
+    setS5Success(false);
+
+    setS6ActiveExercise(1);
+    setS6PlanInput('');
+    setS6PromptInput('');
+    setS6OutputCodeInput('');
+    setS6ExplainInput('');
+    setS6Logs([]);
+    setS6Success(false);
+
+    setS7ActiveExercise(1);
+    setS7PlanInput('');
+    setS7PromptInput('');
+    setS7OutputCodeInput('');
+    setS7ExplainInput('');
+    setS7Logs([]);
+    setS7Success(false);
+
+    setS8ActiveExercise(1);
+    setS8PlanInput('');
+    setS8PromptInput('');
+    setS8OutputCodeInput('');
+    setS8ExplainInput('');
+    setS8Logs([]);
+    setS8Success(false);
+
+    setS9ActiveExercise(1);
+    setS9PlanInput('');
+    setS9PromptInput('');
+    setS9OutputCodeInput('');
+    setS9ExplainInput('');
+    setS9Logs([]);
+    setS9Success(false);
+
+    setS10ActiveExercise(1);
+    setS10PlanInput('');
+    setS10PromptInput('');
+    setS10OutputCodeInput('');
+    setS10ExplainInput('');
+    setS10Logs([]);
+    setS10Success(false);
+
+    setS11ActiveExercise(1);
+    setS11PlanInput('');
+    setS11PromptInput('');
+    setS11OutputCodeInput('');
+    setS11ExplainInput('');
+    setS11Logs([]);
+    setS11Success(false);
+
+    setS12ActiveExercise(1);
+    setS12PlanInput('');
+    setS12PromptInput('');
+    setS12OutputCodeInput('');
+    setS12ExplainInput('');
+    setS12Logs([]);
+    setS12Success(false);
+
+    // Level 2 Sessions 1-13 states
+    setL2s1ActiveExercise(1);
+    setL2s1CodeInput(L2S1_EXERCISES[0]?.preloaded || '');
+    setL2s1Logs([]);
+    setL2s1Success(false);
+
+    setL2s2ActiveExercise(1);
+    setL2s2CodeInput(L2S2_EXERCISES[0]?.preloaded || '');
+    setL2s2Logs([]);
+    setL2s2Success(false);
+
+    setL2s3ActiveExercise(1);
+    setL2s3CodeInput(L2S3_EXERCISES[0]?.preloaded || '');
+    setL2s3Logs([]);
+    setL2s3Success(false);
+
+    setL2s4ActiveExercise(1);
+    setL2s4CodeInput(L2S4_EXERCISES[0]?.preloaded || '');
+    setL2s4Logs([]);
+    setL2s4Success(false);
+
+    setL2s5ActiveExercise(1);
+    setL2s5CodeInput(L2S5_EXERCISES[0]?.preloaded || '');
+    setL2s5Logs([]);
+    setL2s5Success(false);
+
+    setL2s6ActiveExercise(1);
+    setL2s6CodeInput(L2S6_EXERCISES[0]?.preloaded || '');
+    setL2s6Logs([]);
+    setL2s6Success(false);
+
+    setL2s7ActiveExercise(1);
+    setL2s7CodeInput(L2S7_EXERCISES[0]?.preloaded || '');
+    setL2s7Logs([]);
+    setL2s7Success(false);
+
+    setL2s8ActiveExercise(1);
+    setL2s8CodeInput(L2S8_EXERCISES[0]?.preloaded || '');
+    setL2s8Logs([]);
+    setL2s8Success(false);
+
+    setL2s9ActiveExercise(1);
+    setL2s9CodeInput(L2S9_EXERCISES[0]?.preloaded || '');
+    setL2s9Logs([]);
+    setL2s9Success(false);
+
+    setL2s10ActiveExercise(1);
+    setL2s10CodeInput(L2S10_EXERCISES[0]?.preloaded || '');
+    setL2s10Logs([]);
+    setL2s10Success(false);
+
+    setL2s11ActiveExercise(1);
+    setL2s11CodeInput(L2S11_EXERCISES[0]?.preloaded || '');
+    setL2s11Logs([]);
+    setL2s11Success(false);
+
+    setL2s12ActiveExercise(1);
+    setL2s12CodeInput(L2S12_EXERCISES[0]?.preloaded || '');
+    setL2s12Logs([]);
+    setL2s12Success(false);
+
+    setL2s13ActiveExercise(1);
+    setL2s13CodeInput(L2S13_EXERCISES[0]?.preloaded || '');
+    setL2s13Logs([]);
+    setL2s13Success(false);
+
+    // Sandbox & sim states
+    setSandboxCodeOutput(null);
+    setChaosLogs([]);
+    setSandboxSuccess(false);
+    setSimConsoleLogs([]);
+
+    // Project task & journal edit fields
+    setEditingPlanVision('');
+    setEditingPlanSpecs('');
+    setEditingPlanFlow('');
+    setEditingCodePrompt('');
+    setEditingCodeOutput('');
+    setEditingCodeReview('');
+    setEditingTestCases('');
+    setEditingTestResults('');
+    setEditingIterationChanges('');
+    setEditingIterationLessons('');
+    setProjectTaskAuditResult(null);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('detective_token');
     setToken(null);
     setCurrentUser(null);
-    setPoints(0);
-    setSolvedCases({});
-    setJournalEntries([]);
+    resetAllUserSessionState();
     setActiveTab('dashboard');
   };
 
