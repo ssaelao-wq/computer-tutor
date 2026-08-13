@@ -4700,6 +4700,7 @@ export default function App() {
   // markExerciseComplete above, which only records pass/fail. Fire-and-forget: a failed
   // save just means this exercise's text isn't restored next login, not a broken Verify.
   const saveExerciseSubmission = (sessionId, exerciseNum, fields) => {
+    setSavedExerciseCode(prev => ({ ...prev, [`${sessionId}-${exerciseNum}`]: fields }));
     fetch('/api/user/exercise-submission', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -4970,10 +4971,11 @@ export default function App() {
       setSandboxInput('Plain-English answers and short AI prompts');
       setSandboxEdgeCases('Confusing hardware limits with software bugs, vague prompts that could apply to anything');
       setS1ActiveExercise(1);
-      setS1PlanInput('');
-      setS1PromptInput('');
-      setS1OutputCodeInput('');
-      setS1ExplainInput('');
+      const s1Saved = savedExerciseCode['l1-s1-1'];
+      setS1PlanInput(s1Saved?.plan ?? '');
+      setS1PromptInput(s1Saved?.prompt ?? '');
+      setS1OutputCodeInput(s1Saved?.outputCode ?? '');
+      setS1ExplainInput(s1Saved?.explain ?? '');
       setS1Logs([]);
       setS1Success(false);
     } else if (session.id === 'l1-s2') {
@@ -4983,10 +4985,11 @@ export default function App() {
       setSandboxInput('HTML source code');
       setSandboxEdgeCases('Unclosed elements, incorrect tag nesting, spelling mistakes in ids');
       setS2ActiveExercise(1);
-      setS2PlanInput('');
-      setS2PromptInput('');
-      setS2OutputCodeInput('');
-      setS2ExplainInput('');
+      const s2Saved = savedExerciseCode['l1-s2-1'];
+      setS2PlanInput(s2Saved?.plan ?? '');
+      setS2PromptInput(s2Saved?.prompt ?? '');
+      setS2OutputCodeInput(s2Saved?.outputCode ?? '');
+      setS2ExplainInput(s2Saved?.explain ?? '');
       setS2Logs([]);
       setS2Success(false);
     } else if (session.id === 'l1-s3') {
@@ -4996,10 +4999,11 @@ export default function App() {
       setSandboxInput('CSS styling definitions');
       setSandboxEdgeCases('Missing relative anchor positioning, coordinate boundaries overflow, missing display rules');
       setS3ActiveExercise(1);
-      setS3PlanInput('');
-      setS3PromptInput('');
-      setS3OutputCodeInput('');
-      setS3ExplainInput('');
+      const s3Saved = savedExerciseCode['l1-s3-1'];
+      setS3PlanInput(s3Saved?.plan ?? '');
+      setS3PromptInput(s3Saved?.prompt ?? '');
+      setS3OutputCodeInput(s3Saved?.outputCode ?? '');
+      setS3ExplainInput(s3Saved?.explain ?? '');
       setS3Logs([]);
       setS3Success(false);
     } else if (session.id === 'l1-s4') {
@@ -5009,10 +5013,11 @@ export default function App() {
       setSandboxInput('carX, speed, score, gameActive');
       setSandboxEdgeCases('Quoted numbers causing string concatenation instead of math, wrong initial values');
       setS4ActiveExercise(1);
-      setS4PlanInput('');
-      setS4PromptInput('');
-      setS4OutputCodeInput('');
-      setS4ExplainInput('');
+      const s4Saved = savedExerciseCode['l1-s4-1'];
+      setS4PlanInput(s4Saved?.plan ?? '');
+      setS4PromptInput(s4Saved?.prompt ?? '');
+      setS4OutputCodeInput(s4Saved?.outputCode ?? '');
+      setS4ExplainInput(s4Saved?.explain ?? '');
       setS4Logs([]);
       setS4Success(false);
       setSimConsoleLogs([]);
@@ -5023,10 +5028,11 @@ export default function App() {
       setSandboxInput('event.key, carX');
       setSandboxEdgeCases('Wrong key-string comparisons, missing style unit suffixes');
       setS5ActiveExercise(1);
-      setS5PlanInput('');
-      setS5PromptInput('');
-      setS5OutputCodeInput('');
-      setS5ExplainInput('');
+      const s5Saved = savedExerciseCode['l1-s5-1'];
+      setS5PlanInput(s5Saved?.plan ?? '');
+      setS5PromptInput(s5Saved?.prompt ?? '');
+      setS5OutputCodeInput(s5Saved?.outputCode ?? '');
+      setS5ExplainInput(s5Saved?.explain ?? '');
       setS5Logs([]);
       setS5Success(false);
       setSimConsoleLogs([]);
@@ -5037,10 +5043,11 @@ export default function App() {
       setSandboxInput('carX, speed');
       setSandboxEdgeCases('Off-by-one boundary errors, string vs. number type mismatches');
       setS6ActiveExercise(1);
-      setS6PlanInput('');
-      setS6PromptInput('');
-      setS6OutputCodeInput('');
-      setS6ExplainInput('');
+      const s6Saved = savedExerciseCode['l1-s6-1'];
+      setS6PlanInput(s6Saved?.plan ?? '');
+      setS6PromptInput(s6Saved?.prompt ?? '');
+      setS6OutputCodeInput(s6Saved?.outputCode ?? '');
+      setS6ExplainInput(s6Saved?.explain ?? '');
       setS6Logs([]);
       setS6Success(false);
       setSimConsoleLogs([]);
@@ -5051,10 +5058,11 @@ export default function App() {
       setSandboxInput('i, markerY');
       setSandboxEdgeCases('Missing loop increment (infinite loop), incorrect spacing formula');
       setS7ActiveExercise(1);
-      setS7PlanInput('');
-      setS7PromptInput('');
-      setS7OutputCodeInput('');
-      setS7ExplainInput('');
+      const s7Saved = savedExerciseCode['l1-s7-1'];
+      setS7PlanInput(s7Saved?.plan ?? '');
+      setS7PromptInput(s7Saved?.prompt ?? '');
+      setS7OutputCodeInput(s7Saved?.outputCode ?? '');
+      setS7ExplainInput(s7Saved?.explain ?? '');
       setS7Logs([]);
       setS7Success(false);
       setSimConsoleLogs([]);
@@ -5065,10 +5073,11 @@ export default function App() {
       setSandboxInput('carX');
       setSandboxEdgeCases('Variable scope leaks, duplicate render calls');
       setS8ActiveExercise(1);
-      setS8PlanInput('');
-      setS8PromptInput('');
-      setS8OutputCodeInput('');
-      setS8ExplainInput('');
+      const s8Saved = savedExerciseCode['l1-s8-1'];
+      setS8PlanInput(s8Saved?.plan ?? '');
+      setS8PromptInput(s8Saved?.prompt ?? '');
+      setS8OutputCodeInput(s8Saved?.outputCode ?? '');
+      setS8ExplainInput(s8Saved?.explain ?? '');
       setS8Logs([]);
       setS8Success(false);
       setSimConsoleLogs([]);
@@ -5079,10 +5088,11 @@ export default function App() {
       setSandboxInput('obstacleY, speed, gameActive');
       setSandboxEdgeCases('Missing gameActive gate causing runaway recursion, missing reset check');
       setS9ActiveExercise(1);
-      setS9PlanInput('');
-      setS9PromptInput('');
-      setS9OutputCodeInput('');
-      setS9ExplainInput('');
+      const s9Saved = savedExerciseCode['l1-s9-1'];
+      setS9PlanInput(s9Saved?.plan ?? '');
+      setS9PromptInput(s9Saved?.prompt ?? '');
+      setS9OutputCodeInput(s9Saved?.outputCode ?? '');
+      setS9ExplainInput(s9Saved?.explain ?? '');
       setS9Logs([]);
       setS9Success(false);
       setSimConsoleLogs([]);
@@ -5093,10 +5103,11 @@ export default function App() {
       setSandboxInput('rect1, rect2 (x, y, width, height)');
       setSandboxEdgeCases('Flipped comparison operators, swapped X/Y axes, exact-edge touches');
       setS10ActiveExercise(1);
-      setS10PlanInput('');
-      setS10PromptInput('');
-      setS10OutputCodeInput('');
-      setS10ExplainInput('');
+      const s10Saved = savedExerciseCode['l1-s10-1'];
+      setS10PlanInput(s10Saved?.plan ?? '');
+      setS10PromptInput(s10Saved?.prompt ?? '');
+      setS10OutputCodeInput(s10Saved?.outputCode ?? '');
+      setS10ExplainInput(s10Saved?.explain ?? '');
       setS10Logs([]);
       setS10Success(false);
       setSimConsoleLogs([]);
@@ -5107,10 +5118,11 @@ export default function App() {
       setSandboxInput('score, gameActive');
       setSandboxEdgeCases('Negative score values, restart handler forgetting to reset gameActive');
       setS11ActiveExercise(1);
-      setS11PlanInput('');
-      setS11PromptInput('');
-      setS11OutputCodeInput('');
-      setS11ExplainInput('');
+      const s11Saved = savedExerciseCode['l1-s11-1'];
+      setS11PlanInput(s11Saved?.plan ?? '');
+      setS11PromptInput(s11Saved?.prompt ?? '');
+      setS11OutputCodeInput(s11Saved?.outputCode ?? '');
+      setS11ExplainInput(s11Saved?.explain ?? '');
       setS11Logs([]);
       setS11Success(false);
       setSimConsoleLogs([]);
@@ -5121,10 +5133,11 @@ export default function App() {
       setSandboxInput('CONFIG, carX, speed, score, gameActive');
       setSandboxEdgeCases('Unbounded speed scaling, inconsistent boundary operators, seeded collision bug');
       setS12ActiveExercise(1);
-      setS12PlanInput('');
-      setS12PromptInput('');
-      setS12OutputCodeInput('');
-      setS12ExplainInput('');
+      const s12Saved = savedExerciseCode['l1-s12-1'];
+      setS12PlanInput(s12Saved?.plan ?? '');
+      setS12PromptInput(s12Saved?.prompt ?? '');
+      setS12OutputCodeInput(s12Saved?.outputCode ?? '');
+      setS12ExplainInput(s12Saved?.explain ?? '');
       setS12Logs([]);
       setS12Success(false);
       setSimConsoleLogs([]);
@@ -5153,7 +5166,7 @@ export default function App() {
       setSandboxInput('canvas, ctx');
       setSandboxEdgeCases('The draw loop must call ctx.clearRect() before each redraw once a game loop exists, so shapes don\'t leave a solid trail.');
       setL2s1ActiveExercise(1);
-      setL2s1CodeInput(L2S1_EXERCISES[0].preloaded);
+      setL2s1CodeInput(savedExerciseCode['l2-s1-1'] ?? L2S1_EXERCISES[0].preloaded);
       setL2s1Logs([]);
       setL2s1Success(false);
       setSimConsoleLogs([]);
@@ -5164,7 +5177,7 @@ export default function App() {
       setSandboxInput('ship { x, y, width, height, speed }');
       setSandboxEdgeCases('A local variable inside the move handler must never be named ship again — that would shadow the global object and silently stop the canvas ship from moving.');
       setL2s2ActiveExercise(1);
-      setL2s2CodeInput(L2S2_EXERCISES[0].preloaded);
+      setL2s2CodeInput(savedExerciseCode['l2-s2-1'] ?? L2S2_EXERCISES[0].preloaded);
       setL2s2Logs([]);
       setL2s2Success(false);
       setSimConsoleLogs([]);
@@ -5175,7 +5188,7 @@ export default function App() {
       setSandboxInput('lasers[], ship.x');
       setSandboxEdgeCases('A single spacebar press must not push duplicate lasers — key-repeat behavior can make the cannon feel like it\'s stuttering or double-firing if not handled.');
       setL2s3ActiveExercise(1);
-      setL2s3CodeInput(L2S3_EXERCISES[0].preloaded);
+      setL2s3CodeInput(savedExerciseCode['l2-s3-1'] ?? L2S3_EXERCISES[0].preloaded);
       setL2s3Logs([]);
       setL2s3Success(false);
       setSimConsoleLogs([]);
@@ -5186,7 +5199,7 @@ export default function App() {
       setSandboxInput('lasers[]');
       setSandboxEdgeCases('Multiple lasers exiting off-screen on the same frame must all be removed, not just every other one, which is what a forward-splicing loop would incorrectly do.');
       setL2s4ActiveExercise(1);
-      setL2s4CodeInput(L2S4_EXERCISES[0].preloaded);
+      setL2s4CodeInput(savedExerciseCode['l2-s4-1'] ?? L2S4_EXERCISES[0].preloaded);
       setL2s4Logs([]);
       setL2s4Success(false);
       setSimConsoleLogs([]);
@@ -5197,7 +5210,7 @@ export default function App() {
       setSandboxInput('aliens[][], direction, shield[]');
       setSandboxEdgeCases('An alien exactly at the boundary coordinate must trigger the bounce reliably, not clip past it; a laser hitting an already-destroyed shield cell must have no further effect, and a computed index outside the shield\'s range must not crash or silently pass the check.');
       setL2s5ActiveExercise(1);
-      setL2s5CodeInput(L2S5_EXERCISES[0].preloaded);
+      setL2s5CodeInput(savedExerciseCode['l2-s5-1'] ?? L2S5_EXERCISES[0].preloaded);
       setL2s5Logs([]);
       setL2s5Success(false);
       setSimConsoleLogs([]);
@@ -5208,7 +5221,7 @@ export default function App() {
       setSandboxInput('keysPressed{}, lasers[], aliens[][]');
       setSandboxEdgeCases('Holding two keys at once must move and fire in the same frame, with firing respecting a cooling interval; a laser passing through a dense cluster of aliens must destroy at most one alien.');
       setL2s6ActiveExercise(1);
-      setL2s6CodeInput(L2S6_EXERCISES[0].preloaded);
+      setL2s6CodeInput(savedExerciseCode['l2-s6-1'] ?? L2S6_EXERCISES[0].preloaded);
       setL2s6Logs([]);
       setL2s6Success(false);
       setSimConsoleLogs([]);
@@ -5219,7 +5232,7 @@ export default function App() {
       setSandboxInput('wave, health, aliens[][]');
       setSandboxEdgeCases('Destroying every alien in a wave must increment wave exactly once, even across several frames that all read zero alive aliens in a row; a 500-laser stress test must hold a stable frame rate rather than degrading.');
       setL2s7ActiveExercise(1);
-      setL2s7CodeInput(L2S7_EXERCISES[0].preloaded);
+      setL2s7CodeInput(savedExerciseCode['l2-s7-1'] ?? L2S7_EXERCISES[0].preloaded);
       setL2s7Logs([]);
       setL2s7Success(false);
       setSimConsoleLogs([]);
@@ -5230,7 +5243,7 @@ export default function App() {
       setSandboxInput('captured request/response pair (URL, method, status, payload)');
       setSandboxEdgeCases('A 404 response must be explained as a successful conversation with a "no" answer, not confused with a dropped/offline connection.');
       setL2s8ActiveExercise(1);
-      setL2s8CodeInput(L2S8_EXERCISES[0].preloaded);
+      setL2s8CodeInput(savedExerciseCode['l2-s8-1'] ?? L2S8_EXERCISES[0].preloaded);
       setL2s8Logs([]);
       setL2s8Success(false);
       setSimConsoleLogs([]);
@@ -5241,7 +5254,7 @@ export default function App() {
       setSandboxInput('leaderboard endpoint URL');
       setSandboxEdgeCases('A broken or unreachable endpoint must be caught by the try/catch block and logged, not left to throw an uncaught exception.');
       setL2s9ActiveExercise(1);
-      setL2s9CodeInput(L2S9_EXERCISES[0].preloaded);
+      setL2s9CodeInput(savedExerciseCode['l2-s9-1'] ?? L2S9_EXERCISES[0].preloaded);
       setL2s9Logs([]);
       setL2s9Success(false);
       setSimConsoleLogs([]);
@@ -5252,7 +5265,7 @@ export default function App() {
       setSandboxInput('player, score');
       setSandboxEdgeCases('An unreachable endpoint must be caught and logged as a warning instead of crashing the game; a malformed or oversized payload\'s error status must be surfaced, not swallowed.');
       setL2s10ActiveExercise(1);
-      setL2s10CodeInput(L2S10_EXERCISES[0].preloaded);
+      setL2s10CodeInput(savedExerciseCode['l2-s10-1'] ?? L2S10_EXERCISES[0].preloaded);
       setL2s10Logs([]);
       setL2s10Success(false);
       setSimConsoleLogs([]);
@@ -5263,7 +5276,7 @@ export default function App() {
       setSandboxInput('colonist_scores(id, player, score, wave_reached)');
       setSandboxEdgeCases('Running the query on an empty table must return zero rows without erroring; an UPDATE with no WHERE clause must be flagged before running.');
       setL2s11ActiveExercise(1);
-      setL2s11CodeInput(L2S11_EXERCISES[0].preloaded);
+      setL2s11CodeInput(savedExerciseCode['l2-s11-1'] ?? L2S11_EXERCISES[0].preloaded);
       setL2s11Logs([]);
       setL2s11Success(false);
       setSimConsoleLogs([]);
@@ -5274,7 +5287,7 @@ export default function App() {
       setSandboxInput('userInput, score');
       setSandboxEdgeCases('The hostile input \' OR \'1\'=\'1 must fail harmlessly against the parameterized version; a negative or non-numeric score must be rejected by the validation rule before it reaches the database.');
       setL2s12ActiveExercise(1);
-      setL2s12CodeInput(L2S12_EXERCISES[0].preloaded);
+      setL2s12CodeInput(savedExerciseCode['l2-s12-1'] ?? L2S12_EXERCISES[0].preloaded);
       setL2s12Logs([]);
       setL2s12Success(false);
       setSimConsoleLogs([]);
@@ -5285,7 +5298,7 @@ export default function App() {
       setSandboxInput('full Level 2 codebase');
       setSandboxEdgeCases('The seeded diagnostic bug (an async handler, splice statement, or SQL issue) must be patched within the time limit, and at least 2 code design choices must be defended under tutor questioning.');
       setL2s13ActiveExercise(1);
-      setL2s13CodeInput(L2S13_EXERCISES[0].preloaded);
+      setL2s13CodeInput(savedExerciseCode['l2-s13-1'] ?? L2S13_EXERCISES[0].preloaded);
       setL2s13Logs([]);
       setL2s13Success(false);
       setSimConsoleLogs([]);
