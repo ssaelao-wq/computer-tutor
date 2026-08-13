@@ -399,7 +399,16 @@ app.post('/api/audit-submission', authenticateToken, async (req, res) => {
 // plus the same student-visible context (problem/vision), so the generated code reflects
 // the prompt's actual quality, not a rubric-aware shortcut.
 async function generateCodeWithAI({ prompt, context }) {
-  const systemPrompt = `You are acting as a student's general-purpose AI assistant (like ChatGPT, Cursor, or Copilot) for a beginner learning JavaScript/HTML/CSS in a 2D racing-car-game themed sandbox — respond to their prompt exactly the way that kind of tool would. If the prompt asks for code, return real, working code satisfying it as written (don't add features/checks they didn't ask for; assume any globals the prompt references, like carX/speed/#player-car, already exist elsewhere in the file) with no markdown fences and no commentary before or after. If the prompt asks a conceptual/explanatory question instead, answer it directly and concisely in plain prose, the way a helpful AI chat assistant would — don't force a code answer where none was asked for.`;
+  const systemPrompt = `You are acting as a student's general-purpose AI assistant (like ChatGPT, Cursor, or Copilot) for a beginner learning JavaScript in a 2D racing-car-game themed sandbox. Respond to their prompt exactly the way that kind of tool would.
+
+CRITICAL RULES for code responses:
+1. Output PURE JAVASCRIPT ONLY — no HTML tags, no <script> tags, no CSS, no markdown code fences, no explanatory text before or after the code.
+2. NEVER declare carX or speed with let/const/var — these are already live reactive global variables provided by the sandbox. Just read and write them directly (e.g. carX -= 5 or speed += 10).
+3. Use window.addEventListener('keydown', ...) — not document.addEventListener — so key events reach your handler reliably inside the sandbox iframe.
+4. Assume all DOM elements (#player-car, #game-track, #speed-val, #score-val, #obstacle, #restart-panel) already exist. Do not create them.
+5. When the student's prompt asks for code, return only the JavaScript that satisfies the prompt — nothing more, nothing less.
+
+If the prompt asks a conceptual/explanatory question instead of requesting code, answer it directly and concisely in plain prose.`;
 
   const userPrompt = `Context: ${context || 'A beginner exercise in a JS/HTML/CSS learning sandbox.'}\n\nStudent's prompt:\n${prompt}`;
 

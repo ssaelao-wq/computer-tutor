@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { CURRICULUM_DATA } from './curriculumData';
 import { PROJECT_TASKS } from './projectTasksData';
@@ -9,309 +9,309 @@ const CONCEPT_REFERENCES = {
   'l1-s1': [
     {
       name: "Computer Hardware vs. Software",
-      desc: "Core Definition:\n  HARDWARE is the physical, touchable machinery — the CPU, RAM, storage drive, GPU, monitor, keyboard. SOFTWARE is the instructions that run ON that hardware — the operating system, the browser, the game code you're about to start writing. Hardware without software is inert; software cannot exist without some hardware executing it.\n\nWhy It Matters:\n  Every bug you'll ever debug falls into one of these two buckets: a HARDWARE limit (not enough memory, a slow processor, no network signal) or a SOFTWARE mistake (a typo, a missing check, bad logic). Knowing which bucket you're in tells you whether to fix the code or upgrade the machine.\n\nWorked Example — Running the Racing Car Game:\n  - Hardware: the CPU calculating car positions 60 times a second, RAM holding the current game state, the monitor displaying the result.\n  - Software: the operating system managing the browser process, the browser rendering HTML/CSS/JS, and game.js — the code you write — deciding what happens next.",
+      desc: "Core Definition:\n  HARDWARE is the physical, touchable machinery โ€” the CPU, RAM, storage drive, GPU, monitor, keyboard. SOFTWARE is the instructions that run ON that hardware โ€” the operating system, the browser, the game code you're about to start writing. Hardware without software is inert; software cannot exist without some hardware executing it.\n\nWhy It Matters:\n  Every bug you'll ever debug falls into one of these two buckets: a HARDWARE limit (not enough memory, a slow processor, no network signal) or a SOFTWARE mistake (a typo, a missing check, bad logic). Knowing which bucket you're in tells you whether to fix the code or upgrade the machine.\n\nWorked Example โ€” Running the Racing Car Game:\n  - Hardware: the CPU calculating car positions 60 times a second, RAM holding the current game state, the monitor displaying the result.\n  - Software: the operating system managing the browser process, the browser rendering HTML/CSS/JS, and game.js โ€” the code you write โ€” deciding what happens next.",
       keywords: "hardware software difference CPU RAM operating system"
     },
     {
       name: "How a Program Runs (CPU, RAM & Storage)",
-      desc: "Core Definition:\n  The CPU (Central Processing Unit) is the 'brain' that executes instructions one at a time, extremely fast. RAM (Random Access Memory) is short-term, high-speed workspace that holds whatever the CPU is actively using right now — it's wiped when the machine restarts. Storage (an SSD or hard drive) is long-term memory that keeps files even after shutdown, but is much slower to read from than RAM.\n\nWhy It Matters:\n  'The game feels laggy' usually means the CPU is overloaded doing too many calculations per frame. 'The game crashed' often means RAM ran out because too much was loaded into memory at once. Knowing which resource is the bottleneck is the first step of any performance fix — guessing wastes time.\n\nWorked Example:\n  Loading 500 full-resolution car images before a race even starts fills up RAM fast. The fix isn't a faster CPU — it's loading fewer images, or loading them only when needed (this is exactly what Sandbox Exercises 1.4 and 1.5 walk through).",
+      desc: "Core Definition:\n  The CPU (Central Processing Unit) is the 'brain' that executes instructions one at a time, extremely fast. RAM (Random Access Memory) is short-term, high-speed workspace that holds whatever the CPU is actively using right now โ€” it's wiped when the machine restarts. Storage (an SSD or hard drive) is long-term memory that keeps files even after shutdown, but is much slower to read from than RAM.\n\nWhy It Matters:\n  'The game feels laggy' usually means the CPU is overloaded doing too many calculations per frame. 'The game crashed' often means RAM ran out because too much was loaded into memory at once. Knowing which resource is the bottleneck is the first step of any performance fix โ€” guessing wastes time.\n\nWorked Example:\n  Loading 500 full-resolution car images before a race even starts fills up RAM fast. The fix isn't a faster CPU โ€” it's loading fewer images, or loading them only when needed (this is exactly what Sandbox Exercises 1.4 and 1.5 walk through).",
       keywords: "CPU RAM storage memory bottleneck performance"
     },
     {
       name: "Networks & the Client-Server Model",
-      desc: "Core Definition:\n  A CLIENT (your browser) sends a REQUEST across a network to a SERVER, which looks up or processes data and sends back a RESPONSE. Every webpage you've ever loaded — including this platform — used this exact request → response cycle, often dozens of times per page.\n\nWhy It Matters:\n  'The website is down' can mean several different things: the server crashed, the network connection dropped, or the client (browser) has a bug. Separating the client's job from the server's job is what lets you localize where a problem actually is, instead of guessing.\n\nWorked Example — Loading This Platform:\n  1. Your browser (client) sends a request: 'give me the Student Report page.'\n  2. The server receives it, checks the database, builds the response.\n  3. The server sends the response (HTML/JSON data) back across the network.\n  4. Your browser renders it into the page you see.",
+      desc: "Core Definition:\n  A CLIENT (your browser) sends a REQUEST across a network to a SERVER, which looks up or processes data and sends back a RESPONSE. Every webpage you've ever loaded โ€” including this platform โ€” used this exact request โ’ response cycle, often dozens of times per page.\n\nWhy It Matters:\n  'The website is down' can mean several different things: the server crashed, the network connection dropped, or the client (browser) has a bug. Separating the client's job from the server's job is what lets you localize where a problem actually is, instead of guessing.\n\nWorked Example โ€” Loading This Platform:\n  1. Your browser (client) sends a request: 'give me the Student Report page.'\n  2. The server receives it, checks the database, builds the response.\n  3. The server sends the response (HTML/JSON data) back across the network.\n  4. Your browser renders it into the page you see.",
       keywords: "network client server request response HTTP"
     },
     {
       name: "The Web Technology Stack (HTML, CSS, JavaScript & the Browser)",
-      desc: "Core Definition:\n  Every webpage is built from exactly three technologies, each with one job: HTML defines STRUCTURE and CONTENT (what elements exist), CSS defines STYLE and APPEARANCE (how they look), and JavaScript defines BEHAVIOR and INTERACTIVITY (what happens when you click, press a key, or wait). The browser reads all three and renders the final result on screen.\n\nWhy It Matters:\n  Diagnosing 'why does my page look wrong' starts with identifying which of the three technologies is responsible for the broken part. Text in the wrong place with no color or layout at all almost always means CSS failed to load — the HTML (content) is fine, but nothing is styled.\n\nWorked Example — The Racing Car Game (Sessions 2-12):\n  - HTML (Session 2): the track, the car, the scoreboard containers.\n  - CSS (Session 3): lane colors, car positioning, layout.\n  - JavaScript (Sessions 4-12): variables, keyboard controls, collisions, scoring.",
+      desc: "Core Definition:\n  Every webpage is built from exactly three technologies, each with one job: HTML defines STRUCTURE and CONTENT (what elements exist), CSS defines STYLE and APPEARANCE (how they look), and JavaScript defines BEHAVIOR and INTERACTIVITY (what happens when you click, press a key, or wait). The browser reads all three and renders the final result on screen.\n\nWhy It Matters:\n  Diagnosing 'why does my page look wrong' starts with identifying which of the three technologies is responsible for the broken part. Text in the wrong place with no color or layout at all almost always means CSS failed to load โ€” the HTML (content) is fine, but nothing is styled.\n\nWorked Example โ€” The Racing Car Game (Sessions 2-12):\n  - HTML (Session 2): the track, the car, the scoreboard containers.\n  - CSS (Session 3): lane colors, car positioning, layout.\n  - JavaScript (Sessions 4-12): variables, keyboard controls, collisions, scoring.",
       keywords: "HTML CSS JavaScript web stack browser rendering"
     },
     {
       name: "The AI-Era 5-Step Development Loop",
-      desc: "Core Definition:\n  The process this entire course uses, every session, starting with Session 2: (1) Plan & Design — think before you type, (2) Write the AI Prompt — turn the plan into a precise instruction, (3) Review & Explain — read and understand every line the AI generated, (4) Test & Break It — try to make it fail, (5) Iterate & Improve — refine the prompt based on what you found, and repeat.\n\nWhy It Matters:\n  In the AI era, typing code from scratch is no longer the bottleneck — knowing WHAT to ask for, and whether what you got back is actually correct, is. A student who can run this 5-step loop can work with any AI coding tool, in any language, for the rest of their career.\n\nWhere You'll Use It Next:\n  Starting with Session 2's HTML lab, every Sandbox Exercise set and every Project Journal entry in this course is structured around these exact 5 steps.",
+      desc: "Core Definition:\n  The process this entire course uses, every session, starting with Session 2: (1) Plan & Design โ€” think before you type, (2) Write the AI Prompt โ€” turn the plan into a precise instruction, (3) Review & Explain โ€” read and understand every line the AI generated, (4) Test & Break It โ€” try to make it fail, (5) Iterate & Improve โ€” refine the prompt based on what you found, and repeat.\n\nWhy It Matters:\n  In the AI era, typing code from scratch is no longer the bottleneck โ€” knowing WHAT to ask for, and whether what you got back is actually correct, is. A student who can run this 5-step loop can work with any AI coding tool, in any language, for the rest of their career.\n\nWhere You'll Use It Next:\n  Starting with Session 2's HTML lab, every Sandbox Exercise set and every Project Journal entry in this course is structured around these exact 5 steps.",
       keywords: "5-step loop plan prompt review test iterate AI-era methodology"
     }
   ],
   'l1-s2': [
     {
       name: "Document Object Model (DOM)",
-      desc: "Core Definition:\n  The Document Object Model is the browser's live, in-memory representation of your page — it takes the HTML you write and turns it into a tree of connected objects (nodes) that JavaScript can read and change while the page is running. What appears on screen is always a rendering of THIS tree, not of your original HTML file.\n\nWhy It Matters:\n  Every DOM lookup and style change you write in this course — document.getElementById(...), .style.left, .classList — is really just asking the browser 'find me this node in the tree' or 'change this node's properties.' Understanding the tree shape is what makes those calls make sense instead of feeling like memorized magic.\n\nVisual DOM Hierarchy:\n  - document (Root)\n    └─ <html>\n       └─ <body>\n          └─ <div id=\"track\"> (Parent container)\n             ├─ <div id=\"player-car\"></div> (Child container)\n             └─ <div class=\"lane-line\"></div> (Child container)",
+      desc: "Core Definition:\n  The Document Object Model is the browser's live, in-memory representation of your page โ€” it takes the HTML you write and turns it into a tree of connected objects (nodes) that JavaScript can read and change while the page is running. What appears on screen is always a rendering of THIS tree, not of your original HTML file.\n\nWhy It Matters:\n  Every DOM lookup and style change you write in this course โ€” document.getElementById(...), .style.left, .classList โ€” is really just asking the browser 'find me this node in the tree' or 'change this node's properties.' Understanding the tree shape is what makes those calls make sense instead of feeling like memorized magic.\n\nVisual DOM Hierarchy:\n  - document (Root)\n    โ””โ”€ <html>\n       โ””โ”€ <body>\n          โ””โ”€ <div id=\"track\"> (Parent container)\n             โ”โ”€ <div id=\"player-car\"></div> (Child container)\n             โ””โ”€ <div class=\"lane-line\"></div> (Child container)",
       keywords: "browser DOM tree node hierarchy representation"
     },
     {
       name: "HTML Tags and Element Syntax",
-      desc: "Core Definition:\n  Tags define the type and boundaries of visual components. Some tags are GENERIC (a blank box with no built-in meaning) and some are SEMANTIC (they describe what their content IS).\n\nWhy It Matters:\n  Choosing the right tag is a design decision, not decoration. A SEMANTIC tag tells the browser, screen readers, and other developers what a piece of content actually means, while a GENERIC tag is a blank canvas you shape yourself. Using div for everything works visually but throws away meaning; forcing semantic tags onto things that have no meaning (like a decorative divider line) is the opposite mistake.\n\nCheat Sheet Elements:\n  - <div>: A GENERIC block-level container box. It has NO built-in look or meaning — it is raw material you shape with CSS. Used to build tracks, lanes, dashboards, or even a thin line.\n  - <section>: Also a container box, but SEMANTIC — it signals 'a distinct section of content' (e.g. a game arena or a scoreboard region). Use <section> when the grouping has meaning; use <div> when it is purely visual/structural. They look identical until styled.\n  - <span>: A GENERIC inline wrapper (sits inside a line of text) used to highlight one word or a live score number.\n  - <h2>: A SEMANTIC heading/title — screen readers announce it as a heading.\n\nWhy 'blank box' matters (the lane-divider):\n  We draw a lane line with <div class=\"lane-divider\"></div> because a line isn't 'a heading' or 'a paragraph' — it is purely visual. The <div> starts as an INVISIBLE empty box; CSS (width: 2px; height: 100%; dashed border) shapes it into the line. The tag is the raw material; the CSS is the shaping. This is why an unstyled empty div shows nothing.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - ✅ Correct: <div><span>Hello</span></div>\n  - ❌ Incorrect: <div><span>Hello</div></span> (causes render errors)",
+      desc: "Core Definition:\n  Tags define the type and boundaries of visual components. Some tags are GENERIC (a blank box with no built-in meaning) and some are SEMANTIC (they describe what their content IS).\n\nWhy It Matters:\n  Choosing the right tag is a design decision, not decoration. A SEMANTIC tag tells the browser, screen readers, and other developers what a piece of content actually means, while a GENERIC tag is a blank canvas you shape yourself. Using div for everything works visually but throws away meaning; forcing semantic tags onto things that have no meaning (like a decorative divider line) is the opposite mistake.\n\nCheat Sheet Elements:\n  - <div>: A GENERIC block-level container box. It has NO built-in look or meaning โ€” it is raw material you shape with CSS. Used to build tracks, lanes, dashboards, or even a thin line.\n  - <section>: Also a container box, but SEMANTIC โ€” it signals 'a distinct section of content' (e.g. a game arena or a scoreboard region). Use <section> when the grouping has meaning; use <div> when it is purely visual/structural. They look identical until styled.\n  - <span>: A GENERIC inline wrapper (sits inside a line of text) used to highlight one word or a live score number.\n  - <h2>: A SEMANTIC heading/title โ€” screen readers announce it as a heading.\n\nWhy 'blank box' matters (the lane-divider):\n  We draw a lane line with <div class=\"lane-divider\"></div> because a line isn't 'a heading' or 'a paragraph' โ€” it is purely visual. The <div> starts as an INVISIBLE empty box; CSS (width: 2px; height: 100%; dashed border) shapes it into the line. The tag is the raw material; the CSS is the shaping. This is why an unstyled empty div shows nothing.\n\nNesting Pitfall:\n  Always close tags in the exact opposite order you opened them!\n  - โ… Correct: <div><span>Hello</span></div>\n  - โ Incorrect: <div><span>Hello</div></span> (causes render errors)",
       keywords: "HTML element tags opening closing rules cheat sheet"
     },
     {
       name: "Parent-Child Nesting Structure",
-      desc: "Core Definition:\n  Nesting one element inside another makes it a CHILD of that PARENT — the child's position, size, and visibility are all measured and controlled relative to its parent's box, not the page as a whole.\n\nWhy It Matters:\n  This is the structural backbone every layout depends on: the racetrack <div> is the parent that all lanes, cars, and obstacles live inside. Get the nesting wrong — place the car outside the track container — and CSS positioning rules that assume 'relative to the track' silently break, because the car is no longer a child of that parent.\n\nSyntax Blueprint:\n  <div id=\"highway-track\"> <!-- Parent Container -->\n    <div id=\"player-car\"></div> <!-- Child Element 1 -->\n    <div id=\"obstacle-car\"></div> <!-- Child Element 2 -->\n  </div>\n\nRule of Thumb:\n  If you hide, delete, or move a parent element, all of its children will hide, delete, or move with it.",
+      desc: "Core Definition:\n  Nesting one element inside another makes it a CHILD of that PARENT โ€” the child's position, size, and visibility are all measured and controlled relative to its parent's box, not the page as a whole.\n\nWhy It Matters:\n  This is the structural backbone every layout depends on: the racetrack <div> is the parent that all lanes, cars, and obstacles live inside. Get the nesting wrong โ€” place the car outside the track container โ€” and CSS positioning rules that assume 'relative to the track' silently break, because the car is no longer a child of that parent.\n\nSyntax Blueprint:\n  <div id=\"highway-track\"> <!-- Parent Container -->\n    <div id=\"player-car\"></div> <!-- Child Element 1 -->\n    <div id=\"obstacle-car\"></div> <!-- Child Element 2 -->\n  </div>\n\nRule of Thumb:\n  If you hide, delete, or move a parent element, all of its children will hide, delete, or move with it.",
       keywords: "nesting HTML tags structure parent child DOM"
     },
     {
       name: "HTML Attributes (ID vs Class)",
-      desc: "Core Definition:\n  Attributes add identifiers and metadata to HTML elements. The two you use most are id and class — both NAME an element so CSS and JavaScript can find it, but they follow opposite rules.\n\nWhy It Matters:\n  Picking id vs class really means answering 'how many elements need this exact treatment?' Get it backwards — id on something repeated, or class on something meant to be unique — and later JavaScript lookups like getElementById will either fail to find duplicates or silently only ever touch the first match.\n\nWhen to use which:\n  - ID (Unique): Used ONCE per page. It names one specific target.\n    HTML:  <div id=\"player-car\"></div>\n    CSS finds it with a hash:  #player-car { ... }\n  - Class (Reusable): SHARED by many elements that need the same styling/behavior.\n    HTML:  <div class=\"lane-divider\"></div>\n           <div class=\"lane-divider\"></div>\n    CSS finds them all with a dot:  .lane-divider { ... }\n\nWorked Example (why the track uses each):\n  - There is only ONE player car, so it gets id=\"player-car\".\n  - There are MANY lane dividers, so they share class=\"lane-divider\" and a SINGLE rule styles all of them at once. An id could not do this — an id must be unique.\n\nRule of Thumb:\n  id   = the ONE unique thing        (CSS selector: # )\n  class = a REPEATED category of things (CSS selector: . )",
+      desc: "Core Definition:\n  Attributes add identifiers and metadata to HTML elements. The two you use most are id and class โ€” both NAME an element so CSS and JavaScript can find it, but they follow opposite rules.\n\nWhy It Matters:\n  Picking id vs class really means answering 'how many elements need this exact treatment?' Get it backwards โ€” id on something repeated, or class on something meant to be unique โ€” and later JavaScript lookups like getElementById will either fail to find duplicates or silently only ever touch the first match.\n\nWhen to use which:\n  - ID (Unique): Used ONCE per page. It names one specific target.\n    HTML:  <div id=\"player-car\"></div>\n    CSS finds it with a hash:  #player-car { ... }\n  - Class (Reusable): SHARED by many elements that need the same styling/behavior.\n    HTML:  <div class=\"lane-divider\"></div>\n           <div class=\"lane-divider\"></div>\n    CSS finds them all with a dot:  .lane-divider { ... }\n\nWorked Example (why the track uses each):\n  - There is only ONE player car, so it gets id=\"player-car\".\n  - There are MANY lane dividers, so they share class=\"lane-divider\" and a SINGLE rule styles all of them at once. An id could not do this โ€” an id must be unique.\n\nRule of Thumb:\n  id   = the ONE unique thing        (CSS selector: # )\n  class = a REPEATED category of things (CSS selector: . )",
       keywords: "HTML attributes difference id vs class selector" 
     }
   ],
   'l1-s3': [
     {
       name: "CSS Selectors and Specificity Rules",
-      desc: "Core Definition:\n  Selectors tell the browser which HTML elements to apply styles to. Specificity decides which styling rule wins if there is a conflict.\n\nWhy It Matters:\n  CSS rules for the same element often come from different places — a base stylesheet, a shared class, an ID rule — and conflicts are inevitable in any real project. Specificity is the tie-breaking rulebook the browser follows every single time, so instead of guessing why a style 'isn't applying,' you can calculate exactly which rule should win.\n\nSyntax Cheat Sheet:\n  - Target by Tag (low priority): div { background: grey; }\n  - Target by Class (med priority): .obstacle { background: red; }\n  - Target by ID (high priority): #player-car { background: blue; }\n\nRule:\n  If a class selector says a car is red, but its ID selector says it is blue, it will render blue because ID selectors override classes.",
+      desc: "Core Definition:\n  Selectors tell the browser which HTML elements to apply styles to. Specificity decides which styling rule wins if there is a conflict.\n\nWhy It Matters:\n  CSS rules for the same element often come from different places โ€” a base stylesheet, a shared class, an ID rule โ€” and conflicts are inevitable in any real project. Specificity is the tie-breaking rulebook the browser follows every single time, so instead of guessing why a style 'isn't applying,' you can calculate exactly which rule should win.\n\nSyntax Cheat Sheet:\n  - Target by Tag (low priority): div { background: grey; }\n  - Target by Class (med priority): .obstacle { background: red; }\n  - Target by ID (high priority): #player-car { background: blue; }\n\nRule:\n  If a class selector says a car is red, but its ID selector says it is blue, it will render blue because ID selectors override classes.",
       keywords: "CSS selectors specificity hierarchy overrides"
     },
     {
       name: "CSS Box Model",
-      desc: "Core Definition:\n  Every element on a web page is treated as a rectangular box consisting of four layers.\n\nWhy It Matters:\n  Almost every 'why is this element a different size than I expected' bug traces back to the box model. Padding and border ADD to an element's rendered size by default — a 100px-wide box with 20px of padding actually takes up 140px on screen — which is why professional stylesheets almost always opt into border-box sizing to make width mean 'total width' instead of 'content width'.\n\nVisual Layout Blueprint:\n  ┌──────────────────────────────────────────────┐\n  │ MARGIN (Outer space around the element)      │\n  │  ┌────────────────────────────────────────┐  │\n  │  │ BORDER (The element outline line)      │  │\n  │  │  ┌──────────────────────────────────┐  │  │\n  │  │  │ PADDING (Inner clear space)      │  │  │\n  │  │  │  ┌────────────────────────────┐  │  │  │\n  │  │  │  │ CONTENT (Text/Car image)   │  │  │  │\n  │  │  │  └────────────────────────────┘  │  │  │\n  │  │  └──────────────────────────────────┘  │  │\n  │  └────────────────────────────────────────┘  │\n  └──────────────────────────────────────────────┘\n\nBest Practice:\n  Always set box-sizing: border-box; so that padding doesn't swell the final width.",
+      desc: "Core Definition:\n  Every element on a web page is treated as a rectangular box consisting of four layers.\n\nWhy It Matters:\n  Almost every 'why is this element a different size than I expected' bug traces back to the box model. Padding and border ADD to an element's rendered size by default โ€” a 100px-wide box with 20px of padding actually takes up 140px on screen โ€” which is why professional stylesheets almost always opt into border-box sizing to make width mean 'total width' instead of 'content width'.\n\nVisual Layout Blueprint:\n  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n  โ” MARGIN (Outer space around the element)      โ”\n  โ”  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”  โ”\n  โ”  โ” BORDER (The element outline line)      โ”  โ”\n  โ”  โ”  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”  โ”  โ”\n  โ”  โ”  โ” PADDING (Inner clear space)      โ”  โ”  โ”\n  โ”  โ”  โ”  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”  โ”  โ”  โ”\n  โ”  โ”  โ”  โ” CONTENT (Text/Car image)   โ”  โ”  โ”  โ”\n  โ”  โ”  โ”  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”  โ”  โ”  โ”\n  โ”  โ”  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”  โ”  โ”\n  โ”  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”  โ”\n  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n\nBest Practice:\n  Always set box-sizing: border-box; so that padding doesn't swell the final width.",
       keywords: "CSS box model margins borders padding box sizing"
     },
     {
       name: "Absolute vs. Relative Positioning",
-      desc: "Core Definition:\n  Controls coordinate-based layouts so we can position elements freely (like overlaying obstacles onto a racetrack grid).\n\nWhy It Matters:\n  This is the exact mechanism the racing game uses to place cars and obstacles at pixel-precise coordinates instead of letting the normal top-to-bottom document flow decide where they land. Setting position: absolute without a relative parent doesn't throw an error — the element quietly anchors to the whole page instead of the game arena, which is why the parent-relative/child-absolute pairing is a strict rule, not a suggestion.\n\nLayout Blueprint:\n  - Parent element must be relative: anchors coordinates.\n  - Child element must be absolute: moves coordinates relative to parent.\n\nCSS Syntax:\n  #game-arena { \n    position: relative; \n    width: 300px; height: 500px; \n  }\n  #player-car { \n    position: absolute; \n    left: 120px;   /* X-coordinate from left edge */\n    bottom: 10px;  /* Y-coordinate from bottom edge */\n    width: 60px; height: 100px; \n  }",
+      desc: "Core Definition:\n  Controls coordinate-based layouts so we can position elements freely (like overlaying obstacles onto a racetrack grid).\n\nWhy It Matters:\n  This is the exact mechanism the racing game uses to place cars and obstacles at pixel-precise coordinates instead of letting the normal top-to-bottom document flow decide where they land. Setting position: absolute without a relative parent doesn't throw an error โ€” the element quietly anchors to the whole page instead of the game arena, which is why the parent-relative/child-absolute pairing is a strict rule, not a suggestion.\n\nLayout Blueprint:\n  - Parent element must be relative: anchors coordinates.\n  - Child element must be absolute: moves coordinates relative to parent.\n\nCSS Syntax:\n  #game-arena { \n    position: relative; \n    width: 300px; height: 500px; \n  }\n  #player-car { \n    position: absolute; \n    left: 120px;   /* X-coordinate from left edge */\n    bottom: 10px;  /* Y-coordinate from bottom edge */\n    width: 60px; height: 100px; \n  }",
       keywords: "absolute coordinates layout CSS position absolute"
     },
     {
       name: "CSS Flexbox Layouts",
-      desc: "Core Definition:\n  A layout engine to align lists of elements in a row or column automatically.\n\nWhy It Matters:\n  Before flexbox, evenly spacing and centering a row of elements required fragile manual pixel math that broke the moment content changed size. Flexbox lets you describe the RESULT you want — 'evenly spaced,' 'vertically centered' — and the browser computes the exact positions itself, which is what keeps a HUD's speed, score, and lives readouts aligned no matter the screen width.\n\nSyntax Blueprint:\n  .dashboard-hud {\n    display: flex;\n    flex-direction: row;        /* Align horizontal list */\n    justify-content: space-around; /* Distribute elements evenly */\n    align-items: center;        /* Vertically center elements */\n  }",
+      desc: "Core Definition:\n  A layout engine to align lists of elements in a row or column automatically.\n\nWhy It Matters:\n  Before flexbox, evenly spacing and centering a row of elements required fragile manual pixel math that broke the moment content changed size. Flexbox lets you describe the RESULT you want โ€” 'evenly spaced,' 'vertically centered' โ€” and the browser computes the exact positions itself, which is what keeps a HUD's speed, score, and lives readouts aligned no matter the screen width.\n\nSyntax Blueprint:\n  .dashboard-hud {\n    display: flex;\n    flex-direction: row;        /* Align horizontal list */\n    justify-content: space-around; /* Distribute elements evenly */\n    align-items: center;        /* Vertically center elements */\n  }",
       keywords: "CSS flexbox cheat sheet justify content align items"
     }
   ],
   'l1-s4': [
     {
       name: "Variable Declarations (let vs. const)",
-      desc: "Core Definition:\n  Variables are named boxes in memory that hold one value. Choose the keyword by whether the value ever changes.\n\nWhy It Matters:\n  const is not just a style preference — it is a signal to anyone reading your code (including future you) that this value is a fixed rule of the game, not something the logic will change. If something later tries to reassign a const, the browser throws an error immediately at that exact line, turning a potential silent bug into an instant, loud one.\n\nWhen to use which:\n  - let  = a value that CHANGES during play (reassignable).\n    let carX = 165;   // the car moves, so carX changes\n    let score = 0;    // the score climbs\n  - const = a value FIXED for the whole game (cannot be reassigned).\n    const LANE_WIDTH = 130;  // lanes never resize\n\nRule of Thumb:\n  Default to const; switch to let only when you actually need to reassign. Reassigning a const throws an error.",
+      desc: "Core Definition:\n  Variables are named boxes in memory that hold one value. Choose the keyword by whether the value ever changes.\n\nWhy It Matters:\n  const is not just a style preference โ€” it is a signal to anyone reading your code (including future you) that this value is a fixed rule of the game, not something the logic will change. If something later tries to reassign a const, the browser throws an error immediately at that exact line, turning a potential silent bug into an instant, loud one.\n\nWhen to use which:\n  - let  = a value that CHANGES during play (reassignable).\n    let carX = 165;   // the car moves, so carX changes\n    let score = 0;    // the score climbs\n  - const = a value FIXED for the whole game (cannot be reassigned).\n    const LANE_WIDTH = 130;  // lanes never resize\n\nRule of Thumb:\n  Default to const; switch to let only when you actually need to reassign. Reassigning a const throws an error.",
       keywords: "javascript let const difference declaring variables"
     },
     {
       name: "Primitive Data Types (Number, String, Boolean)",
-      desc: "Core Definition:\n  The type of a value decides what the computer can do with it. Three primitives power the racing game.\n\nWhy It Matters:\n  Every value in JavaScript carries a type, and operators behave completely differently depending on it — + adds Numbers but glues Strings together instead. Mixing up a Number with a String that LOOKS like a number is one of the most common beginner bugs, because JavaScript does not stop you or throw an error; it just silently performs the wrong operation.\n\nCheat Sheet:\n  - Number  (no quotes): let speed = 10;      // math works: speed + 5 = 15\n  - String  (in quotes): let label = \"Speed\"; // text, joined with +\n  - Boolean (true/false): let gameActive = false; // a yes/no switch\n\nThe Quoted-Number Trap:\n  let speed = \"10\";   // LOOKS like 10, but it is a String\n  speed += 5;         // result is \"105\" (text glued), NOT 15\n  Remove the quotes so the browser does math instead of concatenation.",
+      desc: "Core Definition:\n  The type of a value decides what the computer can do with it. Three primitives power the racing game.\n\nWhy It Matters:\n  Every value in JavaScript carries a type, and operators behave completely differently depending on it โ€” + adds Numbers but glues Strings together instead. Mixing up a Number with a String that LOOKS like a number is one of the most common beginner bugs, because JavaScript does not stop you or throw an error; it just silently performs the wrong operation.\n\nCheat Sheet:\n  - Number  (no quotes): let speed = 10;      // math works: speed + 5 = 15\n  - String  (in quotes): let label = \"Speed\"; // text, joined with +\n  - Boolean (true/false): let gameActive = false; // a yes/no switch\n\nThe Quoted-Number Trap:\n  let speed = \"10\";   // LOOKS like 10, but it is a String\n  speed += 5;         // result is \"105\" (text glued), NOT 15\n  Remove the quotes so the browser does math instead of concatenation.",
       keywords: "javascript data types number string boolean typeof"
     },
     {
       name: "Assignment & Arithmetic Operators",
-      desc: "Core Definition:\n  Operators read the right-hand side first, then write the result back into the variable.\n\nWhy It Matters:\n  Nearly every piece of game-state math — moving a car, adding score, draining health — is one of these operators applied to a variable that already holds a value. Understanding that the right side is evaluated FIRST, using the OLD value, before the new value is stored back is what makes speed += 10 (and not some other order) actually make sense.\n\nCheat Sheet:\n  =    assign:      score = 0;\n  +=   add & store: speed += 10;   // speed = speed + 10\n  ++   increment:   score++;       // score = score + 1\n  -=   subtract:    carX -= 130;   // move one lane left\n\nWhy order matters:\n  In score = score + 1, the browser computes score + 1 FIRST, then stores it. This is why speed += 10 depends on speed already being a Number.",
+      desc: "Core Definition:\n  Operators read the right-hand side first, then write the result back into the variable.\n\nWhy It Matters:\n  Nearly every piece of game-state math โ€” moving a car, adding score, draining health โ€” is one of these operators applied to a variable that already holds a value. Understanding that the right side is evaluated FIRST, using the OLD value, before the new value is stored back is what makes speed += 10 (and not some other order) actually make sense.\n\nCheat Sheet:\n  =    assign:      score = 0;\n  +=   add & store: speed += 10;   // speed = speed + 10\n  ++   increment:   score++;       // score = score + 1\n  -=   subtract:    carX -= 130;   // move one lane left\n\nWhy order matters:\n  In score = score + 1, the browser computes score + 1 FIRST, then stores it. This is why speed += 10 depends on speed already being a Number.",
       keywords: "javascript assignment operators increment plus equals"
     },
     {
       name: "Connecting JavaScript to HTML (Inline vs. External <script>)",
-      desc: "Core Definition:\n  JavaScript does nothing on its own — it has to be loaded INTO an HTML page before the browser will run it. There are two ways to connect the two: write the JS directly inside the HTML file (INLINE), or write it in its own separate .js file and LINK to it from the HTML with a <script src=\"...\"> tag (EXTERNAL).\n\nWhy It Matters:\n  Every exercise and project task from this session onward assumes your variables actually run somewhere. If a <script> tag is missing, placed wrong, or points to the wrong filename, the browser silently shows a blank page or an unchanged one — with no error dialog telling you 'JavaScript never loaded.' Knowing exactly how the connection is supposed to work is what lets you spot that specific failure instead of assuming the JS code itself is wrong.\n\nMethod 1 - Inline (JS written directly inside the HTML file):\n  <body>\n    <script>\n      let score = 0;\n      console.log(score);\n    </script>\n  </body>\n\nMethod 2 - External (JS in its own file, linked from HTML):\n  game.js (separate file):\n    let score = 0;\n    console.log(score);\n\n  index.html:\n  <body>\n    <script src=\"game.js\"></script>\n  </body>\n\nWhy External Is the Professional Default:\n  Keeping JS in its own file separates STRUCTURE (HTML) from BEHAVIOR (JS) — the same 'one job per technology' idea from Session 1's web stack concept. It also means one game.js file can be reused or replaced without touching the HTML at all.\n\nThe Placement Rule (why <script> usually goes at the bottom of <body>):\n  The browser reads a page top-to-bottom. If <script src=\"game.js\"> appears BEFORE the HTML elements it looks for (e.g. document.getElementById(\"player-car\")), those elements don't exist in the DOM yet — the lookup returns null and the script silently fails. Placing <script> as the LAST thing inside <body> guarantees every element above it has already been parsed.",
+      desc: "Core Definition:\n  JavaScript does nothing on its own โ€” it has to be loaded INTO an HTML page before the browser will run it. There are two ways to connect the two: write the JS directly inside the HTML file (INLINE), or write it in its own separate .js file and LINK to it from the HTML with a <script src=\"...\"> tag (EXTERNAL).\n\nWhy It Matters:\n  Every exercise and project task from this session onward assumes your variables actually run somewhere. If a <script> tag is missing, placed wrong, or points to the wrong filename, the browser silently shows a blank page or an unchanged one โ€” with no error dialog telling you 'JavaScript never loaded.' Knowing exactly how the connection is supposed to work is what lets you spot that specific failure instead of assuming the JS code itself is wrong.\n\nMethod 1 - Inline (JS written directly inside the HTML file):\n  <body>\n    <script>\n      let score = 0;\n      console.log(score);\n    </script>\n  </body>\n\nMethod 2 - External (JS in its own file, linked from HTML):\n  game.js (separate file):\n    let score = 0;\n    console.log(score);\n\n  index.html:\n  <body>\n    <script src=\"game.js\"></script>\n  </body>\n\nWhy External Is the Professional Default:\n  Keeping JS in its own file separates STRUCTURE (HTML) from BEHAVIOR (JS) โ€” the same 'one job per technology' idea from Session 1's web stack concept. It also means one game.js file can be reused or replaced without touching the HTML at all.\n\nThe Placement Rule (why <script> usually goes at the bottom of <body>):\n  The browser reads a page top-to-bottom. If <script src=\"game.js\"> appears BEFORE the HTML elements it looks for (e.g. document.getElementById(\"player-car\")), those elements don't exist in the DOM yet โ€” the lookup returns null and the script silently fails. Placing <script> as the LAST thing inside <body> guarantees every element above it has already been parsed.",
       keywords: "script tag src inline external link javascript html connect"
     }
   ],
   'l1-s5': [
     {
       name: "Event-Driven Programming (addEventListener)",
-      desc: "Core Definition:\n  Instead of running top-to-bottom once, event-driven code waits and reacts. A listener runs your function every time an action happens.\n\nWhy It Matters:\n  This is a fundamentally different execution model from Session 1's sequential, top-to-bottom code — an event listener does not run at a predictable moment, it runs whenever the browser decides the event happened, which could be zero times or a thousand times. Nearly everything interactive in a real application (buttons, forms, games) is built on this reactive pattern instead of a single top-to-bottom script.\n\nSyntax Blueprint:\n  window.addEventListener(\"keydown\", function(event) {\n    // this block runs on EVERY key press\n  });\n\nWhy the window scope:\n  Binding to window catches key presses anywhere on the page, so the car responds no matter what is focused.",
+      desc: "Core Definition:\n  Instead of running top-to-bottom once, event-driven code waits and reacts. A listener runs your function every time an action happens.\n\nWhy It Matters:\n  This is a fundamentally different execution model from Session 1's sequential, top-to-bottom code โ€” an event listener does not run at a predictable moment, it runs whenever the browser decides the event happened, which could be zero times or a thousand times. Nearly everything interactive in a real application (buttons, forms, games) is built on this reactive pattern instead of a single top-to-bottom script.\n\nSyntax Blueprint:\n  window.addEventListener(\"keydown\", function(event) {\n    // this block runs on EVERY key press\n  });\n\nWhy the window scope:\n  Binding to window catches key presses anywhere on the page, so the car responds no matter what is focused.",
       keywords: "javascript addEventListener keydown event driven"
     },
     {
       name: "The Event Object (event.key)",
-      desc: "Core Definition:\n  When a listener fires, the browser hands your function an event object describing what happened. For keys, event.key holds the exact key name.\n\nWhy It Matters:\n  The event object is the ONLY way your code learns which key, button, or element triggered the listener — without reading event.key, a single keydown listener would have no way to tell an ArrowLeft press from a Spacebar press. Because the key names are exact, case-sensitive strings defined by the browser (not something you invent), a single typo silently breaks the match with no error message at all.\n\nExact Key Strings (case-sensitive!):\n  - Left arrow  -> \"ArrowLeft\"   (NOT \"left\")\n  - Right arrow -> \"ArrowRight\"\n  - Spacebar    -> \" \"          (a single space, NOT \"Space\")\n\nCommon Bug:\n  if (event.key === \"left\") { ... }  // never true; nothing happens, no error\n  Use the exact string \"ArrowLeft\" so the comparison can match.",
+      desc: "Core Definition:\n  When a listener fires, the browser hands your function an event object describing what happened. For keys, event.key holds the exact key name.\n\nWhy It Matters:\n  The event object is the ONLY way your code learns which key, button, or element triggered the listener โ€” without reading event.key, a single keydown listener would have no way to tell an ArrowLeft press from a Spacebar press. Because the key names are exact, case-sensitive strings defined by the browser (not something you invent), a single typo silently breaks the match with no error message at all.\n\nExact Key Strings (case-sensitive!):\n  - Left arrow  -> \"ArrowLeft\"   (NOT \"left\")\n  - Right arrow -> \"ArrowRight\"\n  - Spacebar    -> \" \"          (a single space, NOT \"Space\")\n\nCommon Bug:\n  if (event.key === \"left\") { ... }  // never true; nothing happens, no error\n  Use the exact string \"ArrowLeft\" so the comparison can match.",
       keywords: "javascript event.key ArrowLeft keyboard event object"
     },
     {
       name: "Reflecting State to the DOM (style.left)",
-      desc: "Core Definition:\n  Changing a variable only updates memory. To MOVE the car on screen you must write the new value into the element's style.\n\nWhy It Matters:\n  This is the bridge between Session 1's variables (memory) and Session 2's DOM (what the player sees) — the two are never automatically connected. A variable can change a thousand times in memory, but the car will not visually move a single pixel until you explicitly write that value into the element's style. Forgetting this step is the single most common reason a beginner's 'working' logic produces zero visible effect on screen.\n\nSyntax:\n  let carEl = document.getElementById(\"player-car\");\n  carEl.style.left = carX + \"px\";   // note the \"px\" unit!\n\nThe Missing-Unit Bug:\n  carEl.style.left = carX;   // 165 with no unit is invalid CSS -> ignored\n  CSS position values need a unit, so concatenate \"px\" to make \"165px\".",
+      desc: "Core Definition:\n  Changing a variable only updates memory. To MOVE the car on screen you must write the new value into the element's style.\n\nWhy It Matters:\n  This is the bridge between Session 1's variables (memory) and Session 2's DOM (what the player sees) โ€” the two are never automatically connected. A variable can change a thousand times in memory, but the car will not visually move a single pixel until you explicitly write that value into the element's style. Forgetting this step is the single most common reason a beginner's 'working' logic produces zero visible effect on screen.\n\nSyntax:\n  let carEl = document.getElementById(\"player-car\");\n  carEl.style.left = carX + \"px\";   // note the \"px\" unit!\n\nThe Missing-Unit Bug:\n  carEl.style.left = carX;   // 165 with no unit is invalid CSS -> ignored\n  CSS position values need a unit, so concatenate \"px\" to make \"165px\".",
       keywords: "javascript style.left px unit DOM update getElementById"
     }
   ],
   'l1-s6': [
     {
       name: "Conditional Statements (If-Else branching)",
-      desc: "Core Definition:\n  Allows the computer to run different blocks of code based on whether a condition is true or false.\n\nWhy It Matters:\n  This is the first tool in the course that lets a program make a DECISION instead of just executing a fixed sequence — every boundary check, win/lose condition, and safety guard in the racing game depends on if/else. Without conditionals, code can only ever do the exact same thing regardless of what state the game is currently in.\n\nJavaScript Syntax Blueprint:\n  if (speed > 100) {\n    alert(\"Danger: Speed threshold exceeded!\");\n  } else if (speed > 60) {\n    alert(\"Cruising speed reached.\");\n  } else {\n    alert(\"Vehicle slow or stopped.\");\n  }\n\nKey Rule:\n  The computer checks these conditions from top-to-bottom. The first one that evaluates to true is run, and the rest are ignored.", 
+      desc: "Core Definition:\n  Allows the computer to run different blocks of code based on whether a condition is true or false.\n\nWhy It Matters:\n  This is the first tool in the course that lets a program make a DECISION instead of just executing a fixed sequence โ€” every boundary check, win/lose condition, and safety guard in the racing game depends on if/else. Without conditionals, code can only ever do the exact same thing regardless of what state the game is currently in.\n\nJavaScript Syntax Blueprint:\n  if (speed > 100) {\n    alert(\"Danger: Speed threshold exceeded!\");\n  } else if (speed > 60) {\n    alert(\"Cruising speed reached.\");\n  } else {\n    alert(\"Vehicle slow or stopped.\");\n  }\n\nKey Rule:\n  The computer checks these conditions from top-to-bottom. The first one that evaluates to true is run, and the rest are ignored.", 
       keywords: "javascript if else if syntax conditional code blocks" 
     },
     { 
       name: "Logical Operators (AND, OR, NOT)",
-      desc: "Core Definition:\n  Operators used to link multiple checks inside conditional statements.\n\nWhy It Matters:\n  Real conditions are rarely a single check — 'can the car move' depends on the gear AND the brake being released at the same moment. Logical operators let one if statement express a compound rule directly, instead of nesting several separate if statements inside each other, which quickly becomes hard to read and easy to get wrong.\n\nOperators Cheat Sheet:\n  - AND (&&): Both sides must be true.\n    if (gearState === \"DRIVE\" && footbrakeReleased === true) { ... }\n  - OR (||): At least one side must be true.\n    if (sensorAlertActive || manualEmergencyPressed) { ... }\n  - NOT (!): Inverts true to false, or false to true.\n    if (!engineRunning) { startEngine(); }", 
+      desc: "Core Definition:\n  Operators used to link multiple checks inside conditional statements.\n\nWhy It Matters:\n  Real conditions are rarely a single check โ€” 'can the car move' depends on the gear AND the brake being released at the same moment. Logical operators let one if statement express a compound rule directly, instead of nesting several separate if statements inside each other, which quickly becomes hard to read and easy to get wrong.\n\nOperators Cheat Sheet:\n  - AND (&&): Both sides must be true.\n    if (gearState === \"DRIVE\" && footbrakeReleased === true) { ... }\n  - OR (||): At least one side must be true.\n    if (sensorAlertActive || manualEmergencyPressed) { ... }\n  - NOT (!): Inverts true to false, or false to true.\n    if (!engineRunning) { startEngine(); }", 
       keywords: "javascript logical operators AND OR NOT syntax boolean" 
     },
     { 
       name: "Logical Priority and Overrides",
-      desc: "Core Definition:\n  Designing condition hierarchies so that safety triggers are evaluated before routine operations.\n\nWhy It Matters:\n  An if/else if chain stops at the FIRST condition that is true, so the ORDER you write branches in is itself a design decision, not just style. Placing a low-priority check before a safety-critical one means the safety check can be skipped entirely on frames where both would be true — this is the same 'order of checks' idea as Session 1's preconditions, now applied to branching logic.\n\nOrder Priority Pitfall:\n  If you check normal inputs before emergency triggers, the emergency triggers will be ignored!\n\n  // ❌ INCORRECT (Car accelerates even if emergency brake is pressed):\n  if (gasPedalPressed) { speed += 5; }\n  else if (emergencyHaltActive) { speed = 0; }\n\n  // ✅ CORRECT (Emergency override evaluated first):\n  if (emergencyHaltActive) { speed = 0; }\n  else if (gasPedalPressed) { speed += 5; }", 
+      desc: "Core Definition:\n  Designing condition hierarchies so that safety triggers are evaluated before routine operations.\n\nWhy It Matters:\n  An if/else if chain stops at the FIRST condition that is true, so the ORDER you write branches in is itself a design decision, not just style. Placing a low-priority check before a safety-critical one means the safety check can be skipped entirely on frames where both would be true โ€” this is the same 'order of checks' idea as Session 1's preconditions, now applied to branching logic.\n\nOrder Priority Pitfall:\n  If you check normal inputs before emergency triggers, the emergency triggers will be ignored!\n\n  // โ INCORRECT (Car accelerates even if emergency brake is pressed):\n  if (gasPedalPressed) { speed += 5; }\n  else if (emergencyHaltActive) { speed = 0; }\n\n  // โ… CORRECT (Emergency override evaluated first):\n  if (emergencyHaltActive) { speed = 0; }\n  else if (gasPedalPressed) { speed += 5; }", 
       keywords: "condition overrides precedence safety priority programming" 
     }
   ],
   'l1-s7': [
     {
       name: "Loop Structures (For vs. While)",
-      desc: "Core Definition:\n  Loops repeat a block of code multiple times without rewriting it manually.\n\nWhy It Matters:\n  Loops are what make code scale — spawning 20 obstacles by copy-pasting one line 20 times is exactly the kind of repetition programming exists to eliminate. Choosing for vs while is really answering 'do I know the exact repeat count in advance, or am I repeating until some condition changes' — picking the wrong one makes the loop awkward to write correctly.\n\nWhen to use which:\n  - For Loop (Counting): Use when you know exactly how many times to repeat.\n    for (let i = 0; i < 5; i++) {\n      // Runs 5 times (i starts at 0, goes up to 4)\n      spawnObstacle();\n    }\n  - While Loop (Condition-bound): Use when repeating based on a status condition.\n    while (fuelGallons > 0) {\n      consumeFuel();\n      fuelGallons--; // Ensure condition changes!\n    }", 
+      desc: "Core Definition:\n  Loops repeat a block of code multiple times without rewriting it manually.\n\nWhy It Matters:\n  Loops are what make code scale โ€” spawning 20 obstacles by copy-pasting one line 20 times is exactly the kind of repetition programming exists to eliminate. Choosing for vs while is really answering 'do I know the exact repeat count in advance, or am I repeating until some condition changes' โ€” picking the wrong one makes the loop awkward to write correctly.\n\nWhen to use which:\n  - For Loop (Counting): Use when you know exactly how many times to repeat.\n    for (let i = 0; i < 5; i++) {\n      // Runs 5 times (i starts at 0, goes up to 4)\n      spawnObstacle();\n    }\n  - While Loop (Condition-bound): Use when repeating based on a status condition.\n    while (fuelGallons > 0) {\n      consumeFuel();\n      fuelGallons--; // Ensure condition changes!\n    }", 
       keywords: "for loop syntax javascript, while loop code templates" 
     },
     { 
       name: "Infinite Loop Traps & CPU Lockouts",
-      desc: "Core Definition:\n  A severe logic error where a loop's condition never becomes false. The computer runs the loop infinitely, freezing the browser.\n\nWhy It Matters:\n  This is the most dangerous class of bug you will meet so far, because it does not crash with a helpful error message — it freezes the entire browser tab, sometimes the whole computer, with zero feedback about why. Every loop you write needs an honest answer to 'what exactly makes this condition eventually become false?' before you ever run it.\n\nCommon Loop Bug:\n  let counter = 0;\n  while (counter < 5) {\n    console.log(\"Executing...\");\n    // ❌ Error: forgot 'counter++;'. counter is always 0. Loop never exits!\n  }\n\nRules to Prevent CPU Lockouts:\n  1. Double check that your check variable updates inside the loop body.\n  2. Ensure the check moves closer to the loop exit threshold on each run.", 
+      desc: "Core Definition:\n  A severe logic error where a loop's condition never becomes false. The computer runs the loop infinitely, freezing the browser.\n\nWhy It Matters:\n  This is the most dangerous class of bug you will meet so far, because it does not crash with a helpful error message โ€” it freezes the entire browser tab, sometimes the whole computer, with zero feedback about why. Every loop you write needs an honest answer to 'what exactly makes this condition eventually become false?' before you ever run it.\n\nCommon Loop Bug:\n  let counter = 0;\n  while (counter < 5) {\n    console.log(\"Executing...\");\n    // โ Error: forgot 'counter++;'. counter is always 0. Loop never exits!\n  }\n\nRules to Prevent CPU Lockouts:\n  1. Double check that your check variable updates inside the loop body.\n  2. Ensure the check moves closer to the loop exit threshold on each run.", 
       keywords: "browser tab freezes loop error, infinite loop exit conditions" 
     },
     { 
       name: "Loop Controls (Break and Increments)",
-      desc: "Core Definition:\n  Controls that let you change loop behaviors mid-flight.\n\nWhy It Matters:\n  break gives a loop an emergency exit that isn't tied to its normal counting condition — essential for something like collision detection, where you want to stop checking the instant a hit is found instead of wasting time checking everything else. This is the loop-level version of the early-return pattern you will see again with functions.\n\nKeywords Cheat Sheet:\n  - Increment (e.g. i++): Shorthand for i = i + 1. Shifts the loop state forward.\n  - Break: Instantly exits the loop, skipping any remaining cycles.\n\nJavaScript Syntax:\n  for (let i = 0; i < 10; i++) {\n    if (collisionDetected) {\n      break; // Stop running immediately\n    }\n    moveObstacles();\n  }", 
+      desc: "Core Definition:\n  Controls that let you change loop behaviors mid-flight.\n\nWhy It Matters:\n  break gives a loop an emergency exit that isn't tied to its normal counting condition โ€” essential for something like collision detection, where you want to stop checking the instant a hit is found instead of wasting time checking everything else. This is the loop-level version of the early-return pattern you will see again with functions.\n\nKeywords Cheat Sheet:\n  - Increment (e.g. i++): Shorthand for i = i + 1. Shifts the loop state forward.\n  - Break: Instantly exits the loop, skipping any remaining cycles.\n\nJavaScript Syntax:\n  for (let i = 0; i < 10; i++) {\n    if (collisionDetected) {\n      break; // Stop running immediately\n    }\n    moveObstacles();\n  }", 
       keywords: "break statement javascript loop, loop counter increment syntax"
     }
   ],
   'l1-s8': [
     {
       name: "Function Declarations & Parameters",
-      desc: "Core Definition:\n  A function packages a repeatable action under a name you can call whenever needed.\n\nWhy It Matters:\n  Functions are how you turn Session 1's 'process' step into a reusable, named tool instead of retyping the same block of logic everywhere it is needed. Anywhere the exact same steps are needed more than once — moving the car, scoring a hit — a function means fixing a bug in ONE place instead of hunting down every copy of it.\n\nSyntax Blueprint:\n  function updatePlayerPosition() {           // 0 parameters\n    document.getElementById(\"player-car\").style.left = carX + \"px\";\n  }\n  function calculateScore(distance, mult) {   // 2 parameters\n    return distance * mult;                    // hands a value back\n  }\n\nCall it by name:\n  updatePlayerPosition();\n  let s = calculateScore(100, 2);  // s is 200",
+      desc: "Core Definition:\n  A function packages a repeatable action under a name you can call whenever needed.\n\nWhy It Matters:\n  Functions are how you turn Session 1's 'process' step into a reusable, named tool instead of retyping the same block of logic everywhere it is needed. Anywhere the exact same steps are needed more than once โ€” moving the car, scoring a hit โ€” a function means fixing a bug in ONE place instead of hunting down every copy of it.\n\nSyntax Blueprint:\n  function updatePlayerPosition() {           // 0 parameters\n    document.getElementById(\"player-car\").style.left = carX + \"px\";\n  }\n  function calculateScore(distance, mult) {   // 2 parameters\n    return distance * mult;                    // hands a value back\n  }\n\nCall it by name:\n  updatePlayerPosition();\n  let s = calculateScore(100, 2);  // s is 200",
       keywords: "javascript function declaration parameters return call"
     },
     {
       name: "Global vs. Local Scope",
-      desc: "Core Definition:\n  Where you DECLARE a variable decides who can see it.\n\nWhy It Matters:\n  Scope is what makes the shared-state bug below possible in the first place — two functions that each declare their own local carX are NOT sharing a car position at all, they are silently working with two completely separate variables that happen to have the same name. This is one of the most confusing bug classes for beginners precisely because the code looks correct and runs without any error.\n\nThe Rule:\n  - Declared OUTSIDE all functions = GLOBAL: every function can read/change it.\n  - Declared INSIDE a function = LOCAL: only that function can see it; it vanishes when the function ends.\n\nThe Scope Bug:\n  function moveLeft() { let carX = 165; carX -= 130; }  // local carX\n  function render()  { console.log(carX); }             // logs undefined!\n  Both functions must share ONE carX declared once in the outer scope.",
+      desc: "Core Definition:\n  Where you DECLARE a variable decides who can see it.\n\nWhy It Matters:\n  Scope is what makes the shared-state bug below possible in the first place โ€” two functions that each declare their own local carX are NOT sharing a car position at all, they are silently working with two completely separate variables that happen to have the same name. This is one of the most confusing bug classes for beginners precisely because the code looks correct and runs without any error.\n\nThe Rule:\n  - Declared OUTSIDE all functions = GLOBAL: every function can read/change it.\n  - Declared INSIDE a function = LOCAL: only that function can see it; it vanishes when the function ends.\n\nThe Scope Bug:\n  function moveLeft() { let carX = 165; carX -= 130; }  // local carX\n  function render()  { console.log(carX); }             // logs undefined!\n  Both functions must share ONE carX declared once in the outer scope.",
       keywords: "javascript scope global local variable undefined"
     },
     {
       name: "Modular Design (single-purpose functions)",
-      desc: "Core Definition:\n  Split one long script into small functions that each do ONE job. Fewer copies of a line means fewer places for a bug to hide.\n\nWhy It Matters:\n  This is the practical payoff of everything learned so far — functions, scope, and parameters combine into a codebase where each piece has one clear job. A tangled script with logic copy-pasted in three places means every bug fix has to be applied three times, and it's easy to miss one; small single-purpose functions mean a fix in one place is a fix everywhere it's used.\n\nWhy it pays off:\n  - A shared updatePlayerPosition() is fixed once, not in every branch.\n  - moveLeft() / moveRight() clamp their own boundary, then call the shared renderer.\n  - The keydown handler just calls moveLeft()/moveRight() by name.\n\nReadability = maintainability: a reviewer with 10 minutes understands small, well-named functions far faster than one tangled block.",
+      desc: "Core Definition:\n  Split one long script into small functions that each do ONE job. Fewer copies of a line means fewer places for a bug to hide.\n\nWhy It Matters:\n  This is the practical payoff of everything learned so far โ€” functions, scope, and parameters combine into a codebase where each piece has one clear job. A tangled script with logic copy-pasted in three places means every bug fix has to be applied three times, and it's easy to miss one; small single-purpose functions mean a fix in one place is a fix everywhere it's used.\n\nWhy it pays off:\n  - A shared updatePlayerPosition() is fixed once, not in every branch.\n  - moveLeft() / moveRight() clamp their own boundary, then call the shared renderer.\n  - The keydown handler just calls moveLeft()/moveRight() by name.\n\nReadability = maintainability: a reviewer with 10 minutes understands small, well-named functions far faster than one tangled block.",
       keywords: "javascript modular functions refactor single responsibility"
     }
   ],
   'l1-s9': [
     {
       name: "The Game Loop (requestAnimationFrame)",
-      desc: "Core Definition:\n  A game is an animation: each frame updates state, redraws, then books the next frame. requestAnimationFrame runs your function about 60 times per second, in sync with the screen.\n\nWhy It Matters:\n  requestAnimationFrame ties your update logic to the SCREEN's own refresh rate instead of an arbitrary timer, which is why the animation stays smooth and battery-friendly (the browser automatically pauses it on a hidden tab). This is also the course's first real encounter with recursion — a function scheduling itself to run again — a pattern that reappears anywhere work needs to repeat indefinitely rather than a fixed number of times.\n\nRecursion Blueprint:\n  function gameLoop() {\n    moveObstacles();\n    requestAnimationFrame(gameLoop);  // schedule the NEXT frame\n  }\n  gameLoop();  // kick it off once\n\nThe last line is what makes it a loop — remove it and the game updates once, then freezes.",
+      desc: "Core Definition:\n  A game is an animation: each frame updates state, redraws, then books the next frame. requestAnimationFrame runs your function about 60 times per second, in sync with the screen.\n\nWhy It Matters:\n  requestAnimationFrame ties your update logic to the SCREEN's own refresh rate instead of an arbitrary timer, which is why the animation stays smooth and battery-friendly (the browser automatically pauses it on a hidden tab). This is also the course's first real encounter with recursion โ€” a function scheduling itself to run again โ€” a pattern that reappears anywhere work needs to repeat indefinitely rather than a fixed number of times.\n\nRecursion Blueprint:\n  function gameLoop() {\n    moveObstacles();\n    requestAnimationFrame(gameLoop);  // schedule the NEXT frame\n  }\n  gameLoop();  // kick it off once\n\nThe last line is what makes it a loop โ€” remove it and the game updates once, then freezes.",
       keywords: "javascript requestAnimationFrame game loop recursion 60fps"
     },
     {
       name: "The gameActive Gate",
-      desc: "Core Definition:\n  A single Boolean decides whether the loop keeps running. Check it at the top of every frame and return early when the game is over.\n\nWhy It Matters:\n  A recursive loop has no natural stopping point unless you give it one — requestAnimationFrame will keep calling gameLoop forever unless a condition inside it explicitly refuses to schedule the next frame. gameActive is that single source of truth: every other system (score display, restart button) can check the same flag instead of each needing its own separate logic for 'is the game currently running.'\n\nSyntax:\n  function gameLoop() {\n    if (!gameActive) { return; }   // stop: do not schedule another frame\n    moveObstacles();\n    requestAnimationFrame(gameLoop);\n  }\n\nWithout this gate, 'Game Over' is impossible — positions keep updating forever.",
+      desc: "Core Definition:\n  A single Boolean decides whether the loop keeps running. Check it at the top of every frame and return early when the game is over.\n\nWhy It Matters:\n  A recursive loop has no natural stopping point unless you give it one โ€” requestAnimationFrame will keep calling gameLoop forever unless a condition inside it explicitly refuses to schedule the next frame. gameActive is that single source of truth: every other system (score display, restart button) can check the same flag instead of each needing its own separate logic for 'is the game currently running.'\n\nSyntax:\n  function gameLoop() {\n    if (!gameActive) { return; }   // stop: do not schedule another frame\n    moveObstacles();\n    requestAnimationFrame(gameLoop);\n  }\n\nWithout this gate, 'Game Over' is impossible โ€” positions keep updating forever.",
       keywords: "javascript game state flag boolean loop halt"
     },
     {
       name: "Frame Updates & Wrap-Around Reset",
-      desc: "Core Definition:\n  Each frame nudges the obstacle down by speed; once it passes the bottom it wraps back to the top and scores a point.\n\nWhy It Matters:\n  This is the animation trick behind every endless-scroller: instead of creating a new obstacle object for every pass — which would grow an array forever, foreshadowing Level 2's memory-leak lessons — one obstacle is recycled by resetting its position once it exits the screen. The order matters: checking the wrap BEFORE moving, or placing the score increment outside the reset block, would silently miscount passes.\n\nSyntax:\n  obstacleY += speed;            // scroll down\n  if (obstacleY > 500) {         // passed the bottom (track height)\n    obstacleY = -100;            // respawn above the top\n    score += 10;                 // a pass is worth points\n  }\n\nThe score increment must live INSIDE the reset block — passing an obstacle is what earns the points.",
+      desc: "Core Definition:\n  Each frame nudges the obstacle down by speed; once it passes the bottom it wraps back to the top and scores a point.\n\nWhy It Matters:\n  This is the animation trick behind every endless-scroller: instead of creating a new obstacle object for every pass โ€” which would grow an array forever, foreshadowing Level 2's memory-leak lessons โ€” one obstacle is recycled by resetting its position once it exits the screen. The order matters: checking the wrap BEFORE moving, or placing the score increment outside the reset block, would silently miscount passes.\n\nSyntax:\n  obstacleY += speed;            // scroll down\n  if (obstacleY > 500) {         // passed the bottom (track height)\n    obstacleY = -100;            // respawn above the top\n    score += 10;                 // a pass is worth points\n  }\n\nThe score increment must live INSIDE the reset block โ€” passing an obstacle is what earns the points.",
       keywords: "javascript animation coordinate update wrap reset score"
     }
   ],
   'l1-s10': [
     {
       name: "Axis-Aligned Bounding Box (AABB) Overlap",
-      desc: "Core Definition:\n  Two rectangles overlap only when they overlap on BOTH axes at once. The check is four edge comparisons joined by &&.\n\nWhy It Matters:\n  This is the mathematical foundation for every 'did two things touch' check you will write, in this game and beyond — it works identically whether the boxes are cars, UI buttons, or bullets and enemies in a completely different game. Because all four comparisons are joined with &&, ALL must be true simultaneously; overlap on only three of the four edges still means the boxes are apart.\n\nThe Formula:\n  function checkCollision(a, b) {\n    return (\n      a.x < b.x + b.width  &&   // a's left  is past b's right?\n      a.x + a.width > b.x  &&   // a's right is past b's left?\n      a.y < b.y + b.height &&   // a's top   is past b's bottom?\n      a.y + a.height > b.y      // a's bottom is past b's top?\n    );\n  }\n\nFlip even one operator and the combined && can never be true — collisions silently never fire.",
+      desc: "Core Definition:\n  Two rectangles overlap only when they overlap on BOTH axes at once. The check is four edge comparisons joined by &&.\n\nWhy It Matters:\n  This is the mathematical foundation for every 'did two things touch' check you will write, in this game and beyond โ€” it works identically whether the boxes are cars, UI buttons, or bullets and enemies in a completely different game. Because all four comparisons are joined with &&, ALL must be true simultaneously; overlap on only three of the four edges still means the boxes are apart.\n\nThe Formula:\n  function checkCollision(a, b) {\n    return (\n      a.x < b.x + b.width  &&   // a's left  is past b's right?\n      a.x + a.width > b.x  &&   // a's right is past b's left?\n      a.y < b.y + b.height &&   // a's top   is past b's bottom?\n      a.y + a.height > b.y      // a's bottom is past b's top?\n    );\n  }\n\nFlip even one operator and the combined && can never be true โ€” collisions silently never fire.",
       keywords: "AABB collision detection bounding box overlap javascript"
     },
     {
       name: "Why Dimensions Matter",
-      desc: "Core Definition:\n  Comparing only center points (player.x === obstacle.x) almost never matches — two moving cars rarely share the exact same pixel. You must compare the box EDGES, which means using width and height.\n\nWhy It Matters:\n  A point has no size, so comparing two points for equality is really asking 'are these two objects occupying the exact same single pixel,' which almost never happens even during a real collision. Real collision detection has to reason about the SPACE each object occupies, not just its anchor coordinate — which is exactly what AABB's four edge comparisons do.\n\nBox from position + size:\n  const player = { x: carX, y: 380, width: 60, height: 100 };  // real car size\n  Each edge is x/y plus the width/height, so the overlap test is size-aware, not point-based.",
+      desc: "Core Definition:\n  Comparing only center points (player.x === obstacle.x) almost never matches โ€” two moving cars rarely share the exact same pixel. You must compare the box EDGES, which means using width and height.\n\nWhy It Matters:\n  A point has no size, so comparing two points for equality is really asking 'are these two objects occupying the exact same single pixel,' which almost never happens even during a real collision. Real collision detection has to reason about the SPACE each object occupies, not just its anchor coordinate โ€” which is exactly what AABB's four edge comparisons do.\n\nBox from position + size:\n  const player = { x: carX, y: 380, width: 60, height: 100 };  // real car size\n  Each edge is x/y plus the width/height, so the overlap test is size-aware, not point-based.",
       keywords: "collision width height bounding box center point"
     },
     {
       name: "Wiring Collision into the Loop",
-      desc: "Core Definition:\n  Detecting a crash is useless unless something happens. Call the check each frame and end the game on a hit.\n\nWhy It Matters:\n  This session closes the loop between having a check (this session's checkCollision formula) and having it actually matter — the collision check has to be actively invoked once per frame inside gameLoop, and its result has to actually change game state (Session 9's gameActive gate), or the 'crash' is purely theoretical and nothing on screen ever reacts to it.\n\nSyntax (inside gameLoop):\n  if (checkCollision(player, obstacle)) {\n    gameActive = false;              // stops the loop (Session 9 gate)\n    console.log(\"Collision detected!\");\n  }\n\nThis is what turns 'they touched' into 'game over'.",
+      desc: "Core Definition:\n  Detecting a crash is useless unless something happens. Call the check each frame and end the game on a hit.\n\nWhy It Matters:\n  This session closes the loop between having a check (this session's checkCollision formula) and having it actually matter โ€” the collision check has to be actively invoked once per frame inside gameLoop, and its result has to actually change game state (Session 9's gameActive gate), or the 'crash' is purely theoretical and nothing on screen ever reacts to it.\n\nSyntax (inside gameLoop):\n  if (checkCollision(player, obstacle)) {\n    gameActive = false;              // stops the loop (Session 9 gate)\n    console.log(\"Collision detected!\");\n  }\n\nThis is what turns 'they touched' into 'game over'.",
       keywords: "collision game loop gameActive game over trigger"
     }
   ],
   'l1-s11': [
     {
       name: "textContent vs. innerHTML (safety)",
-      desc: "Core Definition:\n  Both write into an element, but they treat the input differently.\n\nWhy It Matters:\n  Real applications regularly display data that ultimately came from a user — a username, a chat message, a saved score — and innerHTML will happily execute any <script> tag hiding inside that data, a real attack called Cross-Site Scripting (XSS). textContent can never do this, because it treats absolutely everything as literal text, never as markup to render.\n\nThe Difference:\n  - textContent: writes PLAIN TEXT. Safe and fast.\n    document.getElementById(\"score-val\").textContent = score;\n  - innerHTML: PARSES the input as HTML, so untrusted data could inject and run a <script>.\n\nRule: for a plain value like a score, always prefer textContent — no injection risk, no HTML parsing cost.",
+      desc: "Core Definition:\n  Both write into an element, but they treat the input differently.\n\nWhy It Matters:\n  Real applications regularly display data that ultimately came from a user โ€” a username, a chat message, a saved score โ€” and innerHTML will happily execute any <script> tag hiding inside that data, a real attack called Cross-Site Scripting (XSS). textContent can never do this, because it treats absolutely everything as literal text, never as markup to render.\n\nThe Difference:\n  - textContent: writes PLAIN TEXT. Safe and fast.\n    document.getElementById(\"score-val\").textContent = score;\n  - innerHTML: PARSES the input as HTML, so untrusted data could inject and run a <script>.\n\nRule: for a plain value like a score, always prefer textContent โ€” no injection risk, no HTML parsing cost.",
       keywords: "textContent innerHTML script injection XSS safe DOM"
     },
     {
       name: "Toggling Visibility with a .hidden Class",
-      desc: "Core Definition:\n  Show or hide panels by adding/removing a CSS class, not by creating or destroying elements. The restart panel already exists in the HTML, hidden by .hidden { display: none; }.\n\nWhy It Matters:\n  This reuses the exact id/class system from Session 2 for a new purpose: instead of building or destroying DOM elements at runtime — slower, and easy to lose track of — you keep every UI panel permanently in the HTML and simply flip whether CSS is hiding it. It is cheaper, and it means the game-over panel's content never has to be rebuilt from scratch.\n\nSyntax:\n  el.classList.remove(\"hidden\");  // reveal the game-over panel\n  el.classList.add(\"hidden\");     // hide it again on restart\n\nAs long as the class is on the element it stays invisible — forgetting to remove it leaves the game-over screen stuck.",
+      desc: "Core Definition:\n  Show or hide panels by adding/removing a CSS class, not by creating or destroying elements. The restart panel already exists in the HTML, hidden by .hidden { display: none; }.\n\nWhy It Matters:\n  This reuses the exact id/class system from Session 2 for a new purpose: instead of building or destroying DOM elements at runtime โ€” slower, and easy to lose track of โ€” you keep every UI panel permanently in the HTML and simply flip whether CSS is hiding it. It is cheaper, and it means the game-over panel's content never has to be rebuilt from scratch.\n\nSyntax:\n  el.classList.remove(\"hidden\");  // reveal the game-over panel\n  el.classList.add(\"hidden\");     // hide it again on restart\n\nAs long as the class is on the element it stays invisible โ€” forgetting to remove it leaves the game-over screen stuck.",
       keywords: "javascript classList hidden class toggle visibility display none"
     },
     {
       name: "Defensive Output Guards",
-      desc: "Core Definition:\n  Clamp a value to something sensible BEFORE writing it to the screen, so bad math never shows the player a broken UI.\n\nWhy It Matters:\n  This is the same preconditions mindset from Session 1, now applied to OUTPUT instead of input — before a value reaches the screen, check whether it is still sensible. A restart button that resets score but forgets carX or gameActive produces a UI that LOOKS reset while the underlying game state is still broken, which is a uniquely confusing bug to track down because the visible symptom (a frozen car) does not obviously point back to the restart handler.\n\nSyntax:\n  if (score < 0) { score = 0; }                 // no negative scores\n  document.getElementById(\"score-val\").textContent = score;\n\n'Never trust the value, guard the output' — the restart handler must also reset every piece of state (score, car position, gameActive) or the game looks reset but will not move.",
+      desc: "Core Definition:\n  Clamp a value to something sensible BEFORE writing it to the screen, so bad math never shows the player a broken UI.\n\nWhy It Matters:\n  This is the same preconditions mindset from Session 1, now applied to OUTPUT instead of input โ€” before a value reaches the screen, check whether it is still sensible. A restart button that resets score but forgets carX or gameActive produces a UI that LOOKS reset while the underlying game state is still broken, which is a uniquely confusing bug to track down because the visible symptom (a frozen car) does not obviously point back to the restart handler.\n\nSyntax:\n  if (score < 0) { score = 0; }                 // no negative scores\n  document.getElementById(\"score-val\").textContent = score;\n\n'Never trust the value, guard the output' โ€” the restart handler must also reset every piece of state (score, car position, gameActive) or the game looks reset but will not move.",
       keywords: "javascript defensive check clamp validation negative score"
     }
   ],
   'l1-s12': [
     {
       name: "The CONFIG Object (no magic numbers)",
-      desc: "Core Definition:\n  Gather every tunable number into one object so the game's feel can be retuned by editing a single place instead of hunting through the code.\n\nWhy It Matters:\n  This is Session 8's modular-design idea applied to DATA instead of functions — as a project grows across many sessions, the same tunable number (a speed, a boundary, a threshold) tends to get referenced in several places. A single named CONFIG object means retuning the whole game's feel is a one-line edit instead of a search-and-hope across hundreds of lines.\n\nSyntax:\n  const CONFIG = {\n    startSpeed: 5,\n    difficultyMultiplier: 0.1,\n    maxSpeed: 15,\n    leftBound: 35,\n    rightBound: 295\n  };\n  if (carX > CONFIG.leftBound) { carX -= 130; }  // reads from config, not a literal\n\nScattered 'magic numbers' are hard to find and change; a config object gives each one a named home.",
+      desc: "Core Definition:\n  Gather every tunable number into one object so the game's feel can be retuned by editing a single place instead of hunting through the code.\n\nWhy It Matters:\n  This is Session 8's modular-design idea applied to DATA instead of functions โ€” as a project grows across many sessions, the same tunable number (a speed, a boundary, a threshold) tends to get referenced in several places. A single named CONFIG object means retuning the whole game's feel is a one-line edit instead of a search-and-hope across hundreds of lines.\n\nSyntax:\n  const CONFIG = {\n    startSpeed: 5,\n    difficultyMultiplier: 0.1,\n    maxSpeed: 15,\n    leftBound: 35,\n    rightBound: 295\n  };\n  if (carX > CONFIG.leftBound) { carX -= 130; }  // reads from config, not a literal\n\nScattered 'magic numbers' are hard to find and change; a config object gives each one a named home.",
       keywords: "javascript config object magic numbers constants maintainable"
     },
     {
       name: "Difficulty Scaling with a Clamp",
-      desc: "Core Definition:\n  Difficulty should ramp with score but never become impossible, so cap it with Math.min.\n\nWhy It Matters:\n  Any formula that scales with an unbounded input — score can climb forever — will eventually produce an absurd or unplayable result unless something caps it. Math.min is the general-purpose 'never exceed this ceiling' tool, useful anywhere a value trends upward without a natural stopping point, not just for game speed.\n\nSyntax:\n  let speed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;\n  speed = Math.min(speed, CONFIG.maxSpeed);   // never exceed the ceiling\n\nOrder of operations: the multiply runs before the add (5 + 50*0.1 = 10). The clamp is the same idea as Session 6's boundary guard, now sourced from CONFIG.",
+      desc: "Core Definition:\n  Difficulty should ramp with score but never become impossible, so cap it with Math.min.\n\nWhy It Matters:\n  Any formula that scales with an unbounded input โ€” score can climb forever โ€” will eventually produce an absurd or unplayable result unless something caps it. Math.min is the general-purpose 'never exceed this ceiling' tool, useful anywhere a value trends upward without a natural stopping point, not just for game speed.\n\nSyntax:\n  let speed = CONFIG.startSpeed + score * CONFIG.difficultyMultiplier;\n  speed = Math.min(speed, CONFIG.maxSpeed);   // never exceed the ceiling\n\nOrder of operations: the multiply runs before the add (5 + 50*0.1 = 10). The clamp is the same idea as Session 6's boundary guard, now sourced from CONFIG.",
       keywords: "javascript Math.min clamp difficulty scaling max speed"
     },
     {
       name: "Smoke Tests & Regression QA",
-      desc: "Core Definition:\n  A final QA pass verifies EVERY system still works, not just the last thing you touched: variables, boundaries, collision, restart.\n\nWhy It Matters:\n  A finished project accumulates many small interacting systems — movement, collision, scoring, restart — and fixing one late-session bug can easily and silently break an earlier one. A smoke-test checklist re-verifies the WHOLE system rather than just the newest feature, which is the same discipline behind this course's 'Test & Break It' step, now applied to the finished project as a whole.\n\nSmoke test idea:\n  console.log(\"Boundary:\", carX >= 35 && carX <= 295 ? \"PASS\" : \"FAIL\");\n  A regression shows up as a visible FAIL line instead of a silent break.\n\nWatch for inconsistent operators (> in one place, >= in another) — the rare edge-case gaps an adversarial 'Malicious QA Officer' will hunt for.",
+      desc: "Core Definition:\n  A final QA pass verifies EVERY system still works, not just the last thing you touched: variables, boundaries, collision, restart.\n\nWhy It Matters:\n  A finished project accumulates many small interacting systems โ€” movement, collision, scoring, restart โ€” and fixing one late-session bug can easily and silently break an earlier one. A smoke-test checklist re-verifies the WHOLE system rather than just the newest feature, which is the same discipline behind this course's 'Test & Break It' step, now applied to the finished project as a whole.\n\nSmoke test idea:\n  console.log(\"Boundary:\", carX >= 35 && carX <= 295 ? \"PASS\" : \"FAIL\");\n  A regression shows up as a visible FAIL line instead of a silent break.\n\nWatch for inconsistent operators (> in one place, >= in another) โ€” the rare edge-case gaps an adversarial 'Malicious QA Officer' will hunt for.",
       keywords: "smoke test regression QA console.log pass fail boundary"
     }
   ],
   'l2-s1': [
     {
       name: "Canvas vs. DOM Rendering (Immediate vs. Retained Mode)",
-      desc: "Core Definition:\n  The DOM keeps a tree of persistent elements the browser remembers and re-paints for you (retained mode) — an L1 <div> stays on screen until you change its CSS. A <canvas> has no memory of what it drew: it is a raw grid of pixels, and YOU issue draw commands every frame to put color there (immediate mode). Nothing is remembered between frames.\n\nWhy this changes everything:\n  - DOM: document.getElementById(\"player-car\").style.left = carX + \"px\"; — the browser tracks the element and moves it.\n  - Canvas: ctx.fillRect(ship.x, ship.y, ship.width, ship.height); — this paints pixels ONCE. If you don't redraw next frame, the ship is just a static picture, not an object you can look up later.\n\nRule of Thumb:\n  On canvas there is no 'the ship element' to select — only x/y numbers in your own object and the pixels you painted from them.",
+      desc: "Core Definition:\n  The DOM keeps a tree of persistent elements the browser remembers and re-paints for you (retained mode) โ€” an L1 <div> stays on screen until you change its CSS. A <canvas> has no memory of what it drew: it is a raw grid of pixels, and YOU issue draw commands every frame to put color there (immediate mode). Nothing is remembered between frames.\n\nWhy this changes everything:\n  - DOM: document.getElementById(\"player-car\").style.left = carX + \"px\"; โ€” the browser tracks the element and moves it.\n  - Canvas: ctx.fillRect(ship.x, ship.y, ship.width, ship.height); โ€” this paints pixels ONCE. If you don't redraw next frame, the ship is just a static picture, not an object you can look up later.\n\nRule of Thumb:\n  On canvas there is no 'the ship element' to select โ€” only x/y numbers in your own object and the pixels you painted from them.",
       keywords: "canvas vs dom immediate mode retained mode rendering"
     },
     {
       name: "Getting the 2D Context",
-      desc: "Core Definition:\n  Before you can draw anything, you need a reference to the <canvas> element AND a 'drawing context' object that exposes the actual draw methods.\n\nWhy It Matters:\n  This one-time setup is the gateway to everything else in Level 2 — every single draw call from here on starts with ctx., so a typo or a missing getContext(\"2d\") call means nothing downstream can run, usually surfacing as a confusing 'ctx is undefined' error before any game code even executes.\n\nSyntax Cheat Sheet:\n  <canvas id=\"defense-arena\" width=\"480\" height=\"600\"></canvas>\n\n  const canvas = document.getElementById(\"defense-arena\");\n  const ctx = canvas.getContext(\"2d\");   // ctx is the toolbox: fillRect, clearRect, etc.\n\nWhy Two Variables:\n  canvas is the HTML element (used for width/height); ctx is the pen you actually draw with. Almost every draw call in the game will be ctx.something(...), never canvas.something(...).",
+      desc: "Core Definition:\n  Before you can draw anything, you need a reference to the <canvas> element AND a 'drawing context' object that exposes the actual draw methods.\n\nWhy It Matters:\n  This one-time setup is the gateway to everything else in Level 2 โ€” every single draw call from here on starts with ctx., so a typo or a missing getContext(\"2d\") call means nothing downstream can run, usually surfacing as a confusing 'ctx is undefined' error before any game code even executes.\n\nSyntax Cheat Sheet:\n  <canvas id=\"defense-arena\" width=\"480\" height=\"600\"></canvas>\n\n  const canvas = document.getElementById(\"defense-arena\");\n  const ctx = canvas.getContext(\"2d\");   // ctx is the toolbox: fillRect, clearRect, etc.\n\nWhy Two Variables:\n  canvas is the HTML element (used for width/height); ctx is the pen you actually draw with. Almost every draw call in the game will be ctx.something(...), never canvas.something(...).",
       keywords: "canvas getContext 2d javascript setup width height"
     },
     {
       name: "Drawing Primitives (fillRect, fillStyle, strokeRect)",
-      desc: "Core Definition:\n  Canvas has no shape elements — you draw rectangles directly onto the pixel grid with coordinate and size arguments.\n\nWhy It Matters:\n  fillRect and fillStyle are the entire vocabulary for putting color on screen in Level 2 — there is no <div> or CSS class to fall back on. Every shape in the game, from the ship to the shield blocks to the aliens, is built from nothing but these two calls repeated with different coordinates.\n\nSyntax Blueprint:\n  ctx.fillStyle = \"#22cc88\";                 // set the paint color BEFORE drawing\n  ctx.fillRect(x, y, width, height);          // solid filled rectangle (e.g. a shield block)\n  ctx.strokeStyle = \"#ffffff\";\n  ctx.strokeRect(x, y, width, height);        // outline-only rectangle\n\nWorked Example (a shield block):\n  ctx.fillStyle = \"#22cc88\";\n  ctx.fillRect(200, 500, 40, 40);   // paints a 40x40 green block at (200, 500)\n\nOrder Matters:\n  fillStyle must be set BEFORE fillRect is called — it colors whatever you draw next, not what you already drew.",
+      desc: "Core Definition:\n  Canvas has no shape elements โ€” you draw rectangles directly onto the pixel grid with coordinate and size arguments.\n\nWhy It Matters:\n  fillRect and fillStyle are the entire vocabulary for putting color on screen in Level 2 โ€” there is no <div> or CSS class to fall back on. Every shape in the game, from the ship to the shield blocks to the aliens, is built from nothing but these two calls repeated with different coordinates.\n\nSyntax Blueprint:\n  ctx.fillStyle = \"#22cc88\";                 // set the paint color BEFORE drawing\n  ctx.fillRect(x, y, width, height);          // solid filled rectangle (e.g. a shield block)\n  ctx.strokeStyle = \"#ffffff\";\n  ctx.strokeRect(x, y, width, height);        // outline-only rectangle\n\nWorked Example (a shield block):\n  ctx.fillStyle = \"#22cc88\";\n  ctx.fillRect(200, 500, 40, 40);   // paints a 40x40 green block at (200, 500)\n\nOrder Matters:\n  fillStyle must be set BEFORE fillRect is called โ€” it colors whatever you draw next, not what you already drew.",
       keywords: "canvas fillRect fillStyle strokeRect draw rectangle"
     },
     {
       name: "clearRect and the Ghost-Trail Bug",
-      desc: "Core Definition:\n  Because canvas never erases itself automatically, every new frame's drawing PILES ON TOP of the last one unless you clear the pixels first.\n\nCommon Mistake Comparison:\n  // ❌ WRONG (no clear — draws pile up into a smear trail):\n  function gameLoop() {\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n    ship.x += ship.speed;\n    requestAnimationFrame(gameLoop);\n  }\n\n  // ✅ CORRECT (clear the whole canvas first, then draw):\n  function gameLoop() {\n    ctx.clearRect(0, 0, canvas.width, canvas.height);   // wipe last frame's pixels\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n    ship.x += ship.speed;\n    requestAnimationFrame(gameLoop);\n  }\n\nRule of Thumb:\n  clearRect must run FIRST in every frame, before any fillRect calls, or the ship leaves a solid streak instead of appearing to move.",
+      desc: "Core Definition:\n  Because canvas never erases itself automatically, every new frame's drawing PILES ON TOP of the last one unless you clear the pixels first.\n\nCommon Mistake Comparison:\n  // โ WRONG (no clear โ€” draws pile up into a smear trail):\n  function gameLoop() {\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n    ship.x += ship.speed;\n    requestAnimationFrame(gameLoop);\n  }\n\n  // โ… CORRECT (clear the whole canvas first, then draw):\n  function gameLoop() {\n    ctx.clearRect(0, 0, canvas.width, canvas.height);   // wipe last frame's pixels\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n    ship.x += ship.speed;\n    requestAnimationFrame(gameLoop);\n  }\n\nRule of Thumb:\n  clearRect must run FIRST in every frame, before any fillRect calls, or the ship leaves a solid streak instead of appearing to move.",
       keywords: "canvas clearRect ghost trail smear bug animation loop"
     }
   ],
   'l2-s2': [
     {
       name: "Sprite Object Literals",
-      desc: "Core Definition:\n  A sprite bundles all of an on-screen entity's properties (position, size, speed) into one object literal, so canvas code always has a single source of truth to read from and write to.\n\nSyntax Blueprint:\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n\n  console.log(ship.x);      // reads the current x (200)\n  ship.x = ship.x + 10;     // writes a new x back onto the same object\n\nWhy an object instead of five loose variables:\n  Passing one ship object into a draw or move function is far cleaner than passing shipX, shipY, shipWidth, shipHeight, shipSpeed separately — and every property travels together.",
+      desc: "Core Definition:\n  A sprite bundles all of an on-screen entity's properties (position, size, speed) into one object literal, so canvas code always has a single source of truth to read from and write to.\n\nSyntax Blueprint:\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n\n  console.log(ship.x);      // reads the current x (200)\n  ship.x = ship.x + 10;     // writes a new x back onto the same object\n\nWhy an object instead of five loose variables:\n  Passing one ship object into a draw or move function is far cleaner than passing shipX, shipY, shipWidth, shipHeight, shipSpeed separately โ€” and every property travels together.",
       keywords: "javascript object literal properties dot notation sprite"
     },
     {
       name: "Mutating Object Properties per Frame",
-      desc: "Core Definition:\n  Each frame, movement and rendering both read/write the SAME sprite object's properties — moving it means changing a number stored on the object, then drawing from that same object.\n\nSyntax Blueprint:\n  ship.x += ship.speed;    // update position in memory\n  ctx.fillRect(ship.x, ship.y, ship.width, ship.height);  // draw from the SAME object's current values\n\nWhy Order Matters:\n  If you draw before updating, the ship appears to lag one frame behind its real position. Update the object's numbers first, then paint from them.",
+      desc: "Core Definition:\n  Each frame, movement and rendering both read/write the SAME sprite object's properties โ€” moving it means changing a number stored on the object, then drawing from that same object.\n\nSyntax Blueprint:\n  ship.x += ship.speed;    // update position in memory\n  ctx.fillRect(ship.x, ship.y, ship.width, ship.height);  // draw from the SAME object's current values\n\nWhy Order Matters:\n  If you draw before updating, the ship appears to lag one frame behind its real position. Update the object's numbers first, then paint from them.",
       keywords: "javascript object property mutation increment canvas draw"
     },
     {
       name: "Variable Shadowing Bug",
-      desc: "Core Definition:\n  Declaring a new variable with the SAME name inside a nested block (like an event handler) creates a separate, local variable that hides — 'shadows' — the outer one. Code inside that block now silently reads/writes the wrong copy.\n\nWhy It Matters:\n  This bug is dangerous specifically because it produces no error at all — the code runs, the handler fires, a value even changes — just on the wrong copy of the object. It is the sprite-object version of Level 1's global/local scope lesson, and it is exactly the kind of bug that forces you to trace WHERE a variable was declared, not just what its name is.\n\nCommon Mistake Comparison:\n  // ❌ WRONG (re-declares ship inside the handler — shadows the global):\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n  window.addEventListener(\"keydown\", function(event) {\n    let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };  // NEW local ship!\n    if (event.key === \"ArrowLeft\") { ship.x -= ship.speed; }         // changes the LOCAL copy only\n  });\n  // The global ship never moves — the game loop keeps drawing the untouched original.\n\n  // ✅ CORRECT (reuse the existing global ship, don't re-declare it):\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \"ArrowLeft\") { ship.x -= ship.speed; }         // mutates the ONE shared object\n  });\n\nRule of Thumb:\n  Never re-declare a sprite variable with let/const inside a function that should be updating the outer one — assign to its properties instead.",
+      desc: "Core Definition:\n  Declaring a new variable with the SAME name inside a nested block (like an event handler) creates a separate, local variable that hides โ€” 'shadows' โ€” the outer one. Code inside that block now silently reads/writes the wrong copy.\n\nWhy It Matters:\n  This bug is dangerous specifically because it produces no error at all โ€” the code runs, the handler fires, a value even changes โ€” just on the wrong copy of the object. It is the sprite-object version of Level 1's global/local scope lesson, and it is exactly the kind of bug that forces you to trace WHERE a variable was declared, not just what its name is.\n\nCommon Mistake Comparison:\n  // โ WRONG (re-declares ship inside the handler โ€” shadows the global):\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n  window.addEventListener(\"keydown\", function(event) {\n    let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };  // NEW local ship!\n    if (event.key === \"ArrowLeft\") { ship.x -= ship.speed; }         // changes the LOCAL copy only\n  });\n  // The global ship never moves โ€” the game loop keeps drawing the untouched original.\n\n  // โ… CORRECT (reuse the existing global ship, don't re-declare it):\n  let ship = { x: 200, y: 500, width: 40, height: 40, speed: 5 };\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \"ArrowLeft\") { ship.x -= ship.speed; }         // mutates the ONE shared object\n  });\n\nRule of Thumb:\n  Never re-declare a sprite variable with let/const inside a function that should be updating the outer one โ€” assign to its properties instead.",
       keywords: "javascript variable shadowing let scope bug silent fail"
     }
   ],
   'l2-s3': [
     {
       name: "Arrays as Ordered Lists (push, pop, length, index)",
-      desc: "Core Definition:\n  An array holds multiple values in one ordered, numbered list — perfect for tracking however many lasers happen to be on screen at once, instead of one variable per laser.\n\nWhy It Matters:\n  A racing game (Level 1) only ever had ONE car, so a single variable was enough. The moment a game needs an unpredictable NUMBER of things on screen at once — however many lasers are currently in flight — a single variable can't represent that, and an array becomes the only workable structure.\n\nSyntax Cheat Sheet:\n  let lasers = [];                    // starts empty\n  lasers.push({ x: ship.x, y: ship.y });  // adds a new laser object to the END of the list\n  lasers.length;                      // how many lasers currently exist\n  lasers[0];                          // the FIRST laser (arrays are zero-indexed)\n  lasers.pop();                       // removes the LAST laser\n\nWorked Example (fire on spacebar):\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \" \") {\n      lasers.push({ x: ship.x, y: ship.y });  // spawn a laser object at the ship's position\n    }\n  });",
+      desc: "Core Definition:\n  An array holds multiple values in one ordered, numbered list โ€” perfect for tracking however many lasers happen to be on screen at once, instead of one variable per laser.\n\nWhy It Matters:\n  A racing game (Level 1) only ever had ONE car, so a single variable was enough. The moment a game needs an unpredictable NUMBER of things on screen at once โ€” however many lasers are currently in flight โ€” a single variable can't represent that, and an array becomes the only workable structure.\n\nSyntax Cheat Sheet:\n  let lasers = [];                    // starts empty\n  lasers.push({ x: ship.x, y: ship.y });  // adds a new laser object to the END of the list\n  lasers.length;                      // how many lasers currently exist\n  lasers[0];                          // the FIRST laser (arrays are zero-indexed)\n  lasers.pop();                       // removes the LAST laser\n\nWorked Example (fire on spacebar):\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \" \") {\n      lasers.push({ x: ship.x, y: ship.y });  // spawn a laser object at the ship's position\n    }\n  });",
       keywords: "javascript array push pop length index syntax"
     },
     {
       name: "Looping Over Sprite Arrays",
-      desc: "Core Definition:\n  A single sprite object needs no loop, but a LIST of sprites (lasers) needs a loop to touch every item once per frame — updating position and drawing each one.\n\nSyntax Blueprint:\n  for (let i = 0; i < lasers.length; i++) {\n    lasers[i].y -= 7;                                       // move this laser up\n    ctx.fillRect(lasers[i].x, lasers[i].y, 4, 10);           // draw this laser\n  }\n\nWhy lasers.length and not a fixed number:\n  The array can grow (new lasers pushed) or shrink (old ones removed) at any time, so the loop must re-check .length rather than hard-coding e.g. 'i < 3'.",
+      desc: "Core Definition:\n  A single sprite object needs no loop, but a LIST of sprites (lasers) needs a loop to touch every item once per frame โ€” updating position and drawing each one.\n\nSyntax Blueprint:\n  for (let i = 0; i < lasers.length; i++) {\n    lasers[i].y -= 7;                                       // move this laser up\n    ctx.fillRect(lasers[i].x, lasers[i].y, 4, 10);           // draw this laser\n  }\n\nWhy lasers.length and not a fixed number:\n  The array can grow (new lasers pushed) or shrink (old ones removed) at any time, so the loop must re-check .length rather than hard-coding e.g. 'i < 3'.",
       keywords: "javascript for loop array iteration update draw"
     },
     {
       name: "Spawning Objects on Events",
-      desc: "Core Definition:\n  A keypress event is the TRIGGER; the RESPONSE is building a brand-new object literal and pushing it into the tracking array — the same push()-on-event pattern used for any spawned entity.\n\nWhy It Matters:\n  This is the same 'event triggers a response' pattern from Level 1's keydown listener, but the response is now 'grow a collection' instead of 'change one variable.' Recognizing push()-on-event as its own reusable pattern is what lets you spawn any kind of entity — particles, pickups, enemies — later without relearning the idea from scratch.\n\nSyntax Blueprint:\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \" \") {\n      lasers.push({ x: ship.x, y: ship.y });   // new object literal, pushed into the array\n    }\n  });\n\nThe Key-Repeat Stutter Issue:\n  A plain keydown listener only fires once per press, then repeats after the OS's key-repeat delay — so held-down fire feels laggy and stuttery rather than a smooth stream of lasers. Fixing this needs a continuous held-key state (tracked separately, not solved by keydown alone) — a technique covered in a later session.",
+      desc: "Core Definition:\n  A keypress event is the TRIGGER; the RESPONSE is building a brand-new object literal and pushing it into the tracking array โ€” the same push()-on-event pattern used for any spawned entity.\n\nWhy It Matters:\n  This is the same 'event triggers a response' pattern from Level 1's keydown listener, but the response is now 'grow a collection' instead of 'change one variable.' Recognizing push()-on-event as its own reusable pattern is what lets you spawn any kind of entity โ€” particles, pickups, enemies โ€” later without relearning the idea from scratch.\n\nSyntax Blueprint:\n  window.addEventListener(\"keydown\", function(event) {\n    if (event.key === \" \") {\n      lasers.push({ x: ship.x, y: ship.y });   // new object literal, pushed into the array\n    }\n  });\n\nThe Key-Repeat Stutter Issue:\n  A plain keydown listener only fires once per press, then repeats after the OS's key-repeat delay โ€” so held-down fire feels laggy and stuttery rather than a smooth stream of lasers. Fixing this needs a continuous held-key state (tracked separately, not solved by keydown alone) โ€” a technique covered in a later session.",
       keywords: "javascript keydown event push spawn object keyrepeat stutter"
     }
   ],
   'l2-s4': [
     {
       name: "Off-Screen Detection (laser.y < 0)",
-      desc: "Core Definition:\n  A laser that has scrolled above the top of the canvas is doing nothing useful — checking its y coordinate against a bound is the RULE that decides when it should be removed.\n\nSyntax Blueprint:\n  if (lasers[i].y < 0) {\n    // this laser has left the visible canvas — mark it for cleanup\n  }\n\nWhy This Matters:\n  Without a bounds check, there is no signal telling the game a laser is 'done' — it would keep existing in the array and keep being looped over and drawn (off-screen, wastefully) forever.",
+      desc: "Core Definition:\n  A laser that has scrolled above the top of the canvas is doing nothing useful โ€” checking its y coordinate against a bound is the RULE that decides when it should be removed.\n\nSyntax Blueprint:\n  if (lasers[i].y < 0) {\n    // this laser has left the visible canvas โ€” mark it for cleanup\n  }\n\nWhy This Matters:\n  Without a bounds check, there is no signal telling the game a laser is 'done' โ€” it would keep existing in the array and keep being looped over and drawn (off-screen, wastefully) forever.",
       keywords: "javascript bounds check off screen coordinate y less than"
     },
     {
       name: "splice() and the Index-Shift Trap",
-      desc: "Core Definition:\n  array.splice(index, 1) removes one element and immediately shifts every element AFTER it down by one index. Looping FORWARD while splicing causes the loop to skip the element that just slid into the current index.\n\nWhy It Matters:\n  This bug is easy to miss in testing because it doesn't crash or throw — it just quietly skips cleanup on roughly every other stale entry, so the array shrinks more slowly than it should. Reverse iteration whenever a loop might splice its own array is a rule worth memorizing outright, because the bug it prevents is silent.\n\nCommon Mistake Comparison:\n  // ❌ WRONG (forward loop — skips an element after a splice):\n  for (let i = 0; i < lasers.length; i++) {\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);   // element at i+1 shifts down to i, but i++ skips over it next pass\n    }\n  }\n\n  // ✅ CORRECT (reverse loop — safe because shifted indices are already behind i):\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);   // removing here only shifts indices we've ALREADY processed\n    }\n  }\n\nRule of Thumb:\n  Whenever a loop might splice() out of the SAME array it is iterating, count DOWN from length - 1 to 0.",
+      desc: "Core Definition:\n  array.splice(index, 1) removes one element and immediately shifts every element AFTER it down by one index. Looping FORWARD while splicing causes the loop to skip the element that just slid into the current index.\n\nWhy It Matters:\n  This bug is easy to miss in testing because it doesn't crash or throw โ€” it just quietly skips cleanup on roughly every other stale entry, so the array shrinks more slowly than it should. Reverse iteration whenever a loop might splice its own array is a rule worth memorizing outright, because the bug it prevents is silent.\n\nCommon Mistake Comparison:\n  // โ WRONG (forward loop โ€” skips an element after a splice):\n  for (let i = 0; i < lasers.length; i++) {\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);   // element at i+1 shifts down to i, but i++ skips over it next pass\n    }\n  }\n\n  // โ… CORRECT (reverse loop โ€” safe because shifted indices are already behind i):\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    if (lasers[i].y < 0) {\n      lasers.splice(i, 1);   // removing here only shifts indices we've ALREADY processed\n    }\n  }\n\nRule of Thumb:\n  Whenever a loop might splice() out of the SAME array it is iterating, count DOWN from length - 1 to 0.",
       keywords: "javascript array splice index shift bug reverse loop"
     },
     {
       name: "Memory Leaks from Unbounded Arrays",
-      desc: "Core Definition:\n  If dead/off-screen lasers are never spliced out, the lasers array only ever grows — every frame's loop has more and more stale entries to iterate over and draw, even though they are invisible.\n\nWhy Frames Slow Down:\n  for (let i = lasers.length - 1; i >= 0; i--) { ... }   // cost scales with array length\n  An array that grows unbounded means this loop (and the draw calls inside it) does more work every single frame, even for objects that produce nothing on screen — eventually the frame rate visibly drops.\n\nRule of Thumb:\n  Every spawn (push) needs a matching cleanup path (splice) or the array — and the work per frame — only ever grows.",
+      desc: "Core Definition:\n  If dead/off-screen lasers are never spliced out, the lasers array only ever grows โ€” every frame's loop has more and more stale entries to iterate over and draw, even though they are invisible.\n\nWhy Frames Slow Down:\n  for (let i = lasers.length - 1; i >= 0; i--) { ... }   // cost scales with array length\n  An array that grows unbounded means this loop (and the draw calls inside it) does more work every single frame, even for objects that produce nothing on screen โ€” eventually the frame rate visibly drops.\n\nRule of Thumb:\n  Every spawn (push) needs a matching cleanup path (splice) or the array โ€” and the work per frame โ€” only ever grows.",
       keywords: "javascript memory leak unbounded array performance frame rate"
     }
   ],
   'l2-s5': [
     {
       name: "2D Arrays (Rows of Arrays)",
-      desc: "Core Definition:\n  A 2D array is an array whose elements are themselves arrays — a grid of rows and columns. grid[row][col] reads the array at index 'row', then reads index 'col' inside it.\n\nWhy It Matters:\n  A flat array (Session 3's lasers list) works when entities have no meaningful position relative to each other. An alien swarm is different — it has ROWS and COLUMNS that matter for spawning, marching, and later collision — and a 2D array is the direct data-shape match for that grid structure, rather than trying to fake rows and columns with math on a flat list.\n\nVisual Grid Mapped to Coordinates:\n  grid[0] -> [ 1, 1, 1, 1 ]   row 0\n  grid[1] -> [ 1, 1, 1, 1 ]   row 1\n  grid[2] -> [ 1, 1, 1, 1 ]   row 2\n\n  grid[1][2] -> the alien in row 1, column 2\n\nSyntax:\n  let grid = [\n    [1, 1, 1, 1],\n    [1, 1, 1, 1],\n    [1, 1, 1, 1]\n  ];\n  grid[1][2];  // reads row 1, column 2",
+      desc: "Core Definition:\n  A 2D array is an array whose elements are themselves arrays โ€” a grid of rows and columns. grid[row][col] reads the array at index 'row', then reads index 'col' inside it.\n\nWhy It Matters:\n  A flat array (Session 3's lasers list) works when entities have no meaningful position relative to each other. An alien swarm is different โ€” it has ROWS and COLUMNS that matter for spawning, marching, and later collision โ€” and a 2D array is the direct data-shape match for that grid structure, rather than trying to fake rows and columns with math on a flat list.\n\nVisual Grid Mapped to Coordinates:\n  grid[0] -> [ 1, 1, 1, 1 ]   row 0\n  grid[1] -> [ 1, 1, 1, 1 ]   row 1\n  grid[2] -> [ 1, 1, 1, 1 ]   row 2\n\n  grid[1][2] -> the alien in row 1, column 2\n\nSyntax:\n  let grid = [\n    [1, 1, 1, 1],\n    [1, 1, 1, 1],\n    [1, 1, 1, 1]\n  ];\n  grid[1][2];  // reads row 1, column 2",
       keywords: "javascript 2d array grid rows columns nested array access"
     },
     {
@@ -321,22 +321,22 @@ const CONCEPT_REFERENCES = {
     },
     {
       name: "March-and-Bounce Boundary Logic",
-      desc: "Core Definition:\n  Each frame nudges the whole alien grid sideways by direction * speed. When any alien reaches a screen edge, flip direction and drop every alien down one step.\n\nWhy It Matters:\n  This is Level 1's boundary-clamp idea (Session 6) applied to a whole GROUP instead of one car — the direction flips for every alien at once, which is what makes the swarm feel like one coordinated unit rather than individually bouncing sprites. Checking the group's outer edge, not any single alien's position, is the detail that keeps the whole formation in sync.\n\nCheat Sheet:\n  alienX += direction * speed;   // direction is 1 (right) or -1 (left)\n\n  if (alienX > CONFIG.rightEdge || alienX < CONFIG.leftEdge) {\n    direction *= -1;              // reverse marching direction\n    for (let row = 0; row < grid.length; row++) {\n      for (let col = 0; col < grid[row].length; col++) {\n        alienYOffsets[row][col] += CONFIG.dropDistance;  // drop all y\n      }\n    }\n  }\n\nCommon Mistake:\n  Checking the edge using only one alien's x instead of the whole group's outer bound — some aliens bounce while others keep marching off-screen.",
+      desc: "Core Definition:\n  Each frame nudges the whole alien grid sideways by direction * speed. When any alien reaches a screen edge, flip direction and drop every alien down one step.\n\nWhy It Matters:\n  This is Level 1's boundary-clamp idea (Session 6) applied to a whole GROUP instead of one car โ€” the direction flips for every alien at once, which is what makes the swarm feel like one coordinated unit rather than individually bouncing sprites. Checking the group's outer edge, not any single alien's position, is the detail that keeps the whole formation in sync.\n\nCheat Sheet:\n  alienX += direction * speed;   // direction is 1 (right) or -1 (left)\n\n  if (alienX > CONFIG.rightEdge || alienX < CONFIG.leftEdge) {\n    direction *= -1;              // reverse marching direction\n    for (let row = 0; row < grid.length; row++) {\n      for (let col = 0; col < grid[row].length; col++) {\n        alienYOffsets[row][col] += CONFIG.dropDistance;  // drop all y\n      }\n    }\n  }\n\nCommon Mistake:\n  Checking the edge using only one alien's x instead of the whole group's outer bound โ€” some aliens bounce while others keep marching off-screen.",
       keywords: "javascript bounce boundary direction reverse sprite edge detection"
     },
     {
       name: "Grids as State (0 = Empty, 1 = Full)",
-      desc: "Core Definition:\n  A destructible shield is a 2D array of small cells, where each cell's number represents whether it is still solid. 1 means the cell blocks lasers; 0 means it has already been shot away.\n\nWhy It Matters:\n  This reuses the exact same 2D-array shape as the alien grid, but the NUMBERS mean something different — not 'is there an alien here' but 'is this cell still solid.' Recognizing that a grid can represent any yes/no state per cell (alive/dead, solid/destroyed, visited/unvisited) is a far more reusable idea than memorizing 'shields use a grid.'\n\nVisual:\n  shieldGrid = [\n    [1, 1, 1, 1],\n    [1, 1, 1, 1],\n    [0, 1, 1, 0]   // corners already destroyed\n  ];\n\nDrawing only renders cells still equal to 1; a laser hit sets its cell to 0 so it disappears from both the render loop and the collision check.",
+      desc: "Core Definition:\n  A destructible shield is a 2D array of small cells, where each cell's number represents whether it is still solid. 1 means the cell blocks lasers; 0 means it has already been shot away.\n\nWhy It Matters:\n  This reuses the exact same 2D-array shape as the alien grid, but the NUMBERS mean something different โ€” not 'is there an alien here' but 'is this cell still solid.' Recognizing that a grid can represent any yes/no state per cell (alive/dead, solid/destroyed, visited/unvisited) is a far more reusable idea than memorizing 'shields use a grid.'\n\nVisual:\n  shieldGrid = [\n    [1, 1, 1, 1],\n    [1, 1, 1, 1],\n    [0, 1, 1, 0]   // corners already destroyed\n  ];\n\nDrawing only renders cells still equal to 1; a laser hit sets its cell to 0 so it disappears from both the render loop and the collision check.",
       keywords: "javascript grid array state destructible shield 0 1"
     },
     {
       name: "Coordinate-to-Index Mapping",
-      desc: "Core Definition:\n  Lasers move in absolute pixel coordinates (x, y), but the shield is stored as row/col grid indices starting at the shield's own on-screen offset — not at pixel 0. To find which cell a laser hit, subtract the shield's starting offset first, then divide by the size of one cell and round down.\n\nWhy It Matters:\n  Two completely different coordinate systems are in play at once — pixels for rendering, grid indices for storage — and every hit-test has to convert between them correctly. This exact pixel-to-cell conversion pattern reappears anywhere a game overlays a logical grid on top of a pixel-based canvas, not just for shields.\n\nFormula:\n  col = Math.floor((laserX - shieldOffsetX) / cellWidth);\n  row = Math.floor((laserY - shieldOffsetY) / cellHeight);\n\nWorked Example:\n  laserX = 145, shieldOffsetX = 30, cellWidth = 50\n  col = Math.floor((145 - 30) / 50) = Math.floor(2.3) = 2   // hits the 3rd column (index 2)\n\nMath.floor is required — without it, 2.3 would not match any whole cell index. Skipping the offset subtraction is the classic bug here: it silently shifts every laser's hit-test by however many pixels the shield is offset from the canvas edge.",
+      desc: "Core Definition:\n  Lasers move in absolute pixel coordinates (x, y), but the shield is stored as row/col grid indices starting at the shield's own on-screen offset โ€” not at pixel 0. To find which cell a laser hit, subtract the shield's starting offset first, then divide by the size of one cell and round down.\n\nWhy It Matters:\n  Two completely different coordinate systems are in play at once โ€” pixels for rendering, grid indices for storage โ€” and every hit-test has to convert between them correctly. This exact pixel-to-cell conversion pattern reappears anywhere a game overlays a logical grid on top of a pixel-based canvas, not just for shields.\n\nFormula:\n  col = Math.floor((laserX - shieldOffsetX) / cellWidth);\n  row = Math.floor((laserY - shieldOffsetY) / cellHeight);\n\nWorked Example:\n  laserX = 145, shieldOffsetX = 30, cellWidth = 50\n  col = Math.floor((145 - 30) / 50) = Math.floor(2.3) = 2   // hits the 3rd column (index 2)\n\nMath.floor is required โ€” without it, 2.3 would not match any whole cell index. Skipping the offset subtraction is the classic bug here: it silently shifts every laser's hit-test by however many pixels the shield is offset from the canvas edge.",
       keywords: "javascript coordinate to grid index math.floor pixel to cell offset"
     },
     {
       name: "Out-of-Bounds Index Guards",
-      desc: "Core Definition:\n  Math.floor(laserX / cellWidth) can produce an index outside the grid entirely if a laser is off to the side or the shield is smaller than the canvas. Reading grid[row][col] at an invalid index doesn't throw an error — it silently returns undefined.\n\nWhy It Matters:\n  JavaScript's refusal to error on an out-of-bounds array read is a trap, not a convenience — undefined quietly fails every === comparison, so bugs like this hide behind 'nothing happened' instead of a stack trace. Any time a coordinate is converted into an index (this session, and again for any tile-based system later), that index needs to be validated before it's trusted.\n\nCommon Mistake — The Invincible Shields:\n  // ❌ No bounds check:\n  if (shieldGrid[row][col] === 1) { ... }\n  // if col is -1 or too large, this reads undefined; undefined === 1 is false,\n  // so the laser is never detected as blocked — it silently passes through.\n\n  // ✅ Guarded:\n  if (row >= 0 && row < shieldGrid.length &&\n      col >= 0 && col < shieldGrid[0].length &&\n      shieldGrid[row][col] === 1) {\n    shieldGrid[row][col] = 0;   // destroy the cell\n  }\n\nRule:\n  Always validate row/col are inside the array's bounds BEFORE reading them.",
+      desc: "Core Definition:\n  Math.floor(laserX / cellWidth) can produce an index outside the grid entirely if a laser is off to the side or the shield is smaller than the canvas. Reading grid[row][col] at an invalid index doesn't throw an error โ€” it silently returns undefined.\n\nWhy It Matters:\n  JavaScript's refusal to error on an out-of-bounds array read is a trap, not a convenience โ€” undefined quietly fails every === comparison, so bugs like this hide behind 'nothing happened' instead of a stack trace. Any time a coordinate is converted into an index (this session, and again for any tile-based system later), that index needs to be validated before it's trusted.\n\nCommon Mistake โ€” The Invincible Shields:\n  // โ No bounds check:\n  if (shieldGrid[row][col] === 1) { ... }\n  // if col is -1 or too large, this reads undefined; undefined === 1 is false,\n  // so the laser is never detected as blocked โ€” it silently passes through.\n\n  // โ… Guarded:\n  if (row >= 0 && row < shieldGrid.length &&\n      col >= 0 && col < shieldGrid[0].length &&\n      shieldGrid[row][col] === 1) {\n    shieldGrid[row][col] = 0;   // destroy the cell\n  }\n\nRule:\n  Always validate row/col are inside the array's bounds BEFORE reading them.",
       keywords: "javascript array index out of bounds undefined guard check"
     }
   ],
@@ -348,186 +348,186 @@ const CONCEPT_REFERENCES = {
     },
     {
       name: "The keysPressed Map (Key-State Object)",
-      desc: "Core Definition:\n  Store the held/released status of every key in one object, keysPressed. keydown sets the key's value to true; keyup sets it back to false. The game loop reads this object every frame instead of relying on the event itself.\n\nWhy It Matters:\n  This is the fix for the previous concept's problem: instead of reacting to individual key EVENTS, the game loop now reads a persistent STATE object every frame, which is how it can see multiple keys held simultaneously. This event-to-state pattern — record it when it happens, read it continuously elsewhere — reappears constantly in real applications (tracking mouse position, tracking connection status).\n\nSyntax Blueprint:\n  let keysPressed = {};\n\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  window.addEventListener(\"keyup\", function(e) {\n    keysPressed[e.key] = false;\n  });\n\n  // inside the game loop:\n  if (keysPressed[\"ArrowLeft\"]) { moveLeft(); }\n  if (keysPressed[\" \"]) { fireLaser(); }\n\nCommon Mistake Comparison — The Firing Spam Lock:\n  // ❌ WRONG (keydown only — no keyup listener):\n  let keysPressed = {};\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  // keysPressed[\" \"] is now stuck true FOREVER once pressed — nothing ever resets it\n  if (keysPressed[\" \"]) { fireLaser(); }   // fires every single frame, forever\n\n  // ✅ CORRECT (keyup resets the flag on release):\n  let keysPressed = {};\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  window.addEventListener(\"keyup\", function(e) {\n    keysPressed[e.key] = false;   // clears the flag the instant the key is released\n  });\n  if (keysPressed[\" \"]) { fireLaser(); }   // only true while Space is actually held down",
+      desc: "Core Definition:\n  Store the held/released status of every key in one object, keysPressed. keydown sets the key's value to true; keyup sets it back to false. The game loop reads this object every frame instead of relying on the event itself.\n\nWhy It Matters:\n  This is the fix for the previous concept's problem: instead of reacting to individual key EVENTS, the game loop now reads a persistent STATE object every frame, which is how it can see multiple keys held simultaneously. This event-to-state pattern โ€” record it when it happens, read it continuously elsewhere โ€” reappears constantly in real applications (tracking mouse position, tracking connection status).\n\nSyntax Blueprint:\n  let keysPressed = {};\n\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  window.addEventListener(\"keyup\", function(e) {\n    keysPressed[e.key] = false;\n  });\n\n  // inside the game loop:\n  if (keysPressed[\"ArrowLeft\"]) { moveLeft(); }\n  if (keysPressed[\" \"]) { fireLaser(); }\n\nCommon Mistake Comparison โ€” The Firing Spam Lock:\n  // โ WRONG (keydown only โ€” no keyup listener):\n  let keysPressed = {};\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  // keysPressed[\" \"] is now stuck true FOREVER once pressed โ€” nothing ever resets it\n  if (keysPressed[\" \"]) { fireLaser(); }   // fires every single frame, forever\n\n  // โ… CORRECT (keyup resets the flag on release):\n  let keysPressed = {};\n  window.addEventListener(\"keydown\", function(e) {\n    keysPressed[e.key] = true;\n  });\n  window.addEventListener(\"keyup\", function(e) {\n    keysPressed[e.key] = false;   // clears the flag the instant the key is released\n  });\n  if (keysPressed[\" \"]) { fireLaser(); }   // only true while Space is actually held down",
       keywords: "javascript keysPressed object keydown keyup state map"
     },
     {
       name: "Cooldown Timers / Rate Limiting",
-      desc: "Core Definition:\n  Even with correct key-state tracking, checking keysPressed[\" \"] every frame at 60fps would fire dozens of lasers per second. A cooldown timer enforces a minimum gap between allowed actions.\n\nWhy It Matters:\n  Fixing 'multiple keys at once' (the keysPressed map) immediately exposes a new problem — holding a key now means the condition is true for 16+ frames in a row, not one. A cooldown timer is the general solution anywhere an action is allowed to happen, but only at some maximum rate, which is why the same pattern later reappears for rate-limiting server requests.\n\nSyntax Blueprint:\n  let lastFireTime = 0;\n  const FIRE_COOLDOWN_MS = 300;\n\n  function tryFire(now) {\n    if (keysPressed[\" \"] && now - lastFireTime > FIRE_COOLDOWN_MS) {\n      spawnLaser();\n      lastFireTime = now;\n    }\n  }\n\nSame Pattern Elsewhere:\n  This is the same idea as rate-limiting a login form — both cap how often one action can repeat inside a time window, closing off a hold-the-key (or brute-force-retry) exploit.",
+      desc: "Core Definition:\n  Even with correct key-state tracking, checking keysPressed[\" \"] every frame at 60fps would fire dozens of lasers per second. A cooldown timer enforces a minimum gap between allowed actions.\n\nWhy It Matters:\n  Fixing 'multiple keys at once' (the keysPressed map) immediately exposes a new problem โ€” holding a key now means the condition is true for 16+ frames in a row, not one. A cooldown timer is the general solution anywhere an action is allowed to happen, but only at some maximum rate, which is why the same pattern later reappears for rate-limiting server requests.\n\nSyntax Blueprint:\n  let lastFireTime = 0;\n  const FIRE_COOLDOWN_MS = 300;\n\n  function tryFire(now) {\n    if (keysPressed[\" \"] && now - lastFireTime > FIRE_COOLDOWN_MS) {\n      spawnLaser();\n      lastFireTime = now;\n    }\n  }\n\nSame Pattern Elsewhere:\n  This is the same idea as rate-limiting a login form โ€” both cap how often one action can repeat inside a time window, closing off a hold-the-key (or brute-force-retry) exploit.",
       keywords: "javascript rate limiting cooldown timer timestamp throttle input"
     },
     {
       name: "AABB Overlap on Canvas Sprites",
-      desc: "Core Definition:\n  Canvas sprites (lasers, aliens) are plain JS objects with x, y, width, height properties — there is no DOM element or CSS box to inspect, so overlap is computed purely with math using the same four-comparison rule as any bounding box check.\n\nWhy It Matters:\n  This proves the AABB formula from Level 1 was never really about the DOM — it is pure math over positions and sizes, which is why it transfers unchanged onto plain objects with no visual element behind them at all. Any two things that can be described as a box (x, y, width, height) can use this exact test, canvas or not.\n\nThe Grid Stays a Grid — Aliens Get an alive Flag:\n  Session 5's aliens[row][col] grid is NOT flattened for collision. Removing a dead alien from the middle of a 2D grid would corrupt every other cell's row/col indexing, so instead each alien object gets an extra alive property. A hit sets aliens[row][col].alive = false instead of deleting the object — the grid's shape never changes, only its contents.\n\nFormula:\n  function checkCollision(a, b) {\n    return (\n      a.x < b.x + b.width &&\n      a.x + a.width > b.x &&\n      a.y < b.y + b.height &&\n      a.y + a.height > b.y\n    );\n  }\n  // a = laser sprite { x, y, width, height }, b = alien sprite { x, y, width, height, alive }\n\nThis is the same AABB test used for DOM game objects, just applied to canvas sprite data instead of getBoundingClientRect() — there's no rect to read, you track width/height yourself in the object.",
+      desc: "Core Definition:\n  Canvas sprites (lasers, aliens) are plain JS objects with x, y, width, height properties โ€” there is no DOM element or CSS box to inspect, so overlap is computed purely with math using the same four-comparison rule as any bounding box check.\n\nWhy It Matters:\n  This proves the AABB formula from Level 1 was never really about the DOM โ€” it is pure math over positions and sizes, which is why it transfers unchanged onto plain objects with no visual element behind them at all. Any two things that can be described as a box (x, y, width, height) can use this exact test, canvas or not.\n\nThe Grid Stays a Grid โ€” Aliens Get an alive Flag:\n  Session 5's aliens[row][col] grid is NOT flattened for collision. Removing a dead alien from the middle of a 2D grid would corrupt every other cell's row/col indexing, so instead each alien object gets an extra alive property. A hit sets aliens[row][col].alive = false instead of deleting the object โ€” the grid's shape never changes, only its contents.\n\nFormula:\n  function checkCollision(a, b) {\n    return (\n      a.x < b.x + b.width &&\n      a.x + a.width > b.x &&\n      a.y < b.y + b.height &&\n      a.y + a.height > b.y\n    );\n  }\n  // a = laser sprite { x, y, width, height }, b = alien sprite { x, y, width, height, alive }\n\nThis is the same AABB test used for DOM game objects, just applied to canvas sprite data instead of getBoundingClientRect() โ€” there's no rect to read, you track width/height yourself in the object.",
       keywords: "canvas sprite collision AABB bounding box overlap javascript"
     },
     {
       name: "Double-Iteration Sweep (Lasers x Alien Grid)",
-      desc: "Core Definition:\n  To find every collision between two moving collections, loop over one INSIDE a loop over the other — every laser is checked against every still-alive alien in the grid.\n\nWhy It Matters:\n  A single collision check (Level 1) only ever compared two fixed objects; this session's real challenge is that BOTH sides are now collections of unknown size. Nesting loops — one collection inside another — is the standard way to compare every pair across two groups, and it's the same shape you'd reach for with any many-to-many comparison, not just lasers and aliens.\n\nBlueprint:\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    for (let row = 0; row < aliens.length; row++) {\n      for (let col = 0; col < aliens[row].length; col++) {\n        const alien = aliens[row][col];\n        if (alien.alive && checkCollision(lasers[i], alien)) {\n          lasers.splice(i, 1);      // remove the laser (a flat array, safe to splice)\n          alien.alive = false;      // keep the grid cell, just mark it dead\n          score += 50;\n          break;                     // stop checking this laser against more aliens\n        }\n      }\n    }\n  }\n\nOnly the lasers array gets spliced — lasers are a flat list with no row/col to preserve. The alien grid keeps its shape; only the alive flag changes.",
+      desc: "Core Definition:\n  To find every collision between two moving collections, loop over one INSIDE a loop over the other โ€” every laser is checked against every still-alive alien in the grid.\n\nWhy It Matters:\n  A single collision check (Level 1) only ever compared two fixed objects; this session's real challenge is that BOTH sides are now collections of unknown size. Nesting loops โ€” one collection inside another โ€” is the standard way to compare every pair across two groups, and it's the same shape you'd reach for with any many-to-many comparison, not just lasers and aliens.\n\nBlueprint:\n  for (let i = lasers.length - 1; i >= 0; i--) {\n    for (let row = 0; row < aliens.length; row++) {\n      for (let col = 0; col < aliens[row].length; col++) {\n        const alien = aliens[row][col];\n        if (alien.alive && checkCollision(lasers[i], alien)) {\n          lasers.splice(i, 1);      // remove the laser (a flat array, safe to splice)\n          alien.alive = false;      // keep the grid cell, just mark it dead\n          score += 50;\n          break;                     // stop checking this laser against more aliens\n        }\n      }\n    }\n  }\n\nOnly the lasers array gets spliced โ€” lasers are a flat list with no row/col to preserve. The alien grid keeps its shape; only the alive flag changes.",
       keywords: "javascript nested loop splice array collision sweep grid"
     },
     {
       name: "break After a Hit (The Multiple Kill Bug)",
-      desc: "Core Definition:\n  Once a laser hits one alien, it should stop checking that same laser against the rest of the grid. Forgetting break lets a single laser register as overlapping with several aliens in the same pass.\n\nWhy It Matters:\n  This is Level 1's loop-control lesson (break as an early exit) applied inside a nested loop, where the stakes are higher — without it, one laser can silently score points off several aliens in a single frame, an outcome that looks like a working game but is quietly awarding the wrong score.\n\nCommon Mistake — Multiple Kill Bug:\n  // ❌ Missing break:\n  if (alien.alive && checkCollision(lasers[i], alien)) {\n    alien.alive = false;\n    score += 50;\n    // no break -- the loop keeps running and can mark MORE aliens dead\n    // from this same laser in the same pass\n  }\n\n  // ✅ Correct:\n  if (alien.alive && checkCollision(lasers[i], alien)) {\n    alien.alive = false;\n    score += 50;\n    break;   // this laser is used up -- stop scanning more aliens\n  }\n\nPerformance Note:\n  A sweep of L lasers against a grid of A aliens runs roughly L x A comparisons every frame — with large swarms this nested cost is why real games often use spatial partitioning instead of a brute-force sweep.",
+      desc: "Core Definition:\n  Once a laser hits one alien, it should stop checking that same laser against the rest of the grid. Forgetting break lets a single laser register as overlapping with several aliens in the same pass.\n\nWhy It Matters:\n  This is Level 1's loop-control lesson (break as an early exit) applied inside a nested loop, where the stakes are higher โ€” without it, one laser can silently score points off several aliens in a single frame, an outcome that looks like a working game but is quietly awarding the wrong score.\n\nCommon Mistake โ€” Multiple Kill Bug:\n  // โ Missing break:\n  if (alien.alive && checkCollision(lasers[i], alien)) {\n    alien.alive = false;\n    score += 50;\n    // no break -- the loop keeps running and can mark MORE aliens dead\n    // from this same laser in the same pass\n  }\n\n  // โ… Correct:\n  if (alien.alive && checkCollision(lasers[i], alien)) {\n    alien.alive = false;\n    score += 50;\n    break;   // this laser is used up -- stop scanning more aliens\n  }\n\nPerformance Note:\n  A sweep of L lasers against a grid of A aliens runs roughly L x A comparisons every frame โ€” with large swarms this nested cost is why real games often use spatial partitioning instead of a brute-force sweep.",
       keywords: "javascript break statement loop bug multiple collision double kill"
     }
   ],
   'l2-s7': [
     {
       name: "Game-State Variables & Wave Progression",
-      desc: "Core Definition:\n  A wave-based game tracks its state in a small set of variables: how many waves cleared, how much health remains, and how many aliens in the grid are still alive. The loop reads these variables every frame to decide what to draw and whether to advance.\n\nWhy It Matters:\n  This is Level 1's gameActive gate idea scaled up — instead of one Boolean deciding 'running or not,' several variables together now describe WHICH stage of a longer game the player is in. Counting a derived value (how many aliens are still alive) from the existing grid, rather than tracking it separately, avoids a second source of truth that could drift out of sync with the real grid.\n\nCore State Variables:\n  let wave = 1;\n  let health = 100;\n  let aliens = [][];   // 2D grid of alien objects, each with an alive flag\n\nCounting the Living:\n  function countAlive(grid) {\n    let count = 0;\n    for (const row of grid) {\n      for (const alien of row) {\n        if (alien.alive) count++;\n      }\n    }\n    return count;\n  }\n\nThe Advance Check:\n  if (countAlive(aliens) === 0) {\n    wave++;\n    spawnWave(wave);\n  }\n\nThe alive-count check is the entire trigger for progression — as long as one alien in the grid still has alive === true, the wave will not advance.",
+      desc: "Core Definition:\n  A wave-based game tracks its state in a small set of variables: how many waves cleared, how much health remains, and how many aliens in the grid are still alive. The loop reads these variables every frame to decide what to draw and whether to advance.\n\nWhy It Matters:\n  This is Level 1's gameActive gate idea scaled up โ€” instead of one Boolean deciding 'running or not,' several variables together now describe WHICH stage of a longer game the player is in. Counting a derived value (how many aliens are still alive) from the existing grid, rather than tracking it separately, avoids a second source of truth that could drift out of sync with the real grid.\n\nCore State Variables:\n  let wave = 1;\n  let health = 100;\n  let aliens = [][];   // 2D grid of alien objects, each with an alive flag\n\nCounting the Living:\n  function countAlive(grid) {\n    let count = 0;\n    for (const row of grid) {\n      for (const alien of row) {\n        if (alien.alive) count++;\n      }\n    }\n    return count;\n  }\n\nThe Advance Check:\n  if (countAlive(aliens) === 0) {\n    wave++;\n    spawnWave(wave);\n  }\n\nThe alive-count check is the entire trigger for progression โ€” as long as one alien in the grid still has alive === true, the wave will not advance.",
       keywords: "javascript game state variables tracking wave counter"
     },
     {
       name: "Scale-Factor Formulas",
-      desc: "Core Definition:\n  As waves increase, enemies should get faster — but the formula must be capped, or the game becomes unplayable after a dozen waves.\n\nThe Formula:\n  let speedMultiplier = wave * 0.15;\n\nWhy It Needs an Upper Clamp:\n  By wave 40, speedMultiplier would be 6.0 — six times the base speed, effectively unbeatable. Cap it with Math.min:\n  speedMultiplier = Math.min(wave * 0.15, 2.5);   // never exceeds 2.5x\n\nAlways graph a scaling formula across the wave range you expect players to reach before shipping it uncapped.",
+      desc: "Core Definition:\n  As waves increase, enemies should get faster โ€” but the formula must be capped, or the game becomes unplayable after a dozen waves.\n\nThe Formula:\n  let speedMultiplier = wave * 0.15;\n\nWhy It Needs an Upper Clamp:\n  By wave 40, speedMultiplier would be 6.0 โ€” six times the base speed, effectively unbeatable. Cap it with Math.min:\n  speedMultiplier = Math.min(wave * 0.15, 2.5);   // never exceeds 2.5x\n\nAlways graph a scaling formula across the wave range you expect players to reach before shipping it uncapped.",
       keywords: "difficulty scaling formula multiplier clamp math min"
     },
     {
       name: "Drawing HUD Gauges on Canvas",
-      desc: "Core Definition:\n  Canvas games have no DOM elements to update — every HUD element (health bar, score text) is redrawn on the canvas each frame using drawing calls, not textContent.\n\nWhy It Matters:\n  This is Level 1's HUD lesson (Session 11's textContent updates) meeting Level 2's immediate-mode canvas reality — there is no #score-val element to write into, so a proportional rectangle IS the health bar, recalculated fresh every single frame from the underlying health number rather than 'updated' the way a DOM element would be.\n\nHealth Bar as a Proportional Rectangle:\n  const barWidth = 200;\n  const healthPct = health / 100;\n  ctx.fillStyle = \"red\";\n  ctx.fillRect(20, 20, barWidth, 20);            // background/max track\n  ctx.fillStyle = \"lime\";\n  ctx.fillRect(20, 20, barWidth * healthPct, 20); // shrinks as health drops\n\nScore Text:\n  ctx.fillStyle = \"white\";\n  ctx.font = \"16px monospace\";\n  ctx.fillText(\"Score: \" + score, 20, 60);\n\nThere is no element to grab with an ID — the HUD only exists as pixels drawn fresh every frame.",
+      desc: "Core Definition:\n  Canvas games have no DOM elements to update โ€” every HUD element (health bar, score text) is redrawn on the canvas each frame using drawing calls, not textContent.\n\nWhy It Matters:\n  This is Level 1's HUD lesson (Session 11's textContent updates) meeting Level 2's immediate-mode canvas reality โ€” there is no #score-val element to write into, so a proportional rectangle IS the health bar, recalculated fresh every single frame from the underlying health number rather than 'updated' the way a DOM element would be.\n\nHealth Bar as a Proportional Rectangle:\n  const barWidth = 200;\n  const healthPct = health / 100;\n  ctx.fillStyle = \"red\";\n  ctx.fillRect(20, 20, barWidth, 20);            // background/max track\n  ctx.fillStyle = \"lime\";\n  ctx.fillRect(20, 20, barWidth * healthPct, 20); // shrinks as health drops\n\nScore Text:\n  ctx.fillStyle = \"white\";\n  ctx.font = \"16px monospace\";\n  ctx.fillText(\"Score: \" + score, 20, 60);\n\nThere is no element to grab with an ID โ€” the HUD only exists as pixels drawn fresh every frame.",
       keywords: "canvas fillRect health bar HUD ctx fillText"
     },
     {
       name: "Spawn Guards Against Concurrent Waves",
-      desc: "Core Definition:\n  Checking \"is anyone still alive?\" every single frame without protection means the moment the last alien is marked dead, MULTIPLE frames in a row can all see zero alive count before the new wave's grid is spawned in — each one calling spawnWave() again.\n\nWhy It Matters:\n  This is Session 7's version of a race condition: a check-then-act pattern (check alive count, then act by spawning) run once per frame at 60fps, with no protection against the SAME condition being true across several consecutive frames. The isSpawning flag is the general fix for 'don't let this trigger fire again while it's already in progress,' a pattern that reappears anywhere an action is slower than the loop calling it.\n\nCommon Mistake (Floods the Screen):\n  if (countAlive(aliens) === 0) {\n    wave++;\n    spawnWave(wave);   // ❌ can fire several times before the new grid populates\n  }\n\n✅ The Fix — an \"already spawning\" guard:\n  let isSpawning = false;\n  if (countAlive(aliens) === 0 && !isSpawning) {\n    isSpawning = true;\n    wave++;\n    spawnWave(wave);\n    isSpawning = false;   // reset once the new grid is populated\n  }\n\nWithout the guard flag, the wave-clear trigger fires concurrently and stacks several waves' worth of aliens on top of each other.",
+      desc: "Core Definition:\n  Checking \"is anyone still alive?\" every single frame without protection means the moment the last alien is marked dead, MULTIPLE frames in a row can all see zero alive count before the new wave's grid is spawned in โ€” each one calling spawnWave() again.\n\nWhy It Matters:\n  This is Session 7's version of a race condition: a check-then-act pattern (check alive count, then act by spawning) run once per frame at 60fps, with no protection against the SAME condition being true across several consecutive frames. The isSpawning flag is the general fix for 'don't let this trigger fire again while it's already in progress,' a pattern that reappears anywhere an action is slower than the loop calling it.\n\nCommon Mistake (Floods the Screen):\n  if (countAlive(aliens) === 0) {\n    wave++;\n    spawnWave(wave);   // โ can fire several times before the new grid populates\n  }\n\nโ… The Fix โ€” an \"already spawning\" guard:\n  let isSpawning = false;\n  if (countAlive(aliens) === 0 && !isSpawning) {\n    isSpawning = true;\n    wave++;\n    spawnWave(wave);\n    isSpawning = false;   // reset once the new grid is populated\n  }\n\nWithout the guard flag, the wave-clear trigger fires concurrently and stacks several waves' worth of aliens on top of each other.",
       keywords: "javascript prevent duplicate function calls guard flag boolean"
     },
     {
       name: "Memory Leaks from Dead Sprites",
-      desc: "Core Definition:\n  A sprite array (lasers, particles, aliens) only shrinks if something actively removes finished entries. If a laser that flies off-screen is never spliced out, it stays in the array forever, still being looped over and drawn every frame even though the player can't see it.\n\nWhy It Matters:\n  This is Session 4's cleanup lesson resurfacing at a bigger scale, now with a diagnostic habit attached: watching an array's .length climb over time is how you CONFIRM a leak exists before spending time hunting for it, rather than guessing from a vague sense that the game feels slower than it used to.\n\nDiagnosing It:\n  console.log(lasers.length);   // watch this climb without bound over time\n\nAfter 500 unpruned lasers accumulate, the frame rate crawls — the game is still iterating over, updating, and drawing hundreds of invisible objects every single frame.\n\nThe Fix — remove off-screen entries:\n  lasers = lasers.filter(laser => laser.y > 0);   // drop anything past the edge\n\nNote: .filter() rebuilds the array in one pass and is a one-shot equivalent to the reverse-loop splice() pattern taught in Session 4 — same cleanup goal, just expressed as a single expression instead of a manual backward loop.",
+      desc: "Core Definition:\n  A sprite array (lasers, particles, aliens) only shrinks if something actively removes finished entries. If a laser that flies off-screen is never spliced out, it stays in the array forever, still being looped over and drawn every frame even though the player can't see it.\n\nWhy It Matters:\n  This is Session 4's cleanup lesson resurfacing at a bigger scale, now with a diagnostic habit attached: watching an array's .length climb over time is how you CONFIRM a leak exists before spending time hunting for it, rather than guessing from a vague sense that the game feels slower than it used to.\n\nDiagnosing It:\n  console.log(lasers.length);   // watch this climb without bound over time\n\nAfter 500 unpruned lasers accumulate, the frame rate crawls โ€” the game is still iterating over, updating, and drawing hundreds of invisible objects every single frame.\n\nThe Fix โ€” remove off-screen entries:\n  lasers = lasers.filter(laser => laser.y > 0);   // drop anything past the edge\n\nNote: .filter() rebuilds the array in one pass and is a one-shot equivalent to the reverse-loop splice() pattern taught in Session 4 โ€” same cleanup goal, just expressed as a single expression instead of a manual backward loop.",
       keywords: "javascript memory leak array length unbounded growth sprites"
     },
     {
       name: "Garbage Collection Pauses & Profiling",
-      desc: "Core Definition:\n  Every new object (a new laser, a new particle) is memory the browser's garbage collector must eventually reclaim. When arrays grow unbounded, the collector has far more to scan and clean up, and it runs its cleanup pass in a pause that can freeze the frame. Guessing which function is slow wastes time — DevTools' Performance tab records exactly how long each function call takes.\n\nWhy Stutter Happens:\n  - Small, steady allocations = small, unnoticeable GC pauses.\n  - Large, unbounded allocations (never-pruned arrays) = long GC pauses that show up as visible frame hitches or stutter.\n\nProfiling Workflow:\n  1. Open DevTools → Performance tab → click Record.\n  2. Play the game for a few seconds during the laggy moment.\n  3. Stop recording and inspect the flame chart — wider blocks mean more time spent in that function.\n  4. Look for the widest block in your own game code (not browser internals) — that's the function to optimize first.\n\nProfiling replaces 'this feels slow' with 'this specific function used 40% of every frame' — a concrete target instead of a guess.",
+      desc: "Core Definition:\n  Every new object (a new laser, a new particle) is memory the browser's garbage collector must eventually reclaim. When arrays grow unbounded, the collector has far more to scan and clean up, and it runs its cleanup pass in a pause that can freeze the frame. Guessing which function is slow wastes time โ€” DevTools' Performance tab records exactly how long each function call takes.\n\nWhy Stutter Happens:\n  - Small, steady allocations = small, unnoticeable GC pauses.\n  - Large, unbounded allocations (never-pruned arrays) = long GC pauses that show up as visible frame hitches or stutter.\n\nProfiling Workflow:\n  1. Open DevTools โ’ Performance tab โ’ click Record.\n  2. Play the game for a few seconds during the laggy moment.\n  3. Stop recording and inspect the flame chart โ€” wider blocks mean more time spent in that function.\n  4. Look for the widest block in your own game code (not browser internals) โ€” that's the function to optimize first.\n\nProfiling replaces 'this feels slow' with 'this specific function used 40% of every frame' โ€” a concrete target instead of a guess.",
       keywords: "javascript garbage collection performance pause stutter frame rate devtools profiling"
     }
   ],
   'l2-s8': [
     {
       name: "The Client-Server Model",
-      desc: "Core Definition:\n  A client (the browser) sends requests; a server (a remote program) sends responses. The client can never reach into the server's storage directly — it can only ask and wait.\n\nWhy It Matters:\n  Everything built in Level 1 and the first half of Level 2 ran entirely inside the player's own browser — there was no 'elsewhere' the data could live. A leaderboard that every player shares requires storage somewhere OTHER than any single player's machine, and the client-server model is the entire reason that's even possible: the browser asks, a separate program somewhere else answers.\n\nThe Only Door:\n  Client  ──request──>  Server\n  Client  <──response──  Server\n\nEvery single thing your game does over the network — reading a leaderboard, submitting a score — is one round trip through this exact shape. There is no shortcut path.",
+      desc: "Core Definition:\n  A client (the browser) sends requests; a server (a remote program) sends responses. The client can never reach into the server's storage directly โ€” it can only ask and wait.\n\nWhy It Matters:\n  Everything built in Level 1 and the first half of Level 2 ran entirely inside the player's own browser โ€” there was no 'elsewhere' the data could live. A leaderboard that every player shares requires storage somewhere OTHER than any single player's machine, and the client-server model is the entire reason that's even possible: the browser asks, a separate program somewhere else answers.\n\nThe Only Door:\n  Client  โ”€โ”€requestโ”€โ”€>  Server\n  Client  <โ”€โ”€responseโ”€โ”€  Server\n\nEvery single thing your game does over the network โ€” reading a leaderboard, submitting a score โ€” is one round trip through this exact shape. There is no shortcut path.",
       keywords: "client server model request response web architecture"
     },
     {
       name: "Anatomy of a URL",
-      desc: "Core Definition:\n  A URL has four parts that each answer a different question about the request.\n\nWhy It Matters:\n  Every fetch() call in the rest of this course starts with a URL string, and a bug in ANY one of its four parts sends the request to the wrong place entirely — a typo'd path is a completely different failure from a missing query parameter, and being able to name which part is wrong is what turns 'the API isn't working' into an actual fix.\n\nBreakdown:\n  https://api.marsdefense.dev/scores?limit=5\n  └─┬──┘   └───────┬───────┘└──┬──┘└───┬───┘\n protocol       host          path    query\n  (how)         (who)        (what)  (which)\n\nThe path selects a resource on the server; the query string narrows or filters it. Both matter equally when reading a Network tab entry.",
+      desc: "Core Definition:\n  A URL has four parts that each answer a different question about the request.\n\nWhy It Matters:\n  Every fetch() call in the rest of this course starts with a URL string, and a bug in ANY one of its four parts sends the request to the wrong place entirely โ€” a typo'd path is a completely different failure from a missing query parameter, and being able to name which part is wrong is what turns 'the API isn't working' into an actual fix.\n\nBreakdown:\n  https://api.marsdefense.dev/scores?limit=5\n  โ””โ”€โ”ฌโ”€โ”€โ”   โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”ฌโ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”โ””โ”€โ”€โ”ฌโ”€โ”€โ”โ””โ”€โ”€โ”€โ”ฌโ”€โ”€โ”€โ”\n protocol       host          path    query\n  (how)         (who)        (what)  (which)\n\nThe path selects a resource on the server; the query string narrows or filters it. Both matter equally when reading a Network tab entry.",
       keywords: "url anatomy protocol host path query string"
     },
     {
       name: "HTTP Methods & Status Code Triage",
-      desc: "Core Definition:\n  HTTP methods are verbs of intent; status codes are the server's one-word verdict on what happened.\n\nWhy It Matters:\n  Status codes are the FIRST thing to check when a network call misbehaves, before diving into your own JavaScript — they tell you immediately which side of the client-server boundary the problem is on, which narrows debugging from 'something is wrong' to 'this specific half of the system is wrong.'\n\nMethods:\n  GET  — read data (no body)\n  POST — send/create data (has a body)\n\nStatus Code Families:\n  200 OK / 201 Created  — success\n  400 Bad Request       — malformed input (your fault)\n  401 / 403             — who are you / you may not\n  404 Not Found         — no such path\n  500 Internal Error    — the server crashed (its fault)\n\nTriage rule: the first digit alone tells you where to start looking for the bug — 4xx means check what you sent, 5xx means the server broke on its own.",
+      desc: "Core Definition:\n  HTTP methods are verbs of intent; status codes are the server's one-word verdict on what happened.\n\nWhy It Matters:\n  Status codes are the FIRST thing to check when a network call misbehaves, before diving into your own JavaScript โ€” they tell you immediately which side of the client-server boundary the problem is on, which narrows debugging from 'something is wrong' to 'this specific half of the system is wrong.'\n\nMethods:\n  GET  โ€” read data (no body)\n  POST โ€” send/create data (has a body)\n\nStatus Code Families:\n  200 OK / 201 Created  โ€” success\n  400 Bad Request       โ€” malformed input (your fault)\n  401 / 403             โ€” who are you / you may not\n  404 Not Found         โ€” no such path\n  500 Internal Error    โ€” the server crashed (its fault)\n\nTriage rule: the first digit alone tells you where to start looking for the bug โ€” 4xx means check what you sent, 5xx means the server broke on its own.",
       keywords: "http methods GET POST status codes 200 404 500 triage"
     },
     {
       name: "Reading the DevTools Network Tab",
-      desc: "Core Definition:\n  The address bar shows the PAGE's URL — but a page fires many separate requests underneath it (scripts, images, and API calls). The Network tab lists every one, and the XHR/Fetch filter isolates the API calls specifically.\n\nWhy It Matters:\n  This is the network equivalent of Level 1's Console — a place to directly OBSERVE what actually happened instead of guessing from symptoms. Before writing any error-handling code, being able to look at the real request, its status, and its actual response body is what tells you whether the bug is in what you sent or in what came back.\n\nWhat Each Row Tells You:\n  - Name/Path: which endpoint was hit\n  - Method: GET or POST\n  - Status: the response verdict\n  - Preview/Response: the actual JSON payload returned\n\nCommon Mistake:\n  Reading only the address bar and concluding 'the request' — the real API traffic is a separate row list, often invisible unless you open DevTools before the action happens.",
+      desc: "Core Definition:\n  The address bar shows the PAGE's URL โ€” but a page fires many separate requests underneath it (scripts, images, and API calls). The Network tab lists every one, and the XHR/Fetch filter isolates the API calls specifically.\n\nWhy It Matters:\n  This is the network equivalent of Level 1's Console โ€” a place to directly OBSERVE what actually happened instead of guessing from symptoms. Before writing any error-handling code, being able to look at the real request, its status, and its actual response body is what tells you whether the bug is in what you sent or in what came back.\n\nWhat Each Row Tells You:\n  - Name/Path: which endpoint was hit\n  - Method: GET or POST\n  - Status: the response verdict\n  - Preview/Response: the actual JSON payload returned\n\nCommon Mistake:\n  Reading only the address bar and concluding 'the request' โ€” the real API traffic is a separate row list, often invisible unless you open DevTools before the action happens.",
       keywords: "browser devtools network tab xhr fetch inspect requests"
     }
   ],
   'l2-s9': [
     {
       name: "Synchronous vs. Asynchronous Execution",
-      desc: "Core Definition:\n  Synchronous code runs one line at a time, and each line must finish before the next one starts — this BLOCKS everything else. Asynchronous code can start a slow operation (like a network request) and let the rest of the program keep running while it waits.\n\nWhy It Matters:\n  Every line of code from Level 1 through Level 2's Session 8 has run synchronously — 'next line waits for this one' was a safe assumption. A network request can take anywhere from milliseconds to several seconds, and if the game LOOP froze for that entire wait, the whole page would appear to hang; asynchronous code is what lets requestAnimationFrame keep the game responsive while a request is still in flight.\n\nSynchronous Timeline (Blocking):\n  console.log(\"1\");\n  slowCalculation();   // takes 3 seconds, nothing else can run\n  console.log(\"2\");    // waits the full 3 seconds before logging\n\nAsynchronous Timeline (Non-Blocking):\n  console.log(\"1\");\n  fetchLeaderboard();   // kicks off a request, does NOT wait\n  console.log(\"2\");    // logs immediately, before the fetch resolves\n\nThe fetch's result arrives later, whenever the network responds — not necessarily in the order it was written.",
+      desc: "Core Definition:\n  Synchronous code runs one line at a time, and each line must finish before the next one starts โ€” this BLOCKS everything else. Asynchronous code can start a slow operation (like a network request) and let the rest of the program keep running while it waits.\n\nWhy It Matters:\n  Every line of code from Level 1 through Level 2's Session 8 has run synchronously โ€” 'next line waits for this one' was a safe assumption. A network request can take anywhere from milliseconds to several seconds, and if the game LOOP froze for that entire wait, the whole page would appear to hang; asynchronous code is what lets requestAnimationFrame keep the game responsive while a request is still in flight.\n\nSynchronous Timeline (Blocking):\n  console.log(\"1\");\n  slowCalculation();   // takes 3 seconds, nothing else can run\n  console.log(\"2\");    // waits the full 3 seconds before logging\n\nAsynchronous Timeline (Non-Blocking):\n  console.log(\"1\");\n  fetchLeaderboard();   // kicks off a request, does NOT wait\n  console.log(\"2\");    // logs immediately, before the fetch resolves\n\nThe fetch's result arrives later, whenever the network responds โ€” not necessarily in the order it was written.",
       keywords: "synchronous vs asynchronous javascript blocking non blocking"
     },
     {
       name: "Promises and async/await",
-      desc: "Core Definition:\n  A fetch call returns a Promise — an object representing a value that isn't ready yet. The await keyword pauses (only inside an async function) until that Promise resolves into its actual value.\n\nWhy It Matters:\n  A Promise is the placeholder that makes asynchronous code possible without freezing the rest of the program — it lets a function return immediately with 'I'll have this eventually' instead of blocking. await is what lets you WRITE asynchronous code that still reads top-to-bottom like Level 1's sequential logic, instead of the older nested-callback style that's much harder to trace.\n\n❌ WRONG (missing await):\n  async function fetchLeaderboard() {\n    let response = fetch(\"/api/leaderboard\");\n    let data = response.json();   // response is still a Promise, not the real object!\n    console.log(data);            // logs \"Promise <Pending>\", not the JSON\n  }\n\n✅ CORRECT (await unwraps the Promise):\n  async function fetchLeaderboard() {\n    let response = await fetch(\"/api/leaderboard\");\n    let data = await response.json();\n    console.log(data);            // logs the actual leaderboard array\n  }\n\nForgetting await doesn't throw an error — it silently hands you the wrapper object instead of the value inside it.",
+      desc: "Core Definition:\n  A fetch call returns a Promise โ€” an object representing a value that isn't ready yet. The await keyword pauses (only inside an async function) until that Promise resolves into its actual value.\n\nWhy It Matters:\n  A Promise is the placeholder that makes asynchronous code possible without freezing the rest of the program โ€” it lets a function return immediately with 'I'll have this eventually' instead of blocking. await is what lets you WRITE asynchronous code that still reads top-to-bottom like Level 1's sequential logic, instead of the older nested-callback style that's much harder to trace.\n\nโ WRONG (missing await):\n  async function fetchLeaderboard() {\n    let response = fetch(\"/api/leaderboard\");\n    let data = response.json();   // response is still a Promise, not the real object!\n    console.log(data);            // logs \"Promise <Pending>\", not the JSON\n  }\n\nโ… CORRECT (await unwraps the Promise):\n  async function fetchLeaderboard() {\n    let response = await fetch(\"/api/leaderboard\");\n    let data = await response.json();\n    console.log(data);            // logs the actual leaderboard array\n  }\n\nForgetting await doesn't throw an error โ€” it silently hands you the wrapper object instead of the value inside it.",
       keywords: "javascript async await promise pending bug fetch"
     },
     {
       name: "fetch GET Requests and response.json()",
-      desc: "Core Definition:\n  fetch() sends an HTTP request and returns a Promise for the Response object. Calling .json() on that response parses the response body as JSON and returns another Promise for the parsed data.\n\nWhy It Matters:\n  This is the single function every network feature in this course is built on top of — fetch() is how the browser actually performs Session 8's client-server round trip in code. The two-step await (once for the response, once for the parsed body) trips up almost everyone the first time, which is exactly why the previous concept calls it out as a common mistake.\n\nBlueprint:\n  async function fetchLeaderboard() {\n    let response = await fetch(\"https://api.example.com/leaderboard\");\n    let data = await response.json();\n    return data;   // an array of { name, score } records\n  }\n\nCalling It:\n  fetchLeaderboard().then(scores => renderLeaderboard(scores));\n\nBy default fetch() sends a GET request — no method needs to be specified for reading data.",
+      desc: "Core Definition:\n  fetch() sends an HTTP request and returns a Promise for the Response object. Calling .json() on that response parses the response body as JSON and returns another Promise for the parsed data.\n\nWhy It Matters:\n  This is the single function every network feature in this course is built on top of โ€” fetch() is how the browser actually performs Session 8's client-server round trip in code. The two-step await (once for the response, once for the parsed body) trips up almost everyone the first time, which is exactly why the previous concept calls it out as a common mistake.\n\nBlueprint:\n  async function fetchLeaderboard() {\n    let response = await fetch(\"https://api.example.com/leaderboard\");\n    let data = await response.json();\n    return data;   // an array of { name, score } records\n  }\n\nCalling It:\n  fetchLeaderboard().then(scores => renderLeaderboard(scores));\n\nBy default fetch() sends a GET request โ€” no method needs to be specified for reading data.",
       keywords: "javascript fetch API GET request response json parse"
     },
     {
       name: "Don't Fetch Inside the Game Loop",
-      desc: "Core Definition:\n  requestAnimationFrame runs about 60 times per second. Calling fetch() from inside that loop means firing roughly 60 HTTP requests every second at the server.\n\nWhy It's a Problem:\n  60 requests/sec x many players = a server hammered into rate-limiting or crashing, even though nothing on the leaderboard changed that fast.\n\n❌ WRONG:\n  function gameLoop() {\n    fetchLeaderboard();   // fires 60 times a second!\n    requestAnimationFrame(gameLoop);\n  }\n\n✅ CORRECT — fetch on events, not every frame:\n  function onGameOver() {\n    fetchLeaderboard();   // fires once, when it's actually needed\n  }\n\nFetch when something meaningful happens (game start, game over, a manual refresh button) — never on every animation frame.",
+      desc: "Core Definition:\n  requestAnimationFrame runs about 60 times per second. Calling fetch() from inside that loop means firing roughly 60 HTTP requests every second at the server.\n\nWhy It's a Problem:\n  60 requests/sec x many players = a server hammered into rate-limiting or crashing, even though nothing on the leaderboard changed that fast.\n\nโ WRONG:\n  function gameLoop() {\n    fetchLeaderboard();   // fires 60 times a second!\n    requestAnimationFrame(gameLoop);\n  }\n\nโ… CORRECT โ€” fetch on events, not every frame:\n  function onGameOver() {\n    fetchLeaderboard();   // fires once, when it's actually needed\n  }\n\nFetch when something meaningful happens (game start, game over, a manual refresh button) โ€” never on every animation frame.",
       keywords: "rate limiting API requests server load fetch game loop"
     }
   ],
   'l2-s10': [
     {
       name: "HTTP POST with JSON Payloads",
-      desc: "Core Definition:\n  A GET request reads data; a POST request sends data to the server to be stored. fetch() takes a second argument — an options object — that configures the method, headers, and body.\n\nWhy It Matters:\n  Session 9's fetch() calls only ever READ data with the defaults; sending data (a submitted score) needs three extra pieces of setup working together — method, headers, and body — which is why this is where students most often forget one piece and get a confusing server-side error instead of a client-side one.\n\nThe Options Object Blueprint:\n  async function submitScore(name, score) {\n    let response = await fetch(\"/api/leaderboard\", {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ name, score })\n    });\n    return response;\n  }\n\nAll three pieces matter: method tells the server what kind of request this is, the Content-Type header tells it how to parse the body, and JSON.stringify() turns the JS object into the text format the header promises.",
+      desc: "Core Definition:\n  A GET request reads data; a POST request sends data to the server to be stored. fetch() takes a second argument โ€” an options object โ€” that configures the method, headers, and body.\n\nWhy It Matters:\n  Session 9's fetch() calls only ever READ data with the defaults; sending data (a submitted score) needs three extra pieces of setup working together โ€” method, headers, and body โ€” which is why this is where students most often forget one piece and get a confusing server-side error instead of a client-side one.\n\nThe Options Object Blueprint:\n  async function submitScore(name, score) {\n    let response = await fetch(\"/api/leaderboard\", {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ name, score })\n    });\n    return response;\n  }\n\nAll three pieces matter: method tells the server what kind of request this is, the Content-Type header tells it how to parse the body, and JSON.stringify() turns the JS object into the text format the header promises.",
       keywords: "fetch POST request options headers JSON stringify body"
     },
     {
       name: "try/catch Around Network Calls",
-      desc: "Core Definition:\n  A network request can fail for reasons that have nothing to do with your code — the wifi drops, the server is down, a URL is unreachable. Without a catch block, a rejected fetch Promise throws an unhandled error and the game silently stops responding.\n\nWhy It Matters:\n  This is the network-call version of Level 1's defensive output guards, applied to something outside your control entirely — no amount of correct code prevents a dropped wifi connection. try/catch is what separates 'the network failed and the player sees nothing' from 'the network failed and the player sees a retry button.'\n\n❌ WRONG (no error handling):\n  async function submitScore(name, score) {\n    let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n    // if the network drops here, this line never runs, no message, no recovery\n  }\n\n✅ CORRECT:\n  async function submitScore(name, score) {\n    try {\n      let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n      return response;\n    } catch (err) {\n      console.error(\"Score submission failed:\", err);\n      showRetryButton();   // let the player know and recover gracefully\n    }\n  }\n\nA catch block is what turns a silent freeze into a message the player can actually act on.",
+      desc: "Core Definition:\n  A network request can fail for reasons that have nothing to do with your code โ€” the wifi drops, the server is down, a URL is unreachable. Without a catch block, a rejected fetch Promise throws an unhandled error and the game silently stops responding.\n\nWhy It Matters:\n  This is the network-call version of Level 1's defensive output guards, applied to something outside your control entirely โ€” no amount of correct code prevents a dropped wifi connection. try/catch is what separates 'the network failed and the player sees nothing' from 'the network failed and the player sees a retry button.'\n\nโ WRONG (no error handling):\n  async function submitScore(name, score) {\n    let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n    // if the network drops here, this line never runs, no message, no recovery\n  }\n\nโ… CORRECT:\n  async function submitScore(name, score) {\n    try {\n      let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n      return response;\n    } catch (err) {\n      console.error(\"Score submission failed:\", err);\n      showRetryButton();   // let the player know and recover gracefully\n    }\n  }\n\nA catch block is what turns a silent freeze into a message the player can actually act on.",
       keywords: "javascript try catch fetch error handling network failure"
     },
     {
       name: "Checking response.ok and Status Codes",
-      desc: "Core Definition:\n  A fetch Promise resolves successfully even when the server responds with an error status like 404 or 500 — fetch only rejects on a true network failure. You must check response.ok (or response.status) yourself to know whether the request actually succeeded.\n\nWhy It Matters:\n  This is the single most surprising fact about fetch() for students coming from try/catch — a 500 Internal Server Error does NOT trigger the catch block, because as far as fetch is concerned, the request-response round trip itself succeeded. Skipping this check is why 'my try/catch didn't catch the error' is a common early confusion.\n\nBlueprint:\n  let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n  if (response.ok) {\n    console.log(\"Score submitted successfully.\");\n  } else {\n    console.error(\"Server rejected the request:\", response.status);\n  }\n\nresponse.ok is true only for status codes 200-299 — a 500 Internal Server Error still resolves the Promise, so skipping this check means treating a server crash as a success.",
+      desc: "Core Definition:\n  A fetch Promise resolves successfully even when the server responds with an error status like 404 or 500 โ€” fetch only rejects on a true network failure. You must check response.ok (or response.status) yourself to know whether the request actually succeeded.\n\nWhy It Matters:\n  This is the single most surprising fact about fetch() for students coming from try/catch โ€” a 500 Internal Server Error does NOT trigger the catch block, because as far as fetch is concerned, the request-response round trip itself succeeded. Skipping this check is why 'my try/catch didn't catch the error' is a common early confusion.\n\nBlueprint:\n  let response = await fetch(\"/api/leaderboard\", { method: \"POST\" /* ... */ });\n  if (response.ok) {\n    console.log(\"Score submitted successfully.\");\n  } else {\n    console.error(\"Server rejected the request:\", response.status);\n  }\n\nresponse.ok is true only for status codes 200-299 โ€” a 500 Internal Server Error still resolves the Promise, so skipping this check means treating a server crash as a success.",
       keywords: "fetch response.ok status code 404 500 error check"
     },
     {
       name: "Never Trust the Client",
-      desc: "Core Definition:\n  Anything sent in a POST body was built by code running on the PLAYER's machine, which the player fully controls — including the browser console. A submitted score of 999999999 is just as easy to send as a real one.\n\nThe Risk:\n  submitScore(\"cheater\", 999999999);   // anyone can call this directly from devtools\n\nWhy It Matters:\n  The server should validate incoming payloads (reasonable score ranges, required fields) rather than storing whatever arrives — the client is a request, not a guarantee. Sessions 11-12 pick this up for real: a database enforces types and ranges, and parameterized queries close off injection.",
+      desc: "Core Definition:\n  Anything sent in a POST body was built by code running on the PLAYER's machine, which the player fully controls โ€” including the browser console. A submitted score of 999999999 is just as easy to send as a real one.\n\nThe Risk:\n  submitScore(\"cheater\", 999999999);   // anyone can call this directly from devtools\n\nWhy It Matters:\n  The server should validate incoming payloads (reasonable score ranges, required fields) rather than storing whatever arrives โ€” the client is a request, not a guarantee. Sessions 11-12 pick this up for real: a database enforces types and ranges, and parameterized queries close off injection.",
       keywords: "client side validation server trust security cheating"
     }
   ],
   'l2-s11': [
     {
       name: "Relational Tables & Data Types",
-      desc: "Core Definition:\n  A relational table has fixed columns with declared types; every row must fit the same shape. This is why databases can be queried reliably — every value in a column is guaranteed to be the same kind of thing.\n\nCommon Types:\n  INT        — whole numbers (scores, quantities, ids)\n  VARCHAR(n) — text up to n characters (names)\n  BOOLEAN    — true/false\n  TIMESTAMP  — a date + time\n\nWhy Types Matter:\n  If score were stored as VARCHAR, ORDER BY score would sort alphabetically ('1000' before '200') instead of numerically. The type isn't decoration — it changes what queries can correctly do.",
+      desc: "Core Definition:\n  A relational table has fixed columns with declared types; every row must fit the same shape. This is why databases can be queried reliably โ€” every value in a column is guaranteed to be the same kind of thing.\n\nCommon Types:\n  INT        โ€” whole numbers (scores, quantities, ids)\n  VARCHAR(n) โ€” text up to n characters (names)\n  BOOLEAN    โ€” true/false\n  TIMESTAMP  โ€” a date + time\n\nWhy Types Matter:\n  If score were stored as VARCHAR, ORDER BY score would sort alphabetically ('1000' before '200') instead of numerically. The type isn't decoration โ€” it changes what queries can correctly do.",
       keywords: "sql relational table data types int varchar boolean timestamp"
     },
     {
       name: "Primary Keys",
-      desc: "Core Definition:\n  The primary key is a column (usually id) that uniquely identifies every row — no two rows can ever share one. It is a row's identity, separate from any of its other data.\n\nSyntax:\n  CREATE TABLE colonist_scores (\n    id INT PRIMARY KEY,\n    player VARCHAR(50),\n    score INT\n  );\n\nWhy It Matters:\n  Two colonists can share the exact same name — they can never share an id. Every UPDATE or DELETE that targets 'one specific row' does so by matching the primary key, not by matching a name that might not be unique.",
+      desc: "Core Definition:\n  The primary key is a column (usually id) that uniquely identifies every row โ€” no two rows can ever share one. It is a row's identity, separate from any of its other data.\n\nSyntax:\n  CREATE TABLE colonist_scores (\n    id INT PRIMARY KEY,\n    player VARCHAR(50),\n    score INT\n  );\n\nWhy It Matters:\n  Two colonists can share the exact same name โ€” they can never share an id. Every UPDATE or DELETE that targets 'one specific row' does so by matching the primary key, not by matching a name that might not be unique.",
       keywords: "sql primary key unique identity row"
     },
     {
       name: "CREATE, INSERT, SELECT, UPDATE",
-      desc: "Core Definition:\n  Four SQL statements cover the basic lifecycle of a table: defining it, filling it, reading it, and changing it.\n\nWhy It Matters:\n  These four statements are the entire CRUD lifecycle (Create, Read, Update — Delete comes next session) that every piece of persistent data in any real application goes through. Sessions 9-10's server calls exist specifically to trigger these statements safely from the client — a POST request's whole job, ultimately, is to run an INSERT or UPDATE on the server's behalf.\n\nSyntax Cheat Sheet:\n  CREATE TABLE colonist_scores (\n    id INT PRIMARY KEY, player VARCHAR(50), score INT\n  );\n  INSERT INTO colonist_scores (id, player, score) VALUES (1, 'cdt_arya', 4200);\n  SELECT player, score FROM colonist_scores WHERE score > 4000 ORDER BY score DESC;\n  UPDATE colonist_scores SET score = 4500 WHERE id = 1;\n\nRead SQL like English but trace exactly what each clause filters: SELECT picks columns, FROM picks the table, WHERE picks rows, ORDER BY sorts what's left.",
+      desc: "Core Definition:\n  Four SQL statements cover the basic lifecycle of a table: defining it, filling it, reading it, and changing it.\n\nWhy It Matters:\n  These four statements are the entire CRUD lifecycle (Create, Read, Update โ€” Delete comes next session) that every piece of persistent data in any real application goes through. Sessions 9-10's server calls exist specifically to trigger these statements safely from the client โ€” a POST request's whole job, ultimately, is to run an INSERT or UPDATE on the server's behalf.\n\nSyntax Cheat Sheet:\n  CREATE TABLE colonist_scores (\n    id INT PRIMARY KEY, player VARCHAR(50), score INT\n  );\n  INSERT INTO colonist_scores (id, player, score) VALUES (1, 'cdt_arya', 4200);\n  SELECT player, score FROM colonist_scores WHERE score > 4000 ORDER BY score DESC;\n  UPDATE colonist_scores SET score = 4500 WHERE id = 1;\n\nRead SQL like English but trace exactly what each clause filters: SELECT picks columns, FROM picks the table, WHERE picks rows, ORDER BY sorts what's left.",
       keywords: "sql create insert select update where order by syntax"
     },
     {
       name: "The Missing WHERE Danger",
-      desc: "Core Definition:\n  An UPDATE or DELETE with no WHERE clause applies to EVERY row in the table, not just the one you meant. SQL does exactly what's written — the same literalness lesson as Level 1, now at data scale.\n\nWhy It Matters:\n  In Level 1 a sequencing mistake broke a simulated car; a missing WHERE clause here can silently destroy every real row of live data in seconds, with no undo. This is why professional teams treat any UPDATE or DELETE statement as something to read twice, and often require the WHERE clause to be written and reviewed before the SET or DELETE part is even considered.\n\n❌ DANGEROUS:\n  UPDATE colonist_scores SET score = 4500;   // overwrites every single row\n\n✅ SAFE:\n  UPDATE colonist_scores SET score = 4500 WHERE id = 1;   // targets exactly one row\n\nRule of Thumb:\n  Write the WHERE clause FIRST, mentally, before deciding what SET does — the WHERE clause is the blast radius of the statement.",
+      desc: "Core Definition:\n  An UPDATE or DELETE with no WHERE clause applies to EVERY row in the table, not just the one you meant. SQL does exactly what's written โ€” the same literalness lesson as Level 1, now at data scale.\n\nWhy It Matters:\n  In Level 1 a sequencing mistake broke a simulated car; a missing WHERE clause here can silently destroy every real row of live data in seconds, with no undo. This is why professional teams treat any UPDATE or DELETE statement as something to read twice, and often require the WHERE clause to be written and reviewed before the SET or DELETE part is even considered.\n\nโ DANGEROUS:\n  UPDATE colonist_scores SET score = 4500;   // overwrites every single row\n\nโ… SAFE:\n  UPDATE colonist_scores SET score = 4500 WHERE id = 1;   // targets exactly one row\n\nRule of Thumb:\n  Write the WHERE clause FIRST, mentally, before deciding what SET does โ€” the WHERE clause is the blast radius of the statement.",
       keywords: "sql update delete missing where danger blast radius"
     }
   ],
   'l2-s12': [
     {
       name: "The Trust Boundary",
-      desc: "Core Definition:\n  The client (browser, player-controlled) is hostile territory. Everything a request sends — form fields, POST bodies — must be validated by the server before it touches the database, regardless of what the frontend form already checked.\n\nWhy Frontend Validation Isn't Enough:\n  A player can open DevTools and call fetch() directly, skipping the form entirely. Frontend checks are UX; server checks are the actual security boundary.\n\nRule of Thumb:\n  Validate type, range, and length on the SERVER for every field, every time — never assume a request came from your own form.",
+      desc: "Core Definition:\n  The client (browser, player-controlled) is hostile territory. Everything a request sends โ€” form fields, POST bodies โ€” must be validated by the server before it touches the database, regardless of what the frontend form already checked.\n\nWhy Frontend Validation Isn't Enough:\n  A player can open DevTools and call fetch() directly, skipping the form entirely. Frontend checks are UX; server checks are the actual security boundary.\n\nRule of Thumb:\n  Validate type, range, and length on the SERVER for every field, every time โ€” never assume a request came from your own form.",
       keywords: "trust boundary server validation client hostile security"
     },
     {
       name: "SQL Injection Recognition",
-      desc: "Core Definition:\n  Building a query by gluing (concatenating) raw user input into a string lets that input change the query's MEANING, not just its data — the classic SQL injection bug.\n\nWhy It Matters:\n  This is the Session 11 Missing WHERE danger's evil twin, except an attacker triggers it on purpose — string concatenation means user input isn't just DATA inside the query anymore, it's part of the query's actual code. Recognizing this shape on sight (raw + gluing user input into SQL text) is one of the highest-value security skills in this entire course, because it's one of the most common real-world vulnerabilities.\n\n❌ VULNERABLE:\n  let query = \"SELECT * FROM users WHERE name = '\" + userInput + \"'\";\n  // if userInput is:  ' OR '1'='1\n  // the query becomes: ...WHERE name = '' OR '1'='1'   -- always true, returns every row\n\nRead It Aloud:\n  Read the assembled query as a sentence after substituting the hostile input — the meaning change becomes obvious once you say it out loud.",
+      desc: "Core Definition:\n  Building a query by gluing (concatenating) raw user input into a string lets that input change the query's MEANING, not just its data โ€” the classic SQL injection bug.\n\nWhy It Matters:\n  This is the Session 11 Missing WHERE danger's evil twin, except an attacker triggers it on purpose โ€” string concatenation means user input isn't just DATA inside the query anymore, it's part of the query's actual code. Recognizing this shape on sight (raw + gluing user input into SQL text) is one of the highest-value security skills in this entire course, because it's one of the most common real-world vulnerabilities.\n\nโ VULNERABLE:\n  let query = \"SELECT * FROM users WHERE name = '\" + userInput + \"'\";\n  // if userInput is:  ' OR '1'='1\n  // the query becomes: ...WHERE name = '' OR '1'='1'   -- always true, returns every row\n\nRead It Aloud:\n  Read the assembled query as a sentence after substituting the hostile input โ€” the meaning change becomes obvious once you say it out loud.",
       keywords: "sql injection concatenation vulnerable string user input"
     },
     {
       name: "Parameterized Queries (The Fix)",
-      desc: "Core Definition:\n  A parameterized query sends the SQL text and the user's data SEPARATELY — the database binds the value as pure data, so it can never be interpreted as part of the query structure.\n\n✅ SAFE:\n  SELECT * FROM users WHERE name = ?;\n  // driver binds userInput to the placeholder — it can never terminate the\n  // string or add clauses, no matter what characters it contains\n\nWhy It's Immune:\n  Even the exact hostile input (' OR '1'='1) just becomes a literal string being searched for — a name that doesn't exist — and returns nothing, instead of hijacking the query.",
+      desc: "Core Definition:\n  A parameterized query sends the SQL text and the user's data SEPARATELY โ€” the database binds the value as pure data, so it can never be interpreted as part of the query structure.\n\nโ… SAFE:\n  SELECT * FROM users WHERE name = ?;\n  // driver binds userInput to the placeholder โ€” it can never terminate the\n  // string or add clauses, no matter what characters it contains\n\nWhy It's Immune:\n  Even the exact hostile input (' OR '1'='1) just becomes a literal string being searched for โ€” a name that doesn't exist โ€” and returns nothing, instead of hijacking the query.",
       keywords: "parameterized query placeholder sql injection defense prepared statement"
     },
     {
       name: "Password Hashing Awareness",
-      desc: "Core Definition:\n  A database should never store a password itself — only a HASH of it, a one-way scramble. Same input always produces the same hash, but there is no path back from the hash to the original password.\n\nWhy It Matters on a Leak:\n  - Plaintext password table leaked: every account is instantly compromised, and reused passwords on other sites too.\n  - Hashed password table leaked: attackers get scrambled values they can't directly use to log in (though weak/common passwords can still be cracked over time).\n\nRule of Thumb:\n  Store hash(password), never password — this is why login checks compare hash(inputPassword) to the stored hash, not the raw strings.",
+      desc: "Core Definition:\n  A database should never store a password itself โ€” only a HASH of it, a one-way scramble. Same input always produces the same hash, but there is no path back from the hash to the original password.\n\nWhy It Matters on a Leak:\n  - Plaintext password table leaked: every account is instantly compromised, and reused passwords on other sites too.\n  - Hashed password table leaked: attackers get scrambled values they can't directly use to log in (though weak/common passwords can still be cracked over time).\n\nRule of Thumb:\n  Store hash(password), never password โ€” this is why login checks compare hash(inputPassword) to the stored hash, not the raw strings.",
       keywords: "password hashing plaintext leak security storage"
     }
   ],
   'l2-s13': [
     {
       name: "The Full Level 2 Architecture",
-      desc: "Core Definition:\n  Every system built across Level 2 stacks into one picture: a canvas render loop for graphics/state, an async layer for talking to the server, and a database layer behind the server that the client never touches directly.\n\nWhy It Matters:\n  Each earlier session taught one layer in isolation; the hardest part of a real project is knowing where each concern BELONGS — collision math stays inside the loop, fetch calls happen on events between frames, and the database is never reachable except through the server. Seeing all three layers on one diagram is what turns 12 sessions of separate lessons into one coherent mental model of how a real game-with-a-backend is actually structured.\n\nThe Pipeline:\n  ┌─────────────────────────────────────────────────────────┐\n  │ init()                                                   │\n  │  - get canvas + ctx, set up sprite arrays, load config   │\n  └───────────────────────┬───────────────────────────────────┘\n                          ▼\n  ┌─────────────────────────────────────────────────────────┐\n  │ gameLoop()  (runs ~60x/sec via requestAnimationFrame)     │\n  │  1. Read input matrix (which keys are currently held)    │\n  │  2. Update: move sprites, run collisions, splice dead ones│\n  │  3. Draw: ctx.clearRect, then redraw every sprite + HUD   │\n  │  4. requestAnimationFrame(gameLoop) — schedule next frame │\n  └───────────────────────┬───────────────────────────────────┘\n                          ▼ (on game-over event, outside the loop)\n  ┌─────────────────────────────────────────────────────────┐\n  │ async submitScore() / fetchLeaderboard()                 │\n  │  - POST the final score, then GET the updated board      │\n  └───────────────────────┬───────────────────────────────────┘\n                          ▼ (server-side, never reached by the client directly)\n  ┌─────────────────────────────────────────────────────────┐\n  │ database (validated INSERT/SELECT, parameterized queries)│\n  └─────────────────────────────────────────────────────────┘\n\nThe loop never awaits anything — async calls fire off to the side when a meaningful event (game over) happens; the database layer is a step further still, reachable only through the server.",
+      desc: "Core Definition:\n  Every system built across Level 2 stacks into one picture: a canvas render loop for graphics/state, an async layer for talking to the server, and a database layer behind the server that the client never touches directly.\n\nWhy It Matters:\n  Each earlier session taught one layer in isolation; the hardest part of a real project is knowing where each concern BELONGS โ€” collision math stays inside the loop, fetch calls happen on events between frames, and the database is never reachable except through the server. Seeing all three layers on one diagram is what turns 12 sessions of separate lessons into one coherent mental model of how a real game-with-a-backend is actually structured.\n\nThe Pipeline:\n  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n  โ” init()                                                   โ”\n  โ”  - get canvas + ctx, set up sprite arrays, load config   โ”\n  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”ฌโ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n                          โ–ผ\n  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n  โ” gameLoop()  (runs ~60x/sec via requestAnimationFrame)     โ”\n  โ”  1. Read input matrix (which keys are currently held)    โ”\n  โ”  2. Update: move sprites, run collisions, splice dead onesโ”\n  โ”  3. Draw: ctx.clearRect, then redraw every sprite + HUD   โ”\n  โ”  4. requestAnimationFrame(gameLoop) โ€” schedule next frame โ”\n  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”ฌโ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n                          โ–ผ (on game-over event, outside the loop)\n  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n  โ” async submitScore() / fetchLeaderboard()                 โ”\n  โ”  - POST the final score, then GET the updated board      โ”\n  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”ฌโ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n                          โ–ผ (server-side, never reached by the client directly)\n  โ”โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n  โ” database (validated INSERT/SELECT, parameterized queries)โ”\n  โ””โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”\n\nThe loop never awaits anything โ€” async calls fire off to the side when a meaningful event (game over) happens; the database layer is a step further still, reachable only through the server.",
       keywords: "canvas game architecture requestAnimationFrame pipeline diagram database"
     },
     {
       name: "Common Seeded-Bug Checklist",
-      desc: "Core Definition:\n  A diagnostic cheat sheet of the classic bug patterns seeded across Level 2 — check these first when something looks broken.\n\nWhy It Matters:\n  Experienced developers debug faster not because they're smarter, but because they recognize SHAPES of bugs they've already seen — a smear trail means clearRect, 'Promise pending' means a missing await. Building this same pattern-recognition habit now, on a known list of seven, is what makes debugging genuinely new problems faster later.\n\nChecklist:\n  - Missing clearRect: old frames never erase, so sprites appear to smear/trail across the canvas.\n  - Forward-splice skip: splicing an array while iterating forward skips the element that slides into the removed index — iterate backward instead.\n  - Stuck key state: a keyup listener never clears the pressed flag, so a key appears held forever.\n  - Missing break: a collision loop keeps scanning after a hit, sometimes double-triggering effects.\n  - Missing await: an async call logs \"Promise <Pending>\" instead of the real data.\n  - Missing WHERE: an UPDATE/DELETE with no WHERE clause silently applies to every row in the table.\n  - String-concatenated query: gluing user input directly into SQL text opens an injection hole — check for a parameterized placeholder instead.\n\nRun through this list before assuming a bug is something new — most Level 2 breakage traces back to one of these seven patterns.",
+      desc: "Core Definition:\n  A diagnostic cheat sheet of the classic bug patterns seeded across Level 2 โ€” check these first when something looks broken.\n\nWhy It Matters:\n  Experienced developers debug faster not because they're smarter, but because they recognize SHAPES of bugs they've already seen โ€” a smear trail means clearRect, 'Promise pending' means a missing await. Building this same pattern-recognition habit now, on a known list of seven, is what makes debugging genuinely new problems faster later.\n\nChecklist:\n  - Missing clearRect: old frames never erase, so sprites appear to smear/trail across the canvas.\n  - Forward-splice skip: splicing an array while iterating forward skips the element that slides into the removed index โ€” iterate backward instead.\n  - Stuck key state: a keyup listener never clears the pressed flag, so a key appears held forever.\n  - Missing break: a collision loop keeps scanning after a hit, sometimes double-triggering effects.\n  - Missing await: an async call logs \"Promise <Pending>\" instead of the real data.\n  - Missing WHERE: an UPDATE/DELETE with no WHERE clause silently applies to every row in the table.\n  - String-concatenated query: gluing user input directly into SQL text opens an injection hole โ€” check for a parameterized placeholder instead.\n\nRun through this list before assuming a bug is something new โ€” most Level 2 breakage traces back to one of these seven patterns.",
       keywords: "javascript common bugs checklist clearRect splice sql debugging"
     },
     {
       name: "Defending Code in Review",
-      desc: "Core Definition:\n  A code-review walkthrough means explaining WHY each piece of your code works, not just reading it aloud. Four areas come up most often across a Level 2 review.\n\nWhy It Matters:\n  This is the professional skill this whole level has been building toward — in a real job, code that works but that you can't explain is a liability, not an asset, because nobody (including future you) can safely change it later. Level 1-2's code-review model is deliberately copy-paste and conversational for this exact reason: explaining your own reasoning out loud is the actual skill being assessed, not just producing correct output.\n\nWhat to Be Ready to Explain:\n  - Coordinate math: why a sprite's x/y updates the way it does, and how the AABB collision check compares edges, not center points.\n  - Cleanup loops: why sprites are filtered/spliced out, and what would happen to performance if that loop were removed (Session 7's memory-leak lesson).\n  - fetch options: why the POST call needs method, headers, and a stringified body, and what try/catch is protecting against.\n  - Query safety: why a query uses a parameterized placeholder instead of string concatenation, and what the validation rulebook rejects and why.\n\nFraming the Walkthrough:\n  Treat the reviewer's questions as collaborative auditing, not adversarial gatekeeping — the same posture a professional code review requires. Being unable to explain a line you wrote is a bigger red flag than the line itself having a small bug.",
+      desc: "Core Definition:\n  A code-review walkthrough means explaining WHY each piece of your code works, not just reading it aloud. Four areas come up most often across a Level 2 review.\n\nWhy It Matters:\n  This is the professional skill this whole level has been building toward โ€” in a real job, code that works but that you can't explain is a liability, not an asset, because nobody (including future you) can safely change it later. Level 1-2's code-review model is deliberately copy-paste and conversational for this exact reason: explaining your own reasoning out loud is the actual skill being assessed, not just producing correct output.\n\nWhat to Be Ready to Explain:\n  - Coordinate math: why a sprite's x/y updates the way it does, and how the AABB collision check compares edges, not center points.\n  - Cleanup loops: why sprites are filtered/spliced out, and what would happen to performance if that loop were removed (Session 7's memory-leak lesson).\n  - fetch options: why the POST call needs method, headers, and a stringified body, and what try/catch is protecting against.\n  - Query safety: why a query uses a parameterized placeholder instead of string concatenation, and what the validation rulebook rejects and why.\n\nFraming the Walkthrough:\n  Treat the reviewer's questions as collaborative auditing, not adversarial gatekeeping โ€” the same posture a professional code review requires. Being unable to explain a line you wrote is a bigger red flag than the line itself having a small bug.",
       keywords: "code review walkthrough explain code line by line defense"
     }
   ]
@@ -542,19 +542,19 @@ const CAMPAIGN_THEMES = {
     description: 'Solve logical systemic bugs in a neon-lit, highly automated city. Track hackers and secure grid lines.',
     levels: {
       1: {
-        mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
+        mainQuest: 'Operation: Racing Car Autopilot โ€” Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
         // L1 quest cards come from CURRICULUM_DATA (see L1_QUEST_SESSIONS); the L1 theme is
         // fixed to the Racing Car Game across all campaigns, so no per-theme session copy here.
         sessions: []
       },
       2: {
-        mainQuest: 'Operation: Colony Defense Grid — Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
+        mainQuest: 'Operation: Colony Defense Grid โ€” Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
         // L2 quest cards come from CURRICULUM_DATA (see L2_QUEST_SESSIONS); the L2 theme is
         // fixed to Mars Colony Defense across all campaigns, so no per-theme session copy here.
         sessions: []
       },
       3: {
-        mainQuest: 'Operation: Network Defense — Architect a decentralized database system to protect citizens\' data privacy against rogue corporations.',
+        mainQuest: 'Operation: Network Defense โ€” Architect a decentralized database system to protect citizens\' data privacy against rogue corporations.',
         sessions: [
           {
             id: 'l3-s1',
@@ -575,7 +575,7 @@ const CAMPAIGN_THEMES = {
         ]
       },
       4: {
-        mainQuest: 'Operation: Live Grid Launch — Connect, secure, and deploy a real-world web application with live database synchronicity and encrypted environment keys.',
+        mainQuest: 'Operation: Live Grid Launch โ€” Connect, secure, and deploy a real-world web application with live database synchronicity and encrypted environment keys.',
         sessions: [
           {
             id: 'l4-s1',
@@ -611,19 +611,19 @@ const CAMPAIGN_THEMES = {
     description: 'Establish and defend a human colony on Mars. Optimize life support systems and control rover logic.',
     levels: {
       1: {
-        mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
+        mainQuest: 'Operation: Racing Car Autopilot โ€” Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
         // L1 quest cards come from CURRICULUM_DATA (see L1_QUEST_SESSIONS); the L1 theme is
         // fixed to the Racing Car Game across all campaigns, so no per-theme session copy here.
         sessions: []
       },
       2: {
-        mainQuest: 'Operation: Colony Defense Grid — Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
+        mainQuest: 'Operation: Colony Defense Grid โ€” Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
         // L2 quest cards come from CURRICULUM_DATA (see L2_QUEST_SESSIONS); the L2 theme is
         // fixed to Mars Colony Defense across all campaigns, so no per-theme session copy here.
         sessions: []
       },
       3: {
-        mainQuest: 'Operation: Interplanetary Communications — Architect secure API structures and sequence diagrams for Mars-Earth networks.',
+        mainQuest: 'Operation: Interplanetary Communications โ€” Architect secure API structures and sequence diagrams for Mars-Earth networks.',
         sessions: [
           {
             id: 'l3-s1',
@@ -644,7 +644,7 @@ const CAMPAIGN_THEMES = {
         ]
       },
       4: {
-        mainQuest: 'Operation: Mars Net Launch — Connect, secure, and deploy a real-world web application with live database synchronicity and encrypted environment keys.',
+        mainQuest: 'Operation: Mars Net Launch โ€” Connect, secure, and deploy a real-world web application with live database synchronicity and encrypted environment keys.',
         sessions: [
           {
             id: 'l4-s1',
@@ -680,19 +680,19 @@ const CAMPAIGN_THEMES = {
     description: 'Master logical spell-crafting in a school of wizardry. Enchant magical items and secure cauldrons.',
     levels: {
       1: {
-        mainQuest: 'Operation: Racing Car Autopilot — Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
+        mainQuest: 'Operation: Racing Car Autopilot โ€” Construct the HTML structure, CSS styling, and JavaScript logic to drive a 2D highway avoidance racing game.',
         // L1 quest cards come from CURRICULUM_DATA (see L1_QUEST_SESSIONS); the L1 theme is
         // fixed to the Racing Car Game across all campaigns, so no per-theme session copy here.
         sessions: []
       },
       2: {
-        mainQuest: 'Operation: Colony Defense Grid — Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
+        mainQuest: 'Operation: Colony Defense Grid โ€” Build a Canvas-based space-shooter defense system, wire it to a live leaderboard, and secure its data with SQL fundamentals.',
         // L2 quest cards come from CURRICULUM_DATA (see L2_QUEST_SESSIONS); the L2 theme is
         // fixed to Mars Colony Defense across all campaigns, so no per-theme session copy here.
         sessions: []
       },
       3: {
-        mainQuest: 'Operation: Hogwarts Security Grid — Architect database tracking systems for magical creatures and set security wards against dark magic.',
+        mainQuest: 'Operation: Hogwarts Security Grid โ€” Architect database tracking systems for magical creatures and set security wards against dark magic.',
         sessions: [
           {
             id: 'l3-s1',
@@ -713,7 +713,7 @@ const CAMPAIGN_THEMES = {
         ]
       },
       4: {
-        mainQuest: 'Operation: Wizarding Web Grid — Connect, secure, and deploy a real-world web application with live database synchronicity and encrypted environment keys.',
+        mainQuest: 'Operation: Wizarding Web Grid โ€” Connect, secure, and deploy a real-world web application with live database synchronicity and encrypted environment keys.',
         sessions: [
           {
             id: 'l4-s1',
@@ -750,34 +750,34 @@ const S1_EXERCISES = [
     num: 1,
     title: "Exercise 1.1: Hardware vs. Software, and the Resource Bottleneck",
     problem: "Before touching any code, you need to know what's physically running your game versus what's just instructions telling it what to do. Here's a real resource snapshot from a laptop running the game: CPU usage 91%, RAM usage 38%, Disk usage 12%.",
-    instruction: "Goal: figure out which physical resource is actually struggling here, and be able to justify your answer using the numbers given. 1) Plan: in your own words, sort these into HARDWARE or SOFTWARE: the CPU, the game code (game.js), the RAM, the operating system, the monitor, the web browser. 2) Prompt: ask the AI about this situation, in your own words — you decide how to phrase it. 3) Explain: once you have an answer, explain in your own words why that resource is the one under strain, not the others.",
+    instruction: "Goal: figure out which physical resource is actually struggling here, and be able to justify your answer using the numbers given. 1) Plan: in your own words, sort these into HARDWARE or SOFTWARE: the CPU, the game code (game.js), the RAM, the operating system, the monitor, the web browser. 2) Prompt: ask the AI about this situation, in your own words โ€” you decide how to phrase it. 3) Explain: once you have an answer, explain in your own words why that resource is the one under strain, not the others.",
     planPlaceholder: "Sort these into HARDWARE or SOFTWARE, in your own words: CPU, game.js, RAM, the OS, the monitor, the browser.",
     promptPlaceholder: "Write your own prompt asking about this situation, in your own words.",
     outputCodePlaceholder: "Paste the AI's actual answer here.",
     runnable: false,
-    expectedConcepts: "Per-field expectations: the Plan field's ONLY job is correctly sorting the 6 items into hardware (CPU, RAM, monitor) vs software (game.js, the OS, the browser) — do NOT mark Plan wrong just because it doesn't also identify the bottleneck; that's the Prompt/Output/Explain fields' job. Given CPU 91%, RAM 38%, Disk 12%, CPU is the constrained resource (a 'bottleneck' means the resource under the highest strain relative to its capacity) — this should show up in the prompt's question and the explanation's reasoning, not necessarily the plan. Don't require the literal word 'bottleneck' or the number 91 in the plan/prompt prose — judge whether the reasoning correctly identifies CPU as the strained resource and why."
+    expectedConcepts: "Per-field expectations: the Plan field's ONLY job is correctly sorting the 6 items into hardware (CPU, RAM, monitor) vs software (game.js, the OS, the browser) โ€” do NOT mark Plan wrong just because it doesn't also identify the bottleneck; that's the Prompt/Output/Explain fields' job. Given CPU 91%, RAM 38%, Disk 12%, CPU is the constrained resource (a 'bottleneck' means the resource under the highest strain relative to its capacity) โ€” this should show up in the prompt's question and the explanation's reasoning, not necessarily the plan. Don't require the literal word 'bottleneck' or the number 91 in the plan/prompt prose โ€” judge whether the reasoning correctly identifies CPU as the strained resource and why."
   },
   {
     num: 2,
     title: "Exercise 1.2: The Out-of-Memory Crash",
     problem: "Bug: the racing game loads 500 full-resolution, uncompressed car images into memory all at once before the race even starts, then crashes on low-end laptops.",
     instruction: "Goal: figure out why this happens, and find a real software-side fix (no new hardware). 1) Plan: form your own hypothesis for why loading 500 large images at once could overload a low-end laptop's memory. 2) Prompt: describe the problem and ask for a fix, in your own words. 3) Explain: once you have a fix, explain in your own words why it actually reduces memory usage.",
-    planPlaceholder: "What's your hypothesis — why would loading 500 large images at once strain memory?",
+    planPlaceholder: "What's your hypothesis โ€” why would loading 500 large images at once strain memory?",
     promptPlaceholder: "Describe the problem and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's proposed fix here.",
     runnable: false,
-    expectedConcepts: "Loading 500 full-resolution images at once means all of them occupy RAM simultaneously even though only a few are visible at a time, exceeding a low-end machine's memory. A real software fix is compressing the images and/or lazy-loading (only loading images as needed). Don't require literal words like 'RAM,' 'compress,' or 'lazy' in the plan/prompt prose — judge whether the reasoning is correct."
+    expectedConcepts: "Loading 500 full-resolution images at once means all of them occupy RAM simultaneously even though only a few are visible at a time, exceeding a low-end machine's memory. A real software fix is compressing the images and/or lazy-loading (only loading images as needed). Don't require literal words like 'RAM,' 'compress,' or 'lazy' in the plan/prompt prose โ€” judge whether the reasoning is correct."
   },
   {
     num: 3,
     title: "Exercise 1.3: The Client-Server Request Cycle",
-    problem: "Every webpage load — including the Racing Car Game you'll start building next session — is really a conversation between two computers: your browser and a server.",
+    problem: "Every webpage load โ€” including the Racing Car Game you'll start building next session โ€” is really a conversation between two computers: your browser and a server.",
     instruction: "Goal: understand what actually happens between your browser asking for a page and it appearing on screen. 1) Plan: describe, step by step, in your own words, what you think happens between clicking a link and seeing the page. 2) Prompt: ask the AI about this, in your own words. 3) Explain: once you have an answer, explain in one sentence why the response step specifically matters.",
     planPlaceholder: "Describe, step by step, in your own words, what happens between clicking a link and seeing the page.",
     promptPlaceholder: "Write your own prompt, in your own words.",
     outputCodePlaceholder: "Paste the AI's actual explanation here.",
     runnable: false,
-    expectedConcepts: "The cycle: the browser (client) sends a request, the server looks up the data, the server sends back a response, the browser displays the page. The explanation should identify why the response step matters (without a response, the browser has nothing to display — the page never resolves). Don't require the literal words 'client,' 'server,' 'request,' or 'response' in the plan/prompt prose — judge whether the sequence of events is actually understood."
+    expectedConcepts: "The cycle: the browser (client) sends a request, the server looks up the data, the server sends back a response, the browser displays the page. The explanation should identify why the response step matters (without a response, the browser has nothing to display โ€” the page never resolves). Don't require the literal words 'client,' 'server,' 'request,' or 'response' in the plan/prompt prose โ€” judge whether the sequence of events is actually understood."
   },
   {
     num: 4,
@@ -788,18 +788,18 @@ const S1_EXERCISES = [
     promptPlaceholder: "Describe the bug and ask for a diagnosis, in your own words.",
     outputCodePlaceholder: "Paste the AI's actual diagnosis here.",
     runnable: false,
-    expectedConcepts: "HTML = structure/content, CSS = visual styling/layout, JavaScript = behavior/interactivity. 'Content and buttons visible but no layout/colors' is the signature of CSS failing to load — HTML is clearly present (text/buttons render) and this isn't a behavior problem, it's a purely visual one. The Explanation genuinely needs to correctly name CSS as the diagnosis (that's the actual answer, not arbitrary wording) — but don't require the plan/prompt prose to use the word 'CSS' if the reasoning about each technology's job is otherwise correct."
+    expectedConcepts: "HTML = structure/content, CSS = visual styling/layout, JavaScript = behavior/interactivity. 'Content and buttons visible but no layout/colors' is the signature of CSS failing to load โ€” HTML is clearly present (text/buttons render) and this isn't a behavior problem, it's a purely visual one. The Explanation genuinely needs to correctly name CSS as the diagnosis (that's the actual answer, not arbitrary wording) โ€” but don't require the plan/prompt prose to use the word 'CSS' if the reasoning about each technology's job is otherwise correct."
   },
   {
     num: 5,
     title: "Exercise 1.5: The 5-Step AI-Era Loop, Applied",
-    problem: "Every session from here on — including your very next one — will use the same repeating process to work with an AI IDE.",
+    problem: "Every session from here on โ€” including your very next one โ€” will use the same repeating process to work with an AI IDE.",
     instruction: "Goal: know this process well enough to describe it in your own words before you rely on it next session. 1) Plan: write the 5 steps of the AI-Era Development Loop, in order, in your own words. 2) Prompt: ask the AI to explain what each step means in practice. 3) Explain: once you have an explanation, say which step you think will be hardest for you, and why.",
     planPlaceholder: "Write the 5 steps of the loop, in order, in your own words.",
     promptPlaceholder: "Write your own prompt, in your own words.",
     outputCodePlaceholder: "Paste the AI's actual explanation here.",
     runnable: false,
-    expectedConcepts: "The 5 steps in order: Plan & Design, Write the AI Prompt, Review & Explain, Test & Break It, Iterate & Improve. This is a recall task — the plan genuinely should name the 5 steps correctly and in order (that's the actual content being tested, not just phrasing), but the Explanation's choice of 'hardest step' and reasoning is personal and has no single correct answer — judge only whether it's a genuine, specific reflection, not a placeholder answer."
+    expectedConcepts: "The 5 steps in order: Plan & Design, Write the AI Prompt, Review & Explain, Test & Break It, Iterate & Improve. This is a recall task โ€” the plan genuinely should name the 5 steps correctly and in order (that's the actual content being tested, not just phrasing), but the Explanation's choice of 'hardest step' and reasoning is personal and has no single correct answer โ€” judge only whether it's a genuine, specific reflection, not a placeholder answer."
   }
 ];
 
@@ -807,8 +807,8 @@ const S2_EXERCISES = [
   {
     num: 1,
     title: "Exercise 2.1: The Track & Car Skeleton",
-    problem: "This game's track element is always called game-track, and the car sitting inside it is always called player-car — later sessions' code depends on these exact names.",
-    instruction: "Goal: create the nested structure a browser needs — a game-track container with a player-car nested inside it. 1) Plan: in your own words, describe the parent/child relationship you need. 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why does player-car need to be nested INSIDE game-track, not just next to it?",
+    problem: "This game's track element is always called game-track, and the car sitting inside it is always called player-car โ€” later sessions' code depends on these exact names.",
+    instruction: "Goal: create the nested structure a browser needs โ€” a game-track container with a player-car nested inside it. 1) Plan: in your own words, describe the parent/child relationship you need. 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why does player-car need to be nested INSIDE game-track, not just next to it?",
     planPlaceholder: "Describe the parent/child relationship you need to build, in your own words.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual HTML the AI generated from your prompt here.",
@@ -827,9 +827,9 @@ const S2_EXERCISES = [
   {
     num: 3,
     title: "Exercise 2.3: The Unclosed Tag Bug Hunt",
-    problem: `Bug in this exact code: <div id="game-track"><div id="player-car"></div> — two divs opened, but only one closed, so the browser never knows where game-track ends.`,
-    instruction: "Goal: figure out why this breaks the page's structure, then fix it. 1) Plan: form your own hypothesis — why does a missing closing tag break things with no visible error? 2) Prompt: describe the bug and the goal to the AI, in your own words. 3) Explain: how many closing </div> tags does the fixed version need, and why?",
-    planPlaceholder: "What's your hypothesis — why does one missing closing tag break the layout with no visible error?",
+    problem: `Bug in this exact code: <div id="game-track"><div id="player-car"></div> โ€” two divs opened, but only one closed, so the browser never knows where game-track ends.`,
+    instruction: "Goal: figure out why this breaks the page's structure, then fix it. 1) Plan: form your own hypothesis โ€” why does a missing closing tag break things with no visible error? 2) Prompt: describe the bug and the goal to the AI, in your own words. 3) Explain: how many closing </div> tags does the fixed version need, and why?",
+    planPlaceholder: "What's your hypothesis โ€” why does one missing closing tag break the layout with no visible error?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's corrected HTML here.",
     runnable: true
@@ -837,7 +837,7 @@ const S2_EXERCISES = [
   {
     num: 4,
     title: "Exercise 2.4: Lane Dividers via Class",
-    problem: "This track can have several lane dividers (unlike game-track or player-car, which are each one-of-a-kind) — an element that repeats needs a class, not an id.",
+    problem: "This track can have several lane dividers (unlike game-track or player-car, which are each one-of-a-kind) โ€” an element that repeats needs a class, not an id.",
     instruction: "Goal: add a lane divider using the right kind of attribute for something that can repeat. 1) Plan: in your own words, why should the divider use a class instead of an id? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: what would go wrong if you used an id instead, once the track needs multiple dividers?",
     planPlaceholder: "Why should the lane divider use a class instead of an id?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
@@ -850,16 +850,16 @@ const S3_EXERCISES = [
   {
     num: 1,
     title: "Exercise 3.1: Arena Sizing Specs",
-    problem: "You're choosing layout dimensions for the track before writing real CSS — its width, height, and background color.",
-    instruction: "Goal: decide on and apply your own track dimensions. 1) Plan: in your own words, decide the track's width, height, and background color — and why those numbers. 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why did you choose those dimensions?",
-    planPlaceholder: "Decide the track's width, height, and background color, in your own words — and why.",
+    problem: "You're choosing layout dimensions for the track before writing real CSS โ€” its width, height, and background color.",
+    instruction: "Goal: decide on and apply your own track dimensions. 1) Plan: in your own words, decide the track's width, height, and background color โ€” and why those numbers. 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why did you choose those dimensions?",
+    planPlaceholder: "Decide the track's width, height, and background color, in your own words โ€” and why.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual CSS the AI generated from your prompt here.",
     runnable: true
   },
   {
     num: 2,
-    title: "Exercise 3.2: Selectors — # vs. .",
+    title: "Exercise 3.2: Selectors โ€” # vs. .",
     problem: "CSS targets elements two different ways: a hash (#) targets the ONE element with that id; a dot (.) targets EVERY element with that class. Mixing them up is why styles seem to 'not apply'.",
     instruction: "Goal: understand when to use each selector type. 1) Plan: in your own words, when should you use an id selector vs. a class selector? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: which one would you use for something that appears many times on a page, and why?",
     planPlaceholder: "When should you use an id selector (#) vs. a class selector (.)? In your own words.",
@@ -870,9 +870,9 @@ const S3_EXERCISES = [
   {
     num: 3,
     title: "Exercise 3.3: The Drifting Car Bug",
-    problem: `Bug in this exact CSS: #game-track { width: 390px; height: 500px; background-color: #333; } — the absolutely-positioned player car drifts to the top of the whole browser window instead of staying inside the track.`,
-    instruction: "Goal: figure out why the car drifts outside its parent, then fix it. 1) Plan: form your own hypothesis — what's missing from the parent that would keep the child's coordinates contained? 2) Prompt: describe the bug and the goal to the AI, in your own words. 3) Explain: what does the fix actually do for the child's coordinates?",
-    planPlaceholder: "What's your hypothesis — what's missing from the parent that lets the child drift outside it?",
+    problem: `Bug in this exact CSS: #game-track { width: 390px; height: 500px; background-color: #333; } โ€” the absolutely-positioned player car drifts to the top of the whole browser window instead of staying inside the track.`,
+    instruction: "Goal: figure out why the car drifts outside its parent, then fix it. 1) Plan: form your own hypothesis โ€” what's missing from the parent that would keep the child's coordinates contained? 2) Prompt: describe the bug and the goal to the AI, in your own words. 3) Explain: what does the fix actually do for the child's coordinates?",
+    planPlaceholder: "What's your hypothesis โ€” what's missing from the parent that lets the child drift outside it?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed CSS here.",
     runnable: true
@@ -903,7 +903,7 @@ const S4_EXERCISES = [
   {
     num: 2,
     title: "Exercise 4.2: Constants and the Lives Count",
-    problem: "Not everything in the registry changes. A lane's width and the track's width are fixed for the whole game — those become const. This session also adds a lives count, so the player can survive more than one crash.",
+    problem: "Not everything in the registry changes. A lane's width and the track's width are fixed for the whole game โ€” those become const. This session also adds a lives count, so the player can survive more than one crash.",
     instruction: "Goal: declare the fixed values plus a new mutable lives count. 1) Plan: name the fixed values this game needs, plus the new lives value (starting count, and whether it changes). 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why are the fixed values const while lives is let, even though lives starts as a fixed-looking number?",
     planPlaceholder: "What stays fixed for the whole game? What is 'lives', what does it start at, and does it change?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
@@ -913,7 +913,7 @@ const S4_EXERCISES = [
   {
     num: 3,
     title: "Exercise 4.3: Math Increments on Game State",
-    problem: "Declaring variables is only half the job — the game also has to update them during play.",
+    problem: "Declaring variables is only half the job โ€” the game also has to update them during play.",
     instruction: "Goal: make score and speed change during play, in a way you decide. 1) Plan: describe how score and speed should change during play. 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: predict what score and speed equal after your code runs, starting from score = 0 and speed = 0.",
     planPlaceholder: "In plain language: how should score change during play? How should speed change?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
@@ -923,7 +923,7 @@ const S4_EXERCISES = [
   {
     num: 4,
     title: "Exercise 4.4: The Quoted-Number Bug Hunt",
-    problem: `Bug in this exact code: let speed = "10"; speed += 5; — the quotes make speed a String, not a Number. Running it produces "105" (text glued together) instead of 15 (real addition).`,
+    problem: `Bug in this exact code: let speed = "10"; speed += 5; โ€” the quotes make speed a String, not a Number. Running it produces "105" (text glued together) instead of 15 (real addition).`,
     instruction: "Goal: figure out why this produces the wrong result, then fix it. 1) Plan: explain in your own words why a quoted \"10\" behaves differently from a plain 10 in math. 2) Prompt: describe the bug and the goal to the AI, in your own words. 3) Explain: what result did you get before vs. after the fix, and why.",
     planPlaceholder: "Why does a quoted \"10\" behave differently from a plain 10 in math?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
@@ -935,7 +935,7 @@ const S4_EXERCISES = [
 // Canned "finished look" CSS for the S2 HTML sandbox preview and the Project Journal's
 // milestone Target Outcome preview. Session 2 only teaches HTML structure (no CSS yet),
 // so this pre-styles the known game elements (track, car, dashboard, lane-divider) to give
-// students a recognizable visual — a sneak peek of the styling Session 3 formally teaches.
+// students a recognizable visual โ€” a sneak peek of the styling Session 3 formally teaches.
 const S2_PREVIEW_STYLE_CSS = `
   body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
   #game-track {
@@ -1002,7 +1002,7 @@ const S2_PREVIEW_STYLE_CSS = `
 // Compact variant of S2_PREVIEW_STYLE_CSS for the Project Journal's small Target Outcome
 // thumbnail. A plain height clamp on the iframe would CROP content instead of shrinking it
 // (an iframe doesn't scale its document to fit), so this scales every vertical dimension down
-// proportionally — the whole scene (dashboard + track + car) fits within ~100px, uncropped.
+// proportionally โ€” the whole scene (dashboard + track + car) fits within ~100px, uncropped.
 const S2_PREVIEW_STYLE_CSS_MINI = `
   body { margin: 0; padding: 4px; background: #060814; color: #fff; font-family: monospace; font-size: 0.55rem; }
   #game-track {
@@ -1066,9 +1066,9 @@ const S3_PREVIEW_SKELETON = `
   <div id="game-track">
     <div class="lane-divider" style="left: 130px; height: 100%;"></div>
     <div class="lane-divider" style="left: 260px; height: 100%;"></div>
-    <div id="player-car">🏎️</div>
-    <div id="obstacle-1" class="obstacle">🚗</div>
-    <div id="obstacle-2" class="obstacle">🚘</div>
+    <div id="player-car">๐๏ธ</div>
+    <div id="obstacle-1" class="obstacle">๐—</div>
+    <div id="obstacle-2" class="obstacle">๐</div>
     <div id="restart-panel" class="hidden">RESTART?</div>
   </div>
 `;
@@ -1078,7 +1078,7 @@ const S3_PREVIEW_SKELETON = `
 // result comes from the student's own CSS (s3OutputCodeInput) instead of a pre-baked default
 // that would make the preview look identical whether or not they wrote the correct rule:
 //   - Ex 3.3 teaches #game-track's `position: relative`, so it's omitted here on that exercise
-//     (everything else drifts to the top-left of the iframe until the student adds it — the
+//     (everything else drifts to the top-left of the iframe until the student adds it โ€” the
 //     exact bug the exercise describes).
 //   - Ex 3.4 teaches #player-car's own absolute position/offsets, so that rule is omitted
 //     entirely on that exercise (the car sits at the browser's default flow position until
@@ -1147,6 +1147,15 @@ function buildS3PreviewCss(exerciseNum) {
 // the iframe, and forwards console.log()/runtime errors back to the parent via
 // postMessage so they can be shown in the terminal log panel.
 function buildJsSandboxPreview(studentCode) {
+  // Pre-clean student code before injecting into the HTML template:
+  // strip any top-level re-declarations of the harness globals (carX, speed)
+  // that the AI commonly emits โ€” e.g. `let carX = 165;` โ€” so they don't
+  // shadow or conflict with the reactive window properties defined below.
+  // Only declaration lines are removed; the identifier itself stays usable.
+  const cleanedCode = studentCode
+    .replace(/\b(let|const|var)\s+carX\b[^\n;]*(;|\n|$)/g, '/* carX is provided by the sandbox */\n')
+    .replace(/\b(let|const|var)\s+speed\b[^\n;]*(;|\n|$)/g, '/* speed is provided by the sandbox */\n');
+
   return `
     <html>
       <head>
@@ -1167,8 +1176,8 @@ function buildJsSandboxPreview(studentCode) {
         <div id="dashboard"><h2>Score: <span id="score-val">0</span> | Speed: <span id="speed-val">0</span></h2></div>
         <div id="game-track">
           <div class="lane-divider" style="left: 180px;"></div>
-          <div id="player-car" style="left: 165px;">🏎️</div>
-          <div id="obstacle" style="left: 165px;">🚧</div>
+          <div id="player-car" style="left: 165px;">๐๏ธ</div>
+          <div id="obstacle" style="left: 165px;">๐ง</div>
           <div id="restart-panel" class="hidden">GAME OVER<br/>Press Space to Restart</div>
         </div>
         <div id="console-hint">Click inside this preview, then press ArrowLeft / ArrowRight to test your code live.</div>
@@ -1183,7 +1192,7 @@ function buildJsSandboxPreview(studentCode) {
             parent.postMessage({ __sim: true, type: 'log', text: args.map(String).join(' ') }, '*');
             _origLog.apply(console, args);
           };
-          // Prevents ArrowUp/ArrowDown/etc from scrolling the page — this preview
+          // Prevents ArrowUp/ArrowDown/etc from scrolling the page โ€” this preview
           // sits inside a page tall enough to actually scroll vertically (unlike
           // horizontal steering, which had no page overflow to scroll into), so
           // without this the browser's native scroll fires alongside the student's
@@ -1191,7 +1200,7 @@ function buildJsSandboxPreview(studentCode) {
           //
           // Also drives the visible road-scroll directly off real ArrowUp/ArrowDown
           // presses, independent of whether the student's AI-generated code ever
-          // touches #game-track's backgroundPositionY itself — whether it does
+          // touches #game-track's backgroundPositionY itself โ€” whether it does
           // depends entirely on how the student's own prompt was worded, which is
           // too unreliable for "does the road visibly move" to hinge on. This way
           // pressing ArrowUp always visibly scrolls the road, matching what the
@@ -1214,16 +1223,40 @@ function buildJsSandboxPreview(studentCode) {
           }, false);
           // Every time this iframe's srcdoc is replaced (switching exercises, or
           // clicking Generate Code again after editing the prompt), it's a fresh
-          // document with no focus of its own — the browser doesn't carry focus
+          // document with no focus of its own โ€” the browser doesn't carry focus
           // over from the previous version, and clicking "Generate Code" itself
           // moves focus to that parent-page button. Without this, arrow keys
           // silently stop doing anything until the student notices and re-clicks
           // inside the preview, which reads as "the new code isn't running."
           document.body.focus();
-          var carX = 165;
-          var speed = 0;
+          // Reactive globals: writing carX auto-moves #player-car visually;
+          // writing speed auto-updates #speed-val in the HUD. Student code only
+          // needs to update the variable โ€” no explicit DOM call required. The
+          // Object.defineProperty is configurable so student code that tries to
+          // redefine these with var won't throw (var on an existing configurable
+          // property is silently ignored in sloppy mode).
+          var _carX = 165;
+          var _speed = 0;
+          Object.defineProperty(window, 'carX', {
+            get: function() { return _carX; },
+            set: function(v) {
+              _carX = v;
+              var car = document.getElementById('player-car');
+              if (car) car.style.left = v + 'px';
+            },
+            configurable: true
+          });
+          Object.defineProperty(window, 'speed', {
+            get: function() { return _speed; },
+            set: function(v) {
+              _speed = v;
+              var sv = document.getElementById('speed-val');
+              if (sv) sv.textContent = v;
+            },
+            configurable: true
+          });
           try {
-            ${studentCode}
+            ${cleanedCode}
           } catch (e) {
             parent.postMessage({ __sim: true, type: 'error', text: e.message }, '*');
           }
@@ -1233,10 +1266,10 @@ function buildJsSandboxPreview(studentCode) {
   `;
 }
 
-// L1 Session 4 dedicated execution sandbox (variables & math — no DOM/game elements
+// L1 Session 4 dedicated execution sandbox (variables & math โ€” no DOM/game elements
 // yet; that starts in Session 5's keyboard steering). buildJsSandboxPreview's racing
 // track/car markup would render identically for every S4 exercise regardless of what
-// the student's code does, since none of it touches the DOM — showing that graphic
+// the student's code does, since none of it touches the DOM โ€” showing that graphic
 // here would be pure decoration, not a real "actual output." This sandbox has no
 // visible body at all; the only real output is whatever the code prints via
 // console.log/errors, surfaced through the terminal log panel in the parent UI.
@@ -1370,7 +1403,7 @@ const L2S1_EXERCISES = [
   {
     num: 5,
     title: "Exercise 1.5: [Iterate & Improve] Order Matters",
-    problem: "clearRect is present now, but the ship still leaves a trail — it was added in the wrong place.",
+    problem: "clearRect is present now, but the ship still leaves a trail โ€” it was added in the wrong place.",
     instruction: "Reorder the lines so ctx.clearRect(...) runs BEFORE ctx.fillRect(...), not after.",
     preloaded: 'let shipX = 200;\nfunction draw() {\n  ctx.fillStyle = "red";\n  ctx.fillRect(shipX, 500, 40, 40);\n  ctx.clearRect(0, 0, 480, 600);\n  shipX += 2;\n  requestAnimationFrame(draw);\n}\ndraw();',
     runnable: true,
@@ -1409,14 +1442,14 @@ const L2S1_EXERCISES = [
   {
     num: 8,
     title: "Exercise 1.8: [Review & Explain] Predict the Color",
-    problem: "fillStyle colors whatever gets drawn AFTER it — not before, and not retroactively.",
-    instruction: 'Given: ctx.fillStyle = "blue"; ctx.fillRect(10,10,20,20); ctx.fillStyle = "green"; ctx.fillRect(50,50,20,20); — what color is the FIRST rectangle (at 10,10)?',
+    problem: "fillStyle colors whatever gets drawn AFTER it โ€” not before, and not retroactively.",
+    instruction: 'Given: ctx.fillStyle = "blue"; ctx.fillRect(10,10,20,20); ctx.fillStyle = "green"; ctx.fillRect(50,50,20,20); โ€” what color is the FIRST rectangle (at 10,10)?',
     preloaded: "/* Write the color here */",
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('blue');
     },
-    hint: "blue — fillStyle colors whatever is drawn AFTER it, and the first fillRect ran while fillStyle was still blue."
+    hint: "blue โ€” fillStyle colors whatever is drawn AFTER it, and the first fillRect ran while fillStyle was still blue."
   },
   {
     num: 9,
@@ -1429,7 +1462,7 @@ const L2S1_EXERCISES = [
       const clean = code.replace(/\s+/g, '');
       return clean.includes('fillrect(100,550,30,30)');
     },
-    hint: "ctx.fillRect(100, 550, 30, 30); — the order is always (x, y, width, height)."
+    hint: "ctx.fillRect(100, 550, 30, 30); โ€” the order is always (x, y, width, height)."
   },
   {
     num: 10,
@@ -1478,7 +1511,7 @@ const L2S2_EXERCISES = [
     num: 3,
     title: "Exercise 2.3: [Review & Explain] Predict the Mutation",
     problem: "Object properties can be read and reassigned with dot notation.",
-    instruction: "Given let ship = { x: 220, speed: 5 }; ship.x -= ship.speed; — what is ship.x now?",
+    instruction: "Given let ship = { x: 220, speed: 5 }; ship.x -= ship.speed; โ€” what is ship.x now?",
     preloaded: "/* Write the resulting value here */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '');
@@ -1489,7 +1522,7 @@ const L2S2_EXERCISES = [
   {
     num: 4,
     title: "Exercise 2.4: [Test & Break] The Broken Literal",
-    problem: "Bug: this object literal has syntax errors — a missing colon and a missing comma.",
+    problem: "Bug: this object literal has syntax errors โ€” a missing colon and a missing comma.",
     instruction: "Fix the object literal so `ship` is declared correctly with x=220, y=500, width=40, height=40, speed=5.",
     preloaded: 'let ship = { x 220, y: 500, width: 40 height: 40, speed: 5 };',
     runnable: true,
@@ -1551,7 +1584,7 @@ const L2S2_EXERCISES = [
       const explains = clean.includes('shadow') || clean.includes('local') || clean.includes('copy');
       return saysNo && explains;
     },
-    hint: "No — a new local ship variable 'shadows' the global one; the handler mutates the local copy, and the canvas keeps drawing from the untouched global ship."
+    hint: "No โ€” a new local ship variable 'shadows' the global one; the handler mutates the local copy, and the canvas keeps drawing from the untouched global ship."
   },
   {
     num: 9,
@@ -1565,13 +1598,13 @@ const L2S2_EXERCISES = [
       const letShipCount = (clean.match(/letship=/g) || []).length;
       return letShipCount === 1 && clean.includes('ship.x-=ship.speed');
     },
-    hint: 'Delete the `let ship = {...};` line inside the event listener — just keep `if (event.key === "ArrowLeft") { ship.x -= ship.speed; }`.'
+    hint: 'Delete the `let ship = {...};` line inside the event listener โ€” just keep `if (event.key === "ArrowLeft") { ship.x -= ship.speed; }`.'
   },
   {
     num: 10,
     title: "Exercise 2.10: [Iterate & Improve] Two-Directional Movement",
-    problem: "The ship can only move one direction so far — complete the control scheme.",
-    instruction: "Add an else-if branch for ArrowRight that adds ship.speed to ship.x, then clears and redraws — completing two-directional movement.",
+    problem: "The ship can only move one direction so far โ€” complete the control scheme.",
+    instruction: "Add an else-if branch for ArrowRight that adds ship.speed to ship.x, then clears and redraws โ€” completing two-directional movement.",
     preloaded: 'let ship = { x: 220, y: 500, width: 40, height: 40, speed: 5 };\nwindow.addEventListener("keydown", function(event) {\n  if (event.key === "ArrowLeft") {\n    ship.x -= ship.speed;\n    ctx.clearRect(0, 0, 480, 600);\n    ctx.fillRect(ship.x, ship.y, ship.width, ship.height);\n  }\n});',
     runnable: true,
     validate: (code) => {
@@ -1618,7 +1651,7 @@ const L2S3_EXERCISES = [
       const clean = code.replace(/\s+/g, '');
       return clean.includes('3');
     },
-    hint: "3 — push() adds one element to the end of the array per call."
+    hint: "3 โ€” push() adds one element to the end of the array per call."
   },
   {
     num: 4,
@@ -1637,7 +1670,7 @@ const L2S3_EXERCISES = [
     num: 5,
     title: "Exercise 3.5: [Iterate & Improve] Fire on Spacebar",
     problem: "fireLaser() exists, but nothing calls it yet.",
-    instruction: 'Add a keydown listener that calls fireLaser() when event.key is the spacebar — a single space character (" "), not the word "Space".',
+    instruction: 'Add a keydown listener that calls fireLaser() when event.key is the spacebar โ€” a single space character (" "), not the word "Space".',
     preloaded: "/* Write the keydown listener here */",
     runnable: true,
     validate: (code) => {
@@ -1656,7 +1689,7 @@ const L2S3_EXERCISES = [
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('lasers.length');
     },
-    hint: "lasers.length — loop from i = 0 while i < lasers.length."
+    hint: "lasers.length โ€” loop from i = 0 while i < lasers.length."
   },
   {
     num: 7,
@@ -1682,7 +1715,7 @@ const L2S3_EXERCISES = [
       const mentionsNever = clean.includes('not') || clean.includes('never') || clean.includes("won't") || clean.includes('wont');
       return mentionsFour && mentionsNever;
     },
-    hint: "The 4th laser would never be drawn — the loop stops checking after index 2 regardless of how many lasers actually exist."
+    hint: "The 4th laser would never be drawn โ€” the loop stops checking after index 2 regardless of how many lasers actually exist."
   },
   {
     num: 9,
@@ -1723,7 +1756,7 @@ const L2S4_EXERCISES = [
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('y<0') || (clean.includes('y') && clean.includes('<') && clean.includes('0'));
     },
-    hint: "y < 0 — once a laser's y coordinate goes above the top edge, it's off-screen."
+    hint: "y < 0 โ€” once a laser's y coordinate goes above the top edge, it's off-screen."
   },
   {
     num: 2,
@@ -1740,14 +1773,14 @@ const L2S4_EXERCISES = [
   {
     num: 3,
     title: "Exercise 4.3: [Review & Explain] The Index Shift",
-    problem: "Removing an element from an array shifts every following element down by one index — mid-loop, that's a trap.",
+    problem: "Removing an element from an array shifts every following element down by one index โ€” mid-loop, that's a trap.",
     instruction: "After index 0 is spliced out of an array during a FORWARD loop, every following element shifts down by one index. Does the loop's next iteration (i=1) end up SKIPPING an element, or checking one TWICE? Answer with one word.",
     preloaded: "/* Write your answer here */",
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('skip');
     },
-    hint: "It skips one — the element that shifted into the just-checked index is never itself checked, because i has already moved past it."
+    hint: "It skips one โ€” the element that shifted into the just-checked index is never itself checked, because i has already moved past it."
   },
   {
     num: 4,
@@ -1786,7 +1819,7 @@ const L2S4_EXERCISES = [
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('lasers.length') || clean.includes('console.log');
     },
-    hint: "console.log(lasers.length) — watch it climb without ever shrinking back down."
+    hint: "console.log(lasers.length) โ€” watch it climb without ever shrinking back down."
   },
   {
     num: 7,
@@ -1803,14 +1836,14 @@ const L2S4_EXERCISES = [
   {
     num: 8,
     title: "Exercise 4.8: [Review & Explain] The Growing Cost",
-    problem: "An unbounded array doesn't just waste memory — it wastes CPU time too, every single frame.",
+    problem: "An unbounded array doesn't just waste memory โ€” it wastes CPU time too, every single frame.",
     instruction: "If lasers are never spliced out, does the per-frame cost of the update loop stay constant, or grow over time? Answer with one word, then say why.",
     preloaded: "/* Write your answer here */",
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('grow') || clean.includes('increase');
     },
-    hint: "It grows — the loop's cost scales with the array's length, and an unpruned array only ever gets longer."
+    hint: "It grows โ€” the loop's cost scales with the array's length, and an unpruned array only ever gets longer."
   },
   {
     num: 9,
@@ -1829,7 +1862,7 @@ const L2S4_EXERCISES = [
     num: 10,
     title: "Exercise 4.10: [Iterate & Improve] Firing + Cleanup Together",
     problem: "The final assembly: everything from Session 3 and Session 4, working together.",
-    instruction: "Combine everything: the lasers array, fireLaser() on spacebar, and updateLasers() that moves and prunes off-screen lasers using a reverse loop — the complete Session 3+4 pipeline.",
+    instruction: "Combine everything: the lasers array, fireLaser() on spacebar, and updateLasers() that moves and prunes off-screen lasers using a reverse loop โ€” the complete Session 3+4 pipeline.",
     preloaded: "/* Write the complete script here */",
     runnable: true,
     validate: (code) => {
@@ -1852,7 +1885,7 @@ const L2S5_EXERCISES = [
       const clean = code.toLowerCase().replace(/\s+/g, '');
       return (clean.includes('nested') || clean.includes('array')) && clean.includes('x') && clean.includes('y') && clean.includes('alive');
     },
-    hint: "A nested array — an array of row-arrays; each alien needs x, y, and alive."
+    hint: "A nested array โ€” an array of row-arrays; each alien needs x, y, and alive."
   },
   {
     num: 2,
@@ -1881,7 +1914,7 @@ const L2S5_EXERCISES = [
   {
     num: 4,
     title: "Exercise 5.4: [Test & Break] The Frozen Rows",
-    problem: "Bug: this marching function only moves the aliens in row 0 — every other row never moves.",
+    problem: "Bug: this marching function only moves the aliens in row 0 โ€” every other row never moves.",
     instruction: "Fix moveRow() so it loops over EVERY row AND every column, not just column 0 of a single row.",
     preloaded: 'function moveRow() {\n  for (let c = 0; c < aliens[0].length; c++) {\n    aliens[0][c].x += 2 * direction;\n  }\n}',
     runnable: true,
@@ -1939,7 +1972,7 @@ const L2S5_EXERCISES = [
       const clean = code.replace(/[^0-9]/g, '');
       return clean === '2';
     },
-    hint: "(145 - 100) / 20 = 2.25 → Math.floor gives 2."
+    hint: "(145 - 100) / 20 = 2.25 โ’ Math.floor gives 2."
   },
   {
     num: 9,
@@ -2004,7 +2037,7 @@ const L2S6_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('stuck') || clean.includes('stay');
     },
-    hint: "It stays stuck at true — nothing ever sets it back to false without a keyup listener."
+    hint: "It stays stuck at true โ€” nothing ever sets it back to false without a keyup listener."
   },
   {
     num: 4,
@@ -2068,7 +2101,7 @@ const L2S6_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('yes');
     },
-    hint: "Yes — without the break, the loop keeps checking (and potentially matching) further aliens after the first hit is already resolved."
+    hint: "Yes โ€” without the break, the loop keeps checking (and potentially matching) further aliens after the first hit is already resolved."
   },
   {
     num: 9,
@@ -2088,7 +2121,7 @@ const L2S6_EXERCISES = [
   {
     num: 10,
     title: "Exercise 6.10: [Iterate & Improve] Input + Collision Together",
-    problem: "Bring the full input matrix and collision sweep together — the complete Session 6 pipeline.",
+    problem: "Bring the full input matrix and collision sweep together โ€” the complete Session 6 pipeline.",
     instruction: "Combine handleInputs() (ArrowLeft/ArrowRight/space) with checkSwarmCollisions() (reverse laser loop, nested alien loop, alive/splice/score/break) into one script.",
     preloaded: "/* Write the complete script here */",
     runnable: true,
@@ -2137,7 +2170,7 @@ const L2S7_EXERCISES = [
       const clean = code.replace(/[^0-9]/g, '');
       return clean === '60';
     },
-    hint: "The width equals health directly — fillRect(10, 45, health, 10), so 60."
+    hint: "The width equals health directly โ€” fillRect(10, 45, health, 10), so 60."
   },
   {
     num: 4,
@@ -2169,7 +2202,7 @@ const L2S7_EXERCISES = [
     num: 6,
     title: "Exercise 7.6: [Plan & Design] The Wave-Clear Condition",
     problem: "Before writing the wave check, plan its trigger condition.",
-    instruction: "Plan checkWaveCompletion(): what exact count of alive aliens should trigger the next wave — and what TWO things should happen when it does?",
+    instruction: "Plan checkWaveCompletion(): what exact count of alive aliens should trigger the next wave โ€” and what TWO things should happen when it does?",
     preloaded: "/* Write your plan here */",
     validate: (code) => {
       const clean = code.toLowerCase();
@@ -2266,7 +2299,7 @@ const L2S8_EXERCISES = [
       const clean = code.replace(/\s+/g, '');
       return clean.includes('/scores');
     },
-    hint: "/scores — everything after the host and before the ?."
+    hint: "/scores โ€” everything after the host and before the ?."
   },
   {
     num: 4,
@@ -2278,7 +2311,7 @@ const L2S8_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('not broken') || clean.includes('connected') || clean.includes('successfully') || clean.includes('answered');
     },
-    hint: "The connection worked fine — the server successfully answered 'no, that path doesn't exist' (404), which is different from a dropped/offline connection."
+    hint: "The connection worked fine โ€” the server successfully answered 'no, that path doesn't exist' (404), which is different from a dropped/offline connection."
   },
   {
     num: 5,
@@ -2326,7 +2359,7 @@ const L2S8_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('refuse') || clean.includes('understood') || clean.includes('authoriz') || clean.includes('permission');
     },
-    hint: "403 means the server understood the request but refuses it (authorization) — 404 means the path doesn't exist at all."
+    hint: "403 means the server understood the request but refuses it (authorization) โ€” 404 means the path doesn't exist at all."
   },
   {
     num: 9,
@@ -2343,7 +2376,7 @@ const L2S8_EXERCISES = [
   {
     num: 10,
     title: "Exercise 8.10: [Iterate & Improve] Document a Real Request",
-    problem: "Bring the whole Session 8 workflow together — this is your homework quest.",
+    problem: "Bring the whole Session 8 workflow together โ€” this is your homework quest.",
     instruction: "Document one real captured request from the Network tab: its URL, its method, its status code, and a sketch of its response payload's shape (array or object, and what fields it has).",
     preloaded: "/* Document your captured request here */",
     validate: (code) => {
@@ -2359,7 +2392,7 @@ const L2S9_EXERCISES = [
     num: 1,
     title: "Exercise 9.1: [Plan & Design] The Two-Step Fetch",
     problem: "Before writing any fetch code, plan the two-step sequence needed to turn a network response into usable data.",
-    instruction: "Plan fetchLeaderboard(): what TWO things must you await in sequence — first to get the response, then to get the actual data out of it?",
+    instruction: "Plan fetchLeaderboard(): what TWO things must you await in sequence โ€” first to get the response, then to get the actual data out of it?",
     preloaded: "/* Write your plan here */",
     validate: (code) => {
       const clean = code.toLowerCase();
@@ -2383,13 +2416,13 @@ const L2S9_EXERCISES = [
     num: 3,
     title: "Exercise 9.3: [Review & Explain] The Missing Await",
     problem: `let res = fetch("https://api.marsdefense.dev/scores"); (missing await)`,
-    instruction: "Without the await keyword before fetch(...), what does res actually hold — the response data, or a pending Promise?",
+    instruction: "Without the await keyword before fetch(...), what does res actually hold โ€” the response data, or a pending Promise?",
     preloaded: "/* Write your answer here */",
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('promise');
     },
-    hint: "res holds a pending Promise — await is what tells JS to pause and unwrap the actual response."
+    hint: "res holds a pending Promise โ€” await is what tells JS to pause and unwrap the actual response."
   },
   {
     num: 4,
@@ -2451,12 +2484,12 @@ const L2S9_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('uncaught') || clean.includes('crash');
     },
-    hint: "It would crash uncaught — only code physically inside the try block is protected by that catch."
+    hint: "It would crash uncaught โ€” only code physically inside the try block is protected by that catch."
   },
   {
     num: 9,
     title: "Exercise 9.9: [Test & Break] The Half-Protected Parse",
-    problem: "Bug: the try block only wraps the fetch() call — the .json() parse happens outside try, unprotected.",
+    problem: "Bug: the try block only wraps the fetch() call โ€” the .json() parse happens outside try, unprotected.",
     instruction: "Fix fetchLeaderboard() so BOTH await calls (fetch and res.json()) are inside the same try block.",
     preloaded: 'async function fetchLeaderboard() {\n  try {\n    var res = await fetch("https://api.marsdefense.dev/scores");\n  } catch (err) {\n    console.error("Fetch failed", err);\n  }\n  let data = await res.json();\n  console.log(data);\n}',
     runnable: true,
@@ -2494,7 +2527,7 @@ const L2S10_EXERCISES = [
     num: 1,
     title: "Exercise 10.1: [Plan & Design] The POST Options Object",
     problem: "Before sending any data to the server, plan the shape of a POST request.",
-    instruction: "Plan the fetch() options object for a POST request: what THREE keys does it need — one for the HTTP method, one for headers, and one for the payload?",
+    instruction: "Plan the fetch() options object for a POST request: what THREE keys does it need โ€” one for the HTTP method, one for headers, and one for the payload?",
     preloaded: "/* Write your plan here */",
     validate: (code) => {
       const clean = code.toLowerCase();
@@ -2518,13 +2551,13 @@ const L2S10_EXERCISES = [
     num: 3,
     title: "Exercise 10.3: [Review & Explain] The Raw Object Body",
     problem: "body: { player: player, score: val }",
-    instruction: "Why is this wrong — what function must wrap this object before it can be sent as a fetch body? Type the function name.",
+    instruction: "Why is this wrong โ€” what function must wrap this object before it can be sent as a fetch body? Type the function name.",
     preloaded: "/* Write the function name here */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('json.stringify');
     },
-    hint: "JSON.stringify() — fetch bodies must be strings, not raw JS objects."
+    hint: "JSON.stringify() โ€” fetch bodies must be strings, not raw JS objects."
   },
   {
     num: 4,
@@ -2562,7 +2595,7 @@ const L2S10_EXERCISES = [
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('res.ok') || clean.includes('.ok');
     },
-    hint: "res.ok — true only for 2xx status responses."
+    hint: "res.ok โ€” true only for 2xx status responses."
   },
   {
     num: 7,
@@ -2586,7 +2619,7 @@ const L2S10_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('no');
     },
-    hint: "No — fetch() resolves normally even for 404/500 responses; you must check res.ok yourself to catch HTTP-level failures."
+    hint: "No โ€” fetch() resolves normally even for 404/500 responses; you must check res.ok yourself to catch HTTP-level failures."
   },
   {
     num: 9,
@@ -2651,7 +2684,7 @@ const L2S11_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('unique');
     },
-    hint: "Uniqueness — no two rows can ever share the same primary key value."
+    hint: "Uniqueness โ€” no two rows can ever share the same primary key value."
   },
   {
     num: 4,
@@ -2711,13 +2744,13 @@ const L2S11_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('every') || clean.includes('all');
     },
-    hint: "Every row — with no WHERE clause, the UPDATE applies to the entire table."
+    hint: "Every row โ€” with no WHERE clause, the UPDATE applies to the entire table."
   },
   {
     num: 9,
     title: "Exercise 11.9: [Test & Break] The Backwards Comparison",
-    problem: "Bug: this query returns LOW scorers instead of high scorers — the comparison is backwards.",
-    instruction: "Fix the WHERE condition — it should return colonists scoring ABOVE 4000, not below.",
+    problem: "Bug: this query returns LOW scorers instead of high scorers โ€” the comparison is backwards.",
+    instruction: "Fix the WHERE condition โ€” it should return colonists scoring ABOVE 4000, not below.",
     preloaded: 'SELECT player, score FROM colonist_scores\nWHERE score < 4000\nORDER BY score DESC;',
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
@@ -2744,13 +2777,13 @@ const L2S12_EXERCISES = [
     num: 1,
     title: "Exercise 12.1: [Plan & Design] Why Concatenation Is Dangerous",
     problem: `let query = "SELECT * FROM users WHERE name = '" + userInput + "'";`,
-    instruction: "Plan why this is dangerous — besides a normal name, what could userInput contain that changes the query's MEANING?",
+    instruction: "Plan why this is dangerous โ€” besides a normal name, what could userInput contain that changes the query's MEANING?",
     preloaded: "/* Write your plan here */",
     validate: (code) => {
       const clean = code.toLowerCase();
       return clean.includes('sql') || clean.includes('quote') || clean.includes("'") || clean.includes('inject');
     },
-    hint: "It could contain SQL syntax itself (quotes, OR conditions) — turning data into code."
+    hint: "It could contain SQL syntax itself (quotes, OR conditions) โ€” turning data into code."
   },
   {
     num: 2,
@@ -2774,7 +2807,7 @@ const L2S12_EXERCISES = [
       const clean = code.replace(/\s+/g, '').toLowerCase();
       return clean.includes('alwaystrue');
     },
-    hint: "Always true — '1'='1' is always true, so every row matches and the whole table is returned."
+    hint: "Always true โ€” '1'='1' is always true, so every row matches and the whole table is returned."
   },
   {
     num: 4,
@@ -2834,13 +2867,13 @@ const L2S12_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('hash');
     },
-    hint: "A hash — a one-way scrambled version, so a leak of the database doesn't directly reveal passwords."
+    hint: "A hash โ€” a one-way scrambled version, so a leak of the database doesn't directly reveal passwords."
   },
   {
     num: 9,
     title: "Exercise 12.9: [Test & Break] The Negative Supply Heist",
     problem: "Bug: this validation rule accepts a purchase quantity of -5, which the server treats as adding stock and refunding credits.",
-    instruction: "Fix isValidQuantity() so it also rejects zero or negative quantities — only positive numbers should pass.",
+    instruction: "Fix isValidQuantity() so it also rejects zero or negative quantities โ€” only positive numbers should pass.",
     preloaded: "function isValidQuantity(q) {\n  return typeof q === 'number';\n}",
     runnable: true,
     validate: (code) => {
@@ -2868,7 +2901,7 @@ const L2S13_EXERCISES = [
     num: 1,
     title: "Exercise 13.1: [Plan & Design] Canvas Fundamentals Recall",
     problem: "Warm up by recalling the canvas basics from Session 1.",
-    instruction: "Name the TWO things every canvas script must do before drawing works — one to access the drawing surface, one to run every frame before redrawing.",
+    instruction: "Name the TWO things every canvas script must do before drawing works โ€” one to access the drawing surface, one to run every frame before redrawing.",
     preloaded: "/* Write your answer here */",
     validate: (code) => {
       const clean = code.toLowerCase();
@@ -2917,7 +2950,7 @@ const L2S13_EXERCISES = [
     num: 5,
     title: "Exercise 13.5: [Iterate & Improve] Async Synthesis",
     problem: "Synthesis: combine everything from Sessions 9-10.",
-    instruction: "Write a complete async fetchLeaderboard() combining everything from Sessions 9-10 — async keyword, both awaits inside a try block, console.log(data) on success, and a catch block logging a friendly error.",
+    instruction: "Write a complete async fetchLeaderboard() combining everything from Sessions 9-10 โ€” async keyword, both awaits inside a try block, console.log(data) on success, and a catch block logging a friendly error.",
     preloaded: "/* Write the complete function here */",
     runnable: true,
     validate: (code) => {
@@ -2940,7 +2973,7 @@ const L2S13_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('keyup') && (clean.includes('stuck') || clean.includes('release') || clean.includes('stop'));
     },
-    hint: "Without keyup, a key's state never resets to false when released — movement or firing would get stuck on."
+    hint: "Without keyup, a key's state never resets to false when released โ€” movement or firing would get stuck on."
   },
   {
     num: 7,
@@ -2964,7 +2997,7 @@ const L2S13_EXERCISES = [
       const clean = code.toLowerCase();
       return clean.includes('injection');
     },
-    hint: "SQL injection — concatenating raw user input into a query string lets input data change the query's meaning."
+    hint: "SQL injection โ€” concatenating raw user input into a query string lets input data change the query's meaning."
   },
   {
     num: 9,
@@ -2982,7 +3015,7 @@ const L2S13_EXERCISES = [
     num: 10,
     title: "Exercise 13.10: [Iterate & Improve] Final Synthesis",
     problem: "Final synthesis: bring the database module's lesson full circle.",
-    instruction: "Write the complete, correctly-targeted UPDATE statement for colonist_scores — set score to 4500 for the single row where id = 1, avoiding the 'update the whole table' mistake from Session 11.",
+    instruction: "Write the complete, correctly-targeted UPDATE statement for colonist_scores โ€” set score to 4500 for the single row where id = 1, avoiding the 'update the whole table' mistake from Session 11.",
     preloaded: "/* Write the complete UPDATE statement here */",
     validate: (code) => {
       const clean = code.replace(/\s+/g, '').toLowerCase();
@@ -2996,17 +3029,17 @@ const S5_EXERCISES = [
   {
     num: 1,
     title: "Exercise 5.1: Reading the Key Pressed",
-    problem: "Every keypress in the browser fires a 'keydown' event, and the event object handed to your code carries the exact key name on its .key property. This sandbox already tracks the car's horizontal position in a variable called carX, and its on-screen element has id player-car — but right now, nothing listens for keyboard input at all. The real game only ever steers with the LEFT and RIGHT arrow keys (test your code by pressing those two in the preview below) — for THIS exercise, those two are enough (later exercises will have you practice extending detection to more keys). This sandbox has no extra text display of its own — the only way to actually 'see' something is the console log panel underneath the preview.",
-    instruction: "Goal: make your code detect exactly which key the player pressed, and prove it works (show the key name somewhere you can actually see it, e.g. the console log panel below) when you press the left or right arrow key. 1) Plan: in your own words, what does your code need to listen for, and where would the key's name actually show up once you catch it? 2) Prompt: write your own prompt describing that goal to the AI — you decide the wording. 3) Explain: once you have working code, point to the exact piece that tells you which key was pressed, and how.",
+    problem: "Every keypress in the browser fires a 'keydown' event, and the event object handed to your code carries the exact key name on its .key property. This sandbox already tracks the car's horizontal position in a variable called carX, and its on-screen element has id player-car โ€” but right now, nothing listens for keyboard input at all. The real game only ever steers with the LEFT and RIGHT arrow keys (test your code by pressing those two in the preview below) โ€” for THIS exercise, those two are enough (later exercises will have you practice extending detection to more keys). This sandbox has no extra text display of its own โ€” the only way to actually 'see' something is the console log panel underneath the preview.",
+    instruction: "Goal: make your code detect exactly which key the player pressed, and prove it works (show the key name somewhere you can actually see it, e.g. the console log panel below) when you press the left or right arrow key. 1) Plan: in your own words, what does your code need to listen for, and where would the key's name actually show up once you catch it? 2) Prompt: write your own prompt describing that goal to the AI โ€” you decide the wording. 3) Explain: once you have working code, point to the exact piece that tells you which key was pressed, and how.",
     planPlaceholder: "What does your code need to listen for, and where will the key's name end up once you catch it? Work it through in your own words.",
-    promptPlaceholder: "Write your own prompt for the goal above — describe what you want to happen, in your own words.",
+    promptPlaceholder: "Write your own prompt for the goal above โ€” describe what you want to happen, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true
   },
   {
     num: 2,
     title: "Exercise 5.2: Detecting All Four Directions",
-    problem: "Your code from Exercise 5.1 detects ArrowLeft and ArrowRight. This drill extends that same detection to ArrowUp and ArrowDown too — even though the real game only steers left/right, this is practice recognizing more keys correctly.",
+    problem: "Your code from Exercise 5.1 detects ArrowLeft and ArrowRight. This drill extends that same detection to ArrowUp and ArrowDown too โ€” even though the real game only steers left/right, this is practice recognizing more keys correctly.",
     instruction: "Goal: extend your key detection so it also recognizes ArrowUp and ArrowDown, proving each of the four arrow keys is correctly identified. 1) Plan: in your own words, what needs to change or be added to your existing code to recognize two more keys? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: press all four arrow keys in the preview and describe what gets logged for each one.",
     planPlaceholder: "What needs to change or be added to your existing code to recognize two more keys?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
@@ -3026,16 +3059,16 @@ const S5_EXERCISES = [
   {
     num: 4,
     title: "Exercise 5.4: Pause with Spacebar",
-    problem: "This sandbox already has a hidden overlay element (id restart-panel) built for showing a message over the track — right now it's hidden and its text says 'GAME OVER, Press Space to Restart.' It's hidden by being given a CSS class called 'hidden' (not by an inline style) — setting the element's own display style directly won't override that class, so the reveal has to defeat the class itself.",
-    instruction: "Goal: make pressing the Spacebar reveal that overlay showing a 'Paused' message instead. 1) Plan: in your own words, what needs to change about that element when Space is pressed — its visibility, its text, or both? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: press Space in the preview and describe what appears.",
-    planPlaceholder: "What needs to change about the overlay element when Space is pressed — visibility, text, or both?",
+    problem: "This sandbox already has a hidden overlay element (id restart-panel) built for showing a message over the track โ€” right now it's hidden and its text says 'GAME OVER, Press Space to Restart.' It's hidden by being given a CSS class called 'hidden' (not by an inline style) โ€” setting the element's own display style directly won't override that class, so the reveal has to defeat the class itself.",
+    instruction: "Goal: make pressing the Spacebar reveal that overlay showing a 'Paused' message instead. 1) Plan: in your own words, what needs to change about that element when Space is pressed โ€” its visibility, its text, or both? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: press Space in the preview and describe what appears.",
+    planPlaceholder: "What needs to change about the overlay element when Space is pressed โ€” visibility, text, or both?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true
   }
   // Note (2026-07-30): a 5th "combine everything into one complete handler" capstone
   // exercise used to live here, but it was functionally a duplicate of this session's
-  // Project Task (Lab 5), which now IS the single "combine it for real" moment — done
+  // Project Task (Lab 5), which now IS the single "combine it for real" moment โ€” done
   // on the student's actual accumulated game.js, AI-graded with reuse checking, instead
   // of rehearsed twice on two different files. See improve_concept.md Part II.
 ];
@@ -3045,59 +3078,59 @@ const S6_EXERCISES = [
     num: 1,
     title: "Exercise 6.1: Track Boundary Coordinates & the Left Guard",
     problem: "The three lane positions are 35px, 165px, and 295px (car starts centered at 165). Right now nothing stops the car from steering past the left edge of the track.",
-    instruction: "Goal: stop the car from steering past the left edge. 1) Plan: in your own words, what needs to be true about carX before you allow it to move further left? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: once it works, explain what happens if the car is already at the edge and ArrowLeft is pressed again — and why a looser comparison like carX >= -130 would fail to protect that same edge.",
+    instruction: "Goal: stop the car from steering past the left edge. 1) Plan: in your own words, what needs to be true about carX before you allow it to move further left? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: once it works, explain what happens if the car is already at the edge and ArrowLeft is pressed again โ€” and why a looser comparison like carX >= -130 would fail to protect that same edge.",
     planPlaceholder: "In your own words, what needs to be true about carX before allowing it to move further left?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The left boundary is 35 (leftmost lane). A guard should only allow carX -= 130 while carX > 35, blocking further movement once the car reaches the edge. Explanation should say the movement is blocked / nothing happens once carX is already at 35, AND should recognize that a looser comparison like carX >= -130 would let the car travel deep into negative/off-screen territory before ever blocking it. Don't require the literal numbers 35/130/-130 or the word 'guard' in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The left boundary is 35 (leftmost lane). A guard should only allow carX -= 130 while carX > 35, blocking further movement once the car reaches the edge. Explanation should say the movement is blocked / nothing happens once carX is already at 35, AND should recognize that a looser comparison like carX >= -130 would let the car travel deep into negative/off-screen territory before ever blocking it. Don't require the literal numbers 35/130/-130 or the word 'guard' in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 6.2: The Right Guard",
     problem: "The right edge of the track is at carX = 295. Right now ArrowRight can push the car past it with nothing to stop it.",
     instruction: "Goal: stop the car from steering past the right edge, mirroring how the left edge is already protected. 1) Plan: in your own words, how should the right guard compare to the left guard you already built in 6.1? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: why does this guard mirror the left one instead of needing entirely different logic?",
-    planPlaceholder: "How should the right guard compare to the left guard you already built — same idea, opposite direction?",
+    planPlaceholder: "How should the right guard compare to the left guard you already built โ€” same idea, opposite direction?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The right guard should only allow carX += 130 while carX < 295 (mirroring the left guard's carX > 35 structure, opposite direction/boundary). Explanation should identify the structural symmetry with the left guard from 6.1. Don't require the literal numbers 295/130 or the word 'mirror' in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The right guard should only allow carX += 130 while carX < 295 (mirroring the left guard's carX > 35 structure, opposite direction/boundary). Explanation should identify the structural symmetry with the left guard from 6.1. Don't require the literal numbers 295/130 or the word 'mirror' in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 6.3: Accelerate & Decelerate (the Speed Range Guard)",
-    problem: `Holding ArrowUp should speed the car up — increasing speed, showing the live number in the HUD (#speed-val), and advancing roadOffset so the track's striped background scrolls, making it look like the car is driving forward. Holding ArrowDown should slow it back down the same way. But speed must stay inside its range: it can't climb past 120 (reset to 100 if it does — watch out, resetting to the String "100" would re-introduce the Session 4 string-concatenation bug), and it can't drop below 0 either.`,
-    instruction: "Goal: make ArrowUp increase speed and ArrowDown decrease it, with speed always staying between 0 and 120. 1) Plan: in your own words, what needs to be true about speed before you allow it to increase further? What needs to be true before you allow it to decrease further? 2) Prompt: describe both rules to the AI, in your own words — including the type concern. This snippet is tested on its own, so have it declare roadOffset itself and call both the accelerate and decelerate handlers a few times so you can see #speed-val and both guards actually work. 3) Explain: why is guarding the bottom of speed's range (0) just as necessary as guarding the top (120)?",
+    problem: `Holding ArrowUp should speed the car up โ€” increasing speed, showing the live number in the HUD (#speed-val), and advancing roadOffset so the track's striped background scrolls, making it look like the car is driving forward. Holding ArrowDown should slow it back down the same way. But speed must stay inside its range: it can't climb past 120 (reset to 100 if it does โ€” watch out, resetting to the String "100" would re-introduce the Session 4 string-concatenation bug), and it can't drop below 0 either.`,
+    instruction: "Goal: make ArrowUp increase speed and ArrowDown decrease it, with speed always staying between 0 and 120. 1) Plan: in your own words, what needs to be true about speed before you allow it to increase further? What needs to be true before you allow it to decrease further? 2) Prompt: describe both rules to the AI, in your own words โ€” including the type concern. This snippet is tested on its own, so have it declare roadOffset itself and call both the accelerate and decelerate handlers a few times so you can see #speed-val and both guards actually work. 3) Explain: why is guarding the bottom of speed's range (0) just as necessary as guarding the top (120)?",
     planPlaceholder: "What needs to be true about speed before allowing it to increase further? Before allowing it to decrease further?",
-    promptPlaceholder: "Describe both the acceleration and deceleration rules to the AI, in your own words — including the type concern.",
+    promptPlaceholder: "Describe both the acceleration and deceleration rules to the AI, in your own words โ€” including the type concern.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "ArrowUp should increase speed (e.g. speed += 10) capped so it never exceeds 120 (resetting to the Number 100, not a string, if it would). ArrowDown should decrease speed (e.g. speed -= 10) floored so it never goes below 0. #speed-val's textContent should update, and roadOffset (declared by the snippet itself, since this box is tested standalone) should advance when accelerating, driving #game-track's style.backgroundPositionY. Explanation should recognize the 0 floor is exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range. Don't require the literal numbers 120/100/10/0 in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "ArrowUp should increase speed (e.g. speed += 10) capped so it never exceeds 120 (resetting to the Number 100, not a string, if it would). ArrowDown should decrease speed (e.g. speed -= 10) floored so it never goes below 0. #speed-val's textContent should update, and roadOffset (declared by the snippet itself, since this box is tested standalone) should advance when accelerating, driving #game-track's style.backgroundPositionY. Explanation should recognize the 0 floor is exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range. Don't require the literal numbers 120/100/10/0 in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 6.4: The Reverse Handoff (Bottom Boundary)",
-    problem: "Once speed has been braked all the way down to 0 (from 6.3), holding ArrowDown shouldn't just do nothing — it should start moving the car backward instead, decreasing roadOffset. But roadOffset (how far along the road the car has driven) must never go below 0 either — reversing past where the road even starts.",
-    instruction: "Goal: once speed is already 0, make ArrowDown reverse the car instead — and stop it at the start of the road. 1) Plan: in your own words, how does ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before you allow it to decrease further? 2) Prompt: describe that handoff to the AI, in your own words. This snippet is tested on its own, so have it declare both speed (already at 0) and roadOffset itself (start it around 10, low enough that reversing hits the floor quickly), and call the ArrowDown handler enough times to see the floor guard work. 3) Explain: why does it make sense for the SAME key (ArrowDown) to mean two different things depending on whether speed is already 0?",
+    problem: "Once speed has been braked all the way down to 0 (from 6.3), holding ArrowDown shouldn't just do nothing โ€” it should start moving the car backward instead, decreasing roadOffset. But roadOffset (how far along the road the car has driven) must never go below 0 either โ€” reversing past where the road even starts.",
+    instruction: "Goal: once speed is already 0, make ArrowDown reverse the car instead โ€” and stop it at the start of the road. 1) Plan: in your own words, how does ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before you allow it to decrease further? 2) Prompt: describe that handoff to the AI, in your own words. This snippet is tested on its own, so have it declare both speed (already at 0) and roadOffset itself (start it around 10, low enough that reversing hits the floor quickly), and call the ArrowDown handler enough times to see the floor guard work. 3) Explain: why does it make sense for the SAME key (ArrowDown) to mean two different things depending on whether speed is already 0?",
     planPlaceholder: "How should ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before allowing it to decrease further?",
-    promptPlaceholder: "Describe the handoff to the AI, in your own words — braking vs. reversing.",
+    promptPlaceholder: "Describe the handoff to the AI, in your own words โ€” braking vs. reversing.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "When speed > 0, ArrowDown should decrease speed (braking, from 6.3). When speed is already 0, ArrowDown should instead decrease roadOffset (reversing), only while roadOffset > 0 — clamping at 0 so the car can't reverse past the start. Since this snippet is tested standalone, the code should declare both speed (at 0) and roadOffset itself and call the handler enough times to demonstrate the floor. Explanation should correctly identify that ArrowDown's meaning depends on the current speed — braking first, reversing only once already stopped. Don't require the literal numbers 10/0 in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "When speed > 0, ArrowDown should decrease speed (braking, from 6.3). When speed is already 0, ArrowDown should instead decrease roadOffset (reversing), only while roadOffset > 0 โ€” clamping at 0 so the car can't reverse past the start. Since this snippet is tested standalone, the code should declare both speed (at 0) and roadOffset itself and call the handler enough times to demonstrate the floor. Explanation should correctly identify that ArrowDown's meaning depends on the current speed โ€” braking first, reversing only once already stopped. Don't require the literal numbers 10/0 in the plan/prompt prose โ€” judge the reasoning."
   }
   // Note (2026-08-06): 6.1/6.2 (left/right) previously had a separate "Infinite Teleporting
   // Bug" exercise between them that tested the exact same left-boundary comparison a second
-  // time — dropped as redundant; its core insight (a looser comparison fails to protect the
+  // time โ€” dropped as redundant; its core insight (a looser comparison fails to protect the
   // edge) now lives inside 6.1's own Explain question instead of a whole separate exercise.
   // 6.3/6.4 are new and deliberately ordered by dependency, not by the original left/right/
   // bottom/uparrow request order: 6.3 builds the full speed range (ArrowUp accelerates,
   // ArrowDown decelerates, floor+ceiling guards, #speed-val HUD, forward road-scroll via
-  // roadOffset), and 6.4 builds the "reverse once already stopped" handoff on top of it —
+  // roadOffset), and 6.4 builds the "reverse once already stopped" handoff on top of it โ€”
   // that's the actual "bottom boundary" (roadOffset can't go below 0). Doing it the other
   // order would have asked students to guard a reverse mechanic before the speed system it
   // depends on existed. See buildJsSandboxPreview's #game-track striped background-image and
   // #speed-val span for the shared harness pieces both exercises rely on. A 5th "combine
-  // everything" capstone exercise still doesn't live here — dropped as a duplicate of this
+  // everything" capstone exercise still doesn't live here โ€” dropped as a duplicate of this
   // session's Project Task (Lab 6), which owns that final integration step. See
   // improve_concept.md Part II.
 ];
@@ -3107,7 +3140,7 @@ const S7_EXERCISES = [
     num: 1,
     title: "Exercise 7.1: Marker Spacing Plan & the Loop",
     problem: "A loop that repeats a task needs two numbers: how many times to run (5 markers) and the step between each (120px down). Those two values drive the whole loop.",
-    instruction: "1) Plan: plan how many markers and how far apart. 2) Prompt: ask the AI for a 'for' loop that runs 5 times, computing markerY as i * 120 on each pass — paste its real code into Output Code and run it. 3) Explain: name the loop header's three parts (start, test, update).",
+    instruction: "1) Plan: plan how many markers and how far apart. 2) Prompt: ask the AI for a 'for' loop that runs 5 times, computing markerY as i * 120 on each pass โ€” paste its real code into Output Code and run it. 3) Explain: name the loop header's three parts (start, test, update).",
     planPlaceholder: "Plan: how many markers, and how far apart? (hint: 5 markers, 120 apart)",
     promptPlaceholder: "Write the prompt asking for a for loop running 5 times, computing markerY = i * 120 each pass.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
@@ -3129,9 +3162,9 @@ const S7_EXERCISES = [
   },
   {
     num: 2,
-    title: "Exercise 7.2: Browser Freezes — the Missing Increment",
-    problem: `Bug: the loop was written as for (let i = 0; i < 5; ) { let markerY = i * 120; } — no increment, so i stays 0 forever and the browser freezes. This step is deliberately not runnable, so the preview won't hang.`,
-    instruction: "1) Plan: explain why a missing i++ makes this loop run forever instead of 5 times. 2) Prompt: ask the AI to restore the missing increment — paste the fixed code into Output Code (it won't auto-run here). 3) Explain: what does 'the browser freezes' actually mean — why does the whole page lock up?",
+    title: "Exercise 7.2: Browser Freezes โ€” the Missing Increment",
+    problem: `Bug: the loop was written as for (let i = 0; i < 5; ) { let markerY = i * 120; } โ€” no increment, so i stays 0 forever and the browser freezes. This step is deliberately not runnable, so the preview won't hang.`,
+    instruction: "1) Plan: explain why a missing i++ makes this loop run forever instead of 5 times. 2) Prompt: ask the AI to restore the missing increment โ€” paste the fixed code into Output Code (it won't auto-run here). 3) Explain: what does 'the browser freezes' actually mean โ€” why does the whole page lock up?",
     planPlaceholder: "Why does a missing 'i++' make 'i < 5' true forever instead of eventually false?",
     promptPlaceholder: "Write the prompt asking the AI to restore the missing increment in: for (let i = 0; i < 5; ) { ... }",
     outputCodePlaceholder: "Paste the AI's fixed loop header here (e.g. for (let i = 0; i < 5; i++) { ... }).",
@@ -3154,8 +3187,8 @@ const S7_EXERCISES = [
   {
     num: 3,
     title: "Exercise 7.3: Logging Each Marker",
-    problem: "Logging inside the loop prints one line per pass — the fastest way to confirm the loop really runs 5 times and computes 0, 120, 240, 360, 480 as expected.",
-    instruction: `1) Plan: plan what to log for each pass. 2) Prompt: ask the AI to add a console.log inside the loop printing "Highway Marker position: " plus markerY — paste its real code into Output Code and run it. 3) Explain: predict the 5 values that should print.`,
+    problem: "Logging inside the loop prints one line per pass โ€” the fastest way to confirm the loop really runs 5 times and computes 0, 120, 240, 360, 480 as expected.",
+    instruction: `1) Plan: plan what to log for each pass. 2) Prompt: ask the AI to add a console.log inside the loop printing "Highway Marker position: " plus markerY โ€” paste its real code into Output Code and run it. 3) Explain: predict the 5 values that should print.`,
     planPlaceholder: "What should get logged on each pass of the loop?",
     promptPlaceholder: 'Write the prompt asking for a console.log inside the loop: "Highway Marker position: " + markerY.',
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
@@ -3178,8 +3211,8 @@ const S7_EXERCISES = [
   {
     num: 4,
     title: "Exercise 7.4: Rendering the Markers",
-    problem: "Computing markerY is only half the job — each pass must also create a real div, place it at that Y, and attach it to the track so it actually appears on screen.",
-    instruction: "1) Plan: plan how each computed position becomes a visible element (a box, given a class, placed at a position). 2) Prompt: ask the AI to create a div with class 'marker-dash', set its top style to markerY, and append it to '#game-track' inside the loop — paste its real code into Output Code and run it. 3) Explain: why is appendChild needed even after createElement already built the div?",
+    problem: "Computing markerY is only half the job โ€” each pass must also create a real div, place it at that Y, and attach it to the track so it actually appears on screen.",
+    instruction: "1) Plan: plan how each computed position becomes a visible element (a box, given a class, placed at a position). 2) Prompt: ask the AI to create a div with class 'marker-dash', set its top style to markerY, and append it to '#game-track' inside the loop โ€” paste its real code into Output Code and run it. 3) Explain: why is appendChild needed even after createElement already built the div?",
     planPlaceholder: "Plan: for each marker, what element gets created, what class does it get, and where is it placed?",
     promptPlaceholder: "Write the prompt asking to create a 'marker-dash' div, set its top to markerY, and appendChild it to #game-track.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
@@ -3196,14 +3229,14 @@ const S7_EXERCISES = [
     hint: {
       prompt: "Mention 'marker-dash', 'appendChild', and '#game-track'.",
       code: "Needs a marker-dash div appended to #game-track inside the loop.",
-      explain: "Say createElement only builds it in memory — appendChild is what makes it show up."
+      explain: "Say createElement only builds it in memory โ€” appendChild is what makes it show up."
     }
   },
   {
     num: 5,
     title: "Exercise 7.5: The Off-Track Marker Bug & Complete Loop",
     problem: `Bug: a spacing formula was written as markerY = i * 12 (missing a zero), bunching all 5 markers near the top. Combine the fix with everything else this session into one complete marker loop.`,
-    instruction: "1) Plan: explain why i * 12 bunches all the markers near the top instead of spreading them out. 2) Prompt: ask the AI for the COMPLETE loop — 5 iterations, markerY = i * 120 (not i * 12), building and appending a marker-dash div each pass — paste its real code into Output Code and run it. 3) Explain: confirm the 5 final Y values your fixed loop produces.",
+    instruction: "1) Plan: explain why i * 12 bunches all the markers near the top instead of spreading them out. 2) Prompt: ask the AI for the COMPLETE loop โ€” 5 iterations, markerY = i * 120 (not i * 12), building and appending a marker-dash div each pass โ€” paste its real code into Output Code and run it. 3) Explain: confirm the 5 final Y values your fixed loop produces.",
     planPlaceholder: "Why does 'i * 12' (missing a zero) bunch all 5 markers near the top instead of spreading them down the track?",
     promptPlaceholder: "Write the prompt asking for the COMPLETE loop: 5 passes, markerY = i * 120, marker-dash div appended to #game-track each time.",
     outputCodePlaceholder: "Paste the AI's complete, fixed loop code here.",
@@ -3229,154 +3262,154 @@ const S8_EXERCISES = [
   {
     num: 1,
     title: "Exercise 8.1: Decomposing & Requesting the Render Function",
-    problem: "One giant block that does everything is hard to fix; splitting it into named functions — one to render, one to move left, one to move right — gives each piece a single, testable job. This sandbox is DOM-based, not canvas-based — there's no canvas element here. Since this Output Code box runs standalone, also have the AI call the new function once right after defining it, so you can confirm it actually moves the car in the Preview.",
-    instruction: "Goal: split out a single-purpose render function. 1) Plan: name the single-purpose pieces to split the steering script into. 2) Prompt: ask the AI for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px' — paste its real code into Output Code. 3) Explain: how many parameters does updatePlayerPosition() take, and why does it need none?",
+    problem: "One giant block that does everything is hard to fix; splitting it into named functions โ€” one to render, one to move left, one to move right โ€” gives each piece a single, testable job. This sandbox is DOM-based, not canvas-based โ€” there's no canvas element here. Since this Output Code box runs standalone, also have the AI call the new function once right after defining it, so you can confirm it actually moves the car in the Preview.",
+    instruction: "Goal: split out a single-purpose render function. 1) Plan: name the single-purpose pieces to split the steering script into. 2) Prompt: ask the AI for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px' โ€” paste its real code into Output Code. 3) Explain: how many parameters does updatePlayerPosition() take, and why does it need none?",
     planPlaceholder: "Name the pieces to split into: one to update position, one to move left, one to move right.",
-    promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
+    promptPlaceholder: "Write your own prompt for the goal above โ€” describe what you want in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "updatePlayerPosition() should be a function taking 0 parameters, since it just reads the already-shared carX variable and writes it to #player-car's style.left. The explanation should correctly say it needs 0 parameters because carX is accessible without being passed in. Don't require the literal function name or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "updatePlayerPosition() should be a function taking 0 parameters, since it just reads the already-shared carX variable and writes it to #player-car's style.left. The explanation should correctly say it needs 0 parameters because carX is accessible without being passed in. Don't require the literal function name or exact code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 8.2: The Scope Access Violation Bug",
-    problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'. A variable declared inside a function is local — for two functions to share carX, it must be declared once outside both.`,
-    instruction: "Goal: fix the scope bug so both functions can read carX. 1) Plan: explain why declaring carX inside moveLeft() breaks updatePlayerPosition()'s access to it. 2) Prompt: ask the AI to move the carX declaration outside both functions so they can share it — paste the fixed code into Output Code. 3) Explain: what's the difference between a local variable and a shared/outer-scope variable?",
+    problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'. A variable declared inside a function is local โ€” for two functions to share carX, it must be declared once outside both.`,
+    instruction: "Goal: fix the scope bug so both functions can read carX. 1) Plan: explain why declaring carX inside moveLeft() breaks updatePlayerPosition()'s access to it. 2) Prompt: ask the AI to move the carX declaration outside both functions so they can share it โ€” paste the fixed code into Output Code. 3) Explain: what's the difference between a local variable and a shared/outer-scope variable?",
     planPlaceholder: "Why can't updatePlayerPosition() read a carX that was declared inside moveLeft()?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "carX must be declared once, outside both moveLeft() and updatePlayerPosition(), so both functions read/write the same shared variable — a variable declared inside one function is local to that function only. The explanation should correctly contrast local scope (visible only inside its own function) with shared/outer scope. Don't require the literal 'let carX = 165;' or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "carX must be declared once, outside both moveLeft() and updatePlayerPosition(), so both functions read/write the same shared variable โ€” a variable declared inside one function is local to that function only. The explanation should correctly contrast local scope (visible only inside its own function) with shared/outer scope. Don't require the literal 'let carX = 165;' or exact code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 8.3: Wiring moveLeft() to the Handler",
-    problem: "Once moveLeft() owns the boundary-check logic, the handler just calls it by name — same behavior, but the logic lives in one place instead of being copied into the listener. Since this Output Code box is tested on its own (not chained to Exercise 8.2's code), ask for the COMPLETE keydown listener — not just the ArrowLeft line — plus a working moveLeft() definition, so the snippet runs standalone without errors.",
-    instruction: "Goal: wire the ArrowLeft branch to call moveLeft() instead of repeating its logic. 1) Plan: plan replacing the inline ArrowLeft logic with a function call. 2) Prompt: ask the AI to rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() — paste its real code into Output Code. 3) Explain: what's the benefit of calling a named function here instead of repeating the logic inline?",
+    problem: "Once moveLeft() owns the boundary-check logic, the handler just calls it by name โ€” same behavior, but the logic lives in one place instead of being copied into the listener. Since this Output Code box is tested on its own (not chained to Exercise 8.2's code), ask for the COMPLETE keydown listener โ€” not just the ArrowLeft line โ€” plus a working moveLeft() definition, so the snippet runs standalone without errors.",
+    instruction: "Goal: wire the ArrowLeft branch to call moveLeft() instead of repeating its logic. 1) Plan: plan replacing the inline ArrowLeft logic with a function call. 2) Prompt: ask the AI to rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() โ€” paste its real code into Output Code. 3) Explain: what's the benefit of calling a named function here instead of repeating the logic inline?",
     planPlaceholder: "Plan: instead of repeating the boundary-check logic inline, what should the ArrowLeft branch do?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The ArrowLeft branch of the keydown handler should call moveLeft() by name instead of repeating the boundary-check logic inline — same behavior, but the logic now lives in one reusable place. The explanation should identify that a future fix only needs to happen once, not everywhere the logic was duplicated. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The ArrowLeft branch of the keydown handler should call moveLeft() by name instead of repeating the boundary-check logic inline โ€” same behavior, but the logic now lives in one reusable place. The explanation should identify that a future fix only needs to happen once, not everywhere the logic was duplicated. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 8.4: Requesting moveLeft() and moveRight()",
-    problem: "Each function clamps carX to its own boundary, then calls updatePlayerPosition() — reusing the shared renderer instead of each writing its own style.left line. Since updatePlayerPosition() isn't defined in this standalone snippet, also include a working definition of it (matching Exercise 8.1: it sets #player-car style.left to carX + 'px'), and call moveLeft() once so you can see the effect in the Preview.",
-    instruction: "Goal: build the moveRight() mirror function alongside moveLeft(). 1) Plan: plan the moveRight() mirror function for the right lane. 2) Prompt: ask the AI for both moveLeft() and moveRight(), each clamping carX and calling updatePlayerPosition() — paste its real code into Output Code and run it. 3) Explain: if a bug is found in the boundary-clamp logic, how many function bodies need fixing if both call a shared clamp helper?",
+    problem: "Each function clamps carX to its own boundary, then calls updatePlayerPosition() โ€” reusing the shared renderer instead of each writing its own style.left line. Since updatePlayerPosition() isn't defined in this standalone snippet, also include a working definition of it (matching Exercise 8.1: it sets #player-car style.left to carX + 'px'), and call moveLeft() once so you can see the effect in the Preview.",
+    instruction: "Goal: build the moveRight() mirror function alongside moveLeft(). 1) Plan: plan the moveRight() mirror function for the right lane. 2) Prompt: ask the AI for both moveLeft() and moveRight(), each clamping carX and calling updatePlayerPosition() โ€” paste its real code into Output Code and run it. 3) Explain: if a bug is found in the boundary-clamp logic, how many function bodies need fixing if both call a shared clamp helper?",
     planPlaceholder: "Plan moveRight(): which boundary (295), and what does it call afterward (updatePlayerPosition)?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "moveLeft() and moveRight() should mirror each other structurally — each clamping carX to its own boundary (35 left / 295 right), then calling the shared updatePlayerPosition() renderer instead of writing its own style.left line. The explanation should correctly say only 1 function body needs fixing if both share a clamp helper. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "moveLeft() and moveRight() should mirror each other structurally โ€” each clamping carX to its own boundary (35 left / 295 right), then calling the shared updatePlayerPosition() renderer instead of writing its own style.left line. The explanation should correctly say only 1 function body needs fixing if both share a clamp helper. Don't require the literal numbers or exact code in the plan/prompt prose โ€” judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the final controller" capstone
   // exercise used to live here, but it duplicated this session's Project Task (Lab 8),
   // which already asks for more than the exercises (grouping the three functions under
-  // one namespaced Controller object) — see PROJECT_TASKS['l1-s8'] in projectTasksData.js.
+  // one namespaced Controller object) โ€” see PROJECT_TASKS['l1-s8'] in projectTasksData.js.
 ];
 
 const S9_EXERCISES = [
   {
     num: 1,
     title: "Exercise 9.1: The Game Loop Lifecycle & Recursive Loop",
-    problem: "A game is an animation: each frame updates the state, redraws, then schedules the next frame — a loop that calls itself ~60 times a second via requestAnimationFrame. obstacleY isn't a pre-existing global in this sandbox — have the AI declare and initialize it too (starting at -100, matching the #obstacle element's own default position), and call gameLoop() once at the end so you can watch it animate in the Preview.",
-    instruction: "Goal: understand and build the repeating frame cycle. 1) Plan: describe the repeating frame cycle in plain language. 2) Prompt: ask the AI for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame — paste its real code into Output Code and run it. 3) Explain: what does calling requestAnimationFrame(gameLoop) at the end actually do?",
+    problem: "A game is an animation: each frame updates the state, redraws, then schedules the next frame โ€” a loop that calls itself ~60 times a second via requestAnimationFrame. obstacleY isn't a pre-existing global in this sandbox โ€” have the AI declare and initialize it too (starting at -100, matching the #obstacle element's own default position), and call gameLoop() once at the end so you can watch it animate in the Preview.",
+    instruction: "Goal: understand and build the repeating frame cycle. 1) Plan: describe the repeating frame cycle in plain language. 2) Prompt: ask the AI for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame โ€” paste its real code into Output Code and run it. 3) Explain: what does calling requestAnimationFrame(gameLoop) at the end actually do?",
     planPlaceholder: "Describe the frame cycle: each frame, update the state, redraw, then...?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "gameLoop() should move the obstacle (updating its own obstacleY and the #obstacle element's position), then call requestAnimationFrame(gameLoop) to schedule itself again next frame. Explanation should correctly say requestAnimationFrame schedules gameLoop to run again on the next frame, creating the animation loop. Don't require literal code or the exact variable name in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "gameLoop() should move the obstacle (updating its own obstacleY and the #obstacle element's position), then call requestAnimationFrame(gameLoop) to schedule itself again next frame. Explanation should correctly say requestAnimationFrame schedules gameLoop to run again on the next frame, creating the animation loop. Don't require literal code or the exact variable name in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 9.2: The Unstoppable Speed Bug",
-    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends. Without a guard that returns early when gameActive is false, Game Over becomes impossible. Since this Output Code box is tested on its own, ask for the complete gameLoop() function — not just the guard line — plus a gameActive variable and obstacleY (there's a single #obstacle element, not an array), and a call to start the loop, so the snippet runs standalone.",
-    instruction: "Goal: add the missing gameActive guard. 1) Plan: explain why a missing gameActive check makes the loop unstoppable. 2) Prompt: ask the AI to add a guard at the top of gameLoop() that returns immediately if gameActive is false, plus a console.log(\"Loop halted\") right before the return — paste its real code into Output Code and run it. 3) Explain: confirm what happens to the loop once gameActive becomes false.",
+    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends. Without a guard that returns early when gameActive is false, Game Over becomes impossible. Since this Output Code box is tested on its own, ask for the complete gameLoop() function โ€” not just the guard line โ€” plus a gameActive variable and obstacleY (there's a single #obstacle element, not an array), and a call to start the loop, so the snippet runs standalone.",
+    instruction: "Goal: add the missing gameActive guard. 1) Plan: explain why a missing gameActive check makes the loop unstoppable. 2) Prompt: ask the AI to add a guard at the top of gameLoop() that returns immediately if gameActive is false, plus a console.log(\"Loop halted\") right before the return โ€” paste its real code into Output Code and run it. 3) Explain: confirm what happens to the loop once gameActive becomes false.",
     planPlaceholder: "Why does gameLoop() never stop without a gameActive check?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "gameLoop() needs a guard at its top — if gameActive is false, log something like 'Loop halted' and return immediately, before doing anything else or scheduling the next frame. Explanation should correctly say the loop exits/halts and requestAnimationFrame never gets called again once gameActive is false. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "gameLoop() needs a guard at its top โ€” if gameActive is false, log something like 'Loop halted' and return immediately, before doing anything else or scheduling the next frame. Explanation should correctly say the loop exits/halts and requestAnimationFrame never gets called again once gameActive is false. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 9.3: Obstacle Movement & Reset",
-    problem: "Each frame adds speed to obstacleY to scroll it down; once it passes the bottom (500), it wraps back to the top (-100) and the score goes up — the illusion of endless oncoming traffic. obstacleY and score aren't pre-existing globals in this sandbox — have the AI declare and initialize both in this same snippet, and log obstacleY after calling moveObstacles() once so you can confirm it changed.",
-    instruction: "Goal: build the scroll-and-wrap behavior. 1) Plan: plan the scroll-and-wrap behavior (down, wrap at 500 to -100, score += 10). 2) Prompt: ask the AI for a function moveObstacles() implementing this — paste its real code into Output Code and run it. 3) Explain: if obstacleY is 490 and speed is 5, what is obstacleY right after this line runs (before any reset check)?",
+    problem: "Each frame adds speed to obstacleY to scroll it down; once it passes the bottom (500), it wraps back to the top (-100) and the score goes up โ€” the illusion of endless oncoming traffic. obstacleY and score aren't pre-existing globals in this sandbox โ€” have the AI declare and initialize both in this same snippet, and log obstacleY after calling moveObstacles() once so you can confirm it changed.",
+    instruction: "Goal: build the scroll-and-wrap behavior. 1) Plan: plan the scroll-and-wrap behavior (down, wrap at 500 to -100, score += 10). 2) Prompt: ask the AI for a function moveObstacles() implementing this โ€” paste its real code into Output Code and run it. 3) Explain: if obstacleY is 490 and speed is 5, what is obstacleY right after this line runs (before any reset check)?",
     planPlaceholder: "Plan: obstacleY += speed each frame; what happens once it passes 500?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "moveObstacles() should add speed to obstacleY each call, and once obstacleY passes 500, reset it to -100 and add 10 to score. Explanation should correctly compute 490 + 5 = 495 for the given scenario. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "moveObstacles() should add speed to obstacleY each call, and once obstacleY passes 500, reset it to -100 and add 10 to score. Explanation should correctly compute 490 + 5 = 495 for the given scenario. Don't require the literal numbers or exact code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 9.4: The Frozen Scoreboard Bug",
-    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen. The score bump must live inside the same reset block. Since this Output Code box is tested on its own, ask for the complete moveObstacles() function (with the reset block AND the fix) — not just the missing line — plus obstacleY/score declared and initialized, so the snippet runs standalone and you can watch score actually increment.`,
-    instruction: "Goal: fix the missing score increment. 1) Plan: explain why resetting obstacleY alone doesn't increase the score. 2) Prompt: ask the AI to add the missing score increment inside the reset block — paste its real code into Output Code and run it. 3) Explain: confirm both obstacleY and score are handled together now.",
+    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } โ€” the score never increments, so the scoreboard stays frozen. The score bump must live inside the same reset block. Since this Output Code box is tested on its own, ask for the complete moveObstacles() function (with the reset block AND the fix) โ€” not just the missing line โ€” plus obstacleY/score declared and initialized, so the snippet runs standalone and you can watch score actually increment.`,
+    instruction: "Goal: fix the missing score increment. 1) Plan: explain why resetting obstacleY alone doesn't increase the score. 2) Prompt: ask the AI to add the missing score increment inside the reset block โ€” paste its real code into Output Code and run it. 3) Explain: confirm both obstacleY and score are handled together now.",
     planPlaceholder: "Why doesn't resetting obstacleY alone make the score go up?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "The score increment must live inside the same reset block as the obstacleY > 500 check — both the position reset AND the score bump happen together, not one without the other. Explanation should correctly confirm both are now handled in the same block. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The score increment must live inside the same reset block as the obstacleY > 500 check โ€” both the position reset AND the score bump happen together, not one without the other. Explanation should correctly confirm both are now handled in the same block. Don't require the literal numbers or exact code in the plan/prompt prose โ€” judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the complete animation engine"
   // capstone exercise used to live here, but it duplicated this session's Project Task
   // (Lab 9), which already asks for more than the exercises (animating the student's own
   // real #obstacle element from Session 2-3, using their own track height instead of a
-  // fixed 500) — see PROJECT_TASKS['l1-s9'] in projectTasksData.js.
+  // fixed 500) โ€” see PROJECT_TASKS['l1-s9'] in projectTasksData.js.
 ];
 
 const S10_EXERCISES = [
   {
     num: 1,
     title: "Exercise 10.1: The Overlap Condition & Requesting checkCollision()",
-    problem: "Two rectangles overlap only when they overlap on BOTH axes at once — so the check is four comparisons joined by AND: right/left on the X axis, top/bottom on the Y axis. Call the function once with two example rectangles and log the result, so you can confirm it works in the Preview.",
-    instruction: "Goal: build the AABB overlap check. 1) Plan: describe when two boxes overlap (both axes at once). 2) Prompt: ask the AI for a function checkCollision(rect1, rect2) that returns true if the x/y/width/height bounds overlap — paste its real code into Output Code and run it. 3) Explain: why does the check need width/height, not just x/y center coordinates?",
+    problem: "Two rectangles overlap only when they overlap on BOTH axes at once โ€” so the check is four comparisons joined by AND: right/left on the X axis, top/bottom on the Y axis. Call the function once with two example rectangles and log the result, so you can confirm it works in the Preview.",
+    instruction: "Goal: build the AABB overlap check. 1) Plan: describe when two boxes overlap (both axes at once). 2) Prompt: ask the AI for a function checkCollision(rect1, rect2) that returns true if the x/y/width/height bounds overlap โ€” paste its real code into Output Code and run it. 3) Explain: why does the check need width/height, not just x/y center coordinates?",
     planPlaceholder: "Describe when two boxes overlap: right vs left AND top vs bottom.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "checkCollision(rect1, rect2) should return true only when both the X-axis and Y-axis ranges overlap, using each rect's width/height (not just x/y center points) — four comparisons joined by AND. Explanation should correctly say exact-x-equality almost never happens, so comparing box edges (accounting for size) is what catches real overlaps. Don't require literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "checkCollision(rect1, rect2) should return true only when both the X-axis and Y-axis ranges overlap, using each rect's width/height (not just x/y center points) โ€” four comparisons joined by AND. Explanation should correctly say exact-x-equality almost never happens, so comparing box edges (accounting for size) is what catches real overlaps. Don't require literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 10.2: The Ghost Car Bug",
     problem: `Bug: the tutor flipped one comparison operator, so the obstacle drives right through the player car with no crash registered. Flip even one of the 4 AABB comparisons and the combined AND can never be true.`,
-    instruction: "Goal: fix the flipped comparison. 1) Plan: explain why a single flipped comparison makes collisions never fire. 2) Prompt: ask the AI to fix the flipped comparison in checkCollision() so it correctly checks rect1.x + rect1.width > rect2.x — paste the fixed code into Output Code. 3) Explain: confirm which direction that comparison should point and why.",
+    instruction: "Goal: fix the flipped comparison. 1) Plan: explain why a single flipped comparison makes collisions never fire. 2) Prompt: ask the AI to fix the flipped comparison in checkCollision() so it correctly checks rect1.x + rect1.width > rect2.x โ€” paste the fixed code into Output Code. 3) Explain: confirm which direction that comparison should point and why.",
     planPlaceholder: "Why does flipping one of the four AABB comparisons make the AND condition never true?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed checkCollision() code here.",
     runnable: true,
-    expectedConcepts: "The comparison rect1.x + rect1.width > rect2.x must use '>' (greater than), not the flipped '<' — a flipped comparison makes the combined AND condition never true, so collisions never register. Explanation should correctly confirm the comparison needs to point toward '>' and why. Don't require the exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The comparison rect1.x + rect1.width > rect2.x must use '>' (greater than), not the flipped '<' โ€” a flipped comparison makes the combined AND condition never true, so collisions never register. Explanation should correctly confirm the comparison needs to point toward '>' and why. Don't require the exact code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 10.3: The Axis Swap Bug",
-    problem: `Bug: the first condition accidentally compares rect1.y (not rect1.x) against rect2's horizontal bound, swapping the X and Y axes — nonsense geometry that makes crashes register in the wrong place or not at all.`,
-    instruction: "Goal: fix the axis-swap bug. 1) Plan: explain why comparing an x value against a y bound is nonsense geometry. 2) Prompt: ask the AI to fix the axis-swap bug so the first condition correctly compares rect1.x — paste the fixed code into Output Code. 3) Explain: confirm x is compared with x, and y with y throughout the function.",
+    problem: `Bug: the first condition accidentally compares rect1.y (not rect1.x) against rect2's horizontal bound, swapping the X and Y axes โ€” nonsense geometry that makes crashes register in the wrong place or not at all.`,
+    instruction: "Goal: fix the axis-swap bug. 1) Plan: explain why comparing an x value against a y bound is nonsense geometry. 2) Prompt: ask the AI to fix the axis-swap bug so the first condition correctly compares rect1.x โ€” paste the fixed code into Output Code. 3) Explain: confirm x is compared with x, and y with y throughout the function.",
     planPlaceholder: "Why does comparing rect1.y against a horizontal (x) bound break the collision check?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed checkCollision() code here.",
     runnable: true,
-    expectedConcepts: "The first condition must compare rect1.x (not rect1.y) against rect2's horizontal bound — mixing an x value into a y comparison is nonsense geometry that breaks detection. Explanation should correctly confirm every x-comparison uses x values and every y-comparison uses y values throughout the function. Don't require the exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The first condition must compare rect1.x (not rect1.y) against rect2's horizontal bound โ€” mixing an x value into a y comparison is nonsense geometry that breaks detection. Explanation should correctly confirm every x-comparison uses x values and every y-comparison uses y values throughout the function. Don't require the exact code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 10.4: Wiring Collision into the Loop",
     problem: "Detecting a crash is useless unless something happens: calling checkCollision() inside the loop and setting gameActive = false on a hit is what turns 'they touched' into 'game over'. Since this Output Code box is tested on its own, ask for a working checkCollision() definition, example player/obstacle rect objects that actually overlap, a gameActive variable, and a call to gameLoop() once, so you can see it detect the collision in the Preview.",
-    instruction: "Goal: wire collision detection into the game loop. 1) Plan: plan what should happen when a collision is detected. 2) Prompt: ask the AI to add a call to checkCollision(player, obstacle) inside gameLoop() that sets gameActive to false and logs 'Collision detected!' — paste its real code into Output Code and run it. 3) Explain: if two box edges touch exactly (no real overlap), does a strict '>' comparison register a hit?",
+    instruction: "Goal: wire collision detection into the game loop. 1) Plan: plan what should happen when a collision is detected. 2) Prompt: ask the AI to add a call to checkCollision(player, obstacle) inside gameLoop() that sets gameActive to false and logs 'Collision detected!' โ€” paste its real code into Output Code and run it. 3) Explain: if two box edges touch exactly (no real overlap), does a strict '>' comparison register a hit?",
     planPlaceholder: "What should happen when checkCollision() returns true? (hint: stop the game, log it)",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "gameLoop() should call checkCollision(player, obstacle), and on a hit set gameActive to false and log something like 'Collision detected!'. Explanation should correctly answer NO — touching exactly isn't 'greater than', so a strict '>' comparison does not register a hit at the exact boundary. Don't require the exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "gameLoop() should call checkCollision(player, obstacle), and on a hit set gameActive to false and log something like 'Collision detected!'. Explanation should correctly answer NO โ€” touching exactly isn't 'greater than', so a strict '>' comparison does not register a hit at the exact boundary. Don't require the exact code in the plan/prompt prose โ€” judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the complete collision system"
   // capstone exercise used to live here, but it duplicated this session's Project Task
   // (Lab 10), which already asks for more than the exercises (spending a life per
-  // collision instead of ending the game immediately) — see PROJECT_TASKS['l1-s10'] in
+  // collision instead of ending the game immediately) โ€” see PROJECT_TASKS['l1-s10'] in
   // projectTasksData.js.
 ];
 
@@ -3384,112 +3417,112 @@ const S11_EXERCISES = [
   {
     num: 1,
     title: "Exercise 11.1: The DOM Update Pipeline & Scoreboard Updater",
-    problem: "A variable changing in memory is invisible until you push it into the page: score changes should show on the scoreboard, and a crash should reveal the restart panel. score isn't a pre-existing global in this sandbox — have the AI declare it too (e.g. starting at 0), and call updateScoreboard() once so you can see #score-val actually update in the Preview.",
-    instruction: "Goal: push score changes onto the visible scoreboard. 1) Plan: map each state change to what appears on screen. 2) Prompt: ask the AI for a function updateScoreboard() that sets '#score-val' textContent to match the score variable — paste its real code into Output Code and run it. 3) Explain: why is textContent safer than innerHTML for this?",
+    problem: "A variable changing in memory is invisible until you push it into the page: score changes should show on the scoreboard, and a crash should reveal the restart panel. score isn't a pre-existing global in this sandbox โ€” have the AI declare it too (e.g. starting at 0), and call updateScoreboard() once so you can see #score-val actually update in the Preview.",
+    instruction: "Goal: push score changes onto the visible scoreboard. 1) Plan: map each state change to what appears on screen. 2) Prompt: ask the AI for a function updateScoreboard() that sets '#score-val' textContent to match the score variable โ€” paste its real code into Output Code and run it. 3) Explain: why is textContent safer than innerHTML for this?",
     planPlaceholder: "Map state changes to screen updates: score changes -> ?; a crash -> ?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "updateScoreboard() should set #score-val's textContent to the score variable. Explanation should correctly say innerHTML could run injected HTML/scripts, while textContent treats the value as plain text, which is safer here. Don't require literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "updateScoreboard() should set #score-val's textContent to the score variable. Explanation should correctly say innerHTML could run injected HTML/scripts, while textContent treats the value as plain text, which is safer here. Don't require literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 11.2: The Negative Score Leak",
-    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5". A defensive clamp — if score < 0, snap it to 0 — keeps the display sensible no matter what the math does. Since this Output Code box is tested on its own, ask for score declared (starting negative, e.g. -5, to prove the clamp works) and the clamped result written to #score-val, so the snippet runs standalone and you can see the fix work.`,
-    instruction: "Goal: clamp score so it never displays negative. 1) Plan: explain why a negative score looks broken to players. 2) Prompt: ask the AI to add a clamp so score never goes below 0 before it's written to the DOM — paste its real code into Output Code and run it. 3) Explain: confirm the clamp runs BEFORE the textContent write, not after.",
+    problem: `Bug: a scoring penalty can push score below zero, and the scoreboard shows "score: -5". A defensive clamp โ€” if score < 0, snap it to 0 โ€” keeps the display sensible no matter what the math does. Since this Output Code box is tested on its own, ask for score declared (starting negative, e.g. -5, to prove the clamp works) and the clamped result written to #score-val, so the snippet runs standalone and you can see the fix work.`,
+    instruction: "Goal: clamp score so it never displays negative. 1) Plan: explain why a negative score looks broken to players. 2) Prompt: ask the AI to add a clamp so score never goes below 0 before it's written to the DOM โ€” paste its real code into Output Code and run it. 3) Explain: confirm the clamp runs BEFORE the textContent write, not after.",
     planPlaceholder: "Why does showing 'score: -5' look broken, even if the math technically produced it?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "If score < 0, it should be reset to 0 BEFORE that value is written to the DOM — a defensive clamp that keeps the display sensible no matter what the math produced. Explanation should correctly confirm the clamp happens before the DOM write, not after. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "If score < 0, it should be reset to 0 BEFORE that value is written to the DOM โ€” a defensive clamp that keeps the display sensible no matter what the math produced. Explanation should correctly confirm the clamp happens before the DOM write, not after. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 11.3: Revealing the Restart Panel",
     problem: "The restart panel already exists in the HTML but is hidden by a 'hidden' class; removing that class with classList.remove is what makes it appear.",
-    instruction: "Goal: reveal the restart panel correctly. 1) Plan: plan the full restart sequence (Space -> reset score, reset car, hide panel, gameActive = true). 2) Prompt: ask the AI for a function triggerGameOverScreen() that removes the 'hidden' class from '#restart-panel' — paste its real code into Output Code and run it. 3) Explain: what happens if you forget to remove that class after a restart?",
+    instruction: "Goal: reveal the restart panel correctly. 1) Plan: plan the full restart sequence (Space -> reset score, reset car, hide panel, gameActive = true). 2) Prompt: ask the AI for a function triggerGameOverScreen() that removes the 'hidden' class from '#restart-panel' โ€” paste its real code into Output Code and run it. 3) Explain: what happens if you forget to remove that class after a restart?",
     planPlaceholder: "Plan the restart sequence: press Space -> reset score -> reset car -> hide panel -> gameActive = true.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "triggerGameOverScreen() should remove the 'hidden' class from #restart-panel (classList.remove), not just set an inline style — the panel is hidden via that CSS class, so the class itself has to be defeated. Explanation should correctly say the panel stays hidden (display: none keeps applying) if the class isn't removed. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "triggerGameOverScreen() should remove the 'hidden' class from #restart-panel (classList.remove), not just set an inline style โ€” the panel is hidden via that CSS class, so the class itself has to be defeated. Explanation should correctly say the panel stays hidden (display: none keeps applying) if the class isn't removed. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 11.4: The Frozen Restart Bug",
-    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true — the game stays frozen. Without gameActive = true, requestAnimationFrame is never re-armed. Since this Output Code box is tested on its own, ask for the complete Space-key restart handler — not just the missing line — including gameActive and score declared, and using classList on the real #restart-panel element (there is no separate 'game-over-panel' element — it's called restart-panel), so the snippet runs standalone without errors.`,
-    instruction: "Goal: fix the frozen restart. 1) Plan: explain why the screen can look reset while the game loop stays frozen. 2) Prompt: ask the AI to add the missing gameActive = true inside the restart handler — paste the fixed code into Output Code and run it. 3) Explain: why must gameActive specifically be set back to true for the game to actually resume?",
+    problem: `Bug: the restart handler resets score and hides the panel, but never sets gameActive back to true โ€” the game stays frozen. Without gameActive = true, requestAnimationFrame is never re-armed. Since this Output Code box is tested on its own, ask for the complete Space-key restart handler โ€” not just the missing line โ€” including gameActive and score declared, and using classList on the real #restart-panel element (there is no separate 'game-over-panel' element โ€” it's called restart-panel), so the snippet runs standalone without errors.`,
+    instruction: "Goal: fix the frozen restart. 1) Plan: explain why the screen can look reset while the game loop stays frozen. 2) Prompt: ask the AI to add the missing gameActive = true inside the restart handler โ€” paste the fixed code into Output Code and run it. 3) Explain: why must gameActive specifically be set back to true for the game to actually resume?",
     planPlaceholder: "Why can the screen LOOK reset (score=0, panel hidden) while the game is still frozen?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "The Space-key restart handler must set gameActive = true after resetting score and re-hiding #restart-panel — without it, gameLoop()'s gate never re-arms requestAnimationFrame. Explanation should correctly say gameActive specifically gates whether the loop keeps scheduling itself. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The Space-key restart handler must set gameActive = true after resetting score and re-hiding #restart-panel โ€” without it, gameLoop()'s gate never re-arms requestAnimationFrame. Explanation should correctly say gameActive specifically gates whether the loop keeps scheduling itself. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the complete HUD & restart system"
   // capstone exercise used to live here, but it duplicated this session's Project Task
   // (Lab 11), which already asks for more than the exercises (a lives readout alongside
-  // score, not score alone) — see PROJECT_TASKS['l1-s11'] in projectTasksData.js.
+  // score, not score alone) โ€” see PROJECT_TASKS['l1-s11'] in projectTasksData.js.
 ];
 
 // Note (2026-08-05): unlike S6-S11's dropped 5th "combine everything" capstone
-// (superseded by that session's Project Task), S12 keeps all 5 exercises — 12.5 is a
+// (superseded by that session's Project Task), S12 keeps all 5 exercises โ€” 12.5 is a
 // personal reflection + self-diagnostic across the WHOLE level, not a duplicate of
 // Project Task Lab 12's CONFIG-refactor + Complete Game assembly.
 const S12_EXERCISES = [
   {
     num: 1,
     title: "Exercise 12.1: The Configuration Object & Difficulty Scaling",
-    problem: "Scattering magic numbers across the code makes them hard to find and change. A CONFIG object gathers every tunable value — starting speed, difficulty ramp, top speed — in one place.",
-    instruction: "Goal: gather tunable values into a CONFIG object. 1) Plan: plan the CONFIG object's fields. 2) Prompt: ask the AI for a difficulty-scaling function using CONFIG.difficultyMultiplier, clamped to CONFIG.maxSpeed — paste its real code into Output Code. 3) Explain: given CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 } and score = 50, what does startSpeed + score * difficultyMultiplier equal?",
+    problem: "Scattering magic numbers across the code makes them hard to find and change. A CONFIG object gathers every tunable value โ€” starting speed, difficulty ramp, top speed โ€” in one place.",
+    instruction: "Goal: gather tunable values into a CONFIG object. 1) Plan: plan the CONFIG object's fields. 2) Prompt: ask the AI for a difficulty-scaling function using CONFIG.difficultyMultiplier, clamped to CONFIG.maxSpeed โ€” paste its real code into Output Code. 3) Explain: given CONFIG = { startSpeed: 5, difficultyMultiplier: 0.1, maxSpeed: 15 } and score = 50, what does startSpeed + score * difficultyMultiplier equal?",
     planPlaceholder: "Plan CONFIG's fields: startSpeed, difficultyMultiplier, maxSpeed (and anything else tunable).",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "A difficulty-scaling function should read from a CONFIG object (e.g. CONFIG.difficultyMultiplier, CONFIG.maxSpeed) rather than hardcoded numbers, clamping its result to CONFIG.maxSpeed. Explanation should correctly compute 5 + (50 * 0.1) = 10 for the given scenario. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "A difficulty-scaling function should read from a CONFIG object (e.g. CONFIG.difficultyMultiplier, CONFIG.maxSpeed) rather than hardcoded numbers, clamping its result to CONFIG.maxSpeed. Explanation should correctly compute 5 + (50 * 0.1) = 10 for the given scenario. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 2,
     title: "Exercise 12.2: The Unbounded Speed Bug",
     problem: "Bug: at very high scores, the computed speed exceeds CONFIG.maxSpeed, making the game unplayably fast. A ramp with no ceiling eventually breaks the game. Since this Output Code box is tested on its own, ask for CONFIG (with a maxSpeed field) and speed declared and initialized in this same snippet (starting above maxSpeed, to prove the clamp works), plus a log of the clamped result.",
-    instruction: "Goal: cap speed at CONFIG.maxSpeed. 1) Plan: explain why the difficulty ramp needs a ceiling. 2) Prompt: ask the AI to add a Math.min clamp so speed never exceeds CONFIG.maxSpeed — paste its real code into Output Code and run it. 3) Explain: confirm what value speed becomes once the raw formula exceeds CONFIG.maxSpeed.",
+    instruction: "Goal: cap speed at CONFIG.maxSpeed. 1) Plan: explain why the difficulty ramp needs a ceiling. 2) Prompt: ask the AI to add a Math.min clamp so speed never exceeds CONFIG.maxSpeed โ€” paste its real code into Output Code and run it. 3) Explain: confirm what value speed becomes once the raw formula exceeds CONFIG.maxSpeed.",
     planPlaceholder: "Why does an unlimited difficulty ramp eventually make the game unplayable?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "speed should be clamped with Math.min(speed, CONFIG.maxSpeed) so it never exceeds the configured ceiling. Explanation should correctly say speed gets capped at CONFIG.maxSpeed, never higher, once the raw formula exceeds it. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "speed should be clamped with Math.min(speed, CONFIG.maxSpeed) so it never exceeds the configured ceiling. Explanation should correctly say speed gets capped at CONFIG.maxSpeed, never higher, once the raw formula exceeds it. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 3,
     title: "Exercise 12.3: Refactoring Magic Numbers",
-    problem: "The literal 35 and 295 boundary values from Session 6 become CONFIG.leftBound and CONFIG.rightBound — same behavior, but now every tunable number lives in one central object. Since this Output Code box is tested on its own, ask for CONFIG (with leftBound/rightBound fields) declared in this same snippet, carX set outside a boundary to prove the clamp works, and a log of the result.",
-    instruction: "Goal: replace hardcoded boundary numbers with CONFIG fields. 1) Plan: plan replacing the hardcoded 35/295 boundary numbers with CONFIG fields. 2) Prompt: ask the AI to rewrite the boundary guards using CONFIG.leftBound/CONFIG.rightBound instead of hardcoded numbers — paste its real code into Output Code and run it. 3) Explain: why does pulling these into CONFIG make the game easier to maintain?",
+    problem: "The literal 35 and 295 boundary values from Session 6 become CONFIG.leftBound and CONFIG.rightBound โ€” same behavior, but now every tunable number lives in one central object. Since this Output Code box is tested on its own, ask for CONFIG (with leftBound/rightBound fields) declared in this same snippet, carX set outside a boundary to prove the clamp works, and a log of the result.",
+    instruction: "Goal: replace hardcoded boundary numbers with CONFIG fields. 1) Plan: plan replacing the hardcoded 35/295 boundary numbers with CONFIG fields. 2) Prompt: ask the AI to rewrite the boundary guards using CONFIG.leftBound/CONFIG.rightBound instead of hardcoded numbers โ€” paste its real code into Output Code and run it. 3) Explain: why does pulling these into CONFIG make the game easier to maintain?",
     planPlaceholder: "Plan: what should '35' and '295' become? (CONFIG.leftBound, CONFIG.rightBound)",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The boundary guards should read from CONFIG.leftBound and CONFIG.rightBound instead of the hardcoded 35/295. Explanation should correctly say every tunable number now lives in one place, easy to find and change. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The boundary guards should read from CONFIG.leftBound and CONFIG.rightBound instead of the hardcoded 35/295. Explanation should correctly say every tunable number now lives in one place, easy to find and change. Don't require the literal numbers or exact code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 12.4: The Final Diagnostic",
-    problem: "One last collision logic error is seeded into this assessment lab: a single flipped operator in the AABB check — the same class of bug from Session 10, now to be caught fast under exam conditions.",
-    instruction: "Goal: catch and fix the seeded flipped comparison. 1) Plan: explain the malicious-QA-officer scenario — if a boundary guard used '> 35' in one place but '>= 35' in another, could that inconsistency let the car overlap the edge? 2) Prompt: ask the AI to diagnose and fix the seeded flipped comparison in checkCollision() — paste the fixed code into Output Code. 3) Explain: which comparison was flipped, and what's the corrected version?",
+    problem: "One last collision logic error is seeded into this assessment lab: a single flipped operator in the AABB check โ€” the same class of bug from Session 10, now to be caught fast under exam conditions.",
+    instruction: "Goal: catch and fix the seeded flipped comparison. 1) Plan: explain the malicious-QA-officer scenario โ€” if a boundary guard used '> 35' in one place but '>= 35' in another, could that inconsistency let the car overlap the edge? 2) Prompt: ask the AI to diagnose and fix the seeded flipped comparison in checkCollision() โ€” paste the fixed code into Output Code. 3) Explain: which comparison was flipped, and what's the corrected version?",
     planPlaceholder: "Could inconsistent boundary operators (> vs >=) create a rare edge-case gap? Explain why.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed checkCollision() code here.",
     runnable: true,
-    expectedConcepts: "The first AABB comparison must use rect1.x < rect2.x + rect2.width (correct direction), not a flipped operator. Explanation should correctly identify which comparison was flipped and confirm the corrected version. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The first AABB comparison must use rect1.x < rect2.x + rect2.width (correct direction), not a flipped operator. Explanation should correctly identify which comparison was flipped and confirm the corrected version. Don't require the literal code in the plan/prompt prose โ€” judge the reasoning."
   },
   {
     num: 5,
     title: "Exercise 12.5: Capstone Reflection & the Final QA Sweep",
-    problem: "Reflect across every Racing Car Game lab you've built this level — variables, boundaries, collision, restart — and confirm the whole game still works together, not just the last thing you touched.",
-    instruction: "Goal: write a self-diagnostic and reflect on the level. 1) Plan: list the 4 core systems this final QA sweep must verify. 2) Prompt: ask the AI for a diagnostic script that logs PASS or FAIL for each core system — paste its real code into Output Code and run it. 3) Explain: write a one-sentence reflection on the trickiest bug you fixed across this level's labs, and how tracing variable values helped you find it.",
+    problem: "Reflect across every Racing Car Game lab you've built this level โ€” variables, boundaries, collision, restart โ€” and confirm the whole game still works together, not just the last thing you touched.",
+    instruction: "Goal: write a self-diagnostic and reflect on the level. 1) Plan: list the 4 core systems this final QA sweep must verify. 2) Prompt: ask the AI for a diagnostic script that logs PASS or FAIL for each core system โ€” paste its real code into Output Code and run it. 3) Explain: write a one-sentence reflection on the trickiest bug you fixed across this level's labs, and how tracing variable values helped you find it.",
     planPlaceholder: "List the 4 core systems to verify: variables, boundaries, collision, restart.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the AI's diagnostic script here.",
     runnable: true,
-    expectedConcepts: "The diagnostic script should check the 4 core systems (variables, boundaries, collision, restart) and log a PASS or FAIL for each via console.log. The explanation is a personal reflection with no single correct answer — judge only whether it's a genuine, specific reflection naming an actual bug and how tracing values helped find it, not a placeholder answer. Don't require literal code in the plan/prompt prose."
+    expectedConcepts: "The diagnostic script should check the 4 core systems (variables, boundaries, collision, restart) and log a PASS or FAIL for each via console.log. The explanation is a personal reflection with no single correct answer โ€” judge only whether it's a genuine, specific reflection naming an actual bug and how tracing values helped find it, not a placeholder answer. Don't require literal code in the plan/prompt prose."
   }
 ];
 
@@ -3499,7 +3532,7 @@ const S12_EXERCISES = [
 const EXERCISE_COUNTS = {
   // l1-s2 through l1-s6 dropped to 4: their old 5th "combine everything" capstone
   // exercise was a duplicate of the session's Project Task, which now owns that final
-  // integration step (see improve_concept.md Part II). l1-s1 stays 5 — its exercises were
+  // integration step (see improve_concept.md Part II). l1-s1 stays 5 โ€” its exercises were
   // never a capstone-duplication pattern, just independent concept checks. l1-s7-s12
   // unchanged pending the same review.
   'l1-s1': 5, 'l1-s2': 4, 'l1-s3': 4, 'l1-s4': 4, 'l1-s5': 4, 'l1-s6': 4,
@@ -3534,7 +3567,7 @@ const L1_QUEST_SESSIONS = L1_SESSION_SEQUENCE.map(s => ({
 // CAMPAIGN_THEMES copy. Every L2 session has a claimable generic AI Prompt Sandbox
 // (loadTemplate) plus a Project Journal milestone, so all 13 appear as quests with a
 // flat 100 XP each, manually claimed via the "Deliver Quest Evidence" button (L2 has
-// no per-exercise EXERCISE_COUNTS gate — the manual claim is the deliberate friction).
+// no per-exercise EXERCISE_COUNTS gate โ€” the manual claim is the deliberate friction).
 const L2_SESSION_SEQUENCE = CURRICULUM_DATA.filter(s => s.level === 2);
 const L2_QUEST_SESSIONS = L2_SESSION_SEQUENCE.map(s => ({
   id: s.id,
@@ -3670,7 +3703,7 @@ export default function App() {
   // typed instead of the preloaded/preset starting state.
   const [savedExerciseCode, setSavedExerciseCode] = useState({});
 
-  // Level 1 Session 1 (Systems Briefing) States — 3-box format:
+  // Level 1 Session 1 (Systems Briefing) States โ€” 3-box format:
   // Plan & Design / Prompt+Output / Explain the Output
   const [s1ActiveExercise, setS1ActiveExercise] = useState(1);
   const [s1PlanInput, setS1PlanInput] = useState('');
@@ -3682,7 +3715,7 @@ export default function App() {
   const [s1Verifying, setS1Verifying] = useState(false);
   const [s1Generating, setS1Generating] = useState(false);
 
-  // Level 1 Session 2 (HTML Sandbox) States — 3-box format:
+  // Level 1 Session 2 (HTML Sandbox) States โ€” 3-box format:
   // Plan & Design / Prompt+Output Code / Explain the Output Code
   const [s2ActiveExercise, setS2ActiveExercise] = useState(1);
   const [s2PlanInput, setS2PlanInput] = useState('');
@@ -3694,7 +3727,7 @@ export default function App() {
   const [s2Verifying, setS2Verifying] = useState(false);
   const [s2Generating, setS2Generating] = useState(false);
 
-  // Level 1 Session 3 (CSS Sandbox) States — 3-box format:
+  // Level 1 Session 3 (CSS Sandbox) States โ€” 3-box format:
   // Plan & Design / Prompt+Output Code / Explain the Output Code
   const [s3ActiveExercise, setS3ActiveExercise] = useState(1);
   const [s3PlanInput, setS3PlanInput] = useState('');
@@ -3706,7 +3739,7 @@ export default function App() {
   const [s3Verifying, setS3Verifying] = useState(false);
   const [s3Generating, setS3Generating] = useState(false);
 
-  // Level 1 Session 4 (Variable Registry) Simulator States — 3-box format:
+  // Level 1 Session 4 (Variable Registry) Simulator States โ€” 3-box format:
   // Plan & Design / Prompt+Output Code / Explain the Output Code
   const [s4ActiveExercise, setS4ActiveExercise] = useState(1);
   const [s4PlanInput, setS4PlanInput] = useState('');
@@ -3740,7 +3773,7 @@ export default function App() {
   const [editingTestResults, setEditingTestResults] = useState('');
   const [editingIterationChanges, setEditingIterationChanges] = useState('');
   const [editingIterationLessons, setEditingIterationLessons] = useState('');
-  // Project Task AI Auditor feedback — pilot scope: L1 Session 5 only (2026-07-30, see
+  // Project Task AI Auditor feedback โ€” pilot scope: L1 Session 5 only (2026-07-30, see
   // improve_concept.md Phase 5). Advisory only: shows AI feedback but never blocks Save,
   // since Project Task XP remains a manual teacher grant per the Hybrid Model.
   const [projectTaskAuditResult, setProjectTaskAuditResult] = useState(null);
@@ -3835,7 +3868,7 @@ export default function App() {
   // Level 2 Sessions 1-4: bespoke Canvas Sandbox exercise states (Arena Init, Sprite
   // Movement, Laser Battery, Motion & Garbage Collection). Sessions 5-13 keep using the
   // generic AI Prompt Sandbox (see loadTemplate's else-if chain and CLAUDE.md's sandbox
-  // scope note) — these 4 sessions share the same JS console forwarding as L1's S4-S12
+  // scope note) โ€” these 4 sessions share the same JS console forwarding as L1's S4-S12
   // via the shared simConsoleLogs state above, just rendered against a canvas preview.
   const [l2s1ActiveExercise, setL2s1ActiveExercise] = useState(1);
   const [l2s1CodeInput, setL2s1CodeInput] = useState('');
@@ -3983,7 +4016,7 @@ export default function App() {
   }, [currentUser?.id, token]);
 
   // Load per-user exercise submissions (Plan/Prompt/Output Code/Explain text saved on
-  // every Verify click — see saveExerciseSubmission below) once the user is known. Merges
+  // every Verify click โ€” see saveExerciseSubmission below) once the user is known. Merges
   // into savedExerciseCode, the same cache the exercise-switch buttons already read from,
   // and pre-fills whichever exercise is currently active per session (exercise 1, since
   // this runs at login before the student has navigated anywhere).
@@ -4048,7 +4081,7 @@ export default function App() {
   };
 
   // planSpecs now holds the merged "System Parts & Information" answer. Older entries saved
-  // hierarchy/variables as two separate fields (planSpecs + planData) — fold any legacy
+  // hierarchy/variables as two separate fields (planSpecs + planData) โ€” fold any legacy
   // planData content into planSpecs on load so nothing a student already wrote is lost.
   const deserializeJournalData = (rawText) => {
     try {
@@ -4085,7 +4118,7 @@ export default function App() {
   // full version history up front, so this never needs an extra fetch). Used to seed a new
   // session's starting code from the previous session (chainFrom) and to render read-only
   // reference blocks (referenceSessions). Returns '' if the student hasn't started that
-  // session's journal yet — callers treat that as "not found", not an error.
+  // session's journal yet โ€” callers treat that as "not found", not an error.
   const getSessionCodeOutput = (sessionId) => {
     if (!currentUser || !sessionId) return '';
     const entry = journalEntries.find(e => e.id === `${currentUser.id}_${sessionId}`);
@@ -4546,7 +4579,7 @@ export default function App() {
     ])
       .then(([journalEntries, attendanceRows]) => {
         // A journal entry created via "Initialize Project Journal" always titles itself
-        // "L{level} S{num}: ..." (see the button handler above) — match on that prefix
+        // "L{level} S{num}: ..." (see the button handler above) โ€” match on that prefix
         // rather than the entry id, since older seed data doesn't follow the id convention.
         const studentLevelNum = parseInt((student.student_level || 'L1').replace('L', '')) || 1;
         const attendedSessionDates = {};
@@ -4638,7 +4671,7 @@ export default function App() {
 
   // Copies a written prompt to the clipboard so the student can paste it into
   // their own external AI tool (ChatGPT/Cursor/Copilot), then paste that tool's
-  // real response back into the Output Code box themselves — the platform never
+  // real response back into the Output Code box themselves โ€” the platform never
   // calls an AI API itself.
   const copyPromptToClipboard = (text, key) => {
     if (!text?.trim()) return;
@@ -4672,7 +4705,7 @@ export default function App() {
   };
 
   // Persists one exercise's Plan/Prompt/Output Code/Explain text on every Verify click
-  // (pass or fail), so students can refer back to what they wrote later — separate from
+  // (pass or fail), so students can refer back to what they wrote later โ€” separate from
   // markExerciseComplete above, which only records pass/fail. Fire-and-forget: a failed
   // save just means this exercise's text isn't restored next login, not a broken Verify.
   const saveExerciseSubmission = (sessionId, exerciseNum, fields) => {
@@ -4702,7 +4735,7 @@ export default function App() {
     } else if (sandboxTask.toLowerCase().includes('env') || sandboxTask.toLowerCase().includes('environment') || sandboxTask.toLowerCase().includes('gitignore') || sandboxTask.toLowerCase().includes('variables')) {
       const preventsHardcoding = sandboxConstraints.toLowerCase().includes('hardcoded') || sandboxConstraints.toLowerCase().includes('prevent') || sandboxConstraints.toLowerCase().includes('gitignore') || sandboxConstraints.toLowerCase().includes('existence');
       if (preventsHardcoding) {
-        mockCode += `// Secure Environment Variables Validation\nconst DB_PASSWORD = import.meta.env.VITE_DATABASE_PASSWORD;\nconst API_KEY = import.meta.env.VITE_API_KEY;\n\n// Scan check against hardcoding\nif (DB_PASSWORD === 'production_secret_key_12345') {\n  throw new Error("SECURITY BREACH: Raw password detected in source control!");\n}\n\nexport function initializeSecrets() {\n  if (!DB_PASSWORD || !API_KEY) {\n    console.warn("Falling back to local offline sandbox. Missing env configuration keys.");\n    return { status: "fallback", loaded: false };\n  }\n  console.log("✓ Environment configurations validated successfully.");\n  return { status: "active", loaded: true };\n}`;
+        mockCode += `// Secure Environment Variables Validation\nconst DB_PASSWORD = import.meta.env.VITE_DATABASE_PASSWORD;\nconst API_KEY = import.meta.env.VITE_API_KEY;\n\n// Scan check against hardcoding\nif (DB_PASSWORD === 'production_secret_key_12345') {\n  throw new Error("SECURITY BREACH: Raw password detected in source control!");\n}\n\nexport function initializeSecrets() {\n  if (!DB_PASSWORD || !API_KEY) {\n    console.warn("Falling back to local offline sandbox. Missing env configuration keys.");\n    return { status: "fallback", loaded: false };\n  }\n  console.log("โ“ Environment configurations validated successfully.");\n  return { status: "active", loaded: true };\n}`;
       } else {
         mockCode += `// Hardcoded Configuration (API Secret Exposed!)\nexport const config = {\n  DB_URL: 'https://production-db.company.com',\n  API_KEY: 'production_secret_key_12345', // Hardcoded plaintext vulnerability!\n  status: 'active'\n};`;
       }
@@ -4858,7 +4891,7 @@ export default function App() {
     // Only auto-log a journal entry the first time this session is claimed. Without this
     // guard, re-completing a session's exercises (or a student who already has a proper
     // "Initialize Project Journal" entry for it) creates ANOTHER entry with a random id and
-    // the raw curriculum title — that stray entry doesn't follow the `${userId}_${sessionId}`
+    // the raw curriculum title โ€” that stray entry doesn't follow the `${userId}_${sessionId}`
     // convention the Project Journal picker and detail panel rely on, so it can shadow the
     // real entry in the session list and make the session look like it has no journal at all.
     const alreadyLogged = journalEntries.some(j =>
@@ -5138,7 +5171,7 @@ export default function App() {
       setSandboxTask('Declare a ship object literal with x, y, width, height, and speed properties, then write a moveLeft() function that subtracts ship.speed from ship.x, clears the canvas, and redraws the ship.');
       setSandboxConstraints('ship must be a single object literal, not five separate loose variables; moveLeft() must reference ship.speed instead of a hardcoded number.');
       setSandboxInput('ship { x, y, width, height, speed }');
-      setSandboxEdgeCases('A local variable inside the move handler must never be named ship again — that would shadow the global object and silently stop the canvas ship from moving.');
+      setSandboxEdgeCases('A local variable inside the move handler must never be named ship again โ€” that would shadow the global object and silently stop the canvas ship from moving.');
       setL2s2ActiveExercise(1);
       setL2s2CodeInput(L2S2_EXERCISES[0].preloaded);
       setL2s2Logs([]);
@@ -5149,7 +5182,7 @@ export default function App() {
       setSandboxTask('Declare an empty lasers array, write a fireLaser() function that pushes a new laser object (positioned at the ship\'s x + 18, moving at speed 8) onto the array when spacebar is pressed, and a loop that draws every laser in the array.');
       setSandboxConstraints('lasers must be initialized as an empty array before any pushes occur; fireLaser() must push a full object literal (not just a coordinate number).');
       setSandboxInput('lasers[], ship.x');
-      setSandboxEdgeCases('A single spacebar press must not push duplicate lasers — key-repeat behavior can make the cannon feel like it\'s stuttering or double-firing if not handled.');
+      setSandboxEdgeCases('A single spacebar press must not push duplicate lasers โ€” key-repeat behavior can make the cannon feel like it\'s stuttering or double-firing if not handled.');
       setL2s3ActiveExercise(1);
       setL2s3CodeInput(L2S3_EXERCISES[0].preloaded);
       setL2s3Logs([]);
@@ -5201,7 +5234,7 @@ export default function App() {
       setSimConsoleLogs([]);
     } else if (session.id === 'l2-s8') {
       setSandboxRole('Colony Defense Systems Engineer');
-      setSandboxTask('Ask the AI for a plain-English, numbered walkthrough of what happens between typing a URL and seeing a page (client request, routing, server response, render), in exactly 8 steps — this session produces no game code, it is a comprehension exercise audited against the DevTools Network tab.');
+      setSandboxTask('Ask the AI for a plain-English, numbered walkthrough of what happens between typing a URL and seeing a page (client request, routing, server response, render), in exactly 8 steps โ€” this session produces no game code, it is a comprehension exercise audited against the DevTools Network tab.');
       setSandboxConstraints('Every step must map to something visible in the DevTools Network tab; no step may skip directly from "client" to "page loads" without naming the request/response round trip.');
       setSandboxInput('captured request/response pair (URL, method, status, payload)');
       setSandboxEdgeCases('A 404 response must be explained as a successful conversation with a "no" answer, not confused with a dropped/offline connection.');
@@ -5433,7 +5466,7 @@ export default function App() {
                 id="password"
                 type="password"
                 className="login-input"
-                placeholder="••••••••"
+                placeholder="โ€ขโ€ขโ€ขโ€ขโ€ขโ€ขโ€ขโ€ข"
                 value={loginPassword}
                 onChange={e => setLoginPassword(e.target.value)}
                 required
@@ -5700,28 +5733,28 @@ export default function App() {
                   onClick={() => { setSelectedLevel(1); setSelectedSessionId('l1-s1'); }}
                   disabled={isLevelDisabled(1)}
                 >
-                  {isLevelDisabled(1) && '🔒 '}Level 1: Logic
+                  {isLevelDisabled(1) && '๐”’ '}Level 1: Logic
                 </button>
                 <button 
                   className={`level-tab ${selectedLevel === 2 ? 'active' : ''} ${isLevelDisabled(2) ? 'disabled-tab' : ''}`} 
                   onClick={() => { setSelectedLevel(2); setSelectedSessionId('l2-s5'); }}
                   disabled={isLevelDisabled(2)}
                 >
-                  {isLevelDisabled(2) && '🔒 '}Level 2: AI Copilot
+                  {isLevelDisabled(2) && '๐”’ '}Level 2: AI Copilot
                 </button>
                 <button 
                   className={`level-tab ${selectedLevel === 3 ? 'active' : ''} ${isLevelDisabled(3) ? 'disabled-tab' : ''}`} 
                   onClick={() => { setSelectedLevel(3); setSelectedSessionId('l3-s1'); }}
                   disabled={isLevelDisabled(3)}
                 >
-                  {isLevelDisabled(3) && '🔒 '}Level 3: Architect
+                  {isLevelDisabled(3) && '๐”’ '}Level 3: Architect
                 </button>
                 <button 
                   className={`level-tab ${selectedLevel === 4 ? 'active' : ''} ${isLevelDisabled(4) ? 'disabled-tab' : ''}`} 
                   onClick={() => { setSelectedLevel(4); setSelectedSessionId('l4-s1'); }}
                   disabled={isLevelDisabled(4)}
                 >
-                  {isLevelDisabled(4) && '🔒 '}Level 4: Engineer
+                  {isLevelDisabled(4) && '๐”’ '}Level 4: Engineer
                 </button>
               </div>
 
@@ -5749,7 +5782,7 @@ export default function App() {
                         {solvedCases[session.id] ? (
                           <span className="badge-cyber badge-green">COMPLETED</span>
                         ) : isQuestLocked(session.id) ? (
-                          <span className="badge-cyber badge-red">🔒 LOCKED</span>
+                          <span className="badge-cyber badge-red">๐”’ LOCKED</span>
                         ) : (
                           <span className="badge-cyber badge-cyan">ACTIVE</span>
                         )}
@@ -5802,10 +5835,10 @@ export default function App() {
                   })()}
 
                   <div className="detail-section">
-                    <h4>⚔️ Class Mission (In-Session Quest)</h4>
+                    <h4>โ”๏ธ Class Mission (In-Session Quest)</h4>
                     <div className="detail-section-body">{selectedSession.activity}</div>
                   </div>                  <div className="detail-section">
-                    <h4>📝 Intel Delivery (Practice at Home Task)</h4>
+                    <h4>๐“ Intel Delivery (Practice at Home Task)</h4>
                     <div className="detail-section-body homework-box">
                       <h5>
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 16, height: 16}}>
@@ -5819,11 +5852,11 @@ export default function App() {
                   {!solvedCases[selectedSession.id] && (
                     <div style={{ marginTop: 32, borderTop: '1px solid var(--border-color)', paddingTop: 20, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
                       {isQuestLocked(selectedSession.id) ? (
-                        <span style={{ color: 'var(--accent-red)', fontSize: '0.85rem' }}>🔒 Complete the earlier quests in this level first to unlock this one.</span>
+                        <span style={{ color: 'var(--accent-red)', fontSize: '0.85rem' }}>๐”’ Complete the earlier quests in this level first to unlock this one.</span>
                       ) : EXERCISE_COUNTS[selectedSession.id] ? (
                         <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textAlign: 'right' }}>
                           Pass all {EXERCISE_COUNTS[selectedSession.id]} sandbox exercises to earn +{selectedSession.xp} XP automatically
-                          {' '}({(exerciseProgress[selectedSession.id] || []).length}/{EXERCISE_COUNTS[selectedSession.id]} done). Use “Open Exercise” above to continue.
+                          {' '}({(exerciseProgress[selectedSession.id] || []).length}/{EXERCISE_COUNTS[selectedSession.id]} done). Use โ€Open Exerciseโ€ above to continue.
                         </span>
                       ) : (
                         <button className="btn-cyber btn-cyber-green" onClick={() => claimCaseEvidence(selectedSession.id, selectedSession.xp)}>
@@ -5847,28 +5880,28 @@ export default function App() {
                     onClick={() => { setCurriculumLevel(1); setCurriculumSessionId('l1-s1'); }}
                     disabled={isLevelDisabled(1)}
                   >
-                    {isLevelDisabled(1) && '🔒 '}Level 1: Foundations
+                    {isLevelDisabled(1) && '๐”’ '}Level 1: Foundations
                   </button>
                   <button 
                     className={`level-tab ${curriculumLevel === 2 ? 'active' : ''} ${isLevelDisabled(2) ? 'disabled-tab' : ''}`} 
                     onClick={() => { setCurriculumLevel(2); setCurriculumSessionId('l2-s1'); }}
                     disabled={isLevelDisabled(2)}
                   >
-                    {isLevelDisabled(2) && '🔒 '}Level 2: AI & Language
+                    {isLevelDisabled(2) && '๐”’ '}Level 2: AI & Language
                   </button>
                   <button 
                     className={`level-tab ${curriculumLevel === 3 ? 'active' : ''} ${isLevelDisabled(3) ? 'disabled-tab' : ''}`} 
                     onClick={() => { setCurriculumLevel(3); setCurriculumSessionId('l3-s1'); }}
                     disabled={isLevelDisabled(3)}
                   >
-                    {isLevelDisabled(3) && '🔒 '}Level 3: Architecture
+                    {isLevelDisabled(3) && '๐”’ '}Level 3: Architecture
                   </button>
                   <button 
                     className={`level-tab ${curriculumLevel === 4 ? 'active' : ''} ${isLevelDisabled(4) ? 'disabled-tab' : ''}`} 
                     onClick={() => { setCurriculumLevel(4); setCurriculumSessionId('l4-s1'); }}
                     disabled={isLevelDisabled(4)}
                   >
-                    {isLevelDisabled(4) && '🔒 '}Level 4: Engineering
+                    {isLevelDisabled(4) && '๐”’ '}Level 4: Engineering
                   </button>
                 </div>
                 
@@ -5882,7 +5915,7 @@ export default function App() {
                       className="curriculum-search-input"
                     />
                     {curriculumSearchQuery && (
-                      <button className="clear-search-btn" onClick={() => setCurriculumSearchQuery('')}>×</button>
+                      <button className="clear-search-btn" onClick={() => setCurriculumSearchQuery('')}>ร—</button>
                     )}
                   </div>
 
@@ -6071,13 +6104,13 @@ export default function App() {
                             /* STUDENT VIEW CONTENT */
                             <>
                               <div className="detail-section student-box">
-                                <h4>👨‍💻 Hands-On Exercise Challenge</h4>
+                                <h4>๐‘จโ€๐’ป Hands-On Exercise Challenge</h4>
                                 <div className="detail-section-body content-emphasis">
                                   {currentSession.handsOn}
                                 </div>
                               </div>
                               <div className="detail-section">
-                                <h4>⚔️ Active Classroom Mission</h4>
+                                <h4>โ”๏ธ Active Classroom Mission</h4>
                                 <div className="detail-section-body">
                                   {displayActivity}
                                 </div>
@@ -6087,21 +6120,21 @@ export default function App() {
                             /* TEACHER VIEW CONTENT */
                             <>
                               <div className="detail-section teacher-box">
-                                <h4>⏱️ Warm-Up Classroom Game (15 min)</h4>
+                                <h4>โฑ๏ธ Warm-Up Classroom Game (15 min)</h4>
                                 <div className="detail-section-body">
                                   {currentSession.warmUp}
                                 </div>
                               </div>
 
                               <div className="detail-section teacher-box">
-                                <h4>🏫 Board Concepts & Mini-Lesson (20 min)</h4>
+                                <h4>๐ซ Board Concepts & Mini-Lesson (20 min)</h4>
                                 <div className="detail-section-body">
                                   {currentSession.miniLesson}
                                 </div>
                               </div>
 
                               <div className="detail-section teacher-box">
-                                <h4>♟️ Activity Orchestration Guide (60 min)</h4>
+                                <h4>โ๏ธ Activity Orchestration Guide (60 min)</h4>
                                 <div className="detail-section-body">
                                   {displayActivity}
                                 </div>
@@ -6111,7 +6144,7 @@ export default function App() {
 
                           {/* Homework Box */}
                           <div className="detail-section">
-                            <h4>📝 Intel Delivery (Practice at Home Task)</h4>
+                            <h4>๐“ Intel Delivery (Practice at Home Task)</h4>
                             <div className="detail-section-body homework-box">
                               <h5>
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{width: 16, height: 16}}>
@@ -6154,7 +6187,7 @@ export default function App() {
                       {/* Tab 2: Concept Reference */}
                       {curriculumDetailTab === 'reference' && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '15px' }}>
-                          <h4 style={{ color: 'var(--accent-cyan)' }}>📚 Session Concepts Reference Details</h4>
+                          <h4 style={{ color: 'var(--accent-cyan)' }}>๐“ Session Concepts Reference Details</h4>
                           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                             Review key concepts taught in this session. You can copy these terms to search on Google or review for your project code design.
                           </p>
@@ -6170,7 +6203,7 @@ export default function App() {
                                   <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-primary)', whiteSpace: 'pre-wrap', fontFamily: 'var(--font-mono)', background: 'rgba(0,0,0,0.25)', padding: '12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>{c.desc}</p>
                                   {c.keywords && (
                                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                                      🔍 GOOGLE SEARCH TERMS: <span style={{ color: 'var(--accent-cyan)' }}>{c.keywords}</span>
+                                      ๐” GOOGLE SEARCH TERMS: <span style={{ color: 'var(--accent-cyan)' }}>{c.keywords}</span>
                                     </div>
                                   )}
                                 </div>
@@ -6239,7 +6272,7 @@ export default function App() {
                 {/* Main Content Area */}
                 <div style={{ flexGrow: 1, height: 'calc(100% - 60px)', minHeight: 0, overflowY: 'auto' }}>
               
-              {/* LEVEL 1 SESSION 1: SYSTEMS BRIEFING — 3-box trial format
+              {/* LEVEL 1 SESSION 1: SYSTEMS BRIEFING โ€” 3-box trial format
                   (Plan & Design / Prompt + Output / Explain the Output) */}
               {sandboxSessionId === 'l1-s1' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -6260,7 +6293,7 @@ export default function App() {
                           setS1Success(false);
                         }}
                       >
-                        Ex 1.{ex.num}{(exerciseProgress['l1-s1'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 1.{ex.num}{(exerciseProgress['l1-s1'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -6303,7 +6336,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s1PromptInput, `s1-ex-${s1ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s1-ex-${s1ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s1-ex-${s1ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -6337,14 +6370,14 @@ export default function App() {
                                 setS1OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS1Logs([{ type: 'error', text: `✗ Couldn't generate an answer (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS1Logs([{ type: 'error', text: `โ— Couldn't generate an answer (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS1Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s1Generating ? 'Generating…' : '🤖 Generate Answer'}
+                            {s1Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Answer'}
                           </button>
                         </div>
                         <textarea
@@ -6354,7 +6387,7 @@ export default function App() {
                           placeholder={S1_EXERCISES[s1ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Answer" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Answer" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -6381,7 +6414,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s1', s1ActiveExercise, { plan: s1PlanInput, prompt: s1PromptInput, outputCode: s1OutputCodeInput, explain: s1ExplainInput });
                         const filled = s1PromptInput.trim();
                         if (!filled) {
-                          setS1Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS1Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS1Success(false);
                           return;
                         }
@@ -6401,32 +6434,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS1Success(true);
                             const prog = markExerciseComplete('l1-s1', s1ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 1 BRIEFING COMPLETE! You now have the systems knowledge to start building.' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 1 BRIEFING COMPLETE! You now have the systems knowledge to start building.' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS1Success(false);
                           }
                           setS1Logs(logs);
                         } catch (err) {
-                          setS1Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS1Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS1Success(false);
                         } finally {
                           setS1Verifying(false);
                         }
                       }}
                     >
-                      {s1Verifying ? 'Checking prompt quality…' : s1Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s1Verifying ? 'Checking prompt qualityโ€ฆ' : s1Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -6451,7 +6484,7 @@ export default function App() {
                           <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : s1Logs.map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                             {log.text}
                           </div>
                         ))}
@@ -6461,7 +6494,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 2: DETECTIVE HTML SANDBOX — 3-box trial format
+              {/* LEVEL 1 SESSION 2: DETECTIVE HTML SANDBOX โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s2' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -6482,7 +6515,7 @@ export default function App() {
                           setS2Success(false);
                         }}
                       >
-                        Ex 2.{ex.num}{(exerciseProgress['l1-s2'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 2.{ex.num}{(exerciseProgress['l1-s2'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -6525,7 +6558,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s2PromptInput, `s2-ex-${s2ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s2-ex-${s2ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s2-ex-${s2ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -6559,14 +6592,14 @@ export default function App() {
                                 setS2OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS2Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS2Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS2Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s2Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s2Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -6576,7 +6609,7 @@ export default function App() {
                           placeholder={S2_EXERCISES[s2ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -6623,7 +6656,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s2', s2ActiveExercise, { plan: s2PlanInput, prompt: s2PromptInput, outputCode: s2OutputCodeInput, explain: s2ExplainInput });
                         const filled = s2PromptInput.trim();
                         if (!filled) {
-                          setS2Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS2Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS2Success(false);
                           return;
                         }
@@ -6643,32 +6676,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS2Success(true);
                             const prog = markExerciseComplete('l1-s2', s2ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 2 CHALLENGES COMPLETE! You have built the HTML skeleton for the Racing Car Game!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 2 CHALLENGES COMPLETE! You have built the HTML skeleton for the Racing Car Game!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS2Success(false);
                           }
                           setS2Logs(logs);
                         } catch (err) {
-                          setS2Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS2Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS2Success(false);
                         } finally {
                           setS2Verifying(false);
                         }
                       }}
                     >
-                      {s2Verifying ? 'Checking prompt quality…' : s2Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s2Verifying ? 'Checking prompt qualityโ€ฆ' : s2Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -6693,7 +6726,7 @@ export default function App() {
                           <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : s2Logs.map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                             {log.text}
                           </div>
                         ))}
@@ -6703,7 +6736,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 3: DETECTIVE CSS SANDBOX — 3-box trial format
+              {/* LEVEL 1 SESSION 3: DETECTIVE CSS SANDBOX โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s3' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -6724,7 +6757,7 @@ export default function App() {
                           setS3Success(false);
                         }}
                       >
-                        Ex 3.{ex.num}{(exerciseProgress['l1-s3'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 3.{ex.num}{(exerciseProgress['l1-s3'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -6767,7 +6800,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s3PromptInput, `s3-ex-${s3ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s3-ex-${s3ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s3-ex-${s3ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -6801,14 +6834,14 @@ export default function App() {
                                 setS3OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS3Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS3Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS3Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s3Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s3Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -6818,7 +6851,7 @@ export default function App() {
                           placeholder={S3_EXERCISES[s3ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -6847,7 +6880,7 @@ export default function App() {
                         />
                       ) : (
                         <div style={{ color: '#8899aa', fontFamily: 'var(--font-mono)', padding: '20px', textAlign: 'center', lineHeight: 1.6, border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}>
-                          This step is a plan/prompt/explanation exercise — nothing to render yet.
+                          This step is a plan/prompt/explanation exercise โ€” nothing to render yet.
                         </div>
                       )}
                     </div>
@@ -6874,7 +6907,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s3', s3ActiveExercise, { plan: s3PlanInput, prompt: s3PromptInput, outputCode: s3OutputCodeInput, explain: s3ExplainInput });
                         const filled = s3PromptInput.trim();
                         if (!filled) {
-                          setS3Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS3Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS3Success(false);
                           return;
                         }
@@ -6894,32 +6927,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS3Success(true);
                             const prog = markExerciseComplete('l1-s3', s3ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 3 CHALLENGES COMPLETE! You have styled the Racing Car highway track!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 3 CHALLENGES COMPLETE! You have styled the Racing Car highway track!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS3Success(false);
                           }
                           setS3Logs(logs);
                         } catch (err) {
-                          setS3Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS3Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS3Success(false);
                         } finally {
                           setS3Verifying(false);
                         }
                       }}
                     >
-                      {s3Verifying ? 'Checking prompt quality…' : s3Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s3Verifying ? 'Checking prompt qualityโ€ฆ' : s3Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -6944,7 +6977,7 @@ export default function App() {
                           <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : s3Logs.map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                             {log.text}
                           </div>
                         ))}
@@ -6954,7 +6987,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 4: JS VARIABLE REGISTRY — 3-box trial format
+              {/* LEVEL 1 SESSION 4: JS VARIABLE REGISTRY โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s4' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -6976,7 +7009,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 4.{ex.num}{(exerciseProgress['l1-s4'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 4.{ex.num}{(exerciseProgress['l1-s4'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -7019,7 +7052,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s4PromptInput, `ex-${s4ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `ex-${s4ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `ex-${s4ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -7053,14 +7086,14 @@ export default function App() {
                                 setS4OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS4Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS4Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS4Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s4Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s4Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -7070,7 +7103,7 @@ export default function App() {
                           placeholder={S4_EXERCISES[s4ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -7079,7 +7112,7 @@ export default function App() {
                   <div className="glass-panel" style={{ padding: '16px' }}>
                     <div className="panel-header"><h3>Console Output</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      {/* Execution sandbox is not shown visually — this session's code is
+                      {/* Execution sandbox is not shown visually โ€” this session's code is
                           variables & math, not DOM/graphics, so there is nothing honest to
                           render as a "preview." The real result is whatever the code prints. */}
                       <iframe
@@ -7097,7 +7130,7 @@ export default function App() {
                               </div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -7110,7 +7143,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s4Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -7141,7 +7174,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s4', s4ActiveExercise, { plan: s4PlanInput, prompt: s4PromptInput, outputCode: s4OutputCodeInput, explain: s4ExplainInput });
                         const filled = s4PromptInput.trim();
                         if (!filled) {
-                          setS4Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS4Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS4Success(false);
                           return;
                         }
@@ -7161,32 +7194,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS4Success(true);
                             const prog = markExerciseComplete('l1-s4', s4ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 4 CHALLENGES COMPLETE! Your game state variables are ready to drive!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 4 CHALLENGES COMPLETE! Your game state variables are ready to drive!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS4Success(false);
                           }
                           setS4Logs(logs);
                         } catch (err) {
-                          setS4Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS4Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS4Success(false);
                         } finally {
                           setS4Verifying(false);
                         }
                       }}
                     >
-                      {s4Verifying ? 'Checking prompt quality…' : s4Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s4Verifying ? 'Checking prompt qualityโ€ฆ' : s4Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -7206,7 +7239,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 5: KEYBOARD CONTROL INTERFACES (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 5: KEYBOARD CONTROL INTERFACES (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s5' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -7228,7 +7261,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 5.{ex.num}{(exerciseProgress['l1-s5'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 5.{ex.num}{(exerciseProgress['l1-s5'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -7271,7 +7304,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s5PromptInput, `s5-ex-${s5ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s5-ex-${s5ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s5-ex-${s5ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -7305,14 +7338,14 @@ export default function App() {
                                 setS5OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS5Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS5Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS5Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s5Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s5Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -7322,7 +7355,7 @@ export default function App() {
                           placeholder={S5_EXERCISES[s5ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -7332,7 +7365,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S5_EXERCISES[s5ActiveExercise - 1].runnable ? s5OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S5_EXERCISES[s5ActiveExercise - 1].runnable ? s5OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -7344,7 +7377,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -7357,7 +7390,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s5Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -7388,7 +7421,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s5', s5ActiveExercise, { plan: s5PlanInput, prompt: s5PromptInput, outputCode: s5OutputCodeInput, explain: s5ExplainInput });
                         const filled = s5PromptInput.trim();
                         if (!filled) {
-                          setS5Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS5Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS5Success(false);
                           return;
                         }
@@ -7408,32 +7441,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS5Success(true);
                             const prog = markExerciseComplete('l1-s5', s5ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 5 CHALLENGES COMPLETE! Your car now steers with the keyboard!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 5 CHALLENGES COMPLETE! Your car now steers with the keyboard!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS5Success(false);
                           }
                           setS5Logs(logs);
                         } catch (err) {
-                          setS5Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS5Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS5Success(false);
                         } finally {
                           setS5Verifying(false);
                         }
                       }}
                     >
-                      {s5Verifying ? 'Checking prompt quality…' : s5Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s5Verifying ? 'Checking prompt qualityโ€ฆ' : s5Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -7453,7 +7486,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 6: TRACK BOUNDARIES & SAFETY GUARDS (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 6: TRACK BOUNDARIES & SAFETY GUARDS (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s6' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -7475,7 +7508,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 6.{ex.num}{(exerciseProgress['l1-s6'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 6.{ex.num}{(exerciseProgress['l1-s6'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -7518,7 +7551,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s6PromptInput, `s6-ex-${s6ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s6-ex-${s6ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s6-ex-${s6ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -7552,14 +7585,14 @@ export default function App() {
                                 setS6OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS6Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS6Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS6Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s6Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s6Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -7569,7 +7602,7 @@ export default function App() {
                           placeholder={S6_EXERCISES[s6ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -7579,7 +7612,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S6_EXERCISES[s6ActiveExercise - 1].runnable ? s6OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S6_EXERCISES[s6ActiveExercise - 1].runnable ? s6OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -7591,7 +7624,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -7604,7 +7637,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s6Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -7635,7 +7668,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s6', s6ActiveExercise, { plan: s6PlanInput, prompt: s6PromptInput, outputCode: s6OutputCodeInput, explain: s6ExplainInput });
                         const filled = s6PromptInput.trim();
                         if (!filled) {
-                          setS6Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS6Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS6Success(false);
                           return;
                         }
@@ -7655,32 +7688,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS6Success(true);
                             const prog = markExerciseComplete('l1-s6', s6ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 6 CHALLENGES COMPLETE! Your car now stays safely on the track!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 6 CHALLENGES COMPLETE! Your car now stays safely on the track!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS6Success(false);
                           }
                           setS6Logs(logs);
                         } catch (err) {
-                          setS6Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS6Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS6Success(false);
                         } finally {
                           setS6Verifying(false);
                         }
                       }}
                     >
-                      {s6Verifying ? 'Checking prompt quality…' : s6Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s6Verifying ? 'Checking prompt qualityโ€ฆ' : s6Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -7700,7 +7733,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 7: OBSTACLE LOOP GENERATION (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 7: OBSTACLE LOOP GENERATION (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s7' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -7722,7 +7755,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 7.{ex.num}{(exerciseProgress['l1-s7'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 7.{ex.num}{(exerciseProgress['l1-s7'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -7765,7 +7798,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s7PromptInput, `s7-ex-${s7ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s7-ex-${s7ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s7-ex-${s7ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -7794,7 +7827,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is deliberately not runnable — the seeded bug here is an infinite loop, and actually executing it would hang the preview.')}
+                        srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is deliberately not runnable โ€” the seeded bug here is an infinite loop, and actually executing it would hang the preview.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -7803,7 +7836,7 @@ export default function App() {
                           <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code and click Verify. This session's code runs once when the preview loads.</div>
                         ) : [...s7Logs, ...simConsoleLogs].map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                             {log.text}
                           </div>
                         ))}
@@ -7834,20 +7867,20 @@ export default function App() {
                         const result = filled ? ex.validate({ plan: s7PlanInput, prompt: s7PromptInput, outputCode: s7OutputCodeInput, explain: s7ExplainInput }) : null;
                         const pass = filled && result.promptOk && result.codeOk && result.explainOk;
                         if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
+                          logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} complete.` });
                           setS7Success(true);
                           const prog = markExerciseComplete('l1-s7', s7ActiveExercise);
                           if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ SESSION 7 CHALLENGES COMPLETE! Highway markers now spawn automatically!' });
+                            logs.push({ type: 'success', text: 'โ“ SESSION 7 CHALLENGES COMPLETE! Highway markers now spawn automatically!' });
                             if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                           } else {
                             logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                           }
                         } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                          logs.push({ type: 'error', text: 'โ— Fill in all three boxes โ€” Plan, Prompt + Output Code, and Explanation โ€” before verifying.' });
                           setS7Success(false);
                         } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
+                          logs.push({ type: 'error', text: 'โ— Check failed โ€” here is exactly what still needs fixing:' });
                           if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
                           if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
                           if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
@@ -7856,7 +7889,7 @@ export default function App() {
                         setS7Logs(logs);
                       }}
                     >
-                      {s7Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s7Success ? 'โ“ Exercise Complete' : 'Verify JS Logic'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -7876,7 +7909,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 8: MODULAR CONTROL FUNCTIONS (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 8: MODULAR CONTROL FUNCTIONS (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s8' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -7898,7 +7931,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 8.{ex.num}{(exerciseProgress['l1-s8'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 8.{ex.num}{(exerciseProgress['l1-s8'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -7941,7 +7974,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s8PromptInput, `s8-ex-${s8ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s8-ex-${s8ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s8-ex-${s8ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -7975,14 +8008,14 @@ export default function App() {
                                 setS8OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS8Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS8Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS8Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s8Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s8Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -7992,7 +8025,7 @@ export default function App() {
                           placeholder={S8_EXERCISES[s8ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -8002,7 +8035,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -8014,7 +8047,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8027,7 +8060,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s8Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8058,7 +8091,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s8', s8ActiveExercise, { plan: s8PlanInput, prompt: s8PromptInput, outputCode: s8OutputCodeInput, explain: s8ExplainInput });
                         const filled = s8PromptInput.trim();
                         if (!filled) {
-                          setS8Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS8Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS8Success(false);
                           return;
                         }
@@ -8078,32 +8111,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS8Success(true);
                             const prog = markExerciseComplete('l1-s8', s8ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 8 CHALLENGES COMPLETE! Your steering logic is now fully modular!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 8 CHALLENGES COMPLETE! Your steering logic is now fully modular!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS8Success(false);
                           }
                           setS8Logs(logs);
                         } catch (err) {
-                          setS8Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS8Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS8Success(false);
                         } finally {
                           setS8Verifying(false);
                         }
                       }}
                     >
-                      {s8Verifying ? 'Checking prompt quality…' : s8Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s8Verifying ? 'Checking prompt qualityโ€ฆ' : s8Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8123,7 +8156,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 9: THE RACING GAME LOOP - TIMERS & ANIMATIONS (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 9: THE RACING GAME LOOP - TIMERS & ANIMATIONS (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s9' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -8145,7 +8178,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 9.{ex.num}{(exerciseProgress['l1-s9'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 9.{ex.num}{(exerciseProgress['l1-s9'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -8188,7 +8221,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s9PromptInput, `s9-ex-${s9ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s9-ex-${s9ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s9-ex-${s9ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -8222,14 +8255,14 @@ export default function App() {
                                 setS9OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS9Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS9Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS9Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s9Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s9Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -8239,7 +8272,7 @@ export default function App() {
                           placeholder={S9_EXERCISES[s9ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -8249,7 +8282,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -8261,7 +8294,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8274,7 +8307,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s9Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8305,7 +8338,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s9', s9ActiveExercise, { plan: s9PlanInput, prompt: s9PromptInput, outputCode: s9OutputCodeInput, explain: s9ExplainInput });
                         const filled = s9PromptInput.trim();
                         if (!filled) {
-                          setS9Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS9Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS9Success(false);
                           return;
                         }
@@ -8325,32 +8358,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS9Success(true);
                             const prog = markExerciseComplete('l1-s9', s9ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 9 CHALLENGES COMPLETE! Your obstacles now animate down the track!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 9 CHALLENGES COMPLETE! Your obstacles now animate down the track!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS9Success(false);
                           }
                           setS9Logs(logs);
                         } catch (err) {
-                          setS9Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS9Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS9Success(false);
                         } finally {
                           setS9Verifying(false);
                         }
                       }}
                     >
-                      {s9Verifying ? 'Checking prompt quality…' : s9Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s9Verifying ? 'Checking prompt qualityโ€ฆ' : s9Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8370,7 +8403,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 10: COLLISION DETECTION - AUDITING AI OVERLAP MATH (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 10: COLLISION DETECTION - AUDITING AI OVERLAP MATH (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s10' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -8392,7 +8425,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 10.{ex.num}{(exerciseProgress['l1-s10'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 10.{ex.num}{(exerciseProgress['l1-s10'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -8435,7 +8468,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s10PromptInput, `s10-ex-${s10ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s10-ex-${s10ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s10-ex-${s10ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -8469,14 +8502,14 @@ export default function App() {
                                 setS10OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS10Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS10Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS10Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s10Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s10Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -8486,7 +8519,7 @@ export default function App() {
                           placeholder={S10_EXERCISES[s10ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -8496,7 +8529,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -8508,7 +8541,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8521,7 +8554,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s10Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8552,7 +8585,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s10', s10ActiveExercise, { plan: s10PlanInput, prompt: s10PromptInput, outputCode: s10OutputCodeInput, explain: s10ExplainInput });
                         const filled = s10PromptInput.trim();
                         if (!filled) {
-                          setS10Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS10Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS10Success(false);
                           return;
                         }
@@ -8572,32 +8605,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS10Success(true);
                             const prog = markExerciseComplete('l1-s10', s10ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 10 CHALLENGES COMPLETE! Collisions are now detected correctly!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 10 CHALLENGES COMPLETE! Collisions are now detected correctly!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS10Success(false);
                           }
                           setS10Logs(logs);
                         } catch (err) {
-                          setS10Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS10Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS10Success(false);
                         } finally {
                           setS10Verifying(false);
                         }
                       }}
                     >
-                      {s10Verifying ? 'Checking prompt quality…' : s10Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s10Verifying ? 'Checking prompt qualityโ€ฆ' : s10Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8617,7 +8650,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 11: THE DASHBOARD & HIGH-SCORE COUNTER - DOM OPERATIONS (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 11: THE DASHBOARD & HIGH-SCORE COUNTER - DOM OPERATIONS (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s11' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -8639,7 +8672,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 11.{ex.num}{(exerciseProgress['l1-s11'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 11.{ex.num}{(exerciseProgress['l1-s11'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -8682,7 +8715,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s11PromptInput, `s11-ex-${s11ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s11-ex-${s11ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s11-ex-${s11ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -8716,14 +8749,14 @@ export default function App() {
                                 setS11OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS11Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS11Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS11Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s11Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s11Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -8733,7 +8766,7 @@ export default function App() {
                           placeholder={S11_EXERCISES[s11ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -8743,7 +8776,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S11_EXERCISES[s11ActiveExercise - 1].runnable ? s11OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S11_EXERCISES[s11ActiveExercise - 1].runnable ? s11OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -8755,7 +8788,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8768,7 +8801,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s11Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -8799,7 +8832,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s11', s11ActiveExercise, { plan: s11PlanInput, prompt: s11PromptInput, outputCode: s11OutputCodeInput, explain: s11ExplainInput });
                         const filled = s11PromptInput.trim();
                         if (!filled) {
-                          setS11Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS11Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS11Success(false);
                           return;
                         }
@@ -8819,32 +8852,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS11Success(true);
                             const prog = markExerciseComplete('l1-s11', s11ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ SESSION 11 CHALLENGES COMPLETE! The HUD and restart flow are fully wired up!' });
+                              logs.push({ type: 'success', text: 'โ“ SESSION 11 CHALLENGES COMPLETE! The HUD and restart flow are fully wired up!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS11Success(false);
                           }
                           setS11Logs(logs);
                         } catch (err) {
-                          setS11Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS11Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS11Success(false);
                         } finally {
                           setS11Verifying(false);
                         }
                       }}
                     >
-                      {s11Verifying ? 'Checking prompt quality…' : s11Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s11Verifying ? 'Checking prompt qualityโ€ฆ' : s11Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8864,7 +8897,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 1 SESSION 12: RACING CAR GAME ASSESSMENT (JS Sandbox) — 3-box trial format
+              {/* LEVEL 1 SESSION 12: RACING CAR GAME ASSESSMENT (JS Sandbox) โ€” 3-box trial format
                   (Plan & Design / Prompt + Output Code / Explain the Output Code) */}
               {sandboxSessionId === 'l1-s12' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
@@ -8886,7 +8919,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 12.{ex.num}{(exerciseProgress['l1-s12'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 12.{ex.num}{(exerciseProgress['l1-s12'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -8929,7 +8962,7 @@ export default function App() {
                             onClick={() => copyPromptToClipboard(s12PromptInput, `s12-ex-${s12ActiveExercise}`)}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {promptCopiedKey === `s12-ex-${s12ActiveExercise}` ? '✓ Copied' : 'Copy Prompt'}
+                            {promptCopiedKey === `s12-ex-${s12ActiveExercise}` ? 'โ“ Copied' : 'Copy Prompt'}
                           </button>
                         </div>
                         <textarea
@@ -8963,14 +8996,14 @@ export default function App() {
                                 setS12OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
                               } catch (err) {
-                                setS12Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                                setS12Logs([{ type: 'error', text: `โ— Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
                                 setS12Generating(false);
                               }
                             }}
                             style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                           >
-                            {s12Generating ? 'Generating…' : '🤖 Generate Code'}
+                            {s12Generating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                           </button>
                         </div>
                         <textarea
@@ -8980,7 +9013,7 @@ export default function App() {
                           placeholder={S12_EXERCISES[s12ActiveExercise - 1].outputCodePlaceholder}
                         />
                         <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                          "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                         </span>
                       </div>
                     </div>
@@ -8990,7 +9023,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '// This step is a plan/prompt/explanation exercise โ€” nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -9002,7 +9035,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
                             ) : simConsoleLogs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -9015,7 +9048,7 @@ export default function App() {
                               <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
                             ) : s12Logs.map((log, idx) => (
                               <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                 {log.text}
                               </div>
                             ))}
@@ -9046,7 +9079,7 @@ export default function App() {
                         saveExerciseSubmission('l1-s12', s12ActiveExercise, { plan: s12PlanInput, prompt: s12PromptInput, outputCode: s12OutputCodeInput, explain: s12ExplainInput });
                         const filled = s12PromptInput.trim();
                         if (!filled) {
-                          setS12Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
+                          setS12Logs([{ type: 'error', text: 'โ— Write a prompt before verifying โ€” that\'s the only box graded.' }]);
                           setS12Success(false);
                           return;
                         }
@@ -9066,32 +9099,32 @@ export default function App() {
 
                           const logs = [];
                           if (verdict.pass) {
-                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'success', text: `โ“ Good prompt! ${ex.title} complete.` });
                             logs.push({ type: 'info', text: verdict.feedback });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  ๐’ก ${tip}` }));
                             setS12Success(true);
                             const prog = markExerciseComplete('l1-s12', s12ActiveExercise);
                             if (prog.allDone) {
-                              logs.push({ type: 'success', text: '✓ LEVEL 1 CAPSTONE COMPLETE! The Racing Car Game is fully certified. Onward to Level 2!' });
+                              logs.push({ type: 'success', text: 'โ“ LEVEL 1 CAPSTONE COMPLETE! The Racing Car Game is fully certified. Onward to Level 2!' });
                               if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                             } else {
                               logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                             }
                           } else {
-                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
-                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            logs.push({ type: 'error', text: `โ— Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  ๐’ก ${tip}` }));
                             setS12Success(false);
                           }
                           setS12Logs(logs);
                         } catch (err) {
-                          setS12Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS12Logs([{ type: 'error', text: `โ— Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
                           setS12Success(false);
                         } finally {
                           setS12Verifying(false);
                         }
                       }}
                     >
-                      {s12Verifying ? 'Checking prompt quality…' : s12Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
+                      {s12Verifying ? 'Checking prompt qualityโ€ฆ' : s12Success ? 'โ“ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -9128,7 +9161,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 1.{ex.num}{(exerciseProgress['l2-s1'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 1.{ex.num}{(exerciseProgress['l2-s1'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9157,24 +9190,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing canvas initialization logic for Exercise 1.${l2s1ActiveExercise}...` }];
                             const pass = ex.validate(l2s1CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s1Success(true);
                               const prog = markExerciseComplete('l2-s1', l2s1ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 1 CHALLENGES COMPLETE! The Defense Arena canvas is ready.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 1 CHALLENGES COMPLETE! The Defense Arena canvas is ready.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Canvas setup or draw parameters missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Canvas setup or draw parameters missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s1Success(false);
                             }
                             setL2s1Logs(logs);
                           }}
                         >
-                          {l2s1Success ? '✓ Exercise Complete' : 'Verify Canvas Logic'}
+                          {l2s1Success ? 'โ“ Exercise Complete' : 'Verify Canvas Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s1CodeInput(L2S1_EXERCISES[l2s1ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9202,7 +9235,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S1_EXERCISES[l2s1ActiveExercise - 1].runnable ? l2s1CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S1_EXERCISES[l2s1ActiveExercise - 1].runnable ? l2s1CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9211,7 +9244,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s1Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9239,7 +9272,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 2.{ex.num}{(exerciseProgress['l2-s2'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 2.{ex.num}{(exerciseProgress['l2-s2'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9268,24 +9301,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing sprite object logic for Exercise 2.${l2s2ActiveExercise}...` }];
                             const pass = ex.validate(l2s2CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s2Success(true);
                               const prog = markExerciseComplete('l2-s2', l2s2ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 2 CHALLENGES COMPLETE! The ship sprite is fully animated.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 2 CHALLENGES COMPLETE! The ship sprite is fully animated.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Sprite object or movement logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Sprite object or movement logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s2Success(false);
                             }
                             setL2s2Logs(logs);
                           }}
                         >
-                          {l2s2Success ? '✓ Exercise Complete' : 'Verify Sprite Logic'}
+                          {l2s2Success ? 'โ“ Exercise Complete' : 'Verify Sprite Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s2CodeInput(L2S2_EXERCISES[l2s2ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9313,7 +9346,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S2_EXERCISES[l2s2ActiveExercise - 1].runnable ? l2s2CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S2_EXERCISES[l2s2ActiveExercise - 1].runnable ? l2s2CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9322,7 +9355,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s2Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9350,7 +9383,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 3.{ex.num}{(exerciseProgress['l2-s3'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 3.{ex.num}{(exerciseProgress['l2-s3'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9379,24 +9412,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing laser array logic for Exercise 3.${l2s3ActiveExercise}...` }];
                             const pass = ex.validate(l2s3CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s3Success(true);
                               const prog = markExerciseComplete('l2-s3', l2s3ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 3 CHALLENGES COMPLETE! The laser battery is online.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 3 CHALLENGES COMPLETE! The laser battery is online.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Array declaration or loop logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Array declaration or loop logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s3Success(false);
                             }
                             setL2s3Logs(logs);
                           }}
                         >
-                          {l2s3Success ? '✓ Exercise Complete' : 'Verify Array Logic'}
+                          {l2s3Success ? 'โ“ Exercise Complete' : 'Verify Array Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s3CodeInput(L2S3_EXERCISES[l2s3ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9424,7 +9457,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S3_EXERCISES[l2s3ActiveExercise - 1].runnable ? l2s3CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S3_EXERCISES[l2s3ActiveExercise - 1].runnable ? l2s3CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9433,7 +9466,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s3Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9461,7 +9494,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 4.{ex.num}{(exerciseProgress['l2-s4'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 4.{ex.num}{(exerciseProgress['l2-s4'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9490,24 +9523,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing garbage collection logic for Exercise 4.${l2s4ActiveExercise}...` }];
                             const pass = ex.validate(l2s4CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s4Success(true);
                               const prog = markExerciseComplete('l2-s4', l2s4ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 4 CHALLENGES COMPLETE! Memory leaks eliminated.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 4 CHALLENGES COMPLETE! Memory leaks eliminated.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Reverse loop or splice logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Reverse loop or splice logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s4Success(false);
                             }
                             setL2s4Logs(logs);
                           }}
                         >
-                          {l2s4Success ? '✓ Exercise Complete' : 'Verify Cleanup Logic'}
+                          {l2s4Success ? 'โ“ Exercise Complete' : 'Verify Cleanup Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s4CodeInput(L2S4_EXERCISES[l2s4ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9535,7 +9568,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S4_EXERCISES[l2s4ActiveExercise - 1].runnable ? l2s4CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S4_EXERCISES[l2s4ActiveExercise - 1].runnable ? l2s4CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9544,7 +9577,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s4Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9572,7 +9605,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 5.{ex.num}{(exerciseProgress['l2-s5'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 5.{ex.num}{(exerciseProgress['l2-s5'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9601,24 +9634,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing swarm grid logic for Exercise 5.${l2s5ActiveExercise}...` }];
                             const pass = ex.validate(l2s5CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s5Success(true);
                               const prog = markExerciseComplete('l2-s5', l2s5ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 5 CHALLENGES COMPLETE! Swarm grid and shield systems online.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 5 CHALLENGES COMPLETE! Swarm grid and shield systems online.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Grid or shield lookup logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Grid or shield lookup logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s5Success(false);
                             }
                             setL2s5Logs(logs);
                           }}
                         >
-                          {l2s5Success ? '✓ Exercise Complete' : 'Verify Swarm Logic'}
+                          {l2s5Success ? 'โ“ Exercise Complete' : 'Verify Swarm Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s5CodeInput(L2S5_EXERCISES[l2s5ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9646,7 +9679,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S5_EXERCISES[l2s5ActiveExercise - 1].runnable ? l2s5CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S5_EXERCISES[l2s5ActiveExercise - 1].runnable ? l2s5CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9655,7 +9688,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s5Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9683,7 +9716,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 6.{ex.num}{(exerciseProgress['l2-s6'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 6.{ex.num}{(exerciseProgress['l2-s6'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9712,24 +9745,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing input matrix / collision sweep logic for Exercise 6.${l2s6ActiveExercise}...` }];
                             const pass = ex.validate(l2s6CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s6Success(true);
                               const prog = markExerciseComplete('l2-s6', l2s6ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 6 CHALLENGES COMPLETE! Firing control and collision sweeps online.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 6 CHALLENGES COMPLETE! Firing control and collision sweeps online.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Key-state or sweep logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Key-state or sweep logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s6Success(false);
                             }
                             setL2s6Logs(logs);
                           }}
                         >
-                          {l2s6Success ? '✓ Exercise Complete' : 'Verify Input/Sweep Logic'}
+                          {l2s6Success ? 'โ“ Exercise Complete' : 'Verify Input/Sweep Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s6CodeInput(L2S6_EXERCISES[l2s6ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9757,7 +9790,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S6_EXERCISES[l2s6ActiveExercise - 1].runnable ? l2s6CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S6_EXERCISES[l2s6ActiveExercise - 1].runnable ? l2s6CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9766,7 +9799,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s6Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9794,7 +9827,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 7.{ex.num}{(exerciseProgress['l2-s7'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 7.{ex.num}{(exerciseProgress['l2-s7'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9823,24 +9856,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing HUD / performance audit logic for Exercise 7.${l2s7ActiveExercise}...` }];
                             const pass = ex.validate(l2s7CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s7Success(true);
                               const prog = markExerciseComplete('l2-s7', l2s7ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 7 CHALLENGES COMPLETE! HUD and wave systems online.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 7 CHALLENGES COMPLETE! HUD and wave systems online.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. HUD or wave-check logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. HUD or wave-check logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s7Success(false);
                             }
                             setL2s7Logs(logs);
                           }}
                         >
-                          {l2s7Success ? '✓ Exercise Complete' : 'Verify HUD/Wave Logic'}
+                          {l2s7Success ? 'โ“ Exercise Complete' : 'Verify HUD/Wave Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s7CodeInput(L2S7_EXERCISES[l2s7ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9868,7 +9901,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S7_EXERCISES[l2s7ActiveExercise - 1].runnable ? l2s7CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S7_EXERCISES[l2s7ActiveExercise - 1].runnable ? l2s7CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9877,7 +9910,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s7Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9888,7 +9921,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 2 SESSION 8: MISSION CONTROL UPLINK — HOW THE WEB WORKS (Canvas Sandbox) */}
+              {/* LEVEL 2 SESSION 8: MISSION CONTROL UPLINK โ€” HOW THE WEB WORKS (Canvas Sandbox) */}
               {sandboxSessionId === 'l2-s8' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
@@ -9905,7 +9938,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 8.{ex.num}{(exerciseProgress['l2-s8'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 8.{ex.num}{(exerciseProgress['l2-s8'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -9934,24 +9967,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Auditing request/response comprehension for Exercise 8.${l2s8ActiveExercise}...` }];
                             const pass = ex.validate(l2s8CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s8Success(true);
                               const prog = markExerciseComplete('l2-s8', l2s8ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 8 CHALLENGES COMPLETE! Mission Control uplink verified.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 8 CHALLENGES COMPLETE! Mission Control uplink verified.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Answer is missing required detail.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Answer is missing required detail.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s8Success(false);
                             }
                             setL2s8Logs(logs);
                           }}
                         >
-                          {l2s8Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                          {l2s8Success ? 'โ“ Exercise Complete' : 'Verify Answer'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s8CodeInput(L2S8_EXERCISES[l2s8ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -9979,7 +10012,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S8_EXERCISES[l2s8ActiveExercise - 1].runnable ? l2s8CodeInput : '// Session 8 is a comprehension exercise — no game code to run.\n// Answer in the editor and click Verify.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S8_EXERCISES[l2s8ActiveExercise - 1].runnable ? l2s8CodeInput : '// Session 8 is a comprehension exercise โ€” no game code to run.\n// Answer in the editor and click Verify.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -9988,7 +10021,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your answer and click Verify.</div>
                           ) : [...l2s8Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -9999,7 +10032,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 2 SESSION 9: ASYNCHRONOUS TELEMETRY — FETCHING THE LEADERBOARD (Canvas Sandbox) */}
+              {/* LEVEL 2 SESSION 9: ASYNCHRONOUS TELEMETRY โ€” FETCHING THE LEADERBOARD (Canvas Sandbox) */}
               {sandboxSessionId === 'l2-s9' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
@@ -10016,7 +10049,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 9.{ex.num}{(exerciseProgress['l2-s9'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 9.{ex.num}{(exerciseProgress['l2-s9'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -10045,24 +10078,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing async fetch logic for Exercise 9.${l2s9ActiveExercise}...` }];
                             const pass = ex.validate(l2s9CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s9Success(true);
                               const prog = markExerciseComplete('l2-s9', l2s9ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 9 CHALLENGES COMPLETE! Leaderboard telemetry link established.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 9 CHALLENGES COMPLETE! Leaderboard telemetry link established.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Async/await or try/catch logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Async/await or try/catch logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s9Success(false);
                             }
                             setL2s9Logs(logs);
                           }}
                         >
-                          {l2s9Success ? '✓ Exercise Complete' : 'Verify Fetch Logic'}
+                          {l2s9Success ? 'โ“ Exercise Complete' : 'Verify Fetch Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s9CodeInput(L2S9_EXERCISES[l2s9ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -10090,7 +10123,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S9_EXERCISES[l2s9ActiveExercise - 1].runnable ? l2s9CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S9_EXERCISES[l2s9ActiveExercise - 1].runnable ? l2s9CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -10099,7 +10132,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s9Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -10127,7 +10160,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 10.{ex.num}{(exerciseProgress['l2-s10'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 10.{ex.num}{(exerciseProgress['l2-s10'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -10156,24 +10189,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Analyzing POST submission logic for Exercise 10.${l2s10ActiveExercise}...` }];
                             const pass = ex.validate(l2s10CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s10Success(true);
                               const prog = markExerciseComplete('l2-s10', l2s10ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 10 CHALLENGES COMPLETE! Score submission uplink verified.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 10 CHALLENGES COMPLETE! Score submission uplink verified.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. POST options or status-check logic missing.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. POST options or status-check logic missing.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s10Success(false);
                             }
                             setL2s10Logs(logs);
                           }}
                         >
-                          {l2s10Success ? '✓ Exercise Complete' : 'Verify Submission Logic'}
+                          {l2s10Success ? 'โ“ Exercise Complete' : 'Verify Submission Logic'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s10CodeInput(L2S10_EXERCISES[l2s10ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -10201,7 +10234,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S10_EXERCISES[l2s10ActiveExercise - 1].runnable ? l2s10CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S10_EXERCISES[l2s10ActiveExercise - 1].runnable ? l2s10CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -10210,7 +10243,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s10Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -10221,7 +10254,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 2 SESSION 11: THE COLONY DATA VAULT — TABLES, SCHEMAS & SQL QUERIES (SQL Sandbox) */}
+              {/* LEVEL 2 SESSION 11: THE COLONY DATA VAULT โ€” TABLES, SCHEMAS & SQL QUERIES (SQL Sandbox) */}
               {sandboxSessionId === 'l2-s11' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
@@ -10238,7 +10271,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 11.{ex.num}{(exerciseProgress['l2-s11'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 11.{ex.num}{(exerciseProgress['l2-s11'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -10267,24 +10300,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Auditing SQL schema/query for Exercise 11.${l2s11ActiveExercise}...` }];
                             const pass = ex.validate(l2s11CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s11Success(true);
                               const prog = markExerciseComplete('l2-s11', l2s11ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 11 CHALLENGES COMPLETE! Colony data vault schema online.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 11 CHALLENGES COMPLETE! Colony data vault schema online.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. SQL statement is missing required detail.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. SQL statement is missing required detail.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s11Success(false);
                             }
                             setL2s11Logs(logs);
                           }}
                         >
-                          {l2s11Success ? '✓ Exercise Complete' : 'Verify SQL'}
+                          {l2s11Success ? 'โ“ Exercise Complete' : 'Verify SQL'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s11CodeInput(L2S11_EXERCISES[l2s11ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -10312,7 +10345,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview('// Session 11 is a SQL exercise — no canvas code to run.\n// Write your SQL in the editor and click Verify.')}
+                          srcDoc={buildCanvasSandboxPreview('// Session 11 is a SQL exercise โ€” no canvas code to run.\n// Write your SQL in the editor and click Verify.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="SQL Playground Preview"
                         />
@@ -10321,7 +10354,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your SQL and click Verify.</div>
                           ) : [...l2s11Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -10332,7 +10365,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* LEVEL 2 SESSION 12: DEFENDING THE DATA VAULT — VALIDATION, PASSWORDS & INJECTION AWARENESS (SQL Sandbox) */}
+              {/* LEVEL 2 SESSION 12: DEFENDING THE DATA VAULT โ€” VALIDATION, PASSWORDS & INJECTION AWARENESS (SQL Sandbox) */}
               {sandboxSessionId === 'l2-s12' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                   <div className="exercise-selector-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', flexWrap: 'wrap' }}>
@@ -10349,7 +10382,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 12.{ex.num}{(exerciseProgress['l2-s12'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 12.{ex.num}{(exerciseProgress['l2-s12'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -10378,24 +10411,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Auditing validation/injection logic for Exercise 12.${l2s12ActiveExercise}...` }];
                             const pass = ex.validate(l2s12CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s12Success(true);
                               const prog = markExerciseComplete('l2-s12', l2s12ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 12 CHALLENGES COMPLETE! Trust boundary secured.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 12 CHALLENGES COMPLETE! Trust boundary secured.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Answer or fix is missing required detail.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Answer or fix is missing required detail.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s12Success(false);
                             }
                             setL2s12Logs(logs);
                           }}
                         >
-                          {l2s12Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                          {l2s12Success ? 'โ“ Exercise Complete' : 'Verify Answer'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s12CodeInput(L2S12_EXERCISES[l2s12ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -10423,7 +10456,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S12_EXERCISES[l2s12ActiveExercise - 1].runnable ? l2s12CodeInput : '// This step is a plan/prompt/review/SQL exercise — nothing to run yet.\n// Jump to the "Test & Break" JS exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S12_EXERCISES[l2s12ActiveExercise - 1].runnable ? l2s12CodeInput : '// This step is a plan/prompt/review/SQL exercise โ€” nothing to run yet.\n// Jump to the "Test & Break" JS exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -10432,7 +10465,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your answer and click Verify.</div>
                           ) : [...l2s12Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -10460,7 +10493,7 @@ export default function App() {
                           setSimConsoleLogs([]);
                         }}
                       >
-                        Ex 13.{ex.num}{(exerciseProgress['l2-s13'] || []).includes(ex.num) ? ' ✓' : ''}
+                        Ex 13.{ex.num}{(exerciseProgress['l2-s13'] || []).includes(ex.num) ? ' โ“' : ''}
                       </button>
                     ))}
                   </div>
@@ -10489,24 +10522,24 @@ export default function App() {
                             const logs = [{ type: 'info', text: `Running graduation diagnostic for Exercise 13.${l2s13ActiveExercise}...` }];
                             const pass = ex.validate(l2s13CodeInput);
                             if (pass) {
-                              logs.push({ type: 'success', text: `✓ Correct! ${ex.title} validation passed.` });
+                              logs.push({ type: 'success', text: `โ“ Correct! ${ex.title} validation passed.` });
                               setL2s13Success(true);
                               const prog = markExerciseComplete('l2-s13', l2s13ActiveExercise);
                               if (prog.allDone) {
-                                logs.push({ type: 'success', text: '✓ SESSION 13 CHALLENGES COMPLETE! Level 2 Defense passed — cleared for Level 3.' });
+                                logs.push({ type: 'success', text: 'โ“ SESSION 13 CHALLENGES COMPLETE! Level 2 Defense passed โ€” cleared for Level 3.' });
                                 if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
                               } else {
                                 logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
                               }
                             } else {
-                              logs.push({ type: 'error', text: `✗ Validation failed. Review the relevant earlier session and try again.` });
+                              logs.push({ type: 'error', text: `โ— Validation failed. Review the relevant earlier session and try again.` });
                               logs.push({ type: 'info', text: `Hint: ${ex.hint}` });
                               setL2s13Success(false);
                             }
                             setL2s13Logs(logs);
                           }}
                         >
-                          {l2s13Success ? '✓ Exercise Complete' : 'Verify Answer'}
+                          {l2s13Success ? 'โ“ Exercise Complete' : 'Verify Answer'}
                         </button>
                         <button className="btn-cyber btn-cyber-red btn-small" onClick={() => { setL2s13CodeInput(L2S13_EXERCISES[l2s13ActiveExercise - 1].preloaded); setSimConsoleLogs([]); }}>
                           Reset Code
@@ -10534,7 +10567,7 @@ export default function App() {
                       </div>
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <iframe
-                          srcDoc={buildCanvasSandboxPreview(L2S13_EXERCISES[l2s13ActiveExercise - 1].runnable ? l2s13CodeInput : '// This step is a plan/prompt/review exercise — nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
+                          srcDoc={buildCanvasSandboxPreview(L2S13_EXERCISES[l2s13ActiveExercise - 1].runnable ? l2s13CodeInput : '// This step is a plan/prompt/review exercise โ€” nothing to run yet.\n// Jump to a "Test & Break" or "Iterate & Improve" exercise to see live code execution.')}
                           style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                           title="Canvas Sandbox Live Preview"
                         />
@@ -10543,7 +10576,7 @@ export default function App() {
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write code and click Verify.</div>
                           ) : [...l2s13Logs, ...simConsoleLogs].map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                               {log.text}
                             </div>
                           ))}
@@ -10644,8 +10677,8 @@ export default function App() {
                         {chaosLogs.length > 0 ? (
                           chaosLogs.map((log, index) => (
                             <div key={index} className={`chaos-log-item ${log.type}`}>
-                              <span>{log.type === 'success' && '✓ '}</span>
-                              <span>{log.type === 'error' && '✗ '}</span>
+                              <span>{log.type === 'success' && 'โ“ '}</span>
+                              <span>{log.type === 'error' && 'โ— '}</span>
                               {log.text}
                             </div>
                           ))
@@ -10681,7 +10714,7 @@ export default function App() {
                     // Prefer an entry whose id actually follows the `${userId}_${sessionId}`
                     // convention (what "Initialize Project Journal" creates, and what the detail
                     // panel below strictly requires to resolve `currentSession`). Only fall back
-                    // to a fuzzy title match for legacy entries that predate that convention —
+                    // to a fuzzy title match for legacy entries that predate that convention โ€”
                     // otherwise a stray auto-logged entry (see claimCaseEvidence) with a random
                     // id and the raw curriculum title can shadow the real entry here even though
                     // the detail panel can't open it, making the session look journal-less.
@@ -10751,12 +10784,12 @@ export default function App() {
                   const isInitialized = selectedJournal && selectedJournal.id.endsWith('_' + currentSession.id);
 
                   // L1 Sessions 1-8 use a reduced 3-box Project Task format (Plan & Design /
-                  // Prompt & Output Code / Explain the Code) — Test & Iterate are dropped from
+                  // Prompt & Output Code / Explain the Code) โ€” Test & Iterate are dropped from
                   // the UI for these sessions only; every other session keeps the original
                   // 5-tab layout untouched.
                   const isL1S4 = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id);
                   // l1-s1 is conceptual (no runnable code), so its Box 2 output is a written
-                  // AI answer, not code — label it accordingly and skip the live-preview panel.
+                  // AI answer, not code โ€” label it accordingly and skip the live-preview panel.
                   const journalOutputLabel = currentSession.id === 'l1-s1' ? 'Output' : 'Output Code';
                   // Guard against arriving on this session while a stale 'test'/'iterate' tab
                   // selection carried over from a previously viewed session.
@@ -10792,7 +10825,7 @@ export default function App() {
                               // Chained sessions (see PROJECT_TASKS[id].chainFrom) start from the
                               // previous session's own saved code instead of blank, so the game
                               // genuinely accumulates session-by-session. If that session hasn't
-                              // been started yet, this quietly falls back to blank — non-blocking.
+                              // been started yet, this quietly falls back to blank โ€” non-blocking.
                               const chainFromId = PROJECT_TASKS[currentSession.id]?.chainFrom;
                               const seededCodeOutput = chainFromId ? getSessionCodeOutput(chainFromId) : '';
                               const initialSerialized = serializeJournalData('', '', '', seededCodeOutput, '', '', '', '', '');
@@ -10856,7 +10889,7 @@ export default function App() {
                         <div className="glass-panel" style={{ padding: '16px', marginBottom: '16px', borderLeft: '4px solid var(--accent-purple)', background: 'rgba(138, 43, 226, 0.03)' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontSize: '0.75rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
-                              {({ 1: '🏎️ Racing Car Project', 2: '🚀 Mars Colony Defense Project', 3: '🕵️ Cyberpunk Hacker Arena Project', 4: '🛰️ Mission Control Dashboard Project' })[currentSession.level] || 'Project'} — {PROJECT_TASKS[currentSession.id].partNum}
+                              {({ 1: '๐๏ธ Racing Car Project', 2: '๐€ Mars Colony Defense Project', 3: '๐•ต๏ธ Cyberpunk Hacker Arena Project', 4: '๐ฐ๏ธ Mission Control Dashboard Project' })[currentSession.level] || 'Project'} โ€” {PROJECT_TASKS[currentSession.id].partNum}
                             </span>
                             <span className="badge-cyber badge-purple" style={{ fontSize: '0.65rem', background: 'rgba(138, 43, 226, 0.2)', color: 'rgb(180, 100, 255)' }}>Active Milestone</span>
                           </div>
@@ -10879,7 +10912,7 @@ export default function App() {
                             {PROJECT_TASKS[currentSession.id].targetOutcomeHtml && (
                               <div style={{ flex: '0 0 220px', width: '220px' }}>
                                 <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                  🎯 Target Outcome
+                                  ๐ฏ Target Outcome
                                 </span>
                                 <iframe
                                   srcDoc={`
@@ -10902,7 +10935,7 @@ export default function App() {
                         </div>
                       )}
 
-                      {/* Final-session assembly, read-only text (not a live-executing iframe — the
+                      {/* Final-session assembly, read-only text (not a live-executing iframe โ€” the
                           platform tracks the student's real game, it doesn't run it for them).
                           Driven entirely by PROJECT_TASKS[id].finalAssembly so any level's last
                           session can opt in, not just L1's. Walks the declared chain by name so a
@@ -10930,7 +10963,7 @@ export default function App() {
                             </p>
                             {missing.length > 0 && (
                               <div style={{ padding: '8px 10px', marginBottom: '12px', background: 'rgba(255, 51, 102, 0.08)', border: '1px solid var(--accent-red)', borderRadius: '4px', fontSize: '0.78rem', color: 'var(--accent-red)' }}>
-                                ⚠ Incomplete build — no saved code found for: {missingTitles.join(', ')}. Finish those sessions' Project Journals (and click 🔄 Pull Latest on any session after them) to complete the assembly.
+                                โ  Incomplete build โ€” no saved code found for: {missingTitles.join(', ')}. Finish those sessions' Project Journals (and click ๐” Pull Latest on any session after them) to complete the assembly.
                               </div>
                             )}
                             {assembly.blocks.map(block => {
@@ -10947,7 +10980,7 @@ export default function App() {
                       })()}
 
                       {/* Sub-tabs selection. L1S4 is a trial of a reduced 3-box format
-                          (Plan & Design / Prompt & Output Code / Explain the Code) — Test &
+                          (Plan & Design / Prompt & Output Code / Explain the Code) โ€” Test &
                           Iterate are dropped from the UI for this session only; every other
                           session keeps the original 5-tab layout untouched. */}
                       <div className="journal-tabs" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', marginBottom: '16px' }}>
@@ -11003,7 +11036,7 @@ export default function App() {
                               return (
                                 <details key={ref.id} className="glass-panel" style={{ padding: '10px 14px', border: '1px solid var(--border-color)' }}>
                                   <summary style={{ cursor: 'pointer', fontSize: '0.8rem', color: 'var(--accent-purple)', fontWeight: 'bold', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
-                                    📎 Reference: {ref.label || (refSession ? refSession.title : ref.id)}
+                                    ๐“ Reference: {ref.label || (refSession ? refSession.title : ref.id)}
                                   </summary>
                                   {refCode ? (
                                     <pre style={{ marginTop: '8px', maxHeight: '220px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word', background: '#0d1526', border: '1px solid #22314f', borderRadius: '4px', padding: '10px', color: '#00ffcc', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
@@ -11011,7 +11044,7 @@ export default function App() {
                                     </pre>
                                   ) : (
                                     <p style={{ marginTop: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                      Not available yet — the Project Journal for {refSession ? refSession.title : ref.id} hasn't been saved with any code.
+                                      Not available yet โ€” the Project Journal for {refSession ? refSession.title : ref.id} hasn't been saved with any code.
                                     </p>
                                   )}
                                 </details>
@@ -11035,7 +11068,7 @@ export default function App() {
                                     value={editingPlanSpecs}
                                     onChange={e => setEditingPlanSpecs(e.target.value)}
                                     style={{ width: '100%', height: '130px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) — no tag names or code yet."}
+                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.parts ? "Planned system design:\n" + PROJECT_TASKS[currentSession.id].planSpecs.parts : "In plain language, list: what PARTS/pieces does this need? (e.g. a road area, a car, a scoreboard) What INFORMATION does the game need to remember? (e.g. the score, whether the game is running) โ€” no tag names or code yet."}
                                   />
                                 </div>
                                 <div className="form-field">
@@ -11044,7 +11077,7 @@ export default function App() {
                                     value={editingPlanVision}
                                     onChange={e => setEditingPlanVision(e.target.value)}
                                     style={{ width: '100%', height: '90px', background: 'rgba(6, 8, 20, 0.7)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '10px', fontSize: '0.85rem' }}
-                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language — layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
+                                    placeholder={PROJECT_TASKS[currentSession.id]?.planSpecs?.vision ? "Planned look & feel:\n" + PROJECT_TASKS[currentSession.id].planSpecs.vision : "Describe what the player should SEE and experience in plain language โ€” layout, colors, motion, and controls (e.g. a 2-lane road scrolling bottom to top, a red car that moves left/right with the arrow keys)"}
                                   />
                                 </div>
                                 <div className="form-field">
@@ -11092,7 +11125,7 @@ export default function App() {
                                         onClick={() => copyPromptToClipboard(editingCodePrompt, 'project-task')}
                                         style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                                       >
-                                        {promptCopiedKey === 'project-task' ? '✓ Copied' : 'Copy Prompt'}
+                                        {promptCopiedKey === 'project-task' ? 'โ“ Copied' : 'Copy Prompt'}
                                       </button>
                                     </div>
                                     <textarea
@@ -11125,7 +11158,7 @@ export default function App() {
                                               const data = await res.json();
                                               if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                               // Chained sessions (see PROJECT_TASKS[id].chainFrom) seed this box
-                                              // with the full prior session's code on Initialize — appending here
+                                              // with the full prior session's code on Initialize โ€” appending here
                                               // (instead of replacing) keeps that base code intact, since the new
                                               // snippet is written assuming it already exists (e.g. LANE_WIDTH).
                                               setEditingCodeOutput(prev => (prev && prev.trim() ? `${prev}\n\n${data.code}` : data.code));
@@ -11138,7 +11171,7 @@ export default function App() {
                                           }}
                                           style={{ padding: '2px 10px', fontSize: '0.7rem' }}
                                         >
-                                          {projectTaskGenerating ? 'Generating…' : '🤖 Generate Code'}
+                                          {projectTaskGenerating ? 'Generatingโ€ฆ' : '๐ค– Generate Code'}
                                         </button>
                                       )}
                                     </div>
@@ -11150,7 +11183,7 @@ export default function App() {
                                     />
                                     {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id) && (
                                       <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                        "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                                        "Generate Code" is a quick in-platform check โ€” for real practice, use your own AI tool via Copy Prompt above.
                                       </span>
                                     )}
                                   </div>
@@ -11158,7 +11191,7 @@ export default function App() {
                                 {/* Live preview / console kind depends on what this session's Output
                                     actually is: l1-s1 is a written AI answer (nothing to render),
                                     l1-s2/l1-s3 are real HTML/CSS (rendered live), l1-s4 is variables
-                                    & math (no visual DOM preview — the real result is console.log),
+                                    & math (no visual DOM preview โ€” the real result is console.log),
                                     l1-s5..l1-s12 are real game.js logic that visibly moves the car/
                                     markers/obstacles or updates the HUD, so they get the same live
                                     racing-game DOM preview the exercises use. */}
@@ -11185,7 +11218,7 @@ export default function App() {
                                 {currentSession.id === 'l1-s4' && (
                                   <div className="glass-panel" style={{ padding: '12px' }}>
                                     <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-cyan)', marginBottom: '6px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Console Output</span>
-                                    {/* No visual DOM preview here — this task's code is variables &
+                                    {/* No visual DOM preview here โ€” this task's code is variables &
                                         math, not graphics, so a game-screen graphic would be decorative,
                                         not a real "actual output." The sandbox runs invisibly; the real
                                         result is whatever the code prints via console.log. */}
@@ -11197,11 +11230,11 @@ export default function App() {
                                     <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                                       {simConsoleLogs.length === 0 ? (
                                         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                                          No console output yet. This doesn't necessarily mean something's wrong — add console.log(...) to your Output Code if you want to see real values here.
+                                          No console output yet. This doesn't necessarily mean something's wrong โ€” add console.log(...) to your Output Code if you want to see real values here.
                                         </div>
                                       ) : simConsoleLogs.map((log, idx) => (
                                         <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                          {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                          {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                           {log.text}
                                         </div>
                                       ))}
@@ -11223,7 +11256,7 @@ export default function App() {
                                         </div>
                                       ) : simConsoleLogs.map((log, idx) => (
                                         <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                          {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                                          {log.type === 'error' ? 'โ— ' : log.type === 'success' ? 'โ“ ' : 'โก '}
                                           {log.text}
                                         </div>
                                       ))}
@@ -11245,7 +11278,7 @@ export default function App() {
                           </div>
                         )}
 
-                        {/* Tab 3: Review & Explain (L1S4: Explain the Code only — Output Code moved to Tab 2) */}
+                        {/* Tab 3: Review & Explain (L1S4: Explain the Code only โ€” Output Code moved to Tab 2) */}
                         {effectiveJournalTab === 'review' && (
                           isL1S4 ? (
                             <div className="form-field">
@@ -11269,9 +11302,9 @@ export default function App() {
                                   return (
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: '6px', padding: '6px 10px', background: 'rgba(0, 242, 254, 0.05)', border: '1px solid rgba(0, 242, 254, 0.2)', borderRadius: '4px', fontSize: '0.75rem' }}>
                                       <span style={{ color: 'var(--accent-cyan)' }}>
-                                        🔗 {hasSynced
-                                          ? `Starting point carried over from ${chainFromLabel} — extend it below.`
-                                          : `This session builds on ${chainFromLabel} — click Pull Latest to load its code.`}
+                                        ๐”— {hasSynced
+                                          ? `Starting point carried over from ${chainFromLabel} โ€” extend it below.`
+                                          : `This session builds on ${chainFromLabel} โ€” click Pull Latest to load its code.`}
                                       </span>
                                       <button
                                         type="button"
@@ -11280,7 +11313,7 @@ export default function App() {
                                         onClick={() => {
                                           const pulled = getSessionCodeOutput(chainFromId);
                                           if (!pulled) {
-                                            alert(`${chainFromLabel}'s Project Journal has no saved code yet — nothing to pull.`);
+                                            alert(`${chainFromLabel}'s Project Journal has no saved code yet โ€” nothing to pull.`);
                                             return;
                                           }
                                           if (window.confirm(`Replace your current "AI-Generated Code" with ${chainFromLabel}'s latest saved code? This overwrites what's in the box now (unsaved changes will be lost).`)) {
@@ -11288,7 +11321,7 @@ export default function App() {
                                           }
                                         }}
                                       >
-                                        🔄 Pull Latest
+                                        ๐” Pull Latest
                                       </button>
                                     </div>
                                   );
@@ -11342,7 +11375,7 @@ export default function App() {
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {PROJECT_TASKS[currentSession.id] && (
                               <div style={{ padding: '10px 12px', background: 'rgba(0, 242, 254, 0.04)', borderLeft: '3px solid var(--accent-cyan)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                                💡 <strong>Iteration Guideline:</strong> {PROJECT_TASKS[currentSession.id].iterationGuide}
+                                ๐’ก <strong>Iteration Guideline:</strong> {PROJECT_TASKS[currentSession.id].iterationGuide}
                               </div>
                             )}
                             <div className="form-field">
@@ -11368,13 +11401,13 @@ export default function App() {
 
                       </div>
 
-                      {/* Project Task AI Auditor feedback panel — all of L1 S1-S12
+                      {/* Project Task AI Auditor feedback panel โ€” all of L1 S1-S12
                           (2026-07-30 pilot on S1/5/6, extended to S2-S4/S7-S12 2026-08-05).
                           Advisory: shows AI feedback but never blocks Save Changes below. */}
                       {['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(currentSession.id) && projectTaskAuditResult && (
                         <div className="glass-panel" style={{ padding: '14px', marginTop: 16 }}>
                           <div className="panel-header"><h4 style={{ margin: 0, color: projectTaskAuditResult.pass ? 'var(--accent-green, #4ade80)' : 'var(--accent-cyan)' }}>
-                            {projectTaskAuditResult.error ? '✗ AI Auditor unavailable' : projectTaskAuditResult.pass ? '✓ Prompt quality: good' : 'Prompt quality feedback'}
+                            {projectTaskAuditResult.error ? 'โ— AI Auditor unavailable' : projectTaskAuditResult.pass ? 'โ“ Prompt quality: good' : 'Prompt quality feedback'}
                           </h4></div>
                           <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.82rem' }}>
                             {projectTaskAuditResult.error ? (
@@ -11383,7 +11416,7 @@ export default function App() {
                               <>
                                 <div style={{ color: 'var(--text-secondary)' }}>{projectTaskAuditResult.feedback}</div>
                                 {(projectTaskAuditResult.tips || []).map((tip, i) => (
-                                  <div key={i} style={{ color: 'var(--text-muted)' }}>💡 {tip}</div>
+                                  <div key={i} style={{ color: 'var(--text-muted)' }}>๐’ก {tip}</div>
                                 ))}
                               </>
                             )}
@@ -11443,7 +11476,7 @@ export default function App() {
                             }}
                             style={{ padding: '8px 16px', fontSize: '0.85rem' }}
                           >
-                            {projectTaskAuditing ? 'Checking prompt quality…' : '🤖 Check Prompt Quality'}
+                            {projectTaskAuditing ? 'Checking prompt qualityโ€ฆ' : '๐ค– Check Prompt Quality'}
                           </button>
                         )}
                         <button
@@ -11815,7 +11848,7 @@ export default function App() {
                         <input
                           type="password"
                           className="login-input"
-                          placeholder="••••••••"
+                          placeholder="โ€ขโ€ขโ€ขโ€ขโ€ขโ€ขโ€ขโ€ข"
                           value={newStudentPassword}
                           onChange={e => setNewStudentPassword(e.target.value)}
                           required
@@ -11849,7 +11882,7 @@ export default function App() {
 
                       <div className="form-group">
                         <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                          Link to existing student(s) — makes this a Parent account instead of a Student
+                          Link to existing student(s) โ€” makes this a Parent account instead of a Student
                         </label>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 140, overflowY: 'auto', border: '1px solid var(--border-color)', borderRadius: '4px', padding: 8 }}>
                           {activeStudents.length === 0 ? (
@@ -11946,7 +11979,7 @@ export default function App() {
                                       type="checkbox"
                                       checked={person.is_active !== false}
                                       onChange={e => handleToggleStudentActive(person.id, e.target.checked)}
-                                      title={person.is_active === false ? 'Deactivated — hidden from student pickers' : 'Active'}
+                                      title={person.is_active === false ? 'Deactivated โ€” hidden from student pickers' : 'Active'}
                                       style={{ cursor: 'pointer', width: 16, height: 16 }}
                                     />
                                   </td>
@@ -12010,7 +12043,7 @@ export default function App() {
                                               title="Remove link"
                                               style={{ background: 'none', border: 'none', color: 'var(--accent-red)', cursor: 'pointer', padding: 0, fontSize: '0.8rem', lineHeight: 1 }}
                                             >
-                                              ×
+                                              ร—
                                             </button>
                                           </span>
                                         ))
@@ -12041,8 +12074,8 @@ export default function App() {
                                         ))}
                                     </select>
                                   </td>
-                                  <td style={{ padding: 10, textAlign: 'center', color: 'var(--text-muted)' }}>—</td>
-                                  <td style={{ padding: 10, textAlign: 'right', color: 'var(--text-muted)' }}>—</td>
+                                  <td style={{ padding: 10, textAlign: 'center', color: 'var(--text-muted)' }}>โ€”</td>
+                                  <td style={{ padding: 10, textAlign: 'right', color: 'var(--text-muted)' }}>โ€”</td>
                                 </tr>
                               ))}
                           </tbody>
@@ -12084,14 +12117,14 @@ export default function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div>
                 <h3 style={{ margin: 0 }}>{viewingStudent.name}'s Project Journal</h3>
-                <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Read-only view — {viewingStudent.username}</p>
+                <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Read-only view โ€” {viewingStudent.username}</p>
               </div>
               <button className="btn-cyber btn-cyber-red btn-small" onClick={handleCloseStudentJournal} style={{ padding: '4px 10px' }}>Close</button>
             </div>
 
             {viewingJournalLoading && <p style={{ color: 'var(--text-secondary)' }}>Loading journal entries...</p>}
             {!viewingJournalLoading && viewingJournalData.length === 0 && (
-              <p style={{ color: 'var(--text-muted)' }}>This student has no attendance recorded yet — set a session date on the Attendance tab to track their sessions here.</p>
+              <p style={{ color: 'var(--text-muted)' }}>This student has no attendance recorded yet โ€” set a session date on the Attendance tab to track their sessions here.</p>
             )}
 
             {!viewingJournalLoading && viewingJournalData.length > 0 && (
@@ -12155,7 +12188,7 @@ export default function App() {
                     if (!item) return <p style={{ color: 'var(--text-muted)' }}>Select a session to view.</p>;
                     const entry = item.journalEntry;
                     if (!entry) return <p style={{ color: 'var(--text-muted)' }}>This student attended "{item.title}" on {item.date} but has not started their Project Journal for it yet.</p>;
-                    // Only the AI Prompt is versioned — Plan/Review/Test/Iterate always reflect the
+                    // Only the AI Prompt is versioned โ€” Plan/Review/Test/Iterate always reflect the
                     // entry's active (latest) version, regardless of which prompt version is selected.
                     const activeHist = entry.history.find(h => h.version === entry.activeVersion) || entry.history[entry.history.length - 1];
                     if (!activeHist) return <p style={{ color: 'var(--text-muted)' }}>No versions saved for this entry.</p>;
@@ -12174,7 +12207,7 @@ export default function App() {
                     );
 
                     // L1 Sessions 1-8 use the reduced 3-box Project Task format (Plan & Design /
-                    // Prompt & Output Code / Explain the Code) in the editable Project Journal —
+                    // Prompt & Output Code / Explain the Code) in the editable Project Journal โ€”
                     // mirror that same 3-section shape here instead of always showing the fixed
                     // 5-section layout, so the read-only view matches what the student actually sees.
                     const use3Box = ['l1-s1', 'l1-s2', 'l1-s3', 'l1-s4', 'l1-s5', 'l1-s6', 'l1-s7', 'l1-s8', 'l1-s9', 'l1-s10', 'l1-s11', 'l1-s12'].includes(item.id);
