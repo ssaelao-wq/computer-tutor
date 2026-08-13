@@ -3107,31 +3107,24 @@ const S6_EXERCISES = [
   },
   {
     num: 4,
-    title: "Exercise 6.4: The Reverse Handoff (Bottom Boundary)",
-    problem: "Once speed has been braked all the way down to 0 (from 6.3), holding ArrowDown shouldn't just do nothing — it should start moving the car backward instead, decreasing roadOffset. But roadOffset (how far along the road the car has driven) must never go below 0 either — reversing past where the road even starts.",
-    instruction: "Goal: once speed is already 0, make ArrowDown reverse the car instead — and stop it at the start of the road. 1) Plan: in your own words, how does ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before you allow it to decrease further? 2) Prompt: describe that handoff to the AI, in your own words. This snippet is tested on its own, so have it declare both speed (already at 0) and roadOffset itself (start it around 10, low enough that reversing hits the floor quickly), and call the ArrowDown handler enough times to see the floor guard work. 3) Explain: why does it make sense for the SAME key (ArrowDown) to mean two different things depending on whether speed is already 0?",
-    planPlaceholder: "How should ArrowDown's job change once speed is already 0? What needs to be true about roadOffset before allowing it to decrease further?",
-    promptPlaceholder: "Describe the handoff to the AI, in your own words — braking vs. reversing.",
+    title: "Exercise 6.4: Hold to Accelerate, Release to Decelerate (Momentum)",
+    problem: "Right now ArrowUp adds a fixed burst of speed each press. This exercise upgrades that to a momentum system: holding ArrowUp continuously builds speed up to 300 and makes the road scroll forward, but as soon as you release the key the car coasts — speed gradually drops back to 0 on its own, like lifting your foot off the accelerator.",
+    instruction: "Goal: make holding ArrowUp accelerate the car (up to 300) and releasing it let the car coast to a stop. 1) Plan: in your own words, what is the difference between 'the key was just pressed once' vs. 'the key is currently being held down'? What needs to keep running even after the key event fires so the car can slow down on its own? 2) Prompt: describe both behaviors to the AI in your own words — accelerating while ArrowUp is held, auto-decelerating when it isn't, roadOffset scrolling with speed, and #speed-val always showing the current value. 3) Explain: why does this feel more natural than the fixed step-by-step speed changes from Exercise 6.3, and what real-world mechanic does it mimic?",
+    planPlaceholder: "What is the difference between 'key just pressed' vs. 'key currently held'? What needs to keep running to let speed decay on its own?",
+    promptPlaceholder: "Describe both behaviors to the AI: build speed while ArrowUp is held (cap at 300), and auto-decelerate to 0 when released.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "When speed > 0, ArrowDown should decrease speed (braking, from 6.3). When speed is already 0, ArrowDown should instead decrease roadOffset (reversing), only while roadOffset > 0 — clamping at 0 so the car can't reverse past the start. Since this snippet is tested standalone, the code should declare both speed (at 0) and roadOffset itself and call the handler enough times to demonstrate the floor. Explanation should correctly identify that ArrowDown's meaning depends on the current speed — braking first, reversing only once already stopped. Don't require the literal numbers 10/0 in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The code should track whether ArrowUp is currently held (e.g. a boolean flag set on keydown, cleared on keyup). While held, speed should increase each tick up to a cap of 300. When released, speed should decay gradually toward 0 on its own (e.g. via setInterval or requestAnimationFrame — something that keeps running without a key press). roadOffset should advance by the current speed each tick, driving #game-track's backgroundPositionY forward. #speed-val should always reflect the live speed value. The explanation should correctly identify that 'held vs. pressed once' is the key distinction, and that the decay requires a persistent timer or loop — not just a keyup handler that snaps speed to 0."
   }
-  // Note (2026-08-06): 6.1/6.2 (left/right) previously had a separate "Infinite Teleporting
-  // Bug" exercise between them that tested the exact same left-boundary comparison a second
-  // time — dropped as redundant; its core insight (a looser comparison fails to protect the
-  // edge) now lives inside 6.1's own Explain question instead of a whole separate exercise.
-  // 6.3/6.4 are new and deliberately ordered by dependency, not by the original left/right/
-  // bottom/uparrow request order: 6.3 builds the full speed range (ArrowUp accelerates,
-  // ArrowDown decelerates, floor+ceiling guards, #speed-val HUD, forward road-scroll via
-  // roadOffset), and 6.4 builds the "reverse once already stopped" handoff on top of it —
-  // that's the actual "bottom boundary" (roadOffset can't go below 0). Doing it the other
-  // order would have asked students to guard a reverse mechanic before the speed system it
-  // depends on existed. See buildJsSandboxPreview's #game-track striped background-image and
-  // #speed-val span for the shared harness pieces both exercises rely on. A 5th "combine
-  // everything" capstone exercise still doesn't live here — dropped as a duplicate of this
-  // session's Project Task (Lab 6), which owns that final integration step. See
-  // improve_concept.md Part II.
+  // Note (2026-08-13): Ex 6.4 updated from the original 'Reverse Handoff' mechanic
+  // (ArrowDown reverses roadOffset once speed = 0) to a 'Hold-to-Accelerate / Release-
+  // to-Decelerate' momentum system — hold ArrowUp to build speed up to 300, release to
+  // coast back to 0. More practical and introduces the 'is the key currently held'
+  // concept (keydown/keyup boolean flag + setInterval/rAF decay loop) rather than a
+  // conditional handoff. 6.3 retains the fixed-step ceiling/floor guard concept.
+  // See buildJsSandboxPreview reactive globals for how speed auto-updates #speed-val.
 ];
+
 
 const S7_EXERCISES = [
   {
@@ -5040,7 +5033,7 @@ export default function App() {
     } else if (session.id === 'l1-s6') {
       setSandboxRole('Junior JavaScript Engineer');
       setSandboxTask('Implement track boundary safety guards for the Racing Car Game');
-      setSandboxConstraints('Clamp carX between 35 and 295 (the outer lane positions). Clamp speed above 120 back to 100.');
+      setSandboxConstraints('Clamp carX between 35 and 295 (the outer lane positions). For ex 6.3: clamp speed between 0 and 120. For ex 6.4: cap speed at 300 and decay it to 0 on key release using a persistent timer or loop.');
       setSandboxInput('carX, speed');
       setSandboxEdgeCases('Off-by-one boundary errors, string vs. number type mismatches');
       setS6ActiveExercise(1);
