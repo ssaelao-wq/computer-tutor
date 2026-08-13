@@ -116,7 +116,37 @@ export const CURRICULUM_DATA = [
     handsOn: "Complete 4 small Sandbox Exercises building your own understanding of left/right lane boundary guards (6.1 & 6.2) and a momentum-based speed acceleration system (6.4) — building speed up to 300 while advancing the road background — each stated as a goal to reason through yourself, not a script to transcribe. Socratic Debugging — The Infinite Teleporting Bug: the tutor changes the boundary check from `carX > 35` to `carX >= -130`, causing the car to teleport off-screen. Trace what value `carX` actually reached and why the boundary guard failed to catch it. The session's Project Task is where it all comes together for real, on your own accumulated game.js — wiring keyboard controls (ArrowLeft, ArrowRight, ArrowUp) and mouse click buttons (◀ Left, ▶ Right, ▲ Accelerate) to the exact same shared functions — completing the milestone begun in Session 5: \"the car remembers itself, responds to you, and stays safe.\"",
     homework: "In the Journal tab under 'Session 6 Homework', write a conditional validation block that checks if `speed` is greater than `300` (maximum speed threshold) and caps it to `300` if true, logging a status (+50 XP).",
     ethics: "System Safety Checks: the Mars Climate Orbiter (1999) crashed because one team used metric units while another used imperial — a boundary-value mismatch that destroyed a $125 million spacecraft. Autonomous vehicles rely on boundaries to stay in lanes; why do developers write redundant checks?",
-    adaptations: "Age 13-16: Discuss why safety-critical systems (like real autopilot lane-keeping) implement multiple redundant boundary checks instead of trusting a single condition."
+    adaptations: "Age 13-16: Discuss why safety-critical systems (like real autopilot lane-keeping) implement multiple redundant boundary checks instead of trusting a single condition.",
+    exerciseGuide: [
+      {
+        num: "6.1",
+        title: "Exercise 6.1: Track Boundary Coordinates & the Left Guard",
+        concept: "Left Boundary Guard (carX > 35)",
+        prompt: "Write a JavaScript event listener for keydown that checks if event.key === 'ArrowLeft'. Only allow the car to move left if carX is greater than 35. Inside the condition, subtract 130 from carX and update the element style: document.getElementById('player-car').style.left = carX + 'px';",
+        outputCode: "window.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowLeft' && carX > 35) {\n    carX -= 130;\n    document.getElementById('player-car').style.left = carX + 'px';\n  }\n});"
+      },
+      {
+        num: "6.2",
+        title: "Exercise 6.2: The Right Guard",
+        concept: "Right Boundary Guard (carX < 295)",
+        prompt: "Write a JavaScript event listener for keydown that checks if event.key === 'ArrowRight'. Only allow the car to move right if carX is less than 295. If true, add 130 to carX and update document.getElementById('player-car').style.left = carX + 'px';",
+        outputCode: "window.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowRight' && carX < 295) {\n    carX += 130;\n    document.getElementById('player-car').style.left = carX + 'px';\n  }\n});"
+      },
+      {
+        num: "6.3",
+        title: "Exercise 6.3: Accelerate & Decelerate (Speed Range Guard)",
+        concept: "Speed Clamping (0 <= speed <= 120)",
+        prompt: "Write a JavaScript keydown listener that increases speed by 10 on ArrowUp (resetting to 100 if speed exceeds 120) and decreases speed by 10 on ArrowDown (not allowing it to drop below 0). Update #speed-val with speed, advance roadOffset by speed, and update #game-track's backgroundPositionY.",
+        outputCode: "let roadOffset = 0;\n\nwindow.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowUp') {\n    speed += 10;\n    if (speed > 120) speed = 100;\n    roadOffset += speed;\n  } else if (event.key === 'ArrowDown') {\n    speed = Math.max(0, speed - 10);\n  }\n  document.getElementById('speed-val').textContent = speed;\n  document.getElementById('game-track').style.backgroundPositionY = roadOffset + 'px';\n});"
+      },
+      {
+        num: "6.4",
+        title: "Exercise 6.4: Hold to Accelerate, Release to Decelerate (Momentum)",
+        concept: "Hold Detection & Decay Loop (Speed Cap 300)",
+        prompt: "Create JavaScript code for a racing game momentum system: track whether ArrowUp is held using keydown/keyup. While held, build speed up to 300 and advance roadOffset. When released, gradually decay speed back to 0 using a setInterval loop. Update #speed-val and scroll #game-track.",
+        outputCode: "let isAccelerating = false;\nlet roadOffset = 0;\n\nwindow.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowUp') {\n    isAccelerating = true;\n    if (speed < 300) speed += 10;\n    roadOffset += speed;\n    document.getElementById('game-track').style.backgroundPositionY = roadOffset + 'px';\n  }\n});\n\nwindow.addEventListener('keyup', function(event) {\n  if (event.key === 'ArrowUp') {\n    isAccelerating = false;\n  }\n});\n\nsetInterval(function() {\n  if (!isAccelerating && speed > 0) {\n    speed = Math.max(0, speed - 5);\n    roadOffset += speed;\n    document.getElementById('game-track').style.backgroundPositionY = roadOffset + 'px';\n  }\n}, 100);"
+      }
+    ]
   },
   {
     id: "l1-s7",
@@ -135,7 +165,44 @@ export const CURRICULUM_DATA = [
     handsOn: "Complete 5 Sandbox Exercises in two 5-step AI-Era loops covering `for` loop mechanics and dynamic marker generation. Socratic Debugging — Browser Freezes: the tutor triggers an infinite loop by removing the counter increment (`i++`). Identify the missing increment, restore it, and explain how many times the CPU executed the loop block before the fix.",
     homework: "In the Journal tab under 'Session 7 Homework', write a JS `for` loop that logs 'Highway Marker position: X' for positions incrementing by 50 up to 250 (+50 XP).",
     ethics: "Resource Efficiency: in 2020, a poorly optimized JavaScript animation loop on a major news website caused mobile devices to overheat and drain batteries within minutes. If a loop runs a million times a second to draw lanes, what happens to the user's battery?",
-    adaptations: "Age 13-16: Discuss loop performance and Big-O intuition — why a nested loop over the same data set is more expensive than a single pass."
+    adaptations: "Age 13-16: Discuss loop performance and Big-O intuition — why a nested loop over the same data set is more expensive than a single pass.",
+    exerciseGuide: [
+      {
+        num: "7.1",
+        title: "Exercise 7.1: Marker Spacing Plan & the Loop",
+        concept: "Loop Header & Coordinate Math",
+        prompt: "Write a JavaScript for loop that runs 5 times (i from 0 to 4) and computes markerY as i * 120 on each iteration.",
+        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}"
+      },
+      {
+        num: "7.2",
+        title: "Exercise 7.2: Browser Freezes — the Missing Increment",
+        concept: "Infinite Loop Diagnosis & Fix",
+        prompt: "Fix this infinite loop by restoring the missing increment: for (let i = 0; i < 5; ) { let markerY = i * 120; }",
+        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}"
+      },
+      {
+        num: "7.3",
+        title: "Exercise 7.3: Logging Each Marker",
+        concept: "Loop State Verification via Logging",
+        prompt: "Write a JavaScript for loop running 5 times, computing markerY = i * 120, and logging 'Highway Marker position: ' + markerY to the console on each pass.",
+        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  console.log(\"Highway Marker position: \" + markerY);\n}"
+      },
+      {
+        num: "7.4",
+        title: "Exercise 7.4: Rendering the Markers",
+        concept: "Dynamic DOM Creation in Loops",
+        prompt: "Write a JavaScript for loop running 5 times that creates a div element with class 'marker-dash', sets its style.top to (i * 120) + 'px', and appends it to document.getElementById('game-track').",
+        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n}"
+      },
+      {
+        num: "7.5",
+        title: "Exercise 7.5: The Off-Track Marker Bug & Complete Loop",
+        concept: "Complete Marker Generation Loop",
+        prompt: "Write the complete JavaScript loop for creating highway markers: loop 5 times, compute markerY = i * 120 (correcting the i * 12 bug), create a 'marker-dash' div, set style.top to markerY + 'px', and append it to #game-track.",
+        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n}"
+      }
+    ]
   },
   {
     id: "l1-s8",
@@ -154,7 +221,37 @@ export const CURRICULUM_DATA = [
     handsOn: "Complete 5 Sandbox Exercises in two 5-step AI-Era loops refactoring steering logic into `updatePlayerPosition()`, `moveLeft()`, and `moveRight()`. Socratic Debugging — Scope Access Violations: the tutor declares a position variable inside a movement function, making it inaccessible to the rendering function (which logs `undefined`). Trace where the variable was declared and why its scope is restricted, then correct it.",
     homework: "In the Journal tab under 'Session 8 Homework', write a function `calculateScore(distance, speedMultiplier)` that multiplies its parameters, declares local variables, and returns the score value (+50 XP).",
     ethics: "Clean Code and Collaboration: the Heartbleed bug (2014) existed in OpenSSL for two years partly because the critical code was poorly structured and hard for reviewers to audit, affecting 17% of all secure web servers. Why is write-once, hard-to-read code a problem for engineering teams?",
-    adaptations: "Age 13-16: Discuss code review practices — how a reviewer with only 10 minutes benefits from small, well-named functions over one long script."
+    adaptations: "Age 13-16: Discuss code review practices — how a reviewer with only 10 minutes benefits from small, well-named functions over one long script.",
+    exerciseGuide: [
+      {
+        num: "8.1",
+        title: "Exercise 8.1: Decomposing & Requesting the Render Function",
+        concept: "Single-Purpose Render Function",
+        prompt: "Write a JavaScript function named updatePlayerPosition() that sets document.getElementById('player-car').style.left to carX + 'px'. Call updatePlayerPosition() once after defining it.",
+        outputCode: "function updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nupdatePlayerPosition();"
+      },
+      {
+        num: "8.2",
+        title: "Exercise 8.2: The Scope Access Violation Bug",
+        concept: "Global vs. Local Variable Scope",
+        prompt: "Fix the variable scope issue where carX was declared locally inside moveLeft(). Declare carX once in global outer scope so both moveLeft() and updatePlayerPosition() can access and share it.",
+        outputCode: "function updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n}"
+      },
+      {
+        num: "8.3",
+        title: "Exercise 8.3: Wiring moveLeft() to the Handler",
+        concept: "Event Handler Function Delegation",
+        prompt: "Write a JavaScript moveLeft() function that checks if carX > 35, subtracts 130, and updates the car position. Then write a keydown event listener where the 'ArrowLeft' key branch calls moveLeft().",
+        outputCode: "function moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nwindow.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowLeft') {\n    moveLeft();\n  }\n});"
+      },
+      {
+        num: "8.4",
+        title: "Exercise 8.4: Requesting moveLeft() and moveRight()",
+        concept: "Modular Movement Functions with Shared Renderer",
+        prompt: "Write modular JavaScript functions for car steering: updatePlayerPosition() to set style.left, moveLeft() to clamp carX > 35 and call updatePlayerPosition(), and moveRight() to clamp carX < 295 and call updatePlayerPosition(). Call moveLeft() once to test.",
+        outputCode: "function updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n}\n\nfunction moveRight() {\n  if (carX < 295) {\n    carX += 130;\n  }\n  updatePlayerPosition();\n}\n\nmoveLeft();"
+      }
+    ]
   },
   {
     id: "l1-s9",

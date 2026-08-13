@@ -6143,6 +6143,34 @@ export default function App() {
                                   {displayActivity}
                                 </div>
                               </div>
+
+                              {currentSession.exerciseGuide && currentSession.exerciseGuide.length > 0 && (
+                                <div className="detail-section teacher-box">
+                                  <h4>📘 Teacher Exercise Guide & Reference Solutions</h4>
+                                  <div className="detail-section-body" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                    {currentSession.exerciseGuide.map((ex, idx) => (
+                                      <div key={idx} style={{ background: 'rgba(6, 8, 20, 0.65)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '12px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+                                          <strong style={{ color: 'var(--accent-cyan)', fontSize: '0.85rem' }}>{ex.title}</strong>
+                                          <span className="badge-cyber badge-cyan" style={{ fontSize: '0.7rem' }}>{ex.concept}</span>
+                                        </div>
+                                        <div style={{ marginBottom: '10px' }}>
+                                          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent-green)', marginBottom: '4px' }}>🎯 Reference Prompt:</div>
+                                          <div style={{ fontSize: '0.8rem', color: 'var(--text-primary)', background: 'rgba(0, 0, 0, 0.35)', padding: '8px 12px', borderRadius: '4px', borderLeft: '3px solid var(--accent-green)', lineHeight: 1.4 }}>
+                                            {ex.prompt}
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--accent-blue)', marginBottom: '4px' }}>💻 Reference Output Code:</div>
+                                          <pre style={{ fontSize: '0.75rem', color: 'var(--text-primary)', background: '#070913', padding: '10px 12px', borderRadius: '4px', margin: 0, overflowX: 'auto', border: '1px solid rgba(0, 242, 254, 0.15)', lineHeight: 1.45, fontFamily: 'var(--font-mono)' }}>
+                                            <code>{ex.outputCode}</code>
+                                          </pre>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </>
                           )}
 
