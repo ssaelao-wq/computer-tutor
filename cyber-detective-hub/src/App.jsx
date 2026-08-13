@@ -10976,7 +10976,7 @@ export default function App() {
                         onClick={() => {
                           if (matchingJournal) {
                             setSelectedJournalId(matchingJournal.id);
-                            setActiveJournalVersion(matchingJournal.active_version || 1);
+                            setActiveJournalVersion(matchingJournal.activeVersion || matchingJournal.active_version || 1);
                           } else {
                             setSelectedJournalId(`${currentUser?.id}_${session.id}`);
                             setActiveJournalVersion(1);

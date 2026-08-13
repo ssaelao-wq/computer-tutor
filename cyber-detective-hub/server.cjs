@@ -739,7 +739,7 @@ app.post('/api/journal', authenticateToken, async (req, res) => {
 // 6. Add a New Version to an Existing Journal Entry
 app.post('/api/journal/version', authenticateToken, async (req, res) => {
   const { entryId, prompt, code } = req.body;
-  if (!entryId || !prompt) {
+  if (!entryId || prompt === undefined) {
     return res.status(400).json({ error: 'Missing parameters' });
   }
 
@@ -756,7 +756,7 @@ app.post('/api/journal/version', authenticateToken, async (req, res) => {
     await db.query(`
       INSERT INTO journal_versions (entry_id, version, prompt, code)
       VALUES ($1, $2, $3, $4)
-    `, [entryId, nextVer, prompt, code || '']);
+    `, [entryId, nextVer, prompt || '', code || '']);
 
     // Update parent metadata version counters
     await db.query(`
@@ -774,7 +774,7 @@ app.post('/api/journal/version', authenticateToken, async (req, res) => {
 // Update an existing journal version
 app.put('/api/journal/version', authenticateToken, async (req, res) => {
   const { entryId, version, prompt, code } = req.body;
-  if (!entryId || !version || !prompt) {
+  if (!entryId || version === undefined || prompt === undefined) {
     return res.status(400).json({ error: 'Missing parameters' });
   }
 
@@ -783,7 +783,7 @@ app.put('/api/journal/version', authenticateToken, async (req, res) => {
       UPDATE journal_versions
       SET prompt = $1, code = $2
       WHERE entry_id = $3 AND version = $4
-    `, [prompt, code || '', entryId, parseInt(version)]);
+    `, [prompt || '', code || '', entryId, parseInt(version, 10)]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
