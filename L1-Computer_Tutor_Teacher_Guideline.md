@@ -397,6 +397,10 @@ The **Project Journal** milestone card ("Lab 5: Keyboard & Click Control Interfa
 > **Content note (2026-07-30):** This session completes the two-session capability milestone begun in Session 5 — *"the car remembers itself, responds to you, and stays safe"* (see Session 5's Content note and the Lab Track's **Grading/Milestone notes** above). It was moved to real AI-Auditor grading and goal-stated instructions, and its old 5th "combine everything" capstone exercise was dropped: the sandbox now has **4 exercises**, not 5.
 >
 > **Content note (2026-08-06):** Two internal changes, same day, in response to real teacher review. First: Exercise 6.2 used to be "The Infinite Teleporting Bug," a bug-hunt that tested the exact same left-boundary comparison as 6.1 a second time — dropped as redundant; its insight (a looser comparison fails to protect the edge) now lives inside 6.1's own Explain question instead. Second: the old Exercise 6.4 ("The Overheat Guard") was rebuilt into a real, coherent accelerate/brake/reverse system spanning two exercises — ArrowUp speeds the car up, ArrowDown brakes it back down to 0, and once already stopped, ArrowDown reverses instead — rather than a single isolated `if (speed > 120)` snippet. The Live Preview gained a live **Speed HUD** (`#speed-val`) and a striped, scrollable road background (`#game-track`'s `backgroundPositionY`) so this is now visibly interactive, not just a silent variable check. The Project Task below was expanded to match.
+>
+> **Content note (2026-08-13):** Exercise 6.4 changed again: the "Reverse Handoff" mechanic above was replaced with a **Hold-to-Accelerate / Release-to-Decelerate momentum system** — holding ArrowUp continuously builds `speed` up to 300 and scrolls the road, releasing it lets `speed` decay back to 0 on its own via a persistent timer/loop (not a one-off keyup snap-to-zero). It's a more practical mechanic and introduces the "key currently held vs. just pressed" distinction that Sessions 9-10 build on.
+>
+> **Content note (2026-08-20):** Live testing surfaced two real AI-generated-code bugs on this session — a `const roadOffset` later reassigned (crashes immediately), and a "currently held" key-state tracker referenced but never declared/updated by the keydown-keyup handlers. Rather than treat these as one-off bugs to patch, 6.3 and 6.4's problem text and grading rubric (`expectedConcepts` in `src/App.jsx`) now explicitly name both traps up front — the same convention 6.3 already used for the Session 4 string-concatenation bug — so the student's prompt is more likely to head them off before the AI writes the code, instead of the student having to debug the crash afterward (debugging-as-a-taught-skill is deliberately deferred past L1/L2 for now).
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Clamping Coordinates Paper Exercises
@@ -428,13 +432,88 @@ Students complete **4 exercises** (the old 5th "combine everything" capstone was
   * *A strong answer shows:* reasoning that the right guard should mirror the left guard's structure in the opposite direction; working code adding that guard; an explanation of why this guard mirrors the left one rather than needing new logic.
   * *Why:* Every movable direction needs its own boundary — the right guard is the mirror image of the left.
 * **Exercise 6.3: Accelerate & Decelerate (the Speed Range Guard)**
-  * *Goal given to the student:* make ArrowUp increase `speed` and ArrowDown decrease it, with `speed` always staying between 0 and 120 — capped at the top (reset to the Number 100, not a string, reintroducing the Session 4 type bug) and floored at the bottom. Both should update the live `#speed-val` HUD; accelerating should also advance a self-declared `roadOffset` so the track's background visibly scrolls.
-  * *A strong answer shows:* `speed += 10` capped so it never exceeds 120; `speed -= 10` floored so it never drops below 0; `#speed-val`'s text updating; an explanation that correctly identifies the 0 floor as exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range.
-  * *Why:* A value with only a ceiling and no floor isn't actually "in a range" — both ends need their own check, and this is the pair the reverse mechanic in 6.4 depends on existing first.
-* **Exercise 6.4: The Reverse Handoff (Bottom Boundary)**
-  * *Goal given to the student:* once `speed` is already braked down to 0 (from 6.3), make ArrowDown reverse the car instead of doing nothing — decreasing a `roadOffset` value that must never go below 0 (the car can't back up past the start of the road).
-  * *A strong answer shows:* `if (speed > 0)` branches to braking (reusing 6.3's logic), `else` branches to decreasing `roadOffset`, floored at 0; an explanation that correctly identifies ArrowDown's meaning as depending on whether the car is already stopped.
-  * *Why:* This is the actual "bottom boundary" of the session — not a position guard like 6.1/6.2, but a guard on how far back the car's *progress* can unwind. It's also the first S6 exercise where the same key means two different things depending on state, a small preview of the state-machine thinking Sessions 9-10 lean on harder.
+  * *Goal given to the student:* make ArrowUp increase `speed` and ArrowDown decrease it, with `speed` always staying between 0 and 120 — capped at the top (reset to the Number 100, not a string, reintroducing the Session 4 type bug) and floored at the bottom. Both should update the live `#speed-val` HUD; accelerating should also advance a self-declared `roadOffset` so the track's background visibly scrolls. The problem text also now warns that `roadOffset` changes every tick, so declaring it as a value that can never change would crash the moment it tries to advance.
+  * *A strong answer shows:* `speed += 10` capped so it never exceeds 120; `speed -= 10` floored so it never drops below 0; `#speed-val`'s text updating; `roadOffset` declared as a value allowed to change (not a constant); an explanation that correctly identifies the 0 floor as exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range.
+  * *Why:* A value with only a ceiling and no floor isn't actually "in a range" — both ends need their own check, and this is the pair Exercise 6.4's momentum system builds on next.
+* **Exercise 6.4: Hold to Accelerate, Release to Decelerate (Momentum)**
+  * *Goal given to the student:* holding ArrowUp continuously builds `speed` up to 300 and scrolls the road forward; releasing it lets `speed` coast back down to 0 on its own, like lifting your foot off the accelerator. The problem text warns that whatever tracks "is the key currently held" must actually be declared AND actually kept up to date by both the keydown and keyup handlers — a common AI mistake is referencing a tracker like that without ever declaring it, or declaring it but never wiring the handlers to update it.
+  * *A strong answer shows:* a key-state tracker (boolean flag or object) declared once, set true on keydown and false on keyup; `speed` increasing each tick while held (capped at 300) and decaying toward 0 on its own once released, via a persistent timer or animation loop — not a one-off snap-to-zero inside the keyup handler; `roadOffset` advancing with `speed`; `#speed-val` always reflecting the live value; an explanation that correctly names "held vs. pressed once" as the key distinction and identifies that the decay needs something that keeps running after the key event fires.
+  * *Why:* This is where "is a key currently down" first becomes something the code has to track explicitly, rather than reacting to a single press — a direct preview of the state-tracking Sessions 9-10 lean on harder. It replaced an earlier "Reverse Handoff" version of this exercise (see Content notes above) for being a more practical, testable mechanic.
+
+### 3a. 📘 Teacher Exercise Guide & Reference Solutions
+
+Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (teacher view only, `exerciseGuide` in `src/curriculumData.js`) — one worked reference prompt and its real generated output per exercise, so a teacher can sanity-check a student's own prompt/code against a known-good answer without re-deriving one live.
+
+* **Exercise 6.1: Track Boundary Coordinates & the Left Guard** — *Left Boundary Guard (carX > 35)*
+  * 🎯 **Reference Prompt:** "Write a JavaScript event listener for keydown that checks if event.key === 'ArrowLeft'. Only allow the car to move left if carX is greater than 35. Inside the condition, subtract 130 from carX and update the element style: document.getElementById('player-car').style.left = carX + 'px';"
+  * 💻 **Reference Output Code:**
+    ```javascript
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft' && carX > 35) {
+        carX -= 130;
+        document.getElementById('player-car').style.left = carX + 'px';
+      }
+    });
+    ```
+* **Exercise 6.2: The Right Guard** — *Right Boundary Guard (carX < 295)*
+  * 🎯 **Reference Prompt:** "Write a JavaScript event listener for keydown that checks if event.key === 'ArrowRight'. Only allow the car to move right if carX is less than 295. If true, add 130 to carX and update document.getElementById('player-car').style.left = carX + 'px';"
+  * 💻 **Reference Output Code:**
+    ```javascript
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowRight' && carX < 295) {
+        carX += 130;
+        document.getElementById('player-car').style.left = carX + 'px';
+      }
+    });
+    ```
+* **Exercise 6.3: Accelerate & Decelerate (Speed Range Guard)** — *Speed Clamping (0 <= speed <= 120)*
+  * 🎯 **Reference Prompt:** "Write a JavaScript keydown listener that increases speed by 10 on ArrowUp (resetting to 100 if speed exceeds 120) and decreases speed by 10 on ArrowDown (not allowing it to drop below 0). Update #speed-val with speed, advance roadOffset by speed, and update #game-track's backgroundPositionY."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    let roadOffset = 0;
+
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowUp') {
+        speed += 10;
+        if (speed > 120) speed = 100;
+        roadOffset += speed;
+      } else if (event.key === 'ArrowDown') {
+        speed = Math.max(0, speed - 10);
+      }
+      document.getElementById('speed-val').textContent = speed;
+      document.getElementById('game-track').style.backgroundPositionY = roadOffset + 'px';
+    });
+    ```
+* **Exercise 6.4: Hold to Accelerate, Release to Decelerate (Momentum)** — *Hold Detection & Decay Loop (Speed Cap 300)*
+  * 🎯 **Reference Prompt:** "Create JavaScript code for a racing game momentum system: track whether ArrowUp is held using keydown/keyup. While held, build speed up to 300 and advance roadOffset. When released, gradually decay speed back to 0 using a setInterval loop. Update #speed-val and scroll #game-track."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    let isAccelerating = false;
+    let roadOffset = 0;
+
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowUp') {
+        isAccelerating = true;
+        if (speed < 300) speed += 10;
+        roadOffset += speed;
+        document.getElementById('game-track').style.backgroundPositionY = roadOffset + 'px';
+      }
+    });
+
+    window.addEventListener('keyup', function(event) {
+      if (event.key === 'ArrowUp') {
+        isAccelerating = false;
+      }
+    });
+
+    setInterval(function() {
+      if (!isAccelerating && speed > 0) {
+        speed = Math.max(0, speed - 5);
+        roadOffset += speed;
+        document.getElementById('game-track').style.backgroundPositionY = roadOffset + 'px';
+      }
+    }, 100);
+    ```
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
@@ -478,7 +557,9 @@ The **Project Journal** milestone card ("Lab 6: Safety Guards & the Full Control
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. Live preview is limited: only Exercises 7.1, 7.3, 7.4, and 7.5 run live (streaming to the terminal); **Exercise 7.2 is deliberately non-runnable** — its seeded bug is a missing loop increment (infinite loop), and actually executing it would hang the preview instead of teaching.
+> **Content note (2026-08-20):** Exercises 7.2 and 7.5 used to be seeded-bug debugging exercises (a missing `i++` causing a freeze; a `i * 12` typo bunching markers) — replaced with pure construction tasks, matching a platform-wide decision this session to keep AI-code-doesn't-work recovery inside "write a better prompt," not "debug broken code," at this level. 7.2 is now a second, independently-parameterized loop (8 markers, 90px apart) that still requires naming the loop header's 3 parts and reasoning about why the update part matters — so the "why do loops need all 3 parts" learning goal survives, just reached through explaining correct code the student built, not fixing broken code handed to them. 7.5 drops the bug narrative and is now a pure "combine everything" integration task. All 5 exercises are runnable now — none are deliberately broken.
+
+Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. All 5 run live in the Live Racing Game Preview (streaming to the terminal).
 
 * **Exercise 7.1: Marker Spacing Plan & the Loop**
   * *Plan box expects:* how many markers and how far apart (5 markers, 120 apart).
@@ -486,12 +567,12 @@ Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2)
   * *Output Code box must include:* `for(...i<5...i++)` with `markerY = i * 120`.
   * *Explain box must cover:* all 3 loop-header parts — start (`i=0`), test (`i<5`), update (`i++`).
   * *Why:* A loop is defined by two numbers — how many times it runs (5) and the step per pass (120px).
-* **Exercise 7.2: Browser Freezes — the Missing Increment** *(deliberately not runnable)*
-  * *Plan box expects:* why a missing `i++` makes `i < 5` true forever instead of eventually false.
-  * *Prompt box must mention:* the missing increment / infinite loop / freeze.
-  * *Output Code box must include:* the loop header restored to `...i < 5; i++) {`.
-  * *Explain box must cover:* why the page locks up — the loop never stops running long enough to do anything else.
-  * *Why:* With no `i++`, `i` stays 0 forever and the browser freezes — this step is deliberately not runnable so the preview won't hang.
+* **Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart**
+  * *Plan box expects:* how many times this loop should run and the step between markers this time (8 markers, 90 apart) — different numbers than 7.1, so the answer can't just be copied.
+  * *Prompt box must mention:* `for loop`, `i * 90`, and `8`.
+  * *Output Code box must include:* `for(...i<8...i++)` with `markerY = i * 90`.
+  * *Explain box must cover:* all 3 loop-header parts (start `i=0`, test `i<8`, update `i++`) AND what happens to the browser if the update part were ever left out (never stops / freezes).
+  * *Why:* Reusing the mechanic with different parameters forces genuine understanding rather than copy-pasting 7.1's numbers, and folds the "why the update part matters" question into explaining code the student built correctly — rather than handing them broken code to fix.
 * **Exercise 7.3: Logging Each Marker**
   * *Plan box expects:* what should get logged on each pass.
   * *Prompt box must mention:* `console.log` and `markerY`.
@@ -504,12 +585,66 @@ Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2)
   * *Output Code box must include:* a `marker-dash` div appended to `#game-track` inside the loop.
   * *Explain box must cover:* why `appendChild` is needed even after `createElement` already built the div.
   * *Why:* `createElement` only builds an element in memory — `appendChild` is what makes it actually show up.
-* **Exercise 7.5: The Off-Track Marker Bug & Complete Loop**
-  * *Plan box expects:* why `i * 12` (missing a zero) bunches all 5 markers near the top instead of spreading them out.
-  * *Prompt box must mention:* `i * 120` (not `i * 12`) and `marker-dash`.
-  * *Output Code box must include:* the full fixed loop — `for(...i<5...i++)`, `markerY = i * 120`, `marker-dash`, `appendChild`.
+* **Exercise 7.5: The Complete Marker System**
+  * *Plan box expects:* listing, in order, everything the loop needs to do each pass — compute the position, create the element, place it, attach it.
+  * *Prompt box must mention:* `i * 120` and `marker-dash`.
+  * *Output Code box must include:* the full loop — `for(...i<5...i++)`, `markerY = i * 120`, `marker-dash`, `appendChild`.
   * *Explain box must cover:* the correct final values: 0, 120, 240, 360, 480.
-  * *Why:* One missing digit (`i * 12` vs `i * 120`) collapses the whole layout — the final exercise combines the fix with everything else built this session.
+  * *Why:* This is where the session's separate pieces (compute, log, create, attach) get combined into one working system in a single prompt.
+
+### 3a. 📘 Teacher Exercise Guide & Reference Solutions
+
+Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (teacher view only, `exerciseGuide` in `src/curriculumData.js`) — one worked reference prompt and its real generated output per exercise, so a teacher can sanity-check a student's own prompt/code against a known-good answer without re-deriving one live.
+
+* **Exercise 7.1: Marker Spacing Plan & the Loop** — *Loop Header & Coordinate Math*
+  * 🎯 **Reference Prompt:** "Write a JavaScript for loop that runs 5 times (i from 0 to 4) and computes markerY as i * 120 on each iteration."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let i = 0; i < 5; i++) {
+      let markerY = i * 120;
+    }
+    ```
+* **Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart** — *Loop Header & Coordinate Math (Different Parameters)*
+  * 🎯 **Reference Prompt:** "Write a JavaScript for loop that runs 8 times (i from 0 to 7) and computes markerY as i * 90 on each iteration."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let i = 0; i < 8; i++) {
+      let markerY = i * 90;
+    }
+    ```
+* **Exercise 7.3: Logging Each Marker** — *Loop State Verification via Logging*
+  * 🎯 **Reference Prompt:** "Write a JavaScript for loop running 5 times, computing markerY = i * 120, and logging 'Highway Marker position: ' + markerY to the console on each pass."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let i = 0; i < 5; i++) {
+      let markerY = i * 120;
+      console.log("Highway Marker position: " + markerY);
+    }
+    ```
+* **Exercise 7.4: Rendering the Markers** — *Dynamic DOM Creation in Loops*
+  * 🎯 **Reference Prompt:** "Write a JavaScript for loop running 5 times that creates a div element with class 'marker-dash', sets its style.top to (i * 120) + 'px', and appends it to document.getElementById('game-track')."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let i = 0; i < 5; i++) {
+      let markerY = i * 120;
+      const marker = document.createElement("div");
+      marker.className = "marker-dash";
+      marker.style.top = markerY + "px";
+      document.getElementById("game-track").appendChild(marker);
+    }
+    ```
+* **Exercise 7.5: The Complete Marker System** — *Complete Marker Generation Loop*
+  * 🎯 **Reference Prompt:** "Write the complete JavaScript loop for creating highway markers: loop 5 times, compute markerY = i * 120, create a 'marker-dash' div, set style.top to markerY + 'px', and append it to #game-track."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let i = 0; i < 5; i++) {
+      let markerY = i * 120;
+      const marker = document.createElement("div");
+      marker.className = "marker-dash";
+      marker.style.top = markerY + "px";
+      document.getElementById("game-track").appendChild(marker);
+    }
+    ```
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 
@@ -572,6 +707,77 @@ Students complete **4 exercises** (the old 5th "combine everything" capstone was
   * *Goal given to the student:* build the `moveRight()` mirror function alongside `moveLeft()`, each clamping `carX` and calling `updatePlayerPosition()`. The exercise text notes `updatePlayerPosition()` isn't defined in this standalone snippet either, so the AI should include a working definition of it too, plus a demo call so the effect is visible in the Preview.
   * *A strong answer shows:* `moveLeft()`/`moveRight()`/`updatePlayerPosition()` all defined together and demonstrably called; an explanation correctly stating only 1 function body needs the fix if both share a clamp helper.
   * *Why:* Each function clamps `carX` to its own boundary, then calls the shared renderer instead of each writing its own `style.left` line.
+
+### 3a. 📘 Teacher Exercise Guide & Reference Solutions
+
+Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (teacher view only, `exerciseGuide` in `src/curriculumData.js`) — one worked reference prompt and its real generated output per exercise, so a teacher can sanity-check a student's own prompt/code against a known-good answer without re-deriving one live.
+
+* **Exercise 8.1: Decomposing & Requesting the Render Function** — *Single-Purpose Render Function*
+  * 🎯 **Reference Prompt:** "Write a JavaScript function named updatePlayerPosition() that sets document.getElementById('player-car').style.left to carX + 'px'. Call updatePlayerPosition() once after defining it."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    function updatePlayerPosition() {
+      document.getElementById('player-car').style.left = carX + 'px';
+    }
+
+    updatePlayerPosition();
+    ```
+* **Exercise 8.2: The Scope Access Violation Bug** — *Global vs. Local Variable Scope*
+  * 🎯 **Reference Prompt:** "Fix the variable scope issue where carX was declared locally inside moveLeft(). Declare carX once in global outer scope so both moveLeft() and updatePlayerPosition() can access and share it."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    function updatePlayerPosition() {
+      document.getElementById('player-car').style.left = carX + 'px';
+    }
+
+    function moveLeft() {
+      if (carX > 35) {
+        carX -= 130;
+      }
+      updatePlayerPosition();
+    }
+    ```
+* **Exercise 8.3: Wiring moveLeft() to the Handler** — *Event Handler Function Delegation*
+  * 🎯 **Reference Prompt:** "Write a JavaScript moveLeft() function that checks if carX > 35, subtracts 130, and updates the car position. Then write a keydown event listener where the 'ArrowLeft' key branch calls moveLeft()."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    function moveLeft() {
+      if (carX > 35) {
+        carX -= 130;
+      }
+      document.getElementById('player-car').style.left = carX + 'px';
+    }
+
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft') {
+        moveLeft();
+      }
+    });
+    ```
+* **Exercise 8.4: Requesting moveLeft() and moveRight()** — *Modular Movement Functions with Shared Renderer*
+  * 🎯 **Reference Prompt:** "Write modular JavaScript functions for car steering: updatePlayerPosition() to set style.left, moveLeft() to clamp carX > 35 and call updatePlayerPosition(), and moveRight() to clamp carX < 295 and call updatePlayerPosition(). Call moveLeft() once to test."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    function updatePlayerPosition() {
+      document.getElementById('player-car').style.left = carX + 'px';
+    }
+
+    function moveLeft() {
+      if (carX > 35) {
+        carX -= 130;
+      }
+      updatePlayerPosition();
+    }
+
+    function moveRight() {
+      if (carX < 295) {
+        carX += 130;
+      }
+      updatePlayerPosition();
+    }
+
+    moveLeft();
+    ```
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 

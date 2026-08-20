@@ -176,10 +176,10 @@ export const CURRICULUM_DATA = [
       },
       {
         num: "7.2",
-        title: "Exercise 7.2: Browser Freezes — the Missing Increment",
-        concept: "Infinite Loop Diagnosis & Fix",
-        prompt: "Fix this infinite loop by restoring the missing increment: for (let i = 0; i < 5; ) { let markerY = i * 120; }",
-        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}"
+        title: "Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart",
+        concept: "Loop Header & Coordinate Math (Different Parameters)",
+        prompt: "Write a JavaScript for loop that runs 8 times (i from 0 to 7) and computes markerY as i * 90 on each iteration.",
+        outputCode: "for (let i = 0; i < 8; i++) {\n  let markerY = i * 90;\n}"
       },
       {
         num: "7.3",
@@ -197,9 +197,9 @@ export const CURRICULUM_DATA = [
       },
       {
         num: "7.5",
-        title: "Exercise 7.5: The Off-Track Marker Bug & Complete Loop",
+        title: "Exercise 7.5: The Complete Marker System",
         concept: "Complete Marker Generation Loop",
-        prompt: "Write the complete JavaScript loop for creating highway markers: loop 5 times, compute markerY = i * 120 (correcting the i * 12 bug), create a 'marker-dash' div, set style.top to markerY + 'px', and append it to #game-track.",
+        prompt: "Write the complete JavaScript loop for creating highway markers: loop 5 times, compute markerY = i * 120, create a 'marker-dash' div, set style.top to markerY + 'px', and append it to #game-track.",
         outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n}"
       }
     ]

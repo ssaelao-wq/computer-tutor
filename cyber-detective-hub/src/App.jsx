@@ -1141,6 +1141,15 @@ function buildS3PreviewCss(exerciseNum) {
   `;
 }
 
+// Converts a Live Preview runtime error into a ready-to-paste follow-up prompt.
+// This keeps fixing AI-generated bugs inside "write a prompt, get code back" —
+// the student pastes this into their AI tool instead of reading the stack trace
+// and editing code themselves. Debugging-as-a-skill is deliberately deferred to
+// a later level; see project_live_preview_fix_prompt memory for the rationale.
+function buildFixPrompt(errorText) {
+  return `The code you gave me threw this error when I ran it:\n\n${errorText}\n\nPlease fix the code so it runs without this error, and briefly explain what caused it so I understand what went wrong.`;
+}
+
 // Shared live-execution iframe for the Level 1 JS Sandboxes (Sessions 4-8+).
 // Unlike the S2/S3 HTML/CSS previews (which just re-render static markup), this
 // actually runs the student's typed JavaScript against the racing game DOM inside
@@ -3097,24 +3106,24 @@ const S6_EXERCISES = [
   {
     num: 3,
     title: "Exercise 6.3: Accelerate & Decelerate (the Speed Range Guard)",
-    problem: `Holding ArrowUp should speed the car up — increasing speed, showing the live number in the HUD (#speed-val), and advancing roadOffset so the track's striped background scrolls, making it look like the car is driving forward. Holding ArrowDown should slow it back down the same way. But speed must stay inside its range: it can't climb past 120 (reset to 100 if it does — watch out, resetting to the String "100" would re-introduce the Session 4 string-concatenation bug), and it can't drop below 0 either.`,
-    instruction: "Goal: make ArrowUp increase speed and ArrowDown decrease it, with speed always staying between 0 and 120. 1) Plan: in your own words, what needs to be true about speed before you allow it to increase further? What needs to be true before you allow it to decrease further? 2) Prompt: describe both rules to the AI, in your own words — including the type concern. This snippet is tested on its own, so have it declare roadOffset itself and call both the accelerate and decelerate handlers a few times so you can see #speed-val and both guards actually work. 3) Explain: why is guarding the bottom of speed's range (0) just as necessary as guarding the top (120)?",
+    problem: `Holding ArrowUp should speed the car up — increasing speed, showing the live number in the HUD (#speed-val), and advancing roadOffset so the track's striped background scrolls, making it look like the car is driving forward. Holding ArrowDown should slow it back down the same way. But speed must stay inside its range: it can't climb past 120 (reset to 100 if it does — watch out, resetting to the String "100" would re-introduce the Session 4 string-concatenation bug), and it can't drop below 0 either. And since roadOffset itself changes value every time speed updates, watch out for the same kind of trap in a different shape: declaring it as a value that can never change would crash the very first time it tries to advance.`,
+    instruction: "Goal: make ArrowUp increase speed and ArrowDown decrease it, with speed always staying between 0 and 120. 1) Plan: in your own words, what needs to be true about speed before you allow it to increase further? What needs to be true before you allow it to decrease further? 2) Prompt: describe both rules to the AI, in your own words — including the type concern, and the fact that roadOffset needs to be declared as a value that's allowed to change over time. This snippet is tested on its own, so have it declare roadOffset itself and call both the accelerate and decelerate handlers a few times so you can see #speed-val and both guards actually work. 3) Explain: why is guarding the bottom of speed's range (0) just as necessary as guarding the top (120)?",
     planPlaceholder: "What needs to be true about speed before allowing it to increase further? Before allowing it to decrease further?",
     promptPlaceholder: "Describe both the acceleration and deceleration rules to the AI, in your own words — including the type concern.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "ArrowUp should increase speed (e.g. speed += 10) capped so it never exceeds 120 (resetting to the Number 100, not a string, if it would). ArrowDown should decrease speed (e.g. speed -= 10) floored so it never goes below 0. #speed-val's textContent should update, and roadOffset (declared by the snippet itself, since this box is tested standalone) should advance when accelerating, driving #game-track's style.backgroundPositionY. Explanation should recognize the 0 floor is exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range. Don't require the literal numbers 120/100/10/0 in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "ArrowUp should increase speed (e.g. speed += 10) capped so it never exceeds 120 (resetting to the Number 100, not a string, if it would). ArrowDown should decrease speed (e.g. speed -= 10) floored so it never goes below 0. #speed-val's textContent should update, and roadOffset (declared by the snippet itself, since this box is tested standalone) should advance when accelerating, driving #game-track's style.backgroundPositionY. Explanation should recognize the 0 floor is exactly the same kind of guard as the 120 ceiling, just at the opposite end of the range. A strong prompt should also flag that roadOffset changes over time and so can't be declared as a fixed/constant value — judged by that reasoning, not by requiring the literal words 'let' or 'const'. Don't require the literal numbers 120/100/10/0 in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
     title: "Exercise 6.4: Hold to Accelerate, Release to Decelerate (Momentum)",
-    problem: "Right now ArrowUp adds a fixed burst of speed each press. This exercise upgrades that to a momentum system: holding ArrowUp continuously builds speed up to 300 and makes the road scroll forward, but as soon as you release the key the car coasts — speed gradually drops back to 0 on its own, like lifting your foot off the accelerator.",
-    instruction: "Goal: make holding ArrowUp accelerate the car (up to 300) and releasing it let the car coast to a stop. 1) Plan: in your own words, what is the difference between 'the key was just pressed once' vs. 'the key is currently being held down'? What needs to keep running even after the key event fires so the car can slow down on its own? 2) Prompt: describe both behaviors to the AI in your own words — accelerating while ArrowUp is held, auto-decelerating when it isn't, roadOffset scrolling with speed, and #speed-val always showing the current value. 3) Explain: why does this feel more natural than the fixed step-by-step speed changes from Exercise 6.3, and what real-world mechanic does it mimic?",
+    problem: "Right now ArrowUp adds a fixed burst of speed each press. This exercise upgrades that to a momentum system: holding ArrowUp continuously builds speed up to 300 and makes the road scroll forward, but as soon as you release the key the car coasts — speed gradually drops back to 0 on its own, like lifting your foot off the accelerator. Watch out for a common trap here: whatever tracks 'is the key currently held' has to actually be declared, AND both the keydown and keyup handlers have to actually update it — it's easy for an AI to reference a tracker like that without ever declaring it, or declare it but never wire the handlers to update it, so it silently never reflects what's really happening.",
+    instruction: "Goal: make holding ArrowUp accelerate the car (up to 300) and releasing it let the car coast to a stop. 1) Plan: in your own words, what is the difference between 'the key was just pressed once' vs. 'the key is currently being held down'? What needs to keep running even after the key event fires so the car can slow down on its own? 2) Prompt: describe both behaviors to the AI in your own words — accelerating while ArrowUp is held, auto-decelerating when it isn't, roadOffset scrolling with speed, #speed-val always showing the current value, and be explicit that the 'currently held' tracker must be both declared and kept up to date by the keydown and keyup handlers. 3) Explain: why does this feel more natural than the fixed step-by-step speed changes from Exercise 6.3, and what real-world mechanic does it mimic?",
     planPlaceholder: "What is the difference between 'key just pressed' vs. 'key currently held'? What needs to keep running to let speed decay on its own?",
     promptPlaceholder: "Describe both behaviors to the AI: build speed while ArrowUp is held (cap at 300), and auto-decelerate to 0 when released.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The code should track whether ArrowUp is currently held (e.g. a boolean flag set on keydown, cleared on keyup). While held, speed should increase each tick up to a cap of 300. When released, speed should decay gradually toward 0 on its own (e.g. via setInterval or requestAnimationFrame — something that keeps running without a key press). roadOffset should advance by the current speed each tick, driving #game-track's backgroundPositionY forward. #speed-val should always reflect the live speed value. The explanation should correctly identify that 'held vs. pressed once' is the key distinction, and that the decay requires a persistent timer or loop — not just a keyup handler that snaps speed to 0."
+    expectedConcepts: "The code should track whether ArrowUp is currently held (e.g. a boolean flag or key-state object, declared once and actually set on keydown, cleared on keyup — not just referenced without ever being declared or updated). While held, speed should increase each tick up to a cap of 300. When released, speed should decay gradually toward 0 on its own (e.g. via setInterval or requestAnimationFrame — something that keeps running without a key press). roadOffset should advance by the current speed each tick, driving #game-track's backgroundPositionY forward. #speed-val should always reflect the live speed value. A strong prompt should explicitly ask that the 'currently held' tracker be both declared and kept up to date by both handlers — judged by that reasoning, not by requiring a literal variable name. The explanation should correctly identify that 'held vs. pressed once' is the key distinction, and that the decay requires a persistent timer or loop — not just a keyup handler that snaps speed to 0."
   }
   // Note (2026-08-13): Ex 6.4 updated from the original 'Reverse Handoff' mechanic
   // (ArrowDown reverses roadOffset once speed = 0) to a 'Hold-to-Accelerate / Release-
@@ -3153,26 +3162,26 @@ const S7_EXERCISES = [
   },
   {
     num: 2,
-    title: "Exercise 7.2: Browser Freezes — the Missing Increment",
-    problem: `Bug: the loop was written as for (let i = 0; i < 5; ) { let markerY = i * 120; } — no increment, so i stays 0 forever and the browser freezes. This step is deliberately not runnable, so the preview won't hang.`,
-    instruction: "1) Plan: explain why a missing i++ makes this loop run forever instead of 5 times. 2) Prompt: ask the AI to restore the missing increment — paste the fixed code into Output Code (it won't auto-run here). 3) Explain: what does 'the browser freezes' actually mean — why does the whole page lock up?",
-    planPlaceholder: "Why does a missing 'i++' make 'i < 5' true forever instead of eventually false?",
-    promptPlaceholder: "Write the prompt asking the AI to restore the missing increment in: for (let i = 0; i < 5; ) { ... }",
-    outputCodePlaceholder: "Paste the AI's fixed loop header here (e.g. for (let i = 0; i < 5; i++) { ... }).",
-    runnable: false,
+    title: "Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart",
+    problem: "Highway distance markers work the same way as the lane dashes in 7.1, but this set needs a different count and spacing: 8 markers, 90px apart instead of 5 markers, 120px apart. The loop header — how many times it runs, and what changes on each pass — is what makes that possible without writing 8 separate lines by hand.",
+    instruction: "Goal: build a second, independent for loop for a different marker count and spacing. 1) Plan: in your own words, how many times should this loop run, and what's the step between markers this time? 2) Prompt: ask the AI for a for loop that runs 8 times, computing markerY as i * 90 on each pass — paste its real code into Output Code and run it. 3) Explain: name the loop header's three parts (start, test, update), and explain what would happen to the browser if the update part were ever left out.",
+    planPlaceholder: "How many times should this loop run, and what's the step between markers this time? (hint: 8 markers, 90 apart)",
+    promptPlaceholder: "Write the prompt asking for a for loop running 8 times, computing markerY = i * 90 each pass.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
+    runnable: true,
     validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('increment') || p.includes('i++') || p.includes('freeze') || p.includes('infinite');
+      const p = prompt.toLowerCase().replace(/\s+/g, '');
+      const promptOk = p.includes('forloop') && p.includes('i*90') && p.includes('8');
       const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('i<5;i++') || clean.includes('i<5;i+=1');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('freeze') || e.includes('lock') || e.includes('never end') || e.includes('forever') || e.includes('hang');
+      const codeOk = clean.includes('for(') && clean.includes('i<8') && clean.includes('i++') && clean.includes('i*90');
+      const e = explain.toLowerCase().replace(/\s+/g, '');
+      const explainOk = e.includes('i++') && (e.includes('i<8') || e.includes('i=0')) && (e.includes('forever') || e.includes('never') || e.includes('freeze') || e.includes('infinite') || e.includes('hang'));
       return { promptOk, codeOk, explainOk };
     },
     hint: {
-      prompt: "Mention the missing increment / infinite loop.",
-      code: "Needs '...i < 5; i++) {' restored as the loop header.",
-      explain: "Say the page locks up because the loop never stops running long enough to do anything else."
+      prompt: "Mention 'for loop', 'i * 90', and '8'.",
+      code: "Needs for(...i<8...i++) with markerY = i * 90.",
+      explain: "Name all 3 parts (start i=0, test i<8, update i++), AND say what happens without the update part (the browser never stops / freezes)."
     }
   },
   {
@@ -3225,12 +3234,12 @@ const S7_EXERCISES = [
   },
   {
     num: 5,
-    title: "Exercise 7.5: The Off-Track Marker Bug & Complete Loop",
-    problem: `Bug: a spacing formula was written as markerY = i * 12 (missing a zero), bunching all 5 markers near the top. Combine the fix with everything else this session into one complete marker loop.`,
-    instruction: "1) Plan: explain why i * 12 bunches all the markers near the top instead of spreading them out. 2) Prompt: ask the AI for the COMPLETE loop — 5 iterations, markerY = i * 120 (not i * 12), building and appending a marker-dash div each pass — paste its real code into Output Code and run it. 3) Explain: confirm the 5 final Y values your fixed loop produces.",
-    planPlaceholder: "Why does 'i * 12' (missing a zero) bunch all 5 markers near the top instead of spreading them down the track?",
+    title: "Exercise 7.5: The Complete Marker System",
+    problem: "Time to put every piece from this session together into one finished system: a loop that computes each marker's position, builds a real element for it, and places it on the track — all 5 markers, in one prompt.",
+    instruction: "Goal: build the COMPLETE marker system in a single prompt. 1) Plan: list, in order, everything this loop needs to do on each pass. 2) Prompt: ask the AI for the complete loop — 5 iterations, markerY = i * 120, a 'marker-dash' div created and appended to #game-track each pass — paste its real code into Output Code and run it. 3) Explain: confirm the 5 final Y values your loop produces.",
+    planPlaceholder: "List, in order, everything this loop needs to do on each pass: compute the position, create the element, place it, attach it.",
     promptPlaceholder: "Write the prompt asking for the COMPLETE loop: 5 passes, markerY = i * 120, marker-dash div appended to #game-track each time.",
-    outputCodePlaceholder: "Paste the AI's complete, fixed loop code here.",
+    outputCodePlaceholder: "Paste the AI's complete loop code here.",
     runnable: true,
     validate: ({ prompt, outputCode, explain }) => {
       const p = prompt.toLowerCase().replace(/\s+/g, '');
@@ -3800,6 +3809,7 @@ export default function App() {
   const [s7ExplainInput, setS7ExplainInput] = useState('');
   const [s7Logs, setS7Logs] = useState([]);
   const [s7Success, setS7Success] = useState(false);
+  const [s7Generating, setS7Generating] = useState(false);
 
   const [s8ActiveExercise, setS8ActiveExercise] = useState(1);
   const [s8PlanInput, setS8PlanInput] = useState('');
@@ -8058,13 +8068,45 @@ export default function App() {
                         </span>
                       </div>
                       <div className="form-field">
-                        <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-cyan)', marginBottom: '4px', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Output Code (game.js)</label>
+                          <button
+                            type="button"
+                            className="btn-cyber btn-small btn-cyber-secondary"
+                            disabled={s7Generating || !s7PromptInput.trim()}
+                            onClick={async () => {
+                              setS7Generating(true);
+                              try {
+                                const ex = S7_EXERCISES[s7ActiveExercise - 1];
+                                const res = await fetch('/api/generate-code', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                  body: JSON.stringify({ prompt: s7PromptInput, context: ex.problem })
+                                });
+                                const data = await res.json();
+                                if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
+                                setS7OutputCodeInput(data.code);
+                                setSimConsoleLogs([]);
+                              } catch (err) {
+                                setS7Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
+                              } finally {
+                                setS7Generating(false);
+                              }
+                            }}
+                            style={{ padding: '2px 10px', fontSize: '0.7rem' }}
+                          >
+                            {s7Generating ? 'Generating…' : '🤖 Generate Code'}
+                          </button>
+                        </div>
                         <textarea
                           value={s7OutputCodeInput}
                           onChange={(e) => setS7OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
                           placeholder={S7_EXERCISES[s7ActiveExercise - 1].outputCodePlaceholder}
                         />
+                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                          "Generate Code" is a quick in-platform check — for real practice, use your own AI tool via Copy Prompt above.
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -8073,7 +8115,7 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is deliberately not runnable — the seeded bug here is an infinite loop, and actually executing it would hang the preview.')}
+                        srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
@@ -10938,6 +10980,37 @@ export default function App() {
                   </div>
                 </div>
               )}
+
+              {/* Auto fix-prompt: whenever the Live Preview iframe threw a runtime
+                  error, surface it as a ready-to-paste follow-up prompt instead of
+                  a raw stack trace. Shared across every session since it reads the
+                  same simConsoleLogs array every session's preview writes into —
+                  see buildFixPrompt for the rationale. */}
+              {(() => {
+                const latestSimError = [...simConsoleLogs].reverse().find(l => l.type === 'error');
+                if (!latestSimError) return null;
+                const fixPromptText = buildFixPrompt(latestSimError.text);
+                return (
+                  <div className="glass-panel" style={{ padding: '16px', marginTop: '20px', border: '1px solid #ff4d4d', background: 'rgba(255, 77, 77, 0.05)' }}>
+                    <div className="panel-header"><h3>⚠ Your AI's Code Has a Bug</h3></div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
+                        The code crashed when it ran. Don't edit the code yourself — copy this prompt and paste it back into your AI tool (ChatGPT/Cursor/Copilot) to get a fixed version.
+                      </p>
+                      <pre style={{ margin: 0, background: 'rgba(0,0,0,0.5)', padding: '12px', borderRadius: '4px', fontSize: '0.8rem', color: '#00ffcc', whiteSpace: 'pre-wrap', fontFamily: 'var(--font-mono)' }}>
+                        {fixPromptText}
+                      </pre>
+                      <button
+                        className="btn-cyber btn-cyber-primary btn-small"
+                        style={{ alignSelf: 'flex-start' }}
+                        onClick={() => copyPromptToClipboard(fixPromptText, 'fix-prompt')}
+                      >
+                        {promptCopiedKey === 'fix-prompt' ? '✓ Copied' : 'Copy Fix Prompt'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
 
                 </div>
               </div>
