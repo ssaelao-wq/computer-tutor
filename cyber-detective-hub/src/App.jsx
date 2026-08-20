@@ -1155,7 +1155,16 @@ function buildFixPrompt(errorText) {
 // actually runs the student's typed JavaScript against the racing game DOM inside
 // the iframe, and forwards console.log()/runtime errors back to the parent via
 // postMessage so they can be shown in the terminal log panel.
-function buildJsSandboxPreview(studentCode) {
+function buildJsSandboxPreview(studentCode, options = {}) {
+  // showCar: hide the reactive #player-car when an exercise's code never
+  // touches carX/speed and produces no other visible effect either — an idle
+  // car sitting on the track reads as "something should be moving," which is
+  // misleading when nothing in that exercise is supposed to move it.
+  // trackHeight: default (260px) fits every steering/speed exercise, but S7's
+  // marker-generation exercises place elements up to 630px down (5 markers x
+  // 120px, or 8 x 90px) — taller than the default track, so anything past
+  // ~260px would silently clip under overflow:hidden even with correct code.
+  const { showCar = true, trackHeight = 260 } = options;
   // Pre-clean student code before injecting into the HTML template:
   // strip any top-level re-declarations of the harness globals (carX, speed)
   // that the AI commonly emits — e.g. `let carX = 165;` — so they don't
@@ -1172,11 +1181,12 @@ function buildJsSandboxPreview(studentCode) {
           body { margin: 0; padding: 10px; background: #060814; color: #fff; font-family: monospace; font-size: 0.85rem; }
           #dashboard { padding: 8px; background-color: #1a1a2e; border-radius: 6px; text-align: center; border: 1px solid #333; margin-bottom: 10px; }
           h2 { margin: 0; font-size: 1rem; color: #00ffcc; }
-          #game-track { position: relative; width: 390px; max-width: 100%; height: 260px; background-color: #222; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 10px, transparent 10px, transparent 50px); border: 3px solid #ffcc00; overflow: hidden; }
+          #game-track { position: relative; width: 390px; max-width: 100%; height: ${trackHeight}px; background-color: #222; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 10px, transparent 10px, transparent 50px); border: 3px solid #ffcc00; overflow-y: auto; overflow-x: hidden; }
           .lane-divider { position: absolute; top: 0; height: 100%; width: 2px; border-left: 2px dashed #ffffff; }
           #player-car { position: absolute; bottom: 20px; width: 30px; height: 50px; background-color: #ff4d4d; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: left 0.15s ease; z-index: 2; }
           #obstacle { position: absolute; top: -100px; width: 25px; height: 40px; background-color: #ff9f43; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 1; }
           #restart-panel { position: absolute; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; color: #ff4d4d; font-weight: bold; text-align: center; z-index: 3; }
+          .marker-dash { position: absolute; left: 178px; width: 34px; height: 8px; background-color: #ffcc00; border-radius: 2px; z-index: 1; }
           .hidden { display: none !important; }
           #console-hint { padding: 6px 2px 0 2px; font-size: 0.65rem; color: #666; }
         </style>
@@ -1185,7 +1195,7 @@ function buildJsSandboxPreview(studentCode) {
         <div id="dashboard"><h2>Score: <span id="score-val">0</span> | Speed: <span id="speed-val">0</span></h2></div>
         <div id="game-track">
           <div class="lane-divider" style="left: 180px;"></div>
-          <div id="player-car" style="left: 165px;">🏎️</div>
+          ${showCar ? '<div id="player-car" style="left: 165px;">🏎️</div>' : ''}
           <div id="obstacle" style="left: 165px;">🚧</div>
           <div id="restart-panel" class="hidden">GAME OVER<br/>Press Space to Restart</div>
         </div>
@@ -8115,8 +8125,11 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
-                        style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                        srcDoc={buildJsSandboxPreview(
+                          S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.',
+                          { showCar: s7ActiveExercise >= 4, trackHeight: 660 }
+                        )}
+                        style={{ width: '100%', height: '780px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
                       <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
