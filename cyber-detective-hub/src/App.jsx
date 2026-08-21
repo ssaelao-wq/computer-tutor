@@ -3784,6 +3784,7 @@ export default function App() {
   const [s9Success, setS9Success] = useState(false);
   const [s9Verifying, setS9Verifying] = useState(false);
   const [s9Generating, setS9Generating] = useState(false);
+  const s9OutputCodeRef = useRef(null);
 
   const [s10ActiveExercise, setS10ActiveExercise] = useState(1);
   const [s10PlanInput, setS10PlanInput] = useState('');
@@ -3794,6 +3795,7 @@ export default function App() {
   const [s10Success, setS10Success] = useState(false);
   const [s10Verifying, setS10Verifying] = useState(false);
   const [s10Generating, setS10Generating] = useState(false);
+  const s10OutputCodeRef = useRef(null);
 
   const [s11ActiveExercise, setS11ActiveExercise] = useState(1);
   const [s11PlanInput, setS11PlanInput] = useState('');
@@ -3814,6 +3816,7 @@ export default function App() {
   const [s12Success, setS12Success] = useState(false);
   const [s12Verifying, setS12Verifying] = useState(false);
   const [s12Generating, setS12Generating] = useState(false);
+  const s12OutputCodeRef = useRef(null);
 
   // Live console.log()/error output forwarded from the JS Sandbox preview iframes (Sessions 4-12)
   const [simConsoleLogs, setSimConsoleLogs] = useState([]);
@@ -8332,32 +8335,17 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {simConsoleLogs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
-                            ) : simConsoleLogs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {s8Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
-                            ) : s8Logs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {simConsoleLogs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                          ) : simConsoleLogs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -8445,6 +8433,22 @@ export default function App() {
                     >
                       Reset Code
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s8Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
+                        ) : s8Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -8547,6 +8551,9 @@ export default function App() {
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS9OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
+                                // This session has no arrow-key/space interaction, so keep focus on
+                                // the Output Code box instead of the iframe (see S7's identical fix).
+                                s9OutputCodeRef.current?.focus();
                               } catch (err) {
                                 setS9Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8559,6 +8566,7 @@ export default function App() {
                           </button>
                         </div>
                         <textarea
+                          ref={s9OutputCodeRef}
                           value={s9OutputCodeInput}
                           onChange={(e) => setS9OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
@@ -8575,36 +8583,21 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {simConsoleLogs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
-                            ) : simConsoleLogs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {s9Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
-                            ) : s9Logs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {simConsoleLogs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                          ) : simConsoleLogs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -8692,6 +8685,22 @@ export default function App() {
                     >
                       Reset Code
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s9Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
+                        ) : s9Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -8794,6 +8803,9 @@ export default function App() {
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS10OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
+                                // This session has no arrow-key/space interaction, so keep focus on
+                                // the Output Code box instead of the iframe (see S7's identical fix).
+                                s10OutputCodeRef.current?.focus();
                               } catch (err) {
                                 setS10Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8806,6 +8818,7 @@ export default function App() {
                           </button>
                         </div>
                         <textarea
+                          ref={s10OutputCodeRef}
                           value={s10OutputCodeInput}
                           onChange={(e) => setS10OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
@@ -8822,36 +8835,21 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {simConsoleLogs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
-                            ) : simConsoleLogs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {s10Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
-                            ) : s10Logs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {simConsoleLogs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                          ) : simConsoleLogs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -8939,6 +8937,22 @@ export default function App() {
                     >
                       Reset Code
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s10Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
+                        ) : s10Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -9073,32 +9087,17 @@ export default function App() {
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {simConsoleLogs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
-                            ) : simConsoleLogs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {s11Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
-                            ) : s11Logs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {simConsoleLogs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                          ) : simConsoleLogs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -9186,6 +9185,22 @@ export default function App() {
                     >
                       Reset Code
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s11Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
+                        ) : s11Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -9288,6 +9303,9 @@ export default function App() {
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS12OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
+                                // This session has no arrow-key/space interaction, so keep focus on
+                                // the Output Code box instead of the iframe (see S7's identical fix).
+                                s12OutputCodeRef.current?.focus();
                               } catch (err) {
                                 setS12Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -9300,6 +9318,7 @@ export default function App() {
                           </button>
                         </div>
                         <textarea
+                          ref={s12OutputCodeRef}
                           value={s12OutputCodeInput}
                           onChange={(e) => setS12OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
@@ -9316,36 +9335,21 @@ export default function App() {
                     <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                        srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
                         style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
                         title="JS Sandbox Live Preview"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {simConsoleLogs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
-                            ) : simConsoleLogs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
-                          <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {s12Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
-                            ) : s12Logs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {simConsoleLogs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                          ) : simConsoleLogs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -9433,6 +9437,22 @@ export default function App() {
                     >
                       Reset Code
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s12Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
+                        ) : s12Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
