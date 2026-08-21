@@ -293,7 +293,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 - **Exercise 5.3 (Different Distances Per Direction)**: track horizontal and vertical running numbers separately — left/right by 20, up/down by 10 — logged after every keypress (tracked and logged, not visually rendered).
 - **Exercise 5.4 (Pause with Spacebar)**: reuse the sandbox's existing hidden `#restart-panel` overlay so pressing Space reveals it with a "Paused" message instead of its default "GAME OVER" text. The overlay is hidden via a CSS class, not an inline style, so a good prompt asks the AI to remove that class (`classList.remove`) rather than just set `style.display` — the exercise text flags this directly, since a plain `style.display` change silently does nothing against the sandbox's `.hidden { display: none !important; }` rule (found and fixed 2026-08-05).
 
-- **Homework Evaluation**: Ensure the handler validates `event.key` matches `"s"` and executes actions.
+- **Homework Evaluation**: Ensure the Project Task's steering logic lives in one shared action (e.g. `steerCar()`) reused by both the keydown handler and the two new `<button>` click handlers — not duplicated per input path — and that both real `<button>` elements exist on the page and move the car by the same `LANE_WIDTH` amount as the keyboard.
 
 ---
 
