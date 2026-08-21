@@ -7331,34 +7331,19 @@ export default function App() {
                         style={{ display: 'none' }}
                         title="JS Execution Sandbox"
                       />
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
-                          <div className="state-terminal-logs" style={{ height: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {simConsoleLogs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                                No console output yet. Add console.log(...) to your Output Code if you want to see real values here.
-                              </div>
-                            ) : simConsoleLogs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Verification Feedback</div>
-                          <div className="state-terminal-logs" style={{ height: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                            {s4Logs.length === 0 ? (
-                              <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
-                            ) : s4Logs.map((log, idx) => (
-                              <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                                {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                                {log.text}
-                              </div>
-                            ))}
-                          </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
+                        <div className="state-terminal-logs" style={{ height: '180px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {simConsoleLogs.length === 0 ? (
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                              No console output yet. Add console.log(...) to your Output Code if you want to see real values here.
+                            </div>
+                          ) : simConsoleLogs.map((log, idx) => (
+                            <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                              {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                              {log.text}
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -7446,6 +7431,22 @@ export default function App() {
                     >
                       Reset
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {s4Logs.length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Write a prompt, then click Verify.</div>
+                        ) : s4Logs.map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
