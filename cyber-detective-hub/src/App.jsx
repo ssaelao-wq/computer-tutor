@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
 import { CURRICULUM_DATA } from './curriculumData';
 import { PROJECT_TASKS } from './projectTasksData';
@@ -1164,7 +1164,12 @@ function buildJsSandboxPreview(studentCode, options = {}) {
   // marker-generation exercises place elements up to 630px down (5 markers x
   // 120px, or 8 x 90px) — taller than the default track, so anything past
   // ~260px would silently clip under overflow:hidden even with correct code.
-  const { showCar = true, trackHeight = 260 } = options;
+  // autoFocus: default true grabs keyboard focus on load so ArrowLeft/Right
+  // steering keeps working after Generate Code reloads the iframe (see the
+  // document.body.focus() call below). S7's marker exercises don't use
+  // steering at all, so that focus grab only serves to scroll the page down
+  // to the iframe — pass false there to leave focus on the Output Code box.
+  const { showCar = true, trackHeight = 260, autoFocus = true } = options;
   // Pre-clean student code before injecting into the HTML template:
   // strip any top-level re-declarations of the harness globals (carX, speed)
   // that the AI commonly emits — e.g. `let carX = 165;` — so they don't
@@ -1247,7 +1252,7 @@ function buildJsSandboxPreview(studentCode, options = {}) {
           // moves focus to that parent-page button. Without this, arrow keys
           // silently stop doing anything until the student notices and re-clicks
           // inside the preview, which reads as "the new code isn't running."
-          document.body.focus();
+          ${autoFocus ? 'document.body.focus();' : ''}
           // Reactive globals: writing carX auto-moves #player-car visually;
           // writing speed auto-updates #speed-val in the HUD. Student code only
           // needs to update the variable — no explicit DOM call required.
@@ -3820,6 +3825,7 @@ export default function App() {
   const [s7Logs, setS7Logs] = useState([]);
   const [s7Success, setS7Success] = useState(false);
   const [s7Generating, setS7Generating] = useState(false);
+  const s7OutputCodeRef = useRef(null);
 
   const [s8ActiveExercise, setS8ActiveExercise] = useState(1);
   const [s8PlanInput, setS8PlanInput] = useState('');
@@ -8097,6 +8103,12 @@ export default function App() {
                                 if (!res.ok) throw new Error(data.error || `Generation failed (${res.status})`);
                                 setS7OutputCodeInput(data.code);
                                 setSimConsoleLogs([]);
+                                // Focus the Output Code box itself, not the Live Preview iframe below —
+                                // the iframe's own script used to grab focus on reload (for arrow-key
+                                // steering in other sessions), which dragged the page's scroll down to
+                                // the preview instead of leaving the student looking at the code they
+                                // just generated. See s7 preview's autoFocus: false.
+                                s7OutputCodeRef.current?.focus();
                               } catch (err) {
                                 setS7Logs([{ type: 'error', text: `✗ Couldn't generate code (${err.message}). Please try again, or use your own AI tool instead.` }]);
                               } finally {
@@ -8109,6 +8121,7 @@ export default function App() {
                           </button>
                         </div>
                         <textarea
+                          ref={s7OutputCodeRef}
                           value={s7OutputCodeInput}
                           onChange={(e) => setS7OutputCodeInput(e.target.value)}
                           style={{ width: '100%', height: '220px', background: 'rgba(6, 8, 20, 0.7)', color: '#00ffcc', border: '1px solid var(--border-color)', borderRadius: '4px', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', lineHeight: 1.5, resize: 'vertical' }}
@@ -8122,26 +8135,32 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
+                    <div className="panel-header"><h3>{s7ActiveExercise >= 4 ? 'Live Racing Game Preview' : 'Console Output'}</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      <iframe
-                        srcDoc={buildJsSandboxPreview(
-                          S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.',
-                          { showCar: s7ActiveExercise >= 4, trackHeight: 660 }
-                        )}
-                        style={{ width: '100%', height: '780px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                        title="JS Sandbox Live Preview"
-                      />
-                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                        {[...s7Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Paste code and click Verify. This session's code runs once when the preview loads.</div>
-                        ) : [...s7Logs, ...simConsoleLogs].map((log, idx) => (
-                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
-                            {log.text}
-                          </div>
-                        ))}
-                      </div>
+                      {/* Ex 7.1-7.3 only compute values / log to console — nothing ever
+                          renders to the DOM, so the racing-track graphic would be pure
+                          decoration (and previously implied something should visibly
+                          move). Those exercises run through the hidden console-only
+                          harness instead; the real output is the Terminal Log below. */}
+                      {s7ActiveExercise >= 4 ? (
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(
+                            S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.',
+                            { trackHeight: 660, autoFocus: false }
+                          )}
+                          style={{ width: '100%', height: '780px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                      ) : (
+                        <>
+                          <iframe
+                            srcDoc={buildJsConsoleOnlyPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '')}
+                            style={{ display: 'none' }}
+                            title="JS Execution Sandbox"
+                          />
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>This exercise has no visual output — check the Terminal Log below.</div>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -8206,6 +8225,22 @@ export default function App() {
                     >
                       Reset Code
                     </button>
+                  </div>
+
+                  <div className="glass-panel" style={{ padding: '16px' }}>
+                    <div className="panel-header"><h3>Terminal Log</h3></div>
+                    <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
+                      <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                        {[...s7Logs, ...simConsoleLogs].length === 0 ? (
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                        ) : [...s7Logs, ...simConsoleLogs].map((log, idx) => (
+                          <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
+                            {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
+                            {log.text}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
