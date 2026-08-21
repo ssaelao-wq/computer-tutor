@@ -10673,18 +10673,18 @@ export default function App() {
 
                     <div className="glass-panel sim-right">
                       <div className="panel-header">
-                        <h3>SQL Playground Preview</h3>
+                        <h3>Verification Feedback</h3>
                       </div>
+                      {/* No exercise in this session is ever runnable — it's pure SQL text,
+                          and there's no SQL engine in the sandbox to execute it against. A
+                          "Live Preview" iframe here would only ever show the same static
+                          "nothing to run" comment, so it's dropped entirely rather than kept
+                          as permanent dead space (see S10/S12's identical fix in L1). */}
                       <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <iframe
-                          srcDoc={buildCanvasSandboxPreview('// Session 11 is a SQL exercise — no canvas code to run.\n// Write your SQL in the editor and click Verify.')}
-                          style={{ width: '100%', height: '350px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                          title="SQL Playground Preview"
-                        />
-                        <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
-                          {[...l2s11Logs, ...simConsoleLogs].length === 0 ? (
+                        <div className="state-terminal-logs" style={{ height: '520px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
+                          {l2s11Logs.length === 0 ? (
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write your SQL and click Verify.</div>
-                          ) : [...l2s11Logs, ...simConsoleLogs].map((log, idx) => (
+                          ) : l2s11Logs.map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                               {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
                               {log.text}
