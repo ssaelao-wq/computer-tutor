@@ -8832,18 +8832,22 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
+                    <div className="panel-header"><h3>Console Output</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
+                      {/* Every S10 exercise is pure collision math (checkCollision returning a
+                          boolean, demoed via console.log per the exercise text) — none of them
+                          move carX/obstacleY, so the racing-track graphic never has anything to
+                          show and previously just sat there implying something should move. */}
                       <iframe
-                        srcDoc={buildJsSandboxPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
-                        style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                        title="JS Sandbox Live Preview"
+                        srcDoc={buildJsConsoleOnlyPreview(S10_EXERCISES[s10ActiveExercise - 1].runnable ? s10OutputCodeInput : '')}
+                        style={{ display: 'none' }}
+                        title="JS Execution Sandbox"
                       />
                       <div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
                         <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                           {simConsoleLogs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>No console output yet. Add console.log(...) to your Output Code to see values here.</div>
                           ) : simConsoleLogs.map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                               {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
@@ -9332,18 +9336,30 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
+                    <div className="panel-header"><h3>{s12ActiveExercise === 3 ? 'Live Racing Game Preview' : 'Console Output'}</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      <iframe
-                        srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
-                        style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                        title="JS Sandbox Live Preview"
-                      />
+                      {/* Only 12.3 (refactoring the boundary guards) actually sets carX, so only
+                          it gets the visible track. 12.1/12.2/12.4/12.5 are CONFIG math, a speed
+                          clamp, a collision fix, and a diagnostic log — none touch the DOM, so the
+                          racing-track graphic would just sit there implying something should move. */}
+                      {s12ActiveExercise === 3 ? (
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
+                          style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                      ) : (
+                        <iframe
+                          srcDoc={buildJsConsoleOnlyPreview(S12_EXERCISES[s12ActiveExercise - 1].runnable ? s12OutputCodeInput : '')}
+                          style={{ display: 'none' }}
+                          title="JS Execution Sandbox"
+                        />
+                      )}
                       <div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
                         <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                           {simConsoleLogs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>No console output yet. Add console.log(...) to your Output Code to see values here.</div>
                           ) : simConsoleLogs.map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                               {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
