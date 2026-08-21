@@ -558,62 +558,35 @@ The **Project Journal** milestone card ("Lab 6: Safety Guards & the Full Control
 
 > **Content note (2026-08-20):** Exercises 7.2 and 7.5 used to be seeded-bug debugging exercises (a missing `i++` causing a freeze; a `i * 12` typo bunching markers) — replaced with pure construction tasks, matching a platform-wide decision this session to keep AI-code-doesn't-work recovery inside "write a better prompt," not "debug broken code," at this level. 7.2 is now a second, independently-parameterized loop (8 markers, 90px apart) that still requires naming the loop header's 3 parts and reasoning about why the update part matters — so the "why do loops need all 3 parts" learning goal survives, just reached through explaining correct code the student built, not fixing broken code handed to them. 7.5 drops the bug narrative and is now a pure "combine everything" integration task. All 5 exercises are runnable now — none are deliberately broken.
 >
-> **Content note (2026-08-21):** this session was moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above) — **Verify now grades the Prompt box only**, the last of Level 1's twelve sessions to make this move. A real student had been hitting the old keyword-checked format as a "guess the exact wording" game: a genuinely well-written prompt describing the same loop in different words still failed outright if it didn't contain the literal required substrings. The exercise count and content are unchanged (still **5 exercises**); only the grading mechanism and instruction phrasing changed, below. Also fixed in the same pass: Exercises 7.1-7.3 produce no visible DOM/graphic output at all (they only compute values or log to console) — the Live Preview for those three now shows a **Console Output** panel instead of the racing-track graphic, which previously sat there with an idle car implying something should move; 7.4-7.5 (which really do render `marker-dash` elements) keep the **Live Racing Game Preview**.
+> **Content note (2026-08-21):** this session was moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above) — **Verify now grades the Prompt box only**, the last of Level 1's twelve sessions to make this move. A real student had been hitting the old keyword-checked format as a "guess the exact wording" game: a genuinely well-written prompt describing the same loop in different words still failed outright if it didn't contain the literal required substrings.
+>
+> **Content note (2026-08-21, later the same day):** real classroom testing found Exercises 7.1-7.3 all felt like variations of the same for-loop/marker-computation task, and 7.4-7.5 both felt like variations of the same rendering task — "nothing interesting to learn" between them. Redesigned to teach four genuinely different loop/conditional constructs, and dropped 7.5 (the session now has **4 exercises**, not 5): 7.1 builds the complete marker system with a `for` loop; 7.2 rebuilds the identical result with a `while` loop, to show the two constructs do the same job differently; 7.3 introduces `if/else` + `break` for conditional early exit — a `while` loop that stops itself once a marker's position would reach 600, instead of relying on a fixed count; 7.4 combines a `for` loop with an `if/else` to produce a real gameplay effect, simulating frames of acceleration and turning the track's border red once `speed` reaches the 100 danger threshold (reusing the sandbox's existing reactive `speed` global, which already starts at 0 the same way `carX` already starts at 165 — the exercise text warns against redeclaring it). All 4 exercises now render real, visible output (markers or a road-color change), so the **Live Racing Game Preview** is shown for every exercise — the Console-Output-only special case from the note above no longer applies here. Also fixed alongside this: `EXERCISE_COUNTS['l1-s7']` was still set to 5 in the code even after this trim to 4 — the same stuck-count bug was found and fixed for Sessions 8-11 at the same time (their own exercise trims happened back on 2026-08-05 but the count was never updated then), which had been silently preventing those sessions' progress from ever reaching "done."
 
-Students complete **5 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. Exercises 7.4-7.5 run live in the Live Racing Game Preview; 7.1-7.3 run in a Console Output panel (no visual output to preview — see the Content note above). **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word.
+Students complete **4 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. All 4 run live in the **Live Racing Game Preview** — click inside it and press arrow keys to steer (none of these exercises move the car, but the arrow-key hint still applies to the shared harness). **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word.
 
-* **Exercise 7.1: Marker Spacing Plan & the Loop**
-  * *Goal given to the student:* a `for` loop that runs 5 times, computing `markerY` as `i * 120` on each pass.
-  * *A strong answer shows:* a real `for(...i<5...i++)` loop computing `markerY = i * 120`; an explanation naming all 3 loop-header parts — start (`i=0`), test (`i<5`), update (`i++`).
-  * *Why:* A loop is defined by two numbers — how many times it runs (5) and the step per pass (120px).
-* **Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart**
-  * *Goal given to the student:* a second, independent `for` loop that runs 8 times, computing `markerY` as `i * 90` — different numbers than 7.1, so the answer can't just be copied.
-  * *A strong answer shows:* a real `for(...i<8...i++)` loop computing `markerY = i * 90`; an explanation naming all 3 loop-header parts AND what happens to the browser if the update part were ever left out (never stops / freezes).
-  * *Why:* Reusing the mechanic with different parameters forces genuine understanding rather than copy-pasting 7.1's numbers, and folds the "why the update part matters" question into explaining code the student built correctly — rather than handing them broken code to fix.
-* **Exercise 7.3: Logging Each Marker**
-  * *Goal given to the student:* a `console.log` inside the loop printing `markerY` on each pass.
-  * *A strong answer shows:* a real `console.log` of `markerY` inside the loop body; an explanation correctly predicting all 5 values: 0, 120, 240, 360, 480.
-  * *Why:* One log line per pass is the fastest proof the loop really runs 5 times.
-* **Exercise 7.4: Rendering the Markers**
-  * *Goal given to the student:* create a `marker-dash` div, set its position from `markerY`, and append it to `#game-track` inside the loop.
-  * *A strong answer shows:* a real `marker-dash` div appended to `#game-track` each pass; an explanation covering why `appendChild` is needed even after `createElement` already built the div.
-  * *Why:* `createElement` only builds an element in memory — `appendChild` is what makes it actually show up.
-* **Exercise 7.5: The Complete Marker System**
-  * *Goal given to the student:* the COMPLETE marker system in one prompt — the loop, the computed position, the created/styled/appended element, all 5 markers.
-  * *A strong answer shows:* the full loop — `for(...i<5...i++)`, `markerY = i * 120`, a `marker-dash` div created and appended each pass; an explanation stating the correct final values: 0, 120, 240, 360, 480.
-  * *Why:* This is where the session's separate pieces (compute, log, create, attach) get combined into one working system in a single prompt.
+* **Exercise 7.1: Building Highway Markers with a For Loop**
+  * *Goal given to the student:* build the complete marker system with a `for` loop in one prompt — compute each marker's position, create the element, and attach it to the track.
+  * *A strong answer shows:* a real `for(...i<5...i++)` loop computing `markerY = i * 120`, creating a `marker-dash` div and appending it to `#game-track` each pass; an explanation naming all 3 loop-header parts and confirming the 5 final Y values (0, 120, 240, 360, 480).
+  * *Why:* A loop is defined by two numbers — how many times it runs (5) and the step per pass (120px) — and rendering means computing AND attaching, not just computing.
+* **Exercise 7.2: The Same Markers, Built with a While Loop**
+  * *Goal given to the student:* rebuild the exact same 5-marker system from 7.1, same spacing and visual result, using a `while` loop instead of a `for` loop.
+  * *A strong answer shows:* the counter declared and initialized BEFORE the loop, a test condition inside `while(...)`, and the increment written explicitly inside the body — a `for` loop bundles all three into its header, a `while` loop doesn't; an explanation correctly saying a missing increment freezes the browser here exactly as a missing `i++` would in a `for` loop.
+  * *Why:* Proves the student understands what a loop actually needs (a start, a test, an update) rather than one specific syntax for expressing it.
+* **Exercise 7.3: Stopping Early — While Loop with If/Else and Break**
+  * *Goal given to the student:* a `while` loop generating markers 120px apart that checks an `if/else` on every pass and uses `break` to stop the moment the next marker's position would reach 600, instead of relying on a fixed count.
+  * *A strong answer shows:* on each pass, `if (markerY >= 600) { break; } else { /* create + append the marker */ }` — with 120px spacing this creates exactly 5 markers (0, 120, 240, 360, 480) before the 6th pass computes 600 and breaks; an explanation correctly identifying that 5 markers were created and that `break` fired because that's the first pass where the condition became true.
+  * *Why:* Some loops need to stop based on a condition mid-run, not just when a counter runs out — control comes from the `if`, not the loop header.
+* **Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color**
+  * *Goal given to the student:* a `for` loop simulating several frames of acceleration, checking `speed` against the 100 danger threshold on each frame and turning `#game-track`'s border red once it's reached (yellow otherwise). `speed` already exists in this sandbox starting at 0 (like `carX` already exists at 165) — the exercise text explicitly warns not to redeclare it.
+  * *A strong answer shows:* a `for` loop that increases the existing `speed` (not a redeclared one) enough times to actually cross 100 by the last frame, with an `if/else` setting `#game-track`'s border color each pass; an explanation identifying the frame and speed value where the color actually changed.
+  * *Why:* This is where a loop and a conditional combine to produce one real, visible gameplay effect — not two separate skills practiced in isolation.
 
 ### 3a. 📘 Teacher Exercise Guide & Reference Solutions
 
 Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (teacher view only, `exerciseGuide` in `src/curriculumData.js`) — one worked reference prompt and its real generated output per exercise, so a teacher can sanity-check a student's own prompt/code against a known-good answer without re-deriving one live.
 
-* **Exercise 7.1: Marker Spacing Plan & the Loop** — *Loop Header & Coordinate Math*
-  * 🎯 **Reference Prompt:** "Write a JavaScript for loop that runs 5 times (i from 0 to 4) and computes markerY as i * 120 on each iteration."
-  * 💻 **Reference Output Code:**
-    ```javascript
-    for (let i = 0; i < 5; i++) {
-      let markerY = i * 120;
-    }
-    ```
-* **Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart** — *Loop Header & Coordinate Math (Different Parameters)*
-  * 🎯 **Reference Prompt:** "Write a JavaScript for loop that runs 8 times (i from 0 to 7) and computes markerY as i * 90 on each iteration."
-  * 💻 **Reference Output Code:**
-    ```javascript
-    for (let i = 0; i < 8; i++) {
-      let markerY = i * 90;
-    }
-    ```
-* **Exercise 7.3: Logging Each Marker** — *Loop State Verification via Logging*
-  * 🎯 **Reference Prompt:** "Write a JavaScript for loop running 5 times, computing markerY = i * 120, and logging 'Highway Marker position: ' + markerY to the console on each pass."
-  * 💻 **Reference Output Code:**
-    ```javascript
-    for (let i = 0; i < 5; i++) {
-      let markerY = i * 120;
-      console.log("Highway Marker position: " + markerY);
-    }
-    ```
-* **Exercise 7.4: Rendering the Markers** — *Dynamic DOM Creation in Loops*
-  * 🎯 **Reference Prompt:** "Write a JavaScript for loop running 5 times that creates a div element with class 'marker-dash', sets its style.top to (i * 120) + 'px', and appends it to document.getElementById('game-track')."
+* **Exercise 7.1: Building Highway Markers with a For Loop** — *For Loop, Coordinate Math & Dynamic DOM Creation*
+  * 🎯 **Reference Prompt:** "Write a JavaScript for loop that runs 5 times (i from 0 to 4), computing markerY as i * 120 on each pass, creating a div element with class 'marker-dash', setting its style.top to markerY + 'px', and appending it to document.getElementById('game-track')."
   * 💻 **Reference Output Code:**
     ```javascript
     for (let i = 0; i < 5; i++) {
@@ -624,16 +597,49 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
       document.getElementById("game-track").appendChild(marker);
     }
     ```
-* **Exercise 7.5: The Complete Marker System** — *Complete Marker Generation Loop*
-  * 🎯 **Reference Prompt:** "Write the complete JavaScript loop for creating highway markers: loop 5 times, compute markerY = i * 120, create a 'marker-dash' div, set style.top to markerY + 'px', and append it to #game-track."
+* **Exercise 7.2: The Same Markers, Built with a While Loop** — *While Loop (Same Job, Different Syntax)*
+  * 🎯 **Reference Prompt:** "Rebuild the same 5-marker system using a JavaScript while loop instead of a for loop: markerY = i * 120 on each pass, creating a 'marker-dash' div and appending it to #game-track."
   * 💻 **Reference Output Code:**
     ```javascript
-    for (let i = 0; i < 5; i++) {
+    let i = 0;
+    while (i < 5) {
       let markerY = i * 120;
       const marker = document.createElement("div");
       marker.className = "marker-dash";
       marker.style.top = markerY + "px";
       document.getElementById("game-track").appendChild(marker);
+      i++;
+    }
+    ```
+* **Exercise 7.3: Stopping Early — While Loop with If/Else and Break** — *Loop Control via If/Else + Break, Not Just the Counter*
+  * 🎯 **Reference Prompt:** "Write a while loop generating markers 120px apart. On each pass, use an if/else: if markerY would reach 600, break out of the loop; otherwise create a 'marker-dash' div at markerY and append it to #game-track."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    let i = 0;
+    while (true) {
+      let markerY = i * 120;
+      if (markerY >= 600) {
+        break;
+      } else {
+        const marker = document.createElement("div");
+        marker.className = "marker-dash";
+        marker.style.top = markerY + "px";
+        document.getElementById("game-track").appendChild(marker);
+      }
+      i++;
+    }
+    ```
+* **Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color** — *Combining a Loop with a Conditional for a Real Effect*
+  * 🎯 **Reference Prompt:** "speed already exists in this sandbox starting at 0 — don't redeclare it. Write a for loop simulating 12 frames: each pass, increase speed by 10, then use an if/else — if speed has reached 100, set document.getElementById('game-track').style.borderColor to red; otherwise set it to yellow."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let frame = 0; frame < 12; frame++) {
+      speed += 10;
+      if (speed >= 100) {
+        document.getElementById("game-track").style.borderColor = "red";
+      } else {
+        document.getElementById("game-track").style.borderColor = "#ffcc00";
+      }
     }
     ```
 

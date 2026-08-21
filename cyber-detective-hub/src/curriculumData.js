@@ -162,45 +162,38 @@ export const CURRICULUM_DATA = [
     warmUp: "Loop Iteration Tracing: determine the output variables after tracing several loop segments on paper, introducing loop counters, conditions, and increments.",
     miniLesson: "Automation through Loops: loop declarations (initializer, condition, update statement — `for (let i = 0; i < 5; i++)`), iterating over coordinate offsets to build rows/grids, and the danger of infinite loops when a condition never evaluates to false.",
     coreActivity: "Road Marker Spawning Plan: design the layout of repeating dashes down the middle of the road, draft the loop specification (e.g. 5 dashes spaced 120px apart), then prompt the AI to generate a loop that creates marker `div` elements dynamically on screen.",
-    handsOn: "Complete 5 Sandbox Exercises in two 5-step AI-Era loops covering `for` loop mechanics and dynamic marker generation. Socratic Debugging — Browser Freezes: the tutor triggers an infinite loop by removing the counter increment (`i++`). Identify the missing increment, restore it, and explain how many times the CPU executed the loop block before the fix.",
+    handsOn: "Complete 4 Sandbox Exercises covering `for` loops, `while` loops, if/else-controlled early exit (`break`), and combining a loop with a conditional to drive a real visible effect (the track's danger-zone color). Socratic Debugging — Browser Freezes: the tutor triggers an infinite loop by removing the counter increment (`i++`). Identify the missing increment, restore it, and explain how many times the CPU executed the loop block before the fix.",
     homework: "In the Journal tab under 'Session 7 Homework', write a JS `for` loop that logs 'Highway Marker position: X' for positions incrementing by 50 up to 250 (+50 XP).",
     ethics: "Resource Efficiency: in 2020, a poorly optimized JavaScript animation loop on a major news website caused mobile devices to overheat and drain batteries within minutes. If a loop runs a million times a second to draw lanes, what happens to the user's battery?",
     adaptations: "Age 13-16: Discuss loop performance and Big-O intuition — why a nested loop over the same data set is more expensive than a single pass.",
     exerciseGuide: [
       {
         num: "7.1",
-        title: "Exercise 7.1: Marker Spacing Plan & the Loop",
-        concept: "Loop Header & Coordinate Math",
-        prompt: "Write a JavaScript for loop that runs 5 times (i from 0 to 4) and computes markerY as i * 120 on each iteration.",
-        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n}"
+        title: "Exercise 7.1: Building Highway Markers with a For Loop",
+        concept: "For Loop, Coordinate Math & Dynamic DOM Creation",
+        prompt: "Write a JavaScript for loop that runs 5 times (i from 0 to 4), computing markerY as i * 120 on each pass, creating a div element with class 'marker-dash', setting its style.top to markerY + 'px', and appending it to document.getElementById('game-track').",
+        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n}"
       },
       {
         num: "7.2",
-        title: "Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart",
-        concept: "Loop Header & Coordinate Math (Different Parameters)",
-        prompt: "Write a JavaScript for loop that runs 8 times (i from 0 to 7) and computes markerY as i * 90 on each iteration.",
-        outputCode: "for (let i = 0; i < 8; i++) {\n  let markerY = i * 90;\n}"
+        title: "Exercise 7.2: The Same Markers, Built with a While Loop",
+        concept: "While Loop (Same Job, Different Syntax)",
+        prompt: "Rebuild the same 5-marker system using a JavaScript while loop instead of a for loop: markerY = i * 120 on each pass, creating a 'marker-dash' div and appending it to #game-track.",
+        outputCode: "let i = 0;\nwhile (i < 5) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n  i++;\n}"
       },
       {
         num: "7.3",
-        title: "Exercise 7.3: Logging Each Marker",
-        concept: "Loop State Verification via Logging",
-        prompt: "Write a JavaScript for loop running 5 times, computing markerY = i * 120, and logging 'Highway Marker position: ' + markerY to the console on each pass.",
-        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  console.log(\"Highway Marker position: \" + markerY);\n}"
+        title: "Exercise 7.3: Stopping Early — While Loop with If/Else and Break",
+        concept: "Loop Control via If/Else + Break, Not Just the Counter",
+        prompt: "Write a while loop generating markers 120px apart. On each pass, use an if/else: if markerY would reach 600, break out of the loop; otherwise create a 'marker-dash' div at markerY and append it to #game-track.",
+        outputCode: "let i = 0;\nwhile (true) {\n  let markerY = i * 120;\n  if (markerY >= 600) {\n    break;\n  } else {\n    const marker = document.createElement(\"div\");\n    marker.className = \"marker-dash\";\n    marker.style.top = markerY + \"px\";\n    document.getElementById(\"game-track\").appendChild(marker);\n  }\n  i++;\n}"
       },
       {
         num: "7.4",
-        title: "Exercise 7.4: Rendering the Markers",
-        concept: "Dynamic DOM Creation in Loops",
-        prompt: "Write a JavaScript for loop running 5 times that creates a div element with class 'marker-dash', sets its style.top to (i * 120) + 'px', and appends it to document.getElementById('game-track').",
-        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n}"
-      },
-      {
-        num: "7.5",
-        title: "Exercise 7.5: The Complete Marker System",
-        concept: "Complete Marker Generation Loop",
-        prompt: "Write the complete JavaScript loop for creating highway markers: loop 5 times, compute markerY = i * 120, create a 'marker-dash' div, set style.top to markerY + 'px', and append it to #game-track.",
-        outputCode: "for (let i = 0; i < 5; i++) {\n  let markerY = i * 120;\n  const marker = document.createElement(\"div\");\n  marker.className = \"marker-dash\";\n  marker.style.top = markerY + \"px\";\n  document.getElementById(\"game-track\").appendChild(marker);\n}"
+        title: "Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color",
+        concept: "Combining a Loop with a Conditional for a Real Effect",
+        prompt: "speed already exists in this sandbox starting at 0 — don't redeclare it. Write a for loop simulating 12 frames: each pass, increase speed by 10, then use an if/else — if speed has reached 100, set document.getElementById('game-track').style.borderColor to red; otherwise set it to yellow.",
+        outputCode: "for (let frame = 0; frame < 12; frame++) {\n  speed += 10;\n  if (speed >= 100) {\n    document.getElementById(\"game-track\").style.borderColor = \"red\";\n  } else {\n    document.getElementById(\"game-track\").style.borderColor = \"#ffcc00\";\n  }\n}"
       }
     ]
   },

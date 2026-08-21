@@ -3153,58 +3153,47 @@ const S6_EXERCISES = [
 const S7_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 7.1: Marker Spacing Plan & the Loop",
-    problem: "A loop that repeats a task needs two numbers: how many times to run (5 markers) and the step between each (120px down). Those two values drive the whole loop.",
-    instruction: "1) Plan: plan how many markers and how far apart. 2) Prompt: ask the AI for a 'for' loop that runs 5 times, computing markerY as i * 120 on each pass — paste its real code into Output Code and run it. 3) Explain: name the loop header's three parts (start, test, update).",
-    planPlaceholder: "Plan: how many markers, and how far apart? (hint: 5 markers, 120 apart)",
-    promptPlaceholder: "Write the prompt asking for a for loop running 5 times, computing markerY = i * 120 each pass.",
+    title: "Exercise 7.1: Building Highway Markers with a For Loop",
+    problem: "Highway lane markers need to repeat down the track at even spacing — a 'for' loop is JavaScript's standard tool for repeating a known number of times, and each pass needs to do the whole job: compute the position, build the element, and attach it to the track.",
+    instruction: "Goal: build the complete marker system with a for loop in one prompt. 1) Plan: how many markers, how far apart, and what happens on each pass (compute the position, create the element, place it, attach it)? 2) Prompt: ask the AI for a for loop that runs 5 times, computing markerY as i * 120 on each pass, creating a 'marker-dash' div, setting its top to markerY, and appending it to #game-track — paste its real code into Output Code and run it. 3) Explain: name the loop header's three parts (start, test, update), and confirm the 5 final Y values your loop produces.",
+    planPlaceholder: "Plan: how many markers, how far apart, and what happens on each pass (compute, create, place, attach)?",
+    promptPlaceholder: "Write the prompt asking for a for loop generating 5 markers, 120px apart, each rendered as a 'marker-dash' div appended to #game-track.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "A for loop needs three parts: start (let i = 0), test (i < 5), and update (i++) — together they make it run exactly 5 times, computing markerY = i * 120 on each pass (0, 120, 240, 360, 480). Explanation should correctly name all three parts. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "A for loop needs three parts: start (let i = 0), test (i < 5), and update (i++) — running exactly 5 times, computing markerY = i * 120 each pass (0, 120, 240, 360, 480). On each pass the loop should also create a div, give it the 'marker-dash' class, set its top to markerY, and append it to #game-track — createElement alone only builds the element in memory, appendChild is what makes it show up. Explanation should correctly name all three loop-header parts and confirm the 5 final Y values. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
-    title: "Exercise 7.2: A Second Spec — 8 Distance Markers, 90px Apart",
-    problem: "Highway distance markers work the same way as the lane dashes in 7.1, but this set needs a different count and spacing: 8 markers, 90px apart instead of 5 markers, 120px apart. The loop header — how many times it runs, and what changes on each pass — is what makes that possible without writing 8 separate lines by hand.",
-    instruction: "Goal: build a second, independent for loop for a different marker count and spacing. 1) Plan: in your own words, how many times should this loop run, and what's the step between markers this time? 2) Prompt: ask the AI for a for loop that runs 8 times, computing markerY as i * 90 on each pass — paste its real code into Output Code and run it. 3) Explain: name the loop header's three parts (start, test, update), and explain what would happen to the browser if the update part were ever left out.",
-    planPlaceholder: "How many times should this loop run, and what's the step between markers this time? (hint: 8 markers, 90 apart)",
-    promptPlaceholder: "Write the prompt asking for a for loop running 8 times, computing markerY = i * 90 each pass.",
+    title: "Exercise 7.2: The Same Markers, Built with a While Loop",
+    problem: "A 'for' loop and a 'while' loop can do the exact same repeating job — the difference is only in how the start/test/update parts are written. Rebuilding the same marker system with a 'while' loop instead proves you understand what a loop actually needs, not just one specific syntax for it.",
+    instruction: "Goal: rebuild the exact same 5-marker system from Exercise 7.1 — same spacing, same visual result — but using a while loop instead of a for loop. 1) Plan: in your own words, what do you need to set up BEFORE the while loop starts that a for loop builds into its own header automatically? 2) Prompt: ask the AI for a while loop that runs 5 times, computing markerY as i * 120 on each pass, creating a 'marker-dash' div and appending it to #game-track — paste its real code into Output Code and run it. 3) Explain: what would happen if the counter's increment was left out of this while loop, compared to a for loop missing i++?",
+    planPlaceholder: "What do you need to set up before the while loop starts, that a for loop's header normally builds in automatically?",
+    promptPlaceholder: "Write the prompt asking for a WHILE loop generating the same 5 markers, 120px apart, appended to #game-track.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "A second, independent for loop needs its own count and step: run 8 times (i < 8) computing markerY = i * 90 each pass. Explanation should name all three loop-header parts (start, test, update) AND correctly say that omitting the update part (i++) makes the loop run forever, freezing the browser. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "A while loop needs the counter variable declared and initialized BEFORE the loop (a for loop builds this into its own header), a test condition inside the while(...) itself, and the increment written explicitly inside the loop body — miss any one of the three and the loop either never runs, runs forever, or crashes. The loop should compute markerY = i * 120 for i = 0 to 4, creating and appending a 'marker-dash' div each pass, the same result as 7.1. Explanation should correctly say a while loop with no increment runs forever and freezes the browser, the same risk as a for loop missing i++. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
-    title: "Exercise 7.3: Logging Each Marker",
-    problem: "Logging inside the loop prints one line per pass — the fastest way to confirm the loop really runs 5 times and computes 0, 120, 240, 360, 480 as expected.",
-    instruction: `1) Plan: plan what to log for each pass. 2) Prompt: ask the AI to add a console.log inside the loop printing "Highway Marker position: " plus markerY — paste its real code into Output Code and run it. 3) Explain: predict the 5 values that should print.`,
-    planPlaceholder: "What should get logged on each pass of the loop?",
-    promptPlaceholder: 'Write the prompt asking for a console.log inside the loop: "Highway Marker position: " + markerY.',
+    title: "Exercise 7.3: Stopping Early — While Loop with If/Else and Break",
+    problem: "Sometimes a loop shouldn't just run a fixed number of times — it should stop as soon as a condition is met, even mid-count. This track only has clean room for markers up to Y=600; continuing past that would place markers off the visible area for no reason.",
+    instruction: "Goal: use a while loop that keeps generating markers 120px apart, but checks an if/else on each pass to decide whether to keep going — using break to stop the loop the moment the next marker's position would reach 600, instead of relying on a fixed count. 1) Plan: in your own words, what should the if/else check on each pass, and what should happen in each branch (create the marker, or break)? 2) Prompt: ask the AI for a while loop with an if/else that breaks out once markerY would reach 600, otherwise creates and appends the marker as normal — paste its real code into Output Code and run it. 3) Explain: how many markers actually got created before the loop broke, and why did it stop there?",
+    planPlaceholder: "What should the if/else check on each pass — and what happens in each branch (create the marker, or break)?",
+    promptPlaceholder: "Write the prompt asking for a while loop with an if/else that breaks once markerY reaches 600, otherwise creates and appends the marker.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "A console.log placed inside the loop body prints once per pass — for this loop that means 5 lines showing markerY at 0, 120, 240, 360, 480 in order. Explanation should correctly predict all 5 values. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "A while loop computing markerY = i * 120 each pass should check, on every pass, whether markerY has reached 600: if so, call break to exit the loop immediately without creating that marker; else, create and append the marker-dash div as normal and continue. With 120px spacing this means 5 markers get created (Y = 0, 120, 240, 360, 480, all below 600) before the 6th pass computes Y = 600 and break fires — so the loop stops itself based on the condition, not just a fixed counter. Explanation should correctly identify that 5 markers were created and that break fired because that's the first pass where the if condition became true. Don't require the exact numbers if the student's own loop used a different bound — judge whether the if/else+break logic is correctly reasoned and correctly explained for whatever their own code actually produces. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
-    title: "Exercise 7.4: Rendering the Markers",
-    problem: "Computing markerY is only half the job — each pass must also create a real div, place it at that Y, and attach it to the track so it actually appears on screen.",
-    instruction: "1) Plan: plan how each computed position becomes a visible element (a box, given a class, placed at a position). 2) Prompt: ask the AI to create a div with class 'marker-dash', set its top style to markerY, and append it to '#game-track' inside the loop — paste its real code into Output Code and run it. 3) Explain: why is appendChild needed even after createElement already built the div?",
-    planPlaceholder: "Plan: for each marker, what element gets created, what class does it get, and where is it placed?",
-    promptPlaceholder: "Write the prompt asking to create a 'marker-dash' div, set its top to markerY, and appendChild it to #game-track.",
+    title: "Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color",
+    problem: "This sandbox already tracks a 'speed' value that starts at 0, the same way carX already starts at 165 in earlier sessions — it's provided by the sandbox, not something you declare yourself. Nothing currently happens when speed gets dangerously high. Real racing games often flash a warning color once a car crosses a speed threshold — here, that threshold is 100.",
+    instruction: "Goal: use a for loop to simulate several frames of the car accelerating, and on each frame check with an if/else whether speed has reached the 100 danger threshold — if it has, change #game-track's border color to red to warn the player; otherwise leave it at its normal yellow. Since speed already exists in this sandbox (starting at 0), do NOT declare it again — just increase the existing speed each pass of the loop, enough times that it actually crosses 100 by the end, so you can watch the road visibly change color in the Preview. 1) Plan: how many frames should the loop simulate, how much should speed increase per frame (enough to pass 100 by the last frame), and what should the if/else do in each branch? 2) Prompt: describe that goal to the AI, in your own words. 3) Explain: at what frame (and what speed value) did the road color actually change, and why?",
+    planPlaceholder: "Plan: how many frames should the loop simulate, how much does speed increase each frame (enough to pass 100 by the end), and what does the if/else do in each branch?",
+    promptPlaceholder: "Describe the goal to the AI, in your own words — a for loop simulating frames of accelerating speed (already provided, starting at 0), with an if/else that turns the track border red once speed reaches 100.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "Rendering a computed position requires three steps: create a real element (document.createElement('div')), give it the marker-dash class, set its position (style.top = markerY + 'px'), and attach it to the page with appendChild on #game-track — createElement alone only builds the element in memory. Explanation should correctly say appendChild is what makes it visible, not createElement. Don't require the literal code in the plan/prompt prose — judge the reasoning."
-  },
-  {
-    num: 5,
-    title: "Exercise 7.5: The Complete Marker System",
-    problem: "Time to put every piece from this session together into one finished system: a loop that computes each marker's position, builds a real element for it, and places it on the track — all 5 markers, in one prompt.",
-    instruction: "Goal: build the COMPLETE marker system in a single prompt. 1) Plan: list, in order, everything this loop needs to do on each pass. 2) Prompt: ask the AI for the complete loop — 5 iterations, markerY = i * 120, a 'marker-dash' div created and appended to #game-track each pass — paste its real code into Output Code and run it. 3) Explain: confirm the 5 final Y values your loop produces.",
-    planPlaceholder: "List, in order, everything this loop needs to do on each pass: compute the position, create the element, place it, attach it.",
-    promptPlaceholder: "Write the prompt asking for the COMPLETE loop: 5 passes, markerY = i * 120, marker-dash div appended to #game-track each time.",
-    outputCodePlaceholder: "Paste the AI's complete loop code here.",
-    runnable: true,
-    expectedConcepts: "The complete marker system combines everything: a for loop of 5 passes computing markerY = i * 120, and on each pass creating a marker-dash div, setting its top to markerY, and appending it to #game-track. Explanation should correctly state the 5 final Y values (0, 120, 240, 360, 480). Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "speed already exists in this sandbox starting at 0 (like carX already exists at 165) — a strong answer does NOT redeclare it with let/const/var, it just increases the existing value. A for loop should run enough frames, adding to speed each pass, that speed actually exceeds 100 by the final frame. On each pass, an if/else should check whether speed has reached 100: if so, set #game-track's border color to a warning color like red; otherwise leave or reset it to the track's normal yellow. The explanation should correctly identify the frame and speed value at which the condition first became true and the road actually changed color, tying the loop's repetition to the moment the condition flipped. Don't require exact frame counts or increment amounts in the plan/prompt prose — judge whether the reasoning correctly connects the loop's repetition to the conditional color change and correctly avoids redeclaring speed. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   }
 ];
 
@@ -3480,13 +3469,17 @@ const S12_EXERCISES = [
 // claimable once every one of its exercises has been passed (no jumping straight
 // to the final exercise), preserving the curriculum's "cognitive resistance" design.
 const EXERCISE_COUNTS = {
-  // l1-s2 through l1-s6 dropped to 4: their old 5th "combine everything" capstone
+  // l1-s2 through l1-s11 dropped to 4: their old 5th "combine everything" capstone
   // exercise was a duplicate of the session's Project Task, which now owns that final
   // integration step (see improve_concept.md Part II). l1-s1 stays 5 — its exercises were
-  // never a capstone-duplication pattern, just independent concept checks. l1-s7-s12
-  // unchanged pending the same review.
+  // never a capstone-duplication pattern, just independent concept checks. l1-s12 stays 5
+  // — its 5th exercise is a personal reflection/whole-level QA sweep, not a duplicate.
+  // Fixed 2026-08-21: l1-s7 through l1-s11 were still listed at 5 here even though
+  // S8_EXERCISES..S11_EXERCISES were cut to 4 real exercises back on 2026-08-05 — with
+  // this stuck at 5, progress could never reach "done" (nextDone.length maxes out at 4),
+  // so those four sessions' completion message/XP auto-claim never fired for real students.
   'l1-s1': 5, 'l1-s2': 4, 'l1-s3': 4, 'l1-s4': 4, 'l1-s5': 4, 'l1-s6': 4,
-  'l1-s7': 5, 'l1-s8': 5, 'l1-s9': 5, 'l1-s10': 5, 'l1-s11': 5, 'l1-s12': 5,
+  'l1-s7': 4, 'l1-s8': 4, 'l1-s9': 4, 'l1-s10': 4, 'l1-s11': 4, 'l1-s12': 5,
   'l2-s1': 10, 'l2-s2': 10, 'l2-s3': 10, 'l2-s4': 10, 'l2-s5': 10, 'l2-s6': 10, 'l2-s7': 10, 'l2-s8': 10,
   'l2-s9': 10, 'l2-s10': 10, 'l2-s11': 10, 'l2-s12': 10, 'l2-s13': 10
 };
@@ -8077,32 +8070,20 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>{s7ActiveExercise >= 4 ? 'Live Racing Game Preview' : 'Console Output'}</h3></div>
+                    <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      {/* Ex 7.1-7.3 only compute values / log to console — nothing ever
-                          renders to the DOM, so the racing-track graphic would be pure
-                          decoration (and previously implied something should visibly
-                          move). Those exercises run through the hidden console-only
-                          harness instead; the real output is the Terminal Log below. */}
-                      {s7ActiveExercise >= 4 ? (
-                        <iframe
-                          srcDoc={buildJsSandboxPreview(
-                            S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.',
-                            { trackHeight: 660, autoFocus: false }
-                          )}
-                          style={{ width: '100%', height: '780px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                          title="JS Sandbox Live Preview"
-                        />
-                      ) : (
-                        <>
-                          <iframe
-                            srcDoc={buildJsConsoleOnlyPreview(S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '')}
-                            style={{ display: 'none' }}
-                            title="JS Execution Sandbox"
-                          />
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>This exercise has no visual output — check the Terminal Log below.</div>
-                        </>
-                      )}
+                      {/* All 4 exercises (2026-08-21 redesign) render real visible output —
+                          markers for 7.1-7.3, the track's border color for 7.4 — so the
+                          preview is always shown. None of them touch carX, so the car stays
+                          hidden (showCar: false) since nothing is supposed to move it. */}
+                      <iframe
+                        srcDoc={buildJsSandboxPreview(
+                          S7_EXERCISES[s7ActiveExercise - 1].runnable ? s7OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.',
+                          { showCar: false, trackHeight: 660, autoFocus: false }
+                        )}
+                        style={{ width: '100%', height: '780px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                        title="JS Sandbox Live Preview"
+                      />
                     </div>
                   </div>
 
