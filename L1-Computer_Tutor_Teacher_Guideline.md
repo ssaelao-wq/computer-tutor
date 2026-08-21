@@ -565,6 +565,8 @@ The **Project Journal** milestone card ("Lab 6: Safety Guards & the Full Control
 > **Content note (2026-08-21, still later):** real testing of 7.4 found two problems. First, a plain synchronous `for` loop resolves to its final value the instant the code runs — a student opening the Preview just saw `speed` already sitting at its end value with no acceleration to actually watch. Second, the car was hidden for all of Session 7 (7.1-7.3 never touch it), but 7.4's whole narrative is the car crossing a speed threshold — showing an empty track undercut the point. The car is now shown specifically for 7.4, still hidden for 7.1-7.3.
 >
 > **Content note (2026-08-21, one more pass):** the first fix for the "nothing to watch" problem above scheduled the speed increase via `setTimeout` so it played out automatically over ~3.6 seconds — but a teacher testing it live wanted real interactivity, not a second scripted animation: *"I just want the speed score 0 and press up allow to speed up until 100 and the border color change to red."* Reworded a second time to be genuinely player-driven: pressing ArrowUp now runs a `for` loop of a few speed "pulses" per press (still a for loop, still combined with the if/else, per the original spec), and the student watches `speed` climb and the border change in direct response to their own key presses. `autoFocus` — off for the rest of this session, since 7.1-7.3 need no keyboard input — is re-enabled for 7.4 alone, so ArrowUp reaches the iframe reliably right after Generate Code or a tab switch.
+>
+> **Content note (2026-08-21, one more pass still):** added the natural next step the teacher asked for after confirming the border color worked — a maximum speed of 120 (holding ArrowUp longer doesn't push it higher), and a slow coast-down toward 0 once ArrowUp is released, instead of speed freezing at whatever it last reached. This reuses Session 6.4's own "is the key currently held" tracker (a boolean flag set on keydown, cleared on keyup) plus a `setInterval` that keeps running independently of key events, rather than inventing a new mechanism — while held, each tick runs the `for` loop of pulses (now capped at 120); while released, each tick decays `speed` by a small amount (floored at 0).
 
 Students complete **4 exercises**, each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. All 4 run live in the **Live Racing Game Preview** — click inside it and press arrow keys to steer. The car itself is only shown for 7.4 (the one exercise about it); 7.1-7.3 never touch it, so it stays hidden there. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word.
 
@@ -581,9 +583,9 @@ Students complete **4 exercises**, each with 3 boxes: **1) Plan & Design**, **2)
   * *A strong answer shows:* on each pass, `if (markerY >= 600) { break; } else { /* create + append the marker */ }` — with 120px spacing this creates exactly 5 markers (0, 120, 240, 360, 480) before the 6th pass computes 600 and breaks; an explanation correctly identifying that 5 markers were created and that `break` fired because that's the first pass where the condition became true.
   * *Why:* Some loops need to stop based on a condition mid-run, not just when a counter runs out — control comes from the `if`, not the loop header.
 * **Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color**
-  * *Goal given to the student:* pressing ArrowUp speeds the car up in bursts — each press runs a `for` loop of several small pulses that each add to `speed` — and an `if/else` checks whether `speed` has reached the 100 danger threshold, turning `#game-track`'s border red once it has (yellow otherwise). `speed` already exists in this sandbox starting at 0 (like `carX` already exists at 165) — the exercise text explicitly warns not to redeclare it.
-  * *A strong answer shows:* a `keydown` handler for ArrowUp whose body runs a `for` loop of several pulses (e.g. 5), each adding to the existing `speed` (not a redeclared one), followed by an `if/else` that sets `#game-track`'s border color; an explanation reporting how many ArrowUp presses it actually took to cross 100, consistent with their own per-press increase. (Found and fixed 2026-08-21, twice: the first version asked for a plain, non-delayed for loop that resolved to the final speed instantly, with no car visible and nothing to watch. A second version tried scheduling the increase via `setTimeout` so it played out automatically over a few seconds — but a teacher testing it live wanted something they could actually control, not another scripted animation: "I just want the speed score 0 and press up allow to speed up until 100." Reworded a second time to be genuinely interactive — the student presses ArrowUp themselves and watches speed climb and the border change in response to their own input. The car — hidden for 7.1-7.3 since they never move it — is shown for 7.4 specifically, and `autoFocus` is re-enabled for this exercise only so ArrowUp reaches the iframe reliably.)
-  * *Why:* This is where a loop and a conditional combine to produce one real, player-controlled gameplay effect — not two separate skills practiced in isolation, and not a canned animation the student only watches.
+  * *Goal given to the student:* holding ArrowUp speeds the car up (capped at 120); releasing it lets speed coast back down slowly toward 0 instead of freezing in place. Needs the same "is the key currently held" tracker Session 6.4 used (a flag set on keydown/keyup) plus a `setInterval` that keeps running on its own — while held, each tick runs a `for` loop of a few pulses raising `speed` (capped at 120); while not held, each tick lowers `speed` a little (floored at 0). An `if/else` on every tick turns `#game-track`'s border red once `speed` reaches 100 (yellow otherwise). `speed` already exists in this sandbox starting at 0 (like `carX` already exists at 165) — the exercise text explicitly warns not to redeclare it.
+  * *A strong answer shows:* a boolean "currently held" flag declared once, set true on keydown and false on keyup (not just referenced without being updated); a `setInterval` running independently of key events; while held, a `for` loop of several pulses (e.g. 5) each adding to `speed`, with a check that stops it at 120; while not held, `speed` decreasing a little each tick, never below 0; an `if/else` on the current `speed` setting `#game-track`'s border color; an explanation correctly saying `speed` stops climbing once it hits 120 no matter how long ArrowUp is held, and that the border stays red for a while after release until the gradually-decaying `speed` actually drops back under 100. (Found and fixed 2026-08-21, three times: v1 asked for a plain, non-delayed for loop that resolved to the final speed instantly with no car visible. v2 scheduled the increase via `setTimeout` so it played out automatically — but a teacher testing it live wanted real control, not another scripted animation: "I just want the speed score 0 and press up allow to speed up until 100." v3 made ArrowUp genuinely drive `speed` in real time. This v4 adds the requested max-speed cap (120) and gradual coast-down when the key isn't held, reusing Session 6.4's held/released + `setInterval` pattern rather than inventing a new one. The car — hidden for 7.1-7.3 since they never move it — is shown for 7.4 specifically, and `autoFocus` is re-enabled for this exercise only so ArrowUp reaches the iframe reliably.)
+  * *Why:* This is where a loop and a conditional combine to produce one real, player-controlled gameplay effect with realistic momentum — not two separate skills practiced in isolation, and not a canned animation the student only watches.
 
 ### 3a. 📘 Teacher Exercise Guide & Reference Solutions
 
@@ -633,22 +635,42 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
       i++;
     }
     ```
-* **Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color** — *Combining a Loop with a Conditional for a Real Effect*
-  * 🎯 **Reference Prompt:** "speed already exists in this sandbox starting at 0 — don't redeclare it. Write a keydown event listener: when ArrowUp is pressed, run a for loop of 5 pulses, each adding 2 to speed. After the loop, use an if/else — if speed has reached 100, set document.getElementById('game-track').style.borderColor to red; otherwise set it to yellow."
+* **Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color** — *Combining a Loop with a Conditional for a Real Effect (Capped, with Coast-Down)*
+  * 🎯 **Reference Prompt:** "speed already exists in this sandbox starting at 0 — don't redeclare it. Track whether ArrowUp is currently held using keydown/keyup on a boolean flag. Every 100ms (setInterval): if held, run a for loop of 5 pulses each adding 2 to speed, capped at 120; if not held, subtract 1 from speed, floored at 0. Then use an if/else — if speed has reached 100, set document.getElementById('game-track').style.borderColor to red; otherwise set it to yellow."
   * 💻 **Reference Output Code:**
     ```javascript
+    let isAccelerating = false;
+
     window.addEventListener("keydown", function(event) {
       if (event.key === "ArrowUp") {
-        for (let pulse = 0; pulse < 5; pulse++) {
-          speed += 2;
-        }
-        if (speed >= 100) {
-          document.getElementById("game-track").style.borderColor = "red";
-        } else {
-          document.getElementById("game-track").style.borderColor = "#ffcc00";
-        }
+        isAccelerating = true;
       }
     });
+
+    window.addEventListener("keyup", function(event) {
+      if (event.key === "ArrowUp") {
+        isAccelerating = false;
+      }
+    });
+
+    setInterval(function() {
+      if (isAccelerating) {
+        for (let pulse = 0; pulse < 5; pulse++) {
+          if (speed < 120) {
+            speed += 2;
+          }
+        }
+      } else {
+        if (speed > 0) {
+          speed -= 1;
+        }
+      }
+      if (speed >= 100) {
+        document.getElementById("game-track").style.borderColor = "red";
+      } else {
+        document.getElementById("game-track").style.borderColor = "#ffcc00";
+      }
+    }, 100);
     ```
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
