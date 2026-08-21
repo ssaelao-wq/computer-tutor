@@ -233,7 +233,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 
 #### 📖 Tutor Manual: Exercises & Homework Solutions (Session 4)
 
-**4 exercises** (2026-07-30: the old 5th, "The Complete Variable Registry," was dropped — the Project Task below already assumes the registry exists and asks for something more, so combining declarations is no longer separately tested), each with **3 input boxes**: (1) Plan & Design, (2) Writing Prompt + Output Code side by side, (3) Explain the Output Code. The student pastes the *actual* code their AI tool generated; the app runs it live, showing `console.log`/error text split into a **Console Output** panel (left) and **Verification Feedback** panel (right), so the two never interleave. Verify grades only the Prompt box's clarity/specificity/completeness.
+**4 exercises** (2026-07-30: the old 5th, "The Complete Variable Registry," was dropped — the Project Task below already assumes the registry exists and asks for something more, so combining declarations is no longer separately tested), each with **3 input boxes**: (1) Plan & Design, (2) Writing Prompt + Output Code side by side, (3) Explain the Output Code. The student pastes the *actual* code their AI tool generated; the app runs it live, showing `console.log`/error text in a **Console Output** panel, with a separate **Terminal Log** panel below the Verify button for the Auditor's feedback. Verify grades only the Prompt box's clarity/specificity/completeness.
 
 - **Exercise 4.1 (The Core State Variables)**: goal is declaring the game's core mutable state (`carX`, `speed`, `score`, `gameActive`).
 - **Exercise 4.2 (Constants and the Lives Count)**: goal is declaring the fixed track/lane width plus a new mutable `lives` count.
