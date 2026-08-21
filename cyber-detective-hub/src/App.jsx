@@ -3160,20 +3160,7 @@ const S7_EXERCISES = [
     promptPlaceholder: "Write the prompt asking for a for loop running 5 times, computing markerY = i * 120 each pass.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('forloop') && p.includes('i*120') && p.includes('5');
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('for(') && clean.includes('i<5') && clean.includes('i++') && clean.includes('i*120');
-      const e = explain.toLowerCase().replace(/\s+/g, '');
-      const explainOk = e.includes('i++') && (e.includes('i<5') || e.includes('i=0'));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'for loop', 'i * 120', and '5'.",
-      code: "Needs for(...i<5...i++) with markerY = i * 120.",
-      explain: "Name all 3 parts: start (i=0), test (i<5), update (i++)."
-    }
+    expectedConcepts: "A for loop needs three parts: start (let i = 0), test (i < 5), and update (i++) — together they make it run exactly 5 times, computing markerY = i * 120 on each pass (0, 120, 240, 360, 480). Explanation should correctly name all three parts. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
@@ -3184,20 +3171,7 @@ const S7_EXERCISES = [
     promptPlaceholder: "Write the prompt asking for a for loop running 8 times, computing markerY = i * 90 each pass.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('forloop') && p.includes('i*90') && p.includes('8');
-      const clean = outputCode.replace(/\s+/g, '');
-      const codeOk = clean.includes('for(') && clean.includes('i<8') && clean.includes('i++') && clean.includes('i*90');
-      const e = explain.toLowerCase().replace(/\s+/g, '');
-      const explainOk = e.includes('i++') && (e.includes('i<8') || e.includes('i=0')) && (e.includes('forever') || e.includes('never') || e.includes('freeze') || e.includes('infinite') || e.includes('hang'));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'for loop', 'i * 90', and '8'.",
-      code: "Needs for(...i<8...i++) with markerY = i * 90.",
-      explain: "Name all 3 parts (start i=0, test i<8, update i++), AND say what happens without the update part (the browser never stops / freezes)."
-    }
+    expectedConcepts: "A second, independent for loop needs its own count and step: run 8 times (i < 8) computing markerY = i * 90 each pass. Explanation should name all three loop-header parts (start, test, update) AND correctly say that omitting the update part (i++) makes the loop run forever, freezing the browser. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
@@ -3208,20 +3182,7 @@ const S7_EXERCISES = [
     promptPlaceholder: 'Write the prompt asking for a console.log inside the loop: "Highway Marker position: " + markerY.',
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase();
-      const promptOk = p.includes('console.log') && p.includes('markery');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('console.log') && clean.includes('markery');
-      const e = explain.replace(/[^0-9,\s]/g, '');
-      const explainOk = ['0', '120', '240', '360', '480'].every(n => e.includes(n));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'console.log' and 'markerY'.",
-      code: "Needs a console.log of markerY inside the loop body.",
-      explain: "Predict all 5 values: 0, 120, 240, 360, 480."
-    }
+    expectedConcepts: "A console.log placed inside the loop body prints once per pass — for this loop that means 5 lines showing markerY at 0, 120, 240, 360, 480 in order. Explanation should correctly predict all 5 values. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
@@ -3232,20 +3193,7 @@ const S7_EXERCISES = [
     promptPlaceholder: "Write the prompt asking to create a 'marker-dash' div, set its top to markerY, and appendChild it to #game-track.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('marker-dash') && p.includes('appendchild') && p.includes('game-track');
-      const clean = outputCode.toLowerCase().replace(/\s+/g, '');
-      const codeOk = clean.includes('marker-dash') && clean.includes('appendchild') && clean.includes('game-track');
-      const e = explain.toLowerCase();
-      const explainOk = e.includes('append') || e.includes('attach') || e.includes('show') || e.includes('visible') || e.includes('display');
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'marker-dash', 'appendChild', and '#game-track'.",
-      code: "Needs a marker-dash div appended to #game-track inside the loop.",
-      explain: "Say createElement only builds it in memory — appendChild is what makes it show up."
-    }
+    expectedConcepts: "Rendering a computed position requires three steps: create a real element (document.createElement('div')), give it the marker-dash class, set its position (style.top = markerY + 'px'), and attach it to the page with appendChild on #game-track — createElement alone only builds the element in memory. Explanation should correctly say appendChild is what makes it visible, not createElement. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 5,
@@ -3256,20 +3204,7 @@ const S7_EXERCISES = [
     promptPlaceholder: "Write the prompt asking for the COMPLETE loop: 5 passes, markerY = i * 120, marker-dash div appended to #game-track each time.",
     outputCodePlaceholder: "Paste the AI's complete loop code here.",
     runnable: true,
-    validate: ({ prompt, outputCode, explain }) => {
-      const p = prompt.toLowerCase().replace(/\s+/g, '');
-      const promptOk = p.includes('i*120') && p.includes('marker-dash');
-      const clean = outputCode.replace(/\s+/g, '').toLowerCase();
-      const codeOk = clean.includes('for(') && clean.includes('i<5') && clean.includes('i++') && clean.includes('i*120') && clean.includes('marker-dash') && clean.includes('appendchild');
-      const e = explain.replace(/[^0-9,\s]/g, '');
-      const explainOk = ['0', '120', '240', '360', '480'].every(n => e.includes(n));
-      return { promptOk, codeOk, explainOk };
-    },
-    hint: {
-      prompt: "Mention 'i * 120' (not 'i * 12') and 'marker-dash'.",
-      code: "Needs the full loop: for(...i<5...i++), markerY = i * 120, marker-dash div, appendChild.",
-      explain: "State the correct final values: 0, 120, 240, 360, 480."
-    }
+    expectedConcepts: "The complete marker system combines everything: a for loop of 5 passes computing markerY = i * 120, and on each pass creating a marker-dash div, setting its top to markerY, and appending it to #game-track. Explanation should correctly state the 5 final Y values (0, 120, 240, 360, 480). Don't require the literal code in the plan/prompt prose — judge the reasoning."
   }
 ];
 
@@ -3824,6 +3759,7 @@ export default function App() {
   const [s7ExplainInput, setS7ExplainInput] = useState('');
   const [s7Logs, setS7Logs] = useState([]);
   const [s7Success, setS7Success] = useState(false);
+  const [s7Verifying, setS7Verifying] = useState(false);
   const [s7Generating, setS7Generating] = useState(false);
   const s7OutputCodeRef = useRef(null);
 
@@ -8179,37 +8115,58 @@ export default function App() {
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       className={`btn-cyber ${s7Success ? 'btn-cyber-green' : 'btn-cyber-primary'}`}
-                      onClick={() => {
+                      disabled={s7Verifying}
+                      onClick={async () => {
                         const ex = S7_EXERCISES[s7ActiveExercise - 1];
                         saveExerciseSubmission('l1-s7', s7ActiveExercise, { plan: s7PlanInput, prompt: s7PromptInput, outputCode: s7OutputCodeInput, explain: s7ExplainInput });
-                        const logs = [{ type: 'info', text: `Checking Exercise 7.${s7ActiveExercise}...` }];
-                        const filled = s7PlanInput.trim() && s7PromptInput.trim() && s7OutputCodeInput.trim() && s7ExplainInput.trim();
-                        const result = filled ? ex.validate({ plan: s7PlanInput, prompt: s7PromptInput, outputCode: s7OutputCodeInput, explain: s7ExplainInput }) : null;
-                        const pass = filled && result.promptOk && result.codeOk && result.explainOk;
-                        if (pass) {
-                          logs.push({ type: 'success', text: `✓ Correct! ${ex.title} complete.` });
-                          setS7Success(true);
-                          const prog = markExerciseComplete('l1-s7', s7ActiveExercise);
-                          if (prog.allDone) {
-                            logs.push({ type: 'success', text: '✓ SESSION 7 CHALLENGES COMPLETE! Highway markers now spawn automatically!' });
-                            if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
-                          } else {
-                            logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
-                          }
-                        } else if (!filled) {
-                          logs.push({ type: 'error', text: '✗ Fill in all three boxes — Plan, Prompt + Output Code, and Explanation — before verifying.' });
+                        const filled = s7PromptInput.trim();
+                        if (!filled) {
+                          setS7Logs([{ type: 'error', text: '✗ Write a prompt before verifying — that\'s the only box graded.' }]);
                           setS7Success(false);
-                        } else {
-                          logs.push({ type: 'error', text: '✗ Check failed — here is exactly what still needs fixing:' });
-                          if (!result.promptOk) logs.push({ type: 'error', text: `  Prompt: ${ex.hint.prompt}` });
-                          if (!result.codeOk) logs.push({ type: 'error', text: `  Output Code: ${ex.hint.code}` });
-                          if (!result.explainOk) logs.push({ type: 'error', text: `  Explanation: ${ex.hint.explain}` });
-                          setS7Success(false);
+                          return;
                         }
-                        setS7Logs(logs);
+                        setS7Verifying(true);
+                        setS7Logs([{ type: 'info', text: `Checking prompt quality for Exercise 7.${s7ActiveExercise}...` }]);
+                        try {
+                          const res = await fetch('/api/audit-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({
+                              prompt: s7PromptInput,
+                              context: `${ex.problem} ${ex.instruction}`
+                            })
+                          });
+                          const verdict = await res.json();
+                          if (!res.ok) throw new Error(verdict.error || `Auditor request failed (${res.status})`);
+
+                          const logs = [];
+                          if (verdict.pass) {
+                            logs.push({ type: 'success', text: `✓ Good prompt! ${ex.title} complete.` });
+                            logs.push({ type: 'info', text: verdict.feedback });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'info', text: `  💡 ${tip}` }));
+                            setS7Success(true);
+                            const prog = markExerciseComplete('l1-s7', s7ActiveExercise);
+                            if (prog.allDone) {
+                              logs.push({ type: 'success', text: '✓ SESSION 7 CHALLENGES COMPLETE! Highway markers now spawn automatically!' });
+                              if (prog.locked) logs.push({ type: 'info', text: 'XP will be awarded automatically once the earlier sessions are completed.' });
+                            } else {
+                              logs.push({ type: 'info', text: `Progress: ${prog.doneCount}/${prog.total} exercises complete.` });
+                            }
+                          } else {
+                            logs.push({ type: 'error', text: `✗ Your prompt needs work: ${verdict.feedback}` });
+                            (verdict.tips || []).forEach(tip => logs.push({ type: 'error', text: `  💡 ${tip}` }));
+                            setS7Success(false);
+                          }
+                          setS7Logs(logs);
+                        } catch (err) {
+                          setS7Logs([{ type: 'error', text: `✗ Couldn't reach the AI Auditor (${err.message}). Please try again.` }]);
+                          setS7Success(false);
+                        } finally {
+                          setS7Verifying(false);
+                        }
                       }}
                     >
-                      {s7Success ? '✓ Exercise Complete' : 'Verify JS Logic'}
+                      {s7Verifying ? 'Checking prompt quality…' : s7Success ? '✓ Exercise Complete' : 'Verify Prompt Quality'}
                     </button>
                     <button
                       className="btn-cyber btn-cyber-red btn-small"
@@ -8232,7 +8189,7 @@ export default function App() {
                     <div className="sim-panel-body" style={{ padding: '10px 0 0' }}>
                       <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                         {[...s7Logs, ...simConsoleLogs].length === 0 ? (
-                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Fill in all three boxes and click Verify.</div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Logs ready. Write a prompt and click Verify.</div>
                         ) : [...s7Logs, ...simConsoleLogs].map((log, idx) => (
                           <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                             {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
