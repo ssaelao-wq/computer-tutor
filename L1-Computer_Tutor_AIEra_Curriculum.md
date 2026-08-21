@@ -134,7 +134,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 - **Exercise 2.3 (The Unclosed Tag Bug Hunt)**: given the exact bug (one closing `</div>` missing), goal is diagnosing and fixing it.
 - **Exercise 2.4 (Lane Dividers via Class)**: goal is adding a lane divider using a class (not an id), since it can repeat.
 
-- **Homework Evaluation**: Ensure student has created a custom dashboard wrapper utilizing multiple nested panels.
+- **Homework Evaluation**: Ensure `#game-track` exists with `#player-car` AND `#obstacle` both nested inside it, `#restart-panel` exists and carries a `hidden` class, and `#dashboard` exists with `#score-val` inside it — the obstacle and hidden overlay are the two elements the sandbox exercises never cover, so this is what makes the Project Task more than a copy-paste of them.
 
 ---
 
@@ -187,7 +187,7 @@ All Level 1 sessions share the **2D Highway Racing** setting. Sessions 2-3 build
 - **Exercise 3.3 (The Drifting Car Bug)**: given the exact bug (absolute-positioned child drifts without a positioned parent), goal is diagnosing and fixing it.
 - **Exercise 3.4 (Positioning the Car)**: goal is centering the car near the bottom of your own chosen track width from Exercise 3.1.
 
-- **Homework Evaluation**: Check that the student uses relative/absolute positioning correctly so the child car stays aligned within the parent track lanes.
+- **Homework Evaluation**: Check that `#game-track` has `position: relative` with the student's own chosen width/height, `#player-car` is absolute-positioned and actually centered within *their* track width (not assumed 165px), `.lane-divider` uses a dashed `border-left`, and — the parts the sandbox exercises never cover — `#obstacle` and `#restart-panel` both have real styles (with `#restart-panel` staying invisible while `hidden` is applied) and `#dashboard` uses flex layout.
 
 ---
 
