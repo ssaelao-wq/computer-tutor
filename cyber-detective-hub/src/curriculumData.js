@@ -192,8 +192,8 @@ export const CURRICULUM_DATA = [
         num: "7.4",
         title: "Exercise 7.4: The Danger Zone — For Loop + Conditional Road Color",
         concept: "Combining a Loop with a Conditional for a Real Effect",
-        prompt: "speed already exists in this sandbox starting at 0 — don't redeclare it. Write a for loop simulating 12 frames: each pass, increase speed by 10, then use an if/else — if speed has reached 100, set document.getElementById('game-track').style.borderColor to red; otherwise set it to yellow.",
-        outputCode: "for (let frame = 0; frame < 12; frame++) {\n  speed += 10;\n  if (speed >= 100) {\n    document.getElementById(\"game-track\").style.borderColor = \"red\";\n  } else {\n    document.getElementById(\"game-track\").style.borderColor = \"#ffcc00\";\n  }\n}"
+        prompt: "speed already exists in this sandbox starting at 0 — don't redeclare it. Write a for loop that SCHEDULES 12 delayed speed updates using setTimeout, each one 300ms later than the last: each update increases speed by 10, then uses an if/else — if speed has reached 100, set document.getElementById('game-track').style.borderColor to red; otherwise set it to yellow.",
+        outputCode: "for (let frame = 0; frame < 12; frame++) {\n  setTimeout(function() {\n    speed += 10;\n    if (speed >= 100) {\n      document.getElementById(\"game-track\").style.borderColor = \"red\";\n    } else {\n      document.getElementById(\"game-track\").style.borderColor = \"#ffcc00\";\n    }\n  }, frame * 300);\n}"
       }
     ]
   },
