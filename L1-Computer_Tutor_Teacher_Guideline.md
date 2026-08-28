@@ -760,6 +760,10 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
   * 🎯 **Reference Prompt:** "Fix the shadowing bug where moveLeft() declares its own local moveCount instead of using the shared outer one. Remove the local declaration so moveLeft() increments the single shared global moveCount. Log moveCount inside moveLeft() and again after calling it twice to prove they now match."
   * 💻 **Reference Output Code:**
     ```javascript
+    // carX is a global variable, already declared and managed by the sandbox
+    // itself (it starts at 165) — that's why moveLeft() and updatePlayerPosition()
+    // below can both read/write it without declaring it anywhere in this snippet.
+
     let moveCount = 0;
 
     function updatePlayerPosition() {
@@ -783,6 +787,10 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
   * 🎯 **Reference Prompt:** "Write clampPosition(x, min, max) again, plus moveLeft() that sets carX = clampPosition(carX - 130, 35, 295) and then calls updatePlayerPosition(). Wire a complete keydown listener so the ArrowLeft branch calls moveLeft()."
   * 💻 **Reference Output Code:**
     ```javascript
+    // carX is a global variable, already declared and managed by the sandbox
+    // itself (it starts at 165) — moveLeft() reassigns it directly (no 'let'/'const'),
+    // so the one shared carX is what updatePlayerPosition() reads too.
+
     function clampPosition(x, min, max) {
       if (x < min) return min;
       if (x > max) return max;
@@ -808,6 +816,10 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
   * 🎯 **Reference Prompt:** "Write clampPosition(x, min, max), a global moveCount, moveLeft() and moveRight() that each assign clampPosition()'s result into carX, increment the shared moveCount, and call updatePlayerPosition(). Wire a keydown listener for both ArrowLeft and ArrowRight."
   * 💻 **Reference Output Code:**
     ```javascript
+    // carX is a global variable, already declared and managed by the sandbox
+    // itself (it starts at 165) — moveLeft()/moveRight() both reassign it directly
+    // (no 'let'/'const'), so updatePlayerPosition() always renders the one shared value.
+
     let moveCount = 0;
 
     function clampPosition(x, min, max) {
