@@ -3259,53 +3259,60 @@ const S8_EXERCISES = [
 const S9_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 9.1: The Game Loop Lifecycle & Recursive Loop",
-    problem: "A game is an animation: each frame updates the state, redraws, then schedules the next frame — a loop that calls itself ~60 times a second via requestAnimationFrame. obstacleY isn't a pre-existing global in this sandbox — have the AI declare and initialize it too (starting at -100, matching the #obstacle element's own default position), and call gameLoop() once at the end so you can watch it animate in the Preview.",
-    instruction: "Goal: understand and build the repeating frame cycle. 1) Plan: describe the repeating frame cycle in plain language. 2) Prompt: ask the AI for a function gameLoop() that moves the obstacle, then calls requestAnimationFrame(gameLoop) to schedule the next frame — paste its real code into Output Code and run it. 3) Explain: what does calling requestAnimationFrame(gameLoop) at the end actually do?",
-    planPlaceholder: "Describe the frame cycle: each frame, update the state, redraw, then...?",
-    promptPlaceholder: "Describe the goal to the AI, in your own words.",
+    title: "Exercise 9.1: The Return-Value Position Stepper",
+    problem: "A game loop repeats the same calculation every frame — but the actual math (where should the obstacle go next?) doesn't need to know anything about requestAnimationFrame or the DOM at all. A pure function that takes the current position and hands back the next one keeps that math testable on its own, separate from the loop that will eventually call it. Since this Output Code box runs standalone, also have the AI call the new function with a few example inputs and console.log each result, so you can confirm exactly what it returns without needing a running game loop.",
+    instruction: "Goal: build a pure function that computes and RETURNS the obstacle's next position, without touching requestAnimationFrame or the DOM at all. 1) Plan: name the inputs (parameters) this function needs and what value it should hand back. 2) Prompt: ask the AI for a function nextObstaclePosition(y, speed, resetY, wrapY) that returns y + speed normally, or resetY if that sum would pass wrapY — paste its real code into Output Code and call it with a few test values. 3) Explain: why does keeping this calculation separate from requestAnimationFrame and the DOM make it easier to test on its own?",
+    planPlaceholder: "Name nextObstaclePosition()'s 4 parameters (y, speed, resetY, wrapY) and what value it hands back.",
+    promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "gameLoop() should move the obstacle (updating its own obstacleY and the #obstacle element's position), then call requestAnimationFrame(gameLoop) to schedule itself again next frame. Explanation should correctly say requestAnimationFrame schedules gameLoop to run again on the next frame, creating the animation loop. Don't require literal code or the exact variable name in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "nextObstaclePosition(y, speed, resetY, wrapY) should be a pure function with 4 parameters that returns y + speed normally, or resetY once that sum would exceed wrapY, with no requestAnimationFrame or DOM code inside it at all. The explanation should correctly say separating this math from the loop/DOM lets it be tested directly with known inputs and expected outputs, without needing a running animation or a browser at all. Don't require the literal function name or exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
-    title: "Exercise 9.2: The Unstoppable Speed Bug",
-    problem: "Bug: the tutor removed the gameActive check, so gameLoop() keeps recursing forever even after the game ends. Without a guard that returns early when gameActive is false, Game Over becomes impossible. Since this Output Code box is tested on its own, ask for the complete gameLoop() function — not just the guard line — plus a gameActive variable and obstacleY (there's a single #obstacle element, not an array), and a call to start the loop, so the snippet runs standalone.",
-    instruction: "Goal: add the missing gameActive guard. 1) Plan: explain why a missing gameActive check makes the loop unstoppable. 2) Prompt: ask the AI to add a guard at the top of gameLoop() that returns immediately if gameActive is false, plus a console.log(\"Loop halted\") right before the return — paste its real code into Output Code and run it. 3) Explain: confirm what happens to the loop once gameActive becomes false.",
-    planPlaceholder: "Why does gameLoop() never stop without a gameActive check?",
+    title: "Exercise 9.2: The Ghost Frame Bug",
+    problem: "Bug: gameLoop() DOES check gameActive — but the check comes AFTER requestAnimationFrame(gameLoop) has already been called again, so one more 'ghost' frame is already queued and will run even after the game has technically ended. Guarding late is barely better than not guarding at all. Since this Output Code box is tested on its own, ask for the complete gameLoop() (with the misplaced guard) — not just the guard line — plus obstacleY/gameActive declared and initialized (there's a single #obstacle element, not an array), and a call to start the loop, so you can watch the ghost frame happen in the Preview before fixing it.",
+    instruction: "Goal: move the gameActive guard to the very first line of gameLoop(), before anything else runs. 1) Plan: explain why checking gameActive AFTER already scheduling the next frame still lets one more frame through. 2) Prompt: ask the AI to move the gameActive check to the top of gameLoop(), returning immediately — before moving the obstacle OR scheduling the next frame — if it's false, plus a console.log(\"Loop halted\") right before that return — paste the fixed code into Output Code and run it. 3) Explain: why must the guard be the very FIRST thing the function does, not just present somewhere in the function?",
+    planPlaceholder: "Why does checking gameActive AFTER calling requestAnimationFrame(gameLoop) still let one more frame run?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "gameLoop() needs a guard at its top — if gameActive is false, log something like 'Loop halted' and return immediately, before doing anything else or scheduling the next frame. Explanation should correctly say the loop exits/halts and requestAnimationFrame never gets called again once gameActive is false. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The gameActive guard must be the very first line inside gameLoop(), logging something like 'Loop halted' and returning immediately — before moving the obstacle or calling requestAnimationFrame again. A guard placed after either of those still lets that one frame complete. The explanation should correctly say order matters: checking late still allows one 'ghost' frame to run before the loop actually stops. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
-    title: "Exercise 9.3: Obstacle Movement & Reset",
-    problem: "Each frame adds speed to obstacleY to scroll it down; once it passes the bottom (500), it wraps back to the top (-100) and the score goes up — the illusion of endless oncoming traffic. obstacleY and score aren't pre-existing globals in this sandbox — have the AI declare and initialize both in this same snippet, and log obstacleY after calling moveObstacles() once so you can confirm it changed.",
-    instruction: "Goal: build the scroll-and-wrap behavior. 1) Plan: plan the scroll-and-wrap behavior (down, wrap at 500 to -100, score += 10). 2) Prompt: ask the AI for a function moveObstacles() implementing this — paste its real code into Output Code and run it. 3) Explain: if obstacleY is 490 and speed is 5, what is obstacleY right after this line runs (before any reset check)?",
-    planPlaceholder: "Plan: obstacleY += speed each frame; what happens once it passes 500?",
+    title: "Exercise 9.3: Wiring the Return Value into a Persisting Loop",
+    problem: "nextObstaclePosition() from Exercise 9.1 only computes an answer — nothing moves on screen until gameLoop() takes that returned number and assigns it to the shared obstacleY, then applies it to the real #obstacle element. This is also where a frame counter earns its keep: declared OUTSIDE gameLoop(), it accumulates across every recursive call; declared inside, it would reset to the same value every single frame, since each call starts the function fresh. Since this Output Code box is tested on its own, ask for nextObstaclePosition() defined again in this same snippet, gameLoop() built using it (guarded on gameActive), an outer frameCount, and obstacleY/gameActive/score declared and initialized, plus a call to start the loop.",
+    instruction: "Goal: build gameLoop() so it assigns nextObstaclePosition()'s RETURNED value to obstacleY, moves #obstacle to match, adds 10 to score on every wrap, and logs a frameCount declared outside the function. 1) Plan: plan the assignment — what does gameLoop() do with the number nextObstaclePosition() hands back? Where must frameCount live to actually accumulate? 2) Prompt: ask the AI to wire this together — paste its real code into Output Code and run it, watching frameCount climb every frame. 3) Explain: if frameCount were declared with let INSIDE gameLoop() instead of outside it, what would its logged value be on every single frame?",
+    planPlaceholder: "Plan: what does gameLoop() DO with the number nextObstaclePosition() returns? Where must frameCount be declared to keep counting?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "moveObstacles() should add speed to obstacleY each call, and once obstacleY passes 500, reset it to -100 and add 10 to score. Explanation should correctly compute 490 + 5 = 495 for the given scenario. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "gameLoop() must assign nextObstaclePosition()'s return value into obstacleY (and move #obstacle to match, adding 10 to score on a wrap), guarded by gameActive at the top, while frameCount is declared OUTSIDE gameLoop() so it persists and increments across every recursive call. The explanation should correctly say a frameCount declared with let INSIDE gameLoop() would reset to a fresh value every single call, so it would always log the same number (e.g. always 1) instead of climbing. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
-    title: "Exercise 9.4: The Frozen Scoreboard Bug",
-    problem: `Bug: the reset check was written as if (obstacleY > 500) { obstacleY = -100; } — the score never increments, so the scoreboard stays frozen. The score bump must live inside the same reset block. Since this Output Code box is tested on its own, ask for the complete moveObstacles() function (with the reset block AND the fix) — not just the missing line — plus obstacleY/score declared and initialized, so the snippet runs standalone and you can watch score actually increment.`,
-    instruction: "Goal: fix the missing score increment. 1) Plan: explain why resetting obstacleY alone doesn't increase the score. 2) Prompt: ask the AI to add the missing score increment inside the reset block — paste its real code into Output Code and run it. 3) Explain: confirm both obstacleY and score are handled together now.",
-    planPlaceholder: "Why doesn't resetting obstacleY alone make the score go up?",
-    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
-    outputCodePlaceholder: "Paste the AI's fixed code here.",
+    title: "Exercise 9.4: Combining It All — The Complete Animation Engine",
+    problem: "Every piece from 9.1-9.3 belongs in one final loop: a pure, return-based nextObstaclePosition() driving the obstacle's motion, a gameActive guard that's genuinely first, and a frameCount that survives across every recursive call — this is the actual shape of a real game loop. Since this Output Code box is tested on its own, ask for every piece defined together in this same snippet so it runs standalone in the Preview.",
+    instruction: "Goal: build the complete animation engine using every piece from this session. 1) Plan: list the 4 pieces this system needs and their call order (guard check -> nextObstaclePosition -> move #obstacle/score -> frameCount -> schedule next frame). 2) Prompt: ask the AI for nextObstaclePosition(y, speed, resetY, wrapY) (returns the next position), an outer frameCount and gameActive, and a gameLoop() that: returns immediately if gameActive is false (checked FIRST), assigns nextObstaclePosition()'s result to obstacleY and moves #obstacle to match, adds 10 to score whenever a wrap happens, increments the outer frameCount, and calls requestAnimationFrame(gameLoop) — paste its real code into Output Code and run it. 3) Explain: if the gameActive guard were placed after the frameCount increment instead of before it, would frameCount still climb for one extra frame after Game Over?",
+    planPlaceholder: "List the 4 pieces and their call order, plus where gameActive is checked and where frameCount lives.",
+    promptPlaceholder: "Describe the goal to the AI, in your own words.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The score increment must live inside the same reset block as the obstacleY > 500 check — both the position reset AND the score bump happen together, not one without the other. Explanation should correctly confirm both are now handled in the same block. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The final gameLoop() should check gameActive first (returning immediately if false, before anything else), then assign nextObstaclePosition()'s return value to obstacleY (moving #obstacle and bumping score on wrap), increment an outer, persisting frameCount, and re-schedule itself via requestAnimationFrame — the same 4 pieces from 9.1-9.3 integrated into one loop. The explanation should correctly say YES — placing the guard after the frameCount increment would still let frameCount (and everything before the guard) execute one extra time after gameActive becomes false. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the complete animation engine"
   // capstone exercise used to live here, but it duplicated this session's Project Task
   // (Lab 9), which already asks for more than the exercises (animating the student's own
   // real #obstacle element from Session 2-3, using their own track height instead of a
   // fixed 500) — see PROJECT_TASKS['l1-s9'] in projectTasksData.js.
+  // Redesigned 2026-08-28: 9.1-9.3 now build toward a genuine return-value function
+  // (nextObstaclePosition) and a harder loop-ordering bug (guard placed after scheduling,
+  // not simply missing), plus a frameCount that must live outside the recursive function to
+  // persist across calls; 9.4 combines every piece into one engine — still short of the
+  // Project Task's own-track-height requirement, so the two don't overlap. 9.1 has no
+  // requestAnimationFrame/DOM code at all, so its sandbox tab shows Console Output only
+  // (see the s9ActiveExercise === 1 branch below), matching the S8.1/S10/S12 precedent.
 ];
 
 const S10_EXERCISES = [
@@ -8588,18 +8595,32 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
+                    <div className="panel-header"><h3>{s9ActiveExercise === 1 ? 'Console Output' : 'Live Racing Game Preview'}</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      <iframe
-                        srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
-                        style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                        title="JS Sandbox Live Preview"
-                      />
+                      {/* Only 9.1 (nextObstaclePosition) is a pure function with no DOM code at
+                          all — it never touches obstacleY or #obstacle, so the racing-track
+                          graphic would just sit there implying something should move. 9.2-9.4
+                          all move #obstacle via the animation loop, so they keep the visible track. */}
+                      {s9ActiveExercise === 1 ? (
+                        <iframe
+                          srcDoc={buildJsConsoleOnlyPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '')}
+                          style={{ display: 'none' }}
+                          title="JS Execution Sandbox"
+                        />
+                      ) : (
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.', { autoFocus: false })}
+                          style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                      )}
                       <div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
                         <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                           {simConsoleLogs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                              {s9ActiveExercise === 1 ? 'No console output yet. Add console.log(...) to your Output Code to see values here.' : 'Click inside the preview, then press arrow keys to test your code.'}
+                            </div>
                           ) : simConsoleLogs.map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                               {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
