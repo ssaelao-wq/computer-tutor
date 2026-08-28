@@ -211,38 +211,38 @@ export const CURRICULUM_DATA = [
     warmUp: "Scope Trace Challenge: determine which variables are accessible inside functions vs. outside them, tracing accessibility across functions.",
     miniLesson: "Modular Program Design: function signatures (parameters and return data types), global vs. local scope blocks and variable isolation, and packaging repeated operations into reusable, readable actions.",
     coreActivity: "Modular Logic Decomposition: decompose the monolithic game script into a list of isolated, single-purpose functions, and draft each function's interface (inputs and outputs) before prompting the AI to refactor the variables and listeners into modular functions.",
-    handsOn: "Complete 5 Sandbox Exercises in two 5-step AI-Era loops refactoring steering logic into `updatePlayerPosition()`, `moveLeft()`, and `moveRight()`. Socratic Debugging — Scope Access Violations: the tutor declares a position variable inside a movement function, making it inaccessible to the rendering function (which logs `undefined`). Trace where the variable was declared and why its scope is restricted, then correct it.",
+    handsOn: "Complete 4 Sandbox Exercises in 5-step AI-Era loops building a pure return-value function (`clampPosition()`), a shared renderer (`updatePlayerPosition()`), and `moveLeft()`/`moveRight()` wired through it. Socratic Debugging — Shadowed Variable: the tutor declares a counter variable inside a movement function that shares a name with an outer/global counter, silently creating two separate variables instead of sharing one. Trace which variable each console.log call actually reads, then correct it.",
     homework: "In the Journal tab under 'Session 8 Homework', write a function `calculateScore(distance, speedMultiplier)` that multiplies its parameters, declares local variables, and returns the score value (+50 XP).",
     ethics: "Clean Code and Collaboration: the Heartbleed bug (2014) existed in OpenSSL for two years partly because the critical code was poorly structured and hard for reviewers to audit, affecting 17% of all secure web servers. Why is write-once, hard-to-read code a problem for engineering teams?",
     adaptations: "Age 13-16: Discuss code review practices — how a reviewer with only 10 minutes benefits from small, well-named functions over one long script.",
     exerciseGuide: [
       {
         num: "8.1",
-        title: "Exercise 8.1: Decomposing & Requesting the Render Function",
-        concept: "Single-Purpose Render Function",
-        prompt: "Write a JavaScript function named updatePlayerPosition() that sets document.getElementById('player-car').style.left to carX + 'px'. Call updatePlayerPosition() once after defining it.",
-        outputCode: "function updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nupdatePlayerPosition();"
+        title: "Exercise 8.1: The Return-Value Clamp Function",
+        concept: "Pure Function with a Return Value",
+        prompt: "Write a JavaScript function named clampPosition(x, min, max) that returns min if x is less than min, max if x is greater than max, and x otherwise — no DOM code inside it. Call it with a few example values and console.log each result.",
+        outputCode: "function clampPosition(x, min, max) {\n  if (x < min) return min;\n  if (x > max) return max;\n  return x;\n}\n\nconsole.log(clampPosition(10, 35, 295));\nconsole.log(clampPosition(150, 35, 295));\nconsole.log(clampPosition(400, 35, 295));"
       },
       {
         num: "8.2",
-        title: "Exercise 8.2: The Scope Access Violation Bug",
-        concept: "Global vs. Local Variable Scope",
-        prompt: "Fix the variable scope issue where carX was declared locally inside moveLeft(). Declare carX once in global outer scope so both moveLeft() and updatePlayerPosition() can access and share it.",
-        outputCode: "function updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n}"
+        title: "Exercise 8.2: The Shadowed Counter Bug",
+        concept: "Variable Shadowing: Local vs. Global Scope",
+        prompt: "Fix the shadowing bug where moveLeft() declares its own local moveCount instead of using the shared outer one. Remove the local declaration so moveLeft() increments the single shared global moveCount. Log moveCount inside moveLeft() and again after calling it twice to prove they now match.",
+        outputCode: "let moveCount = 0;\n\nfunction updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  moveCount++;\n  updatePlayerPosition();\n  console.log('moveCount inside moveLeft():', moveCount);\n}\n\nmoveLeft();\nmoveLeft();\nconsole.log('moveCount outside moveLeft():', moveCount);"
       },
       {
         num: "8.3",
-        title: "Exercise 8.3: Wiring moveLeft() to the Handler",
-        concept: "Event Handler Function Delegation",
-        prompt: "Write a JavaScript moveLeft() function that checks if carX > 35, subtracts 130, and updates the car position. Then write a keydown event listener where the 'ArrowLeft' key branch calls moveLeft().",
-        outputCode: "function moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nwindow.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowLeft') {\n    moveLeft();\n  }\n});"
+        title: "Exercise 8.3: Wiring the Return Value Back into Shared State",
+        concept: "Assigning a Function's Return Value into Global Scope",
+        prompt: "Write clampPosition(x, min, max) again, plus moveLeft() that sets carX = clampPosition(carX - 130, 35, 295) and then calls updatePlayerPosition(). Wire a complete keydown listener so the ArrowLeft branch calls moveLeft().",
+        outputCode: "function clampPosition(x, min, max) {\n  if (x < min) return min;\n  if (x > max) return max;\n  return x;\n}\n\nfunction updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  carX = clampPosition(carX - 130, 35, 295);\n  updatePlayerPosition();\n}\n\nwindow.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowLeft') {\n    moveLeft();\n  }\n});"
       },
       {
         num: "8.4",
-        title: "Exercise 8.4: Requesting moveLeft() and moveRight()",
-        concept: "Modular Movement Functions with Shared Renderer",
-        prompt: "Write modular JavaScript functions for car steering: updatePlayerPosition() to set style.left, moveLeft() to clamp carX > 35 and call updatePlayerPosition(), and moveRight() to clamp carX < 295 and call updatePlayerPosition(). Call moveLeft() once to test.",
-        outputCode: "function updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  if (carX > 35) {\n    carX -= 130;\n  }\n  updatePlayerPosition();\n}\n\nfunction moveRight() {\n  if (carX < 295) {\n    carX += 130;\n  }\n  updatePlayerPosition();\n}\n\nmoveLeft();"
+        title: "Exercise 8.4: Combining It All — Full Steering with Shared Helpers",
+        concept: "Functions + Return Values + Shared Scope, Integrated",
+        prompt: "Write clampPosition(x, min, max), a global moveCount, moveLeft() and moveRight() that each assign clampPosition()'s result into carX, increment the shared moveCount, and call updatePlayerPosition(). Wire a keydown listener for both ArrowLeft and ArrowRight.",
+        outputCode: "let moveCount = 0;\n\nfunction clampPosition(x, min, max) {\n  if (x < min) return min;\n  if (x > max) return max;\n  return x;\n}\n\nfunction updatePlayerPosition() {\n  document.getElementById('player-car').style.left = carX + 'px';\n}\n\nfunction moveLeft() {\n  carX = clampPosition(carX - 130, 35, 295);\n  moveCount++;\n  updatePlayerPosition();\n}\n\nfunction moveRight() {\n  carX = clampPosition(carX + 130, 35, 295);\n  moveCount++;\n  updatePlayerPosition();\n}\n\nwindow.addEventListener('keydown', function(event) {\n  if (event.key === 'ArrowLeft') {\n    moveLeft();\n  } else if (event.key === 'ArrowRight') {\n    moveRight();\n  }\n});"
       }
     ]
   },

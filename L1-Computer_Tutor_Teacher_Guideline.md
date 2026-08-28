@@ -697,6 +697,8 @@ The **Project Journal** milestone card ("Lab 7: Obstacle Loop Generation") track
 ## Session 8: "Defining Movement & Game Functions: JS Modular Code"
 
 > **Content note (2026-08-05):** This session was moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above) — **Verify now grades the Prompt box only**. Its old 5th "combine everything" capstone exercise (8.5, "The Duplicate Render Call & Complete Controller") was dropped as a duplicate of this session's own Project Task, which already asks for more (grouping the three functions under one namespaced `Controller` object, not three loose globals). The sandbox now has **4 exercises**, not 5. Testing "🤖 Generate Code" against the live AI also found two of the original five exercises' own solutions broke the Live Preview: Exercise 8.3's fix, generated standalone, came back as a bare `if (event.key === 'ArrowLeft') { moveLeft(); }` fragment with no enclosing listener and no `moveLeft()` defined — `event` doesn't exist outside a handler, so it crashed on load; Exercise 8.5 (now dropped) had generated canvas-API code (`canvas.width`, `render()`) that doesn't exist in this DOM-based sandbox. Both 8.1's and 8.3's exercise text now say plainly that the Output Code box runs standalone (nothing from another exercise carries over), so the AI needs to write a complete, self-contained snippet — including calling the new piece once so its effect is visible in the Preview.
+>
+> **Content note (2026-08-28):** 8.1-8.3 were redesigned harder to make function declarations, return values, and local-vs-global scope each individually unmistakable, and 8.4 now combines every piece into one integrated system (it still stops short of the Project Task's Controller-namespacing requirement, so the two don't overlap). 8.1 asks for a genuine pure function — `clampPosition(x, min, max)`, which **returns** a value instead of touching the DOM — where the old 8.1 only ever built void, side-effecting functions. 8.2's scope bug is now a **shadowing** bug (a `moveCount` counter re-declared inside `moveLeft()` silently creates a second, separate variable instead of the old "declared inside, so it's inaccessible outside" version) — harder because the code doesn't error, it just silently produces two different values under one name. 8.2/8.4 use a new `moveCount` variable rather than `carX` for this: `buildJsSandboxPreview`'s harness makes `carX` (and `speed`) reactive globals and strips any `let/const/var carX` declaration anywhere in the pasted snippet via regex (not scope-aware) before running it, so a `carX`-shadowing bug would silently get "fixed" by the harness and never actually reproduce live — `moveCount` has no such special handling. 8.3 now requires assigning `clampPosition()`'s return value back into the shared `carX` (`carX = clampPosition(carX - 130, 35, 295)`), connecting "function returns a value" with "shared global state" explicitly, instead of the old version's simple function-call wiring.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Variable Scoping Match
@@ -716,43 +718,50 @@ The **Project Journal** milestone card ("Lab 7: Obstacle Loop Generation") track
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. All 4 run live in the Live Racing Game Preview — click inside it and press arrow keys to steer. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word.
+Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. Exercise 8.1's `clampPosition()` is a pure function with no DOM code at all, so it gets a **Console Output**-only panel instead of the racing track (a visible track implying something should move would be misleading when nothing does); 8.2-8.4 all clamp/assign `carX` and call `updatePlayerPosition()`, so they keep the **Live Racing Game Preview** — click inside it and press arrow keys to steer. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness) — not the Plan/Output Code/Explain boxes, and not whether it names any specific word.
 
-* **Exercise 8.1: Decomposing & Requesting the Render Function**
-  * *Goal given to the student:* split the steering script into single-purpose pieces (render, move-left, move-right), starting with a function named `updatePlayerPosition()` that sets `#player-car`'s `style.left` to `carX`. The exercise text notes this sandbox is DOM-based (no canvas), and that the Output Code box runs standalone — the AI should also call the new function once so its effect is visible in the Preview.
-  * *A strong answer shows:* a self-contained `updatePlayerPosition()` definition plus a call to it; an explanation correctly stating it takes 0 parameters because it just reads the shared `carX`.
-  * *Why:* One block that does everything is hard to test or fix — naming the three jobs first is the decomposition skill.
-* **Exercise 8.2: The Scope Access Violation Bug**
-  * *Goal given to the student:* explain why `updatePlayerPosition()` can't read a `carX` declared inside `moveLeft()`, then fix it by moving the declaration outside both functions.
-  * *A strong answer shows:* `carX` declared once, outside both functions; an explanation correctly contrasting local (visible only inside its own function) vs. shared/outer scope.
-  * *Why:* A variable declared inside a function is local — for two functions to share `carX`, it must be declared once outside both.
-* **Exercise 8.3: Wiring moveLeft() to the Handler**
-  * *Goal given to the student:* replace the inline ArrowLeft logic with a call to `moveLeft()`. The exercise text notes this box is tested standalone (not chained to Exercise 8.2), so the AI needs to write the **complete** keydown listener plus a working `moveLeft()` — not just the one changed line.
-  * *A strong answer shows:* a real `addEventListener('keydown', ...)` wrapper whose ArrowLeft branch calls a self-contained `moveLeft()`; an explanation covering the benefit of a named function call over repeating logic inline. (Found and fixed 2026-08-05: without this note, the AI's literal answer to "just the ArrowLeft branch" was a bare fragment with no listener and no `moveLeft()` — `event` undefined, crashing the Preview on load.)
-  * *Why:* Once `moveLeft()` owns the boundary logic, the handler shrinks to a single call.
-* **Exercise 8.4: Requesting moveLeft() and moveRight()**
-  * *Goal given to the student:* build the `moveRight()` mirror function alongside `moveLeft()`, each clamping `carX` and calling `updatePlayerPosition()`. The exercise text notes `updatePlayerPosition()` isn't defined in this standalone snippet either, so the AI should include a working definition of it too, plus a demo call so the effect is visible in the Preview.
-  * *A strong answer shows:* `moveLeft()`/`moveRight()`/`updatePlayerPosition()` all defined together and demonstrably called; an explanation correctly stating only 1 function body needs the fix if both share a clamp helper.
-  * *Why:* Each function clamps `carX` to its own boundary, then calls the shared renderer instead of each writing its own `style.left` line.
+* **Exercise 8.1: The Return-Value Clamp Function**
+  * *Goal given to the student:* build a pure function `clampPosition(x, min, max)` that **returns** `min`/`max`/`x` depending on where `x` falls, with no DOM code inside it, then call it with a few example values and log each result so its return value is provable without needing the Preview.
+  * *A strong answer shows:* a self-contained `clampPosition()` with 3 parameters and a `return` in every branch, demonstrably called; an explanation correctly stating a `return`-ending function hands back a usable value (unlike `updatePlayerPosition()`, which hands back `undefined`).
+  * *Why:* Not every function should touch the screen directly — separating "compute the answer" from "draw the car" is what `return` makes possible.
+* **Exercise 8.2: The Shadowed Counter Bug**
+  * *Goal given to the student:* given the exact bug (a `moveCount` re-declared with `let` inside `moveLeft()`, shadowing an outer `moveCount`), remove the local declaration so both scopes reference the one shared counter — proven by two `console.log` calls (inside `moveLeft()` and after calling it) that should match once fixed.
+  * *A strong answer shows:* the local `let moveCount = 0;` removed so `moveLeft()`'s `moveCount++` updates the single outer variable; an explanation correctly identifying that the buggy version has TWO separate variables sharing one name — the inner one resets and vanishes every call, the outer one never moves.
+  * *Why:* Harder than a simple "can't access it" bug — shadowing doesn't throw an error, it silently produces two different values under one name, which is a more realistic (and more dangerous) scope mistake.
+  * *Note:* uses `moveCount`, not `carX`, as the shadowed variable — the sandbox's execution harness (`buildJsSandboxPreview`) makes `carX`/`speed` reactive globals and strips any `let/const/var carX` declaration anywhere in the pasted code (a text-level regex, not scope-aware) before running it, so a `carX`-shadowing bug would silently get neutralized by the harness itself and never actually reproduce live.
+* **Exercise 8.3: Wiring the Return Value Back into Shared State**
+  * *Goal given to the student:* build `moveLeft()` so it assigns `clampPosition()`'s **returned** value back into the shared `carX` (`carX = clampPosition(carX - 130, 35, 295)`), then calls `updatePlayerPosition()`, wired to the ArrowLeft key. The exercise text notes this box is tested standalone, so the AI needs `clampPosition()` redefined here too, plus the **complete** keydown listener — not just the assignment line.
+  * *A strong answer shows:* a real `addEventListener('keydown', ...)` wrapper whose ArrowLeft branch calls a self-contained `moveLeft()` that assigns the clamp's return value into `carX`; an explanation correctly stating that calling `clampPosition()` without assigning its result changes nothing — the computed value would just be discarded.
+  * *Why:* This is the moment a pure, return-based function and a shared global variable actually connect — the return value is useless until something assigns it back into shared state.
+* **Exercise 8.4: Combining It All — Full Steering with Shared Helpers**
+  * *Goal given to the student:* build the complete system — `clampPosition()` shared by both `moveLeft()`/`moveRight()`, a single shared `moveCount` both increment (no shadowing this time), the shared `updatePlayerPosition()` renderer, and one keydown listener wiring both arrow keys.
+  * *A strong answer shows:* all 4 pieces defined together and demonstrably working (both keys move the car and `moveCount` climbs correctly on each); an explanation correctly stating only 1 place needs editing for a boundary change, since both direction functions and the render call reuse the shared helper instead of duplicating it.
+  * *Why:* Every concept from 8.1-8.3 (function, return value, shared scope) integrated into one working controller — one step short of the Project Task's Controller-namespacing refactor.
 
 ### 3a. 📘 Teacher Exercise Guide & Reference Solutions
 
 Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (teacher view only, `exerciseGuide` in `src/curriculumData.js`) — one worked reference prompt and its real generated output per exercise, so a teacher can sanity-check a student's own prompt/code against a known-good answer without re-deriving one live.
 
-* **Exercise 8.1: Decomposing & Requesting the Render Function** — *Single-Purpose Render Function*
-  * 🎯 **Reference Prompt:** "Write a JavaScript function named updatePlayerPosition() that sets document.getElementById('player-car').style.left to carX + 'px'. Call updatePlayerPosition() once after defining it."
+* **Exercise 8.1: The Return-Value Clamp Function** — *Pure Function with a Return Value*
+  * 🎯 **Reference Prompt:** "Write a JavaScript function named clampPosition(x, min, max) that returns min if x is less than min, max if x is greater than max, and x otherwise — no DOM code inside it. Call it with a few example values and console.log each result."
   * 💻 **Reference Output Code:**
     ```javascript
-    function updatePlayerPosition() {
-      document.getElementById('player-car').style.left = carX + 'px';
+    function clampPosition(x, min, max) {
+      if (x < min) return min;
+      if (x > max) return max;
+      return x;
     }
 
-    updatePlayerPosition();
+    console.log(clampPosition(10, 35, 295));
+    console.log(clampPosition(150, 35, 295));
+    console.log(clampPosition(400, 35, 295));
     ```
-* **Exercise 8.2: The Scope Access Violation Bug** — *Global vs. Local Variable Scope*
-  * 🎯 **Reference Prompt:** "Fix the variable scope issue where carX was declared locally inside moveLeft(). Declare carX once in global outer scope so both moveLeft() and updatePlayerPosition() can access and share it."
+* **Exercise 8.2: The Shadowed Counter Bug** — *Variable Shadowing: Local vs. Global Scope*
+  * 🎯 **Reference Prompt:** "Fix the shadowing bug where moveLeft() declares its own local moveCount instead of using the shared outer one. Remove the local declaration so moveLeft() increments the single shared global moveCount. Log moveCount inside moveLeft() and again after calling it twice to prove they now match."
   * 💻 **Reference Output Code:**
     ```javascript
+    let moveCount = 0;
+
     function updatePlayerPosition() {
       document.getElementById('player-car').style.left = carX + 'px';
     }
@@ -761,18 +770,32 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
       if (carX > 35) {
         carX -= 130;
       }
+      moveCount++;
       updatePlayerPosition();
+      console.log('moveCount inside moveLeft():', moveCount);
     }
+
+    moveLeft();
+    moveLeft();
+    console.log('moveCount outside moveLeft():', moveCount);
     ```
-* **Exercise 8.3: Wiring moveLeft() to the Handler** — *Event Handler Function Delegation*
-  * 🎯 **Reference Prompt:** "Write a JavaScript moveLeft() function that checks if carX > 35, subtracts 130, and updates the car position. Then write a keydown event listener where the 'ArrowLeft' key branch calls moveLeft()."
+* **Exercise 8.3: Wiring the Return Value Back into Shared State** — *Assigning a Function's Return Value into Global Scope*
+  * 🎯 **Reference Prompt:** "Write clampPosition(x, min, max) again, plus moveLeft() that sets carX = clampPosition(carX - 130, 35, 295) and then calls updatePlayerPosition(). Wire a complete keydown listener so the ArrowLeft branch calls moveLeft()."
   * 💻 **Reference Output Code:**
     ```javascript
-    function moveLeft() {
-      if (carX > 35) {
-        carX -= 130;
-      }
+    function clampPosition(x, min, max) {
+      if (x < min) return min;
+      if (x > max) return max;
+      return x;
+    }
+
+    function updatePlayerPosition() {
       document.getElementById('player-car').style.left = carX + 'px';
+    }
+
+    function moveLeft() {
+      carX = clampPosition(carX - 130, 35, 295);
+      updatePlayerPosition();
     }
 
     window.addEventListener('keydown', function(event) {
@@ -781,29 +804,41 @@ Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (te
       }
     });
     ```
-* **Exercise 8.4: Requesting moveLeft() and moveRight()** — *Modular Movement Functions with Shared Renderer*
-  * 🎯 **Reference Prompt:** "Write modular JavaScript functions for car steering: updatePlayerPosition() to set style.left, moveLeft() to clamp carX > 35 and call updatePlayerPosition(), and moveRight() to clamp carX < 295 and call updatePlayerPosition(). Call moveLeft() once to test."
+* **Exercise 8.4: Combining It All — Full Steering with Shared Helpers** — *Functions + Return Values + Shared Scope, Integrated*
+  * 🎯 **Reference Prompt:** "Write clampPosition(x, min, max), a global moveCount, moveLeft() and moveRight() that each assign clampPosition()'s result into carX, increment the shared moveCount, and call updatePlayerPosition(). Wire a keydown listener for both ArrowLeft and ArrowRight."
   * 💻 **Reference Output Code:**
     ```javascript
+    let moveCount = 0;
+
+    function clampPosition(x, min, max) {
+      if (x < min) return min;
+      if (x > max) return max;
+      return x;
+    }
+
     function updatePlayerPosition() {
       document.getElementById('player-car').style.left = carX + 'px';
     }
 
     function moveLeft() {
-      if (carX > 35) {
-        carX -= 130;
-      }
+      carX = clampPosition(carX - 130, 35, 295);
+      moveCount++;
       updatePlayerPosition();
     }
 
     function moveRight() {
-      if (carX < 295) {
-        carX += 130;
-      }
+      carX = clampPosition(carX + 130, 35, 295);
+      moveCount++;
       updatePlayerPosition();
     }
 
-    moveLeft();
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft') {
+        moveLeft();
+      } else if (event.key === 'ArrowRight') {
+        moveRight();
+      }
+    });
     ```
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)

@@ -3200,52 +3200,60 @@ const S7_EXERCISES = [
 const S8_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 8.1: Decomposing & Requesting the Render Function",
-    problem: "One giant block that does everything is hard to fix; splitting it into named functions — one to render, one to move left, one to move right — gives each piece a single, testable job. This sandbox is DOM-based, not canvas-based — there's no canvas element here. Since this Output Code box runs standalone, also have the AI call the new function once right after defining it, so you can confirm it actually moves the car in the Preview.",
-    instruction: "Goal: split out a single-purpose render function. 1) Plan: name the single-purpose pieces to split the steering script into. 2) Prompt: ask the AI for a function named updatePlayerPosition() that sets '#player-car' style.left to carX + 'px' — paste its real code into Output Code. 3) Explain: how many parameters does updatePlayerPosition() take, and why does it need none?",
-    planPlaceholder: "Name the pieces to split into: one to update position, one to move left, one to move right.",
+    title: "Exercise 8.1: The Return-Value Clamp Function",
+    problem: "Not every function should touch the screen directly — a pure function takes input, does math, and hands back an answer with 'return', leaving the caller free to decide what to do with it. Splitting 'compute the clamped number' from 'draw the car' is the real decomposition skill functions provide here. Since this Output Code box runs standalone, also have the AI call the new function with a few example inputs and console.log each result, so you can confirm exactly what it returns without needing the Preview.",
+    instruction: "Goal: build a pure function that RETURNS a computed value instead of touching the DOM. 1) Plan: name the inputs (parameters) this function needs and what value it should hand back. 2) Prompt: ask the AI for a function clampPosition(x, min, max) that returns min if x is below it, max if x is above it, and x otherwise — no DOM code inside it at all — paste its real code into Output Code and call it with a few test values. 3) Explain: what's the difference between this function ending with 'return x;' versus a function like updatePlayerPosition() that ends with nothing? What would happen if you wrote 'let result = updatePlayerPosition();'?",
+    planPlaceholder: "Name clampPosition()'s 3 parameters (x, min, max) and what value it hands back.",
     promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "updatePlayerPosition() should be a function taking 0 parameters, since it just reads the already-shared carX variable and writes it to #player-car's style.left. The explanation should correctly say it needs 0 parameters because carX is accessible without being passed in. Don't require the literal function name or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "clampPosition(x, min, max) should be a pure function with 3 parameters that returns min/max/x depending on where x falls, with no DOM code inside it — a clear example of a function that computes and RETURNS a value instead of one that produces a side effect. The explanation should correctly say a function ending in 'return' hands back a usable value that can be stored in a variable, while a function with no return (like updatePlayerPosition()) hands back undefined — assigning its 'result' to a variable would just store undefined. Don't require the literal function name or exact code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
-    title: "Exercise 8.2: The Scope Access Violation Bug",
-    problem: `Bug: carX was accidentally declared inside moveLeft(), so updatePlayerPosition() can no longer read it and logs 'undefined'. A variable declared inside a function is local — for two functions to share carX, it must be declared once outside both.`,
-    instruction: "Goal: fix the scope bug so both functions can read carX. 1) Plan: explain why declaring carX inside moveLeft() breaks updatePlayerPosition()'s access to it. 2) Prompt: ask the AI to move the carX declaration outside both functions so they can share it — paste the fixed code into Output Code. 3) Explain: what's the difference between a local variable and a shared/outer-scope variable?",
-    planPlaceholder: "Why can't updatePlayerPosition() read a carX that was declared inside moveLeft()?",
+    title: "Exercise 8.2: The Shadowed Counter Bug",
+    problem: "Bug: moveLeft() was written with its own 'let moveCount = 0;' at the top, meant to track how many times the car has moved — but a moveCount ALSO exists in the outer/global scope, so this creates two separate variables that just happen to share a name. The global counter never budges past 0, while the inner one silently resets to 0 and becomes 1 every single call, then disappears. Since this Output Code box is tested on its own, ask for the global moveCount, a moveLeft() that still does its usual carX clamp + updatePlayerPosition() call, and two console.log calls — one logging moveCount INSIDE moveLeft() right before it returns, one logging the OUTER moveCount right after calling moveLeft() twice — so the mismatch is visible in the console panel below the Preview.",
+    instruction: "Goal: find and remove the shadowing local declaration so moveLeft() increments the ONE shared global counter. 1) Plan: explain why declaring 'let moveCount = 0;' again inside moveLeft() creates a separate variable instead of reusing the outer one. 2) Prompt: ask the AI to remove the local moveCount declaration inside moveLeft() so incrementing it there updates the single shared outer counter — paste the fixed code into Output Code and run it, checking that the two logged values now match. 3) Explain: before the fix, why did the inside-the-function log always show 1 no matter how many times you pressed the key, while the outer log stayed frozen at 0?",
+    planPlaceholder: "Why does re-declaring 'let moveCount = 0' inside moveLeft() create a SEPARATE variable instead of reusing the outer one?",
     promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
     outputCodePlaceholder: "Paste the AI's fixed code here.",
     runnable: true,
-    expectedConcepts: "carX must be declared once, outside both moveLeft() and updatePlayerPosition(), so both functions read/write the same shared variable — a variable declared inside one function is local to that function only. The explanation should correctly contrast local scope (visible only inside its own function) with shared/outer scope. Don't require the literal 'let carX = 165;' or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The fix must remove the local 'let moveCount = 0' declaration from inside moveLeft() so the function increments the single, outer-scope moveCount instead of creating and discarding a fresh local one on every call. The explanation should correctly identify that the buggy version has two DIFFERENT variables sharing the same name (shadowing) — the local one resets to 0 and becomes 1 on every call then disappears, while the untouched global one never changes, which is why the two logged values never match. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
-    title: "Exercise 8.3: Wiring moveLeft() to the Handler",
-    problem: "Once moveLeft() owns the boundary-check logic, the handler just calls it by name — same behavior, but the logic lives in one place instead of being copied into the listener. Since this Output Code box is tested on its own (not chained to Exercise 8.2's code), ask for the COMPLETE keydown listener — not just the ArrowLeft line — plus a working moveLeft() definition, so the snippet runs standalone without errors.",
-    instruction: "Goal: wire the ArrowLeft branch to call moveLeft() instead of repeating its logic. 1) Plan: plan replacing the inline ArrowLeft logic with a function call. 2) Prompt: ask the AI to rewrite the ArrowLeft branch of the keydown handler so it simply calls moveLeft() — paste its real code into Output Code. 3) Explain: what's the benefit of calling a named function here instead of repeating the logic inline?",
-    planPlaceholder: "Plan: instead of repeating the boundary-check logic inline, what should the ArrowLeft branch do?",
+    title: "Exercise 8.3: Wiring the Return Value Back into Shared State",
+    problem: "clampPosition() from Exercise 8.1 only computes an answer — nothing changes on screen until moveLeft() actually takes that returned number and assigns it to the shared carX: carX = clampPosition(carX - 130, 35, 295). This is the moment a pure, return-based function and a shared global variable connect. Since this Output Code box is tested on its own (not chained to Exercise 8.1's code), ask for clampPosition() defined again in this same snippet, a moveLeft() built using it, a working updatePlayerPosition(), and the COMPLETE keydown listener with the ArrowLeft branch calling moveLeft() — so the whole chain runs standalone in the Preview.",
+    instruction: "Goal: build moveLeft() so it calls clampPosition() and assigns the RETURNED value back to carX. 1) Plan: plan the assignment — what does moveLeft() do with the number clampPosition() hands back? 2) Prompt: ask the AI for a moveLeft() that computes carX = clampPosition(carX - 130, 35, 295), then calls updatePlayerPosition(), wired to the ArrowLeft key — paste its real code into Output Code and run it. 3) Explain: if moveLeft() called clampPosition(carX - 130, 35, 295) but never assigned the result back to carX, what would happen to the car's position?",
+    planPlaceholder: "Plan: moveLeft() calls clampPosition(...) — what does it DO with the number that comes back?",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The ArrowLeft branch of the keydown handler should call moveLeft() by name instead of repeating the boundary-check logic inline — same behavior, but the logic now lives in one reusable place. The explanation should identify that a future fix only needs to happen once, not everywhere the logic was duplicated. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "moveLeft() must assign clampPosition()'s return value back into the shared carX (carX = clampPosition(carX - 130, 35, 295)), then call updatePlayerPosition() — wired to the ArrowLeft branch of a complete keydown listener. The explanation should correctly say that calling clampPosition() without assigning its result changes nothing — the return value would be computed and immediately discarded, so carX (and the car on screen) would never actually update. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
-    title: "Exercise 8.4: Requesting moveLeft() and moveRight()",
-    problem: "Each function clamps carX to its own boundary, then calls updatePlayerPosition() — reusing the shared renderer instead of each writing its own style.left line. Since updatePlayerPosition() isn't defined in this standalone snippet, also include a working definition of it (matching Exercise 8.1: it sets #player-car style.left to carX + 'px'), and call moveLeft() once so you can see the effect in the Preview.",
-    instruction: "Goal: build the moveRight() mirror function alongside moveLeft(). 1) Plan: plan the moveRight() mirror function for the right lane. 2) Prompt: ask the AI for both moveLeft() and moveRight(), each clamping carX and calling updatePlayerPosition() — paste its real code into Output Code and run it. 3) Explain: if a bug is found in the boundary-clamp logic, how many function bodies need fixing if both call a shared clamp helper?",
-    planPlaceholder: "Plan moveRight(): which boundary (295), and what does it call afterward (updatePlayerPosition)?",
+    title: "Exercise 8.4: Combining It All — Full Steering with Shared Helpers",
+    problem: "Every piece from 8.1-8.3 belongs in one final system: a pure, return-based clampPosition() shared by both direction functions, a single shared moveCount that both functions increment correctly (no local shadow this time), a shared renderer, and a keydown listener wiring both arrow keys — this is the actual shape of a modular controller. Since this Output Code box is tested on its own, ask for every piece defined together in this same snippet so it runs standalone in the Preview.",
+    instruction: "Goal: build the complete steering system using every piece from this session. 1) Plan: list the 4 pieces this system needs and how they call each other (clampPosition -> moveLeft/moveRight -> updatePlayerPosition), plus where the single shared moveCount lives. 2) Prompt: ask the AI for clampPosition(x, min, max) (returns the clamped value), a global moveCount, moveLeft() and moveRight() (each assigning clampPosition()'s result into the shared carX, incrementing the shared moveCount, then calling updatePlayerPosition()), updatePlayerPosition() itself, and a keydown listener wiring both ArrowLeft and ArrowRight — paste its real code into Output Code and run it in the Preview, watching moveCount go up correctly on both keys. 3) Explain: if a boundary number needed to change (say the right edge moved from 295 to 320), how many places in this final version would you actually have to edit, and why?",
+    planPlaceholder: "List the 4 pieces and their call order, plus where moveCount is declared so both directions share it.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "moveLeft() and moveRight() should mirror each other structurally — each clamping carX to its own boundary (35 left / 295 right), then calling the shared updatePlayerPosition() renderer instead of writing its own style.left line. The explanation should correctly say only 1 function body needs fixing if both share a clamp helper. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "The final system should have clampPosition(x, min, max) as a single shared return-value helper called by both moveLeft() and moveRight(), a single global moveCount incremented by both (no local re-declaration inside either function), each assigning clampPosition()'s result into the shared carX and calling the shared updatePlayerPosition(), all wired through one keydown listener handling both arrow keys. The explanation should correctly say only 1 place needs editing (inside the shared clampPosition() call for that boundary), since both direction functions and the render call are reused, not duplicated. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the final controller" capstone
   // exercise used to live here, but it duplicated this session's Project Task (Lab 8),
   // which already asks for more than the exercises (grouping the three functions under
   // one namespaced Controller object) — see PROJECT_TASKS['l1-s8'] in projectTasksData.js.
+  // Redesigned 2026-08-28: 8.1-8.3 now build toward a genuine return-value function
+  // (clampPosition) and a harder scope bug, and 8.4 combines every piece (clamp/return,
+  // shared counter, shared renderer, both directions) into one system — still short of
+  // the Project Task's Controller-namespacing requirement, so the two don't overlap.
+  // Uses moveCount (not carX) as the shadowing-bug variable in 8.2/8.4: carX/speed are
+  // harness-reactive globals in buildJsSandboxPreview, which silently strips ANY
+  // let/const/var carX declaration anywhere in the snippet (regex, not scope-aware)
+  // before running it — so a carX-shadowing bug would never actually reproduce live.
 ];
 
 const S9_EXERCISES = [
@@ -8314,18 +8322,32 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>Live Racing Game Preview</h3></div>
+                    <div className="panel-header"><h3>{s8ActiveExercise === 1 ? 'Console Output' : 'Live Racing Game Preview'}</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      <iframe
-                        srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
-                        style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
-                        title="JS Sandbox Live Preview"
-                      />
+                      {/* Only 8.1 (clampPosition) is a pure function with no DOM code at all —
+                          it never touches carX, so the racing-track graphic would just sit there
+                          implying something should move. 8.2-8.4 all clamp/assign carX and call
+                          updatePlayerPosition(), so they keep the visible track. */}
+                      {s8ActiveExercise === 1 ? (
+                        <iframe
+                          srcDoc={buildJsConsoleOnlyPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8OutputCodeInput : '')}
+                          style={{ display: 'none' }}
+                          title="JS Execution Sandbox"
+                        />
+                      ) : (
+                        <iframe
+                          srcDoc={buildJsSandboxPreview(S8_EXERCISES[s8ActiveExercise - 1].runnable ? s8OutputCodeInput : '// This step is a plan/prompt/explanation exercise — nothing to run yet.')}
+                          style={{ width: '100%', height: '360px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#060814' }}
+                          title="JS Sandbox Live Preview"
+                        />
+                      )}
                       <div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)', marginBottom: '4px' }}>Console Output</div>
                         <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                           {simConsoleLogs.length === 0 ? (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Click inside the preview, then press arrow keys to test your code.</div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                              {s8ActiveExercise === 1 ? 'No console output yet. Add console.log(...) to your Output Code to see values here.' : 'Click inside the preview, then press arrow keys to test your code.'}
+                            </div>
                           ) : simConsoleLogs.map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
                               {log.type === 'error' ? '✗ ' : log.type === 'success' ? '✓ ' : '⚡ '}
