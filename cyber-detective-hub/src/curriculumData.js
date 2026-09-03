@@ -255,15 +255,46 @@ export const CURRICULUM_DATA = [
     objectives: [
       "Understand the concept of frame rates and game loops",
       "Animate obstacles moving down the track using `requestAnimationFrame`",
-      "Manage persistent loop states (active, paused, game-over)"
+      "Manage persistent loop states (active, paused, game-over)",
+      "Read and write the core JS syntax patterns this loop depends on: function declarations with `return`, the `if (!gameActive) return;` early-return guard, and where a `let` is declared (inside vs. outside a function) determines whether it resets or persists"
     ],
     warmUp: "Animate the Dots: trace how coordinates update dynamically over time offsets, calculating the spacing steps needed to keep object movement smooth.",
-    miniLesson: "Chronological Time Deltas & Frame Rates: the continuous paint cycle and frame-rate targets (60 FPS / 16.6ms per frame), the `requestAnimationFrame` recursion loop, and game-state gates that stop loop updates once a collision flag turns true.",
+    miniLesson: "Chronological Time Deltas & Frame Rates: the continuous paint cycle and frame-rate targets (60 FPS / 16.6ms per frame), the `requestAnimationFrame` recursion loop, and game-state gates that stop loop updates once a collision flag turns true. **JS Syntax Focus:** function declaration syntax — `function name(params) { ...; return value; }` — and how a `return` hands a value back to the caller; the `if (!gameActive) return;` early-return guard pattern, read line by line; and the syntax difference between `let x` written inside a function body (re-run, and reset, on every call) versus outside it (written once, keeps its value across every call).",
     coreActivity: "Game Engine Flowcharting: draw a lifecycle flowchart for the game state machine (Start → Update → Check Collision → Redraw → Loop), draft the loop controller's pseudocode, then prompt the AI to construct the core `loop()` function.",
     handsOn: "Complete 4 Sandbox Exercises in 5-step AI-Era loops building a pure return-value position function (`nextObstaclePosition()`), the `requestAnimationFrame` game loop wired to it, and a `gameActive` gate. Socratic Debugging — The Ghost Frame Bug: the tutor places the `gameActive` check AFTER the loop has already scheduled its next frame, so one extra frame runs even after the game-over flag triggers true. Trace why the guard's position inside the function — not just its presence — determines when the loop actually stops.",
     homework: "In the Journal tab under 'Session 9 Homework', write a game loop structure with an active-check gate that prints 'Tick' to console, a recursive call, and a method to halt execution (+50 XP).",
     ethics: "Hook Loops and Addictive Patterns: Fortnite's 'Battle Pass' system and continuous reward loops have been linked to documented cases of gaming addiction in minors, prompting regulatory investigations. How do fast feedback loops in games keep users hooked, and what's our responsibility as designers?",
-    adaptations: "Age 13-16: Discuss the ethics of tuning a game's reward loop for engagement vs. designing it for a satisfying, bounded play session."
+    adaptations: "Age 13-16: Discuss the ethics of tuning a game's reward loop for engagement vs. designing it for a satisfying, bounded play session.",
+    exerciseGuide: [
+      {
+        num: "9.1",
+        title: "Exercise 9.1: The Loop Countdown",
+        concept: "For Loop Review — the Baseline Before Recursion",
+        prompt: "Write a JavaScript for loop that logs 'tickCount: ' followed by the current count, running for values 0 through 4.",
+        outputCode: "for (let i = 0; i <= 4; i++) {\n  console.log('tickCount:', i);\n}"
+      },
+      {
+        num: "9.2",
+        title: "Exercise 9.2: The Recursive Countdown",
+        concept: "Same Task, Recursion Instead of a Loop",
+        prompt: "Write a JavaScript function tickRecursive(n) that logs 'tickCount: ' + n, then calls tickRecursive(n + 1) again only if n is less than 4. Call tickRecursive(0) to start it.",
+        outputCode: "function tickRecursive(n) {\n  console.log('tickCount:', n);\n  if (n < 4) {\n    tickRecursive(n + 1);\n  }\n}\n\ntickRecursive(0);"
+      },
+      {
+        num: "9.3",
+        title: "Exercise 9.3: The Recursive Predictor",
+        concept: "Recursion That Returns a Computed Value (True Stack-Based Recursion)",
+        prompt: "Write a function predictPosition(startY, speed, ticksRemaining) that returns startY once ticksRemaining is 0, otherwise returns predictPosition(startY + speed, speed, ticksRemaining - 1). Call it with a few example values and console.log each result.",
+        outputCode: "function predictPosition(startY, speed, ticksRemaining) {\n  if (ticksRemaining === 0) {\n    return startY;\n  }\n  return predictPosition(startY + speed, speed, ticksRemaining - 1);\n}\n\nconsole.log(predictPosition(0, 10, 3));\nconsole.log(predictPosition(50, 5, 10));\nconsole.log(predictPosition(100, 20, 0));"
+      },
+      {
+        num: "9.4",
+        title: "Exercise 9.4: Recursion in the Game",
+        concept: "Return-Value Recursion + Self-Scheduling (requestAnimationFrame) + Guard-First, Applied to a Real Element",
+        prompt: "Write a pure function nextObstaclePosition(y, speed, resetY, wrapY) that returns the next position, an outer frameCount, gameActive, obstacleY, and score all declared and initialized, and a gameLoop() that checks gameActive FIRST (returning immediately if false), assigns nextObstaclePosition()'s result to obstacleY and moves #obstacle to match, adds 10 to score whenever a wrap happens, increments frameCount, and calls requestAnimationFrame(gameLoop) to schedule its own next call. Call gameLoop() once to start it.",
+        outputCode: "// 9.3's predictPosition() returned a value computed by calling itself directly.\n// gameLoop() does the same kind of return-value math (nextObstaclePosition), but\n// instead of calling itself again immediately, it schedules its NEXT call via\n// requestAnimationFrame — so it keeps running over time instead of just once.\n\nlet obstacleY = -100;\nlet gameActive = true;\nlet score = 0;\nlet frameCount = 0;\n\nfunction nextObstaclePosition(y, speed, resetY, wrapY) {\n  const next = y + speed;\n  if (next > wrapY) {\n    return resetY;\n  }\n  return next;\n}\n\nfunction gameLoop() {\n  if (!gameActive) return;\n\n  const next = nextObstaclePosition(obstacleY, 20, -100, 500);\n  if (next === -100) {\n    score += 10;\n  }\n  obstacleY = next;\n  document.getElementById('obstacle').style.top = obstacleY + 'px';\n\n  frameCount++;\n  console.log('frameCount:', frameCount);\n\n  requestAnimationFrame(gameLoop);\n}\n\ngameLoop();"
+      }
+    ]
   },
   {
     id: "l1-s10",

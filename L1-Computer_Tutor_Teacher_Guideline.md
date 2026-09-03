@@ -879,6 +879,18 @@ The **Project Journal** milestone card ("Lab 8: Modular Control Functions") trac
 > **Content note (2026-08-05):** This session was moved to real AI-Auditor grading and goal-stated instructions (see the Lab Track's **Grading note** above) — **Verify now grades the Prompt box only**. Its old 5th "combine everything" capstone exercise (9.5, "The Complete Animation Engine") was dropped as a duplicate of this session's own Project Task, which already asks for more (animating the student's own real `#obstacle` element from Sessions 2-3, using their own track height instead of a fixed 500). The sandbox now has **4 exercises**, not 5. This pass also found that the shared JS sandbox only pre-declares `carX`/`speed` as globals — `obstacleY`, `score`, and `gameActive` aren't pre-existing here, and each exercise's Output Code box is tested standalone. Exercises 9.2 and 9.4's text now says so explicitly and asks the AI to declare/initialize those values (and, for 9.1/9.2, call the loop once) so the Preview actually runs instead of throwing a "not defined" error.
 >
 > **Content note (2026-08-28):** 9.1-9.3 redesigned harder, mirroring the Session 8 pass: 9.1 now builds a genuine pure, **return-value** function (`nextObstaclePosition()`) instead of a `gameLoop()` that both computes and renders in one step; 9.2's bug is now a subtler ordering mistake — the `gameActive` guard exists but runs AFTER `requestAnimationFrame(gameLoop)` has already re-queued a frame, letting one "ghost frame" through, rather than the guard being simply absent; 9.3 wires that return value into a `gameLoop()` alongside a `frameCount` that must live OUTSIDE the recursive function to actually accumulate across calls (declaring it inside resets it every frame) — a fresh application of the local-vs-global-scope idea from Session 8, now in a recursive-function context. 9.4 combines every piece into one engine (still short of the Project Task's own-track-height requirement, so the two don't overlap). Because 9.1 has no `requestAnimationFrame`/DOM code at all, its sandbox tab now shows a **Console Output**-only panel instead of the (always-idle) racing track, matching the 8.1/S10/S12 precedent.
+>
+> **Content note (2026-09-03):** all 4 exercises' instructions now explicitly tell the student to complete the work by writing their own prompt and pasting back whatever code the AI returns — not by hand-editing or debugging the code themselves; if the result isn't right, the instruction directs them to describe what happened back to the AI and ask it to fix it. This applies the standing platform policy that debugging-as-a-taught-skill is deliberately deferred to a later level (Session 9's exercises, especially 9.2's guard-ordering bug and 9.4's synthesis, could otherwise read as "find and fix this yourself"). A **📘 Teacher Exercise Guide & Reference Solutions** block (worked reference prompt + real generated code per exercise, driven by `exerciseGuide` in `src/curriculumData.js`) was also added below, matching the Session 6-8 precedent — Session 9 previously had none.
+>
+> **Content note (2026-09-03, later same day):** the topic itself (animation loop, Project Task, exercises, sequence into Session 10) is unchanged — only the objectives and Board Lesson gained a 4th, explicit **JS Syntax Focus**: function-declaration/`return` syntax, the `if (!gameActive) return;` guard read line by line, and the `let`-inside-vs-outside syntax distinction that determines whether a variable resets or persists across recursive calls. This session's exercises already exercised all three patterns; the change makes the syntax itself an explicit talking point on the board, not just something students pick up incidentally while building the loop.
+>
+> **Content note (2026-09-03, exercise restructure):** the old 9.1 (`nextObstaclePosition()`) jumped straight into the game loop's math without ever isolating WHY a self-scheduling function behaves differently from a Session 7 for/while loop — a function that finishes, returns, and only THEN schedules its own next call, rather than running every repeat back-to-back in one pass. **New Exercise 9.1, "The Self-Scheduling Tick,"** strips that mechanism down to a bare, DOM-free `tick()`/`setTimeout` demo before any game math or DOM code appears. The old 9.1-9.3 shifted down to become 9.2-9.4: old 9.1 (return-value function) is now 9.2, old 9.2 (Ghost Frame Bug) is now 9.3 and now explicitly opens by naming that `gameLoop()` "uses the exact same self-scheduling pattern as tick() from Exercise 9.1." Old 9.3 ("Wiring the Return Value into a Persisting Loop") was dropped as a standalone exercise — its job (assign the return value, persist frameCount) is what the new 9.4 already does as the final combine, so keeping both would have re-duplicated the same build twice in a row. **Still 4 exercises, not 5.** 9.1 AND 9.2 now both have no `requestAnimationFrame`/DOM code at all, so both get the **Console Output**-only panel (previously only 9.1 did); 9.3-9.4 keep the **Live Racing Game Preview**.
+>
+> **Content note (2026-09-03, full rebuild — supersedes the pass immediately above):** the isolated `tick()`/`setTimeout` demo alone still didn't actually teach recursion — it never contrasted recursion against the loop mechanism students already know from Session 7, and it skipped recursion's classic textbook shape (a function calling itself with an updated argument, stopping at a condition) entirely in favor of jumping straight to the advanced async/self-scheduling variant. **All 4 exercises rebuilt around one explicit progression: loop → same task via recursion → recursion over time (the advanced form) → recursion applied to the real game.** **9.1, "The Loop Countdown,"** is a plain Session-7-style `for` loop logging 0-4 — the familiar baseline, all repeats running immediately, back-to-back. **9.2, "The Recursive Countdown,"** builds the IDENTICAL result (`tickRecursive(n)`, verified to log the exact same 5 values) via a function calling itself instead of a loop — direct side-by-side contrast, same output, different mechanism. **9.3, "Recursion Over Time,"** is the old `tick()`/`setTimeout` demo, now explicitly framed as the *advanced* form recursion takes for a real game loop — calls happen LATER instead of immediately, which is why 9.2's parameter-passing trick stops working and an outer-scope `tickCount` becomes necessary. **9.4, "Recursion in the Game,"** applies 9.3's exact self-scheduling shape to the real `gameLoop()`, folding in the old "Ghost Frame Bug" guard-ordering lesson as a construction requirement (guard checked first, by design) rather than a seeded-bug hunt — consistent with the platform's standing "no manual debugging yet" policy. **Still 4 exercises, not 5.** 9.1-9.3 are now ALL DOM-free, so all three get the **Console Output**-only panel; only 9.4 keeps the **Live Racing Game Preview**.
+>
+> **Content note (2026-09-03, 9.3 simplified):** `tick()`'s self-call via `setTimeout` is technically NOT the same mechanism as 9.2's `tickRecursive()` — it never grows a call stack (each invocation starts and fully finishes before the next is even scheduled), unlike 9.2's nested, stack-based calls that unwind at a base case. The pattern does have a real name in JS developer culture ("recursive setTimeout," a documented `setInterval` alternative), so calling it recursive isn't wrong — but the exercise's old Explain question ("why doesn't 9.2's parameter-passing approach work here?") asked students to reason abstractly about that call-stack distinction from scratch, which tested too hard. **Renamed 9.3 to "Recursion That Waits"** and rewrote its Explain step to be observational instead of abstract: watch the Console Output and notice whether values appear instantly (like 9.2) or with a visible gap between them, and explain why — something a student can actually see, not just infer.
+>
+> **Content note (2026-09-03, 9.3 swapped for a genuinely recursive sample):** the wording fix above wasn't enough — the underlying SAMPLE CODE (`tick()`/`setTimeout`) was still the ambiguous "recursive setTimeout" mechanism, not the same recursion as 9.2. **9.3's code was replaced entirely** with `predictPosition(startY, speed, ticksRemaining)` — genuine synchronous, stack-based recursion (calls itself directly, builds and unwinds a real call stack, no `setTimeout` anywhere) that RETURNS a computed value, unlike 9.2's void-logging `tickRecursive()`. This is unambiguously the same recursion mechanism as 9.2, just more advanced (computing and handing back an answer instead of only printing), and it's thematically tied to the game (predicting the obstacle's future position). Since 9.3 no longer sets up self-scheduling at all, **9.4 now introduces `requestAnimationFrame` fresh and self-contained** — its Explain step asks why `gameLoop()` needs `requestAnimationFrame` instead of calling itself directly the way 9.2/9.3 did (answer: calling directly would run every call instantly with no timing control and risk a runaway stack; `requestAnimationFrame` waits for the current call to finish, then schedules the next one only once the browser is ready to repaint). **9.1-9.3 remain all DOM-free**, so all three keep the **Console Output**-only panel; only 9.4 keeps the **Live Racing Game Preview**.
 
 ### Minute-by-Minute Timeline
 * **00:00 - 00:15 | Warm-Up**: Frames vs Timers Match
@@ -891,6 +903,7 @@ The **Project Journal** milestone card ("Lab 8: Modular Control Functions") trac
 ### 1. Board Lesson Talking Points
 * **The Animation Loop**: Explain that games are animations drawn 60 times a second. We clear coordinates, run updates, and redraw elements.
 * **requestAnimationFrame**: Directs the browser engine to run updates before rendering the next display frame.
+* **JS Syntax Focus**: Walk the board through the actual syntax the loop is built from — a function declaration with `return` (`function name(params) { ...; return value; }`, and what it means for `return` to hand a value back to whoever called it); the `if (!gameActive) return;` early-return guard, read line by line; and the syntax difference between `let x` written INSIDE a function body (re-declared, and reset, on every call) versus OUTSIDE it (declared once, keeps its value across every call).
 
 ### 2. Socratic Prompting
 * *"Why does using a while loop for game updates lock the browser tab, but requestAnimationFrame runs smoothly?"* (A while loop blocks the execution thread. requestAnimationFrame yields control back to the browser between frames).
@@ -898,24 +911,105 @@ The **Project Journal** milestone card ("Lab 8: Modular Control Functions") trac
 
 ### 3. Digital Sandbox Exercises & Solutions
 
-Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content note above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. Exercise 9.1's `nextObstaclePosition()` is a pure function with no DOM code at all, so it gets a **Console Output**-only panel instead of the racing track; 9.2-9.4 all move `#obstacle` via the animation loop, so they keep the **Live Racing Game Preview**. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness).
+Students complete **4 exercises** (the old 5th "combine everything" capstone was dropped — see the Content notes above), each with 3 boxes: **1) Plan & Design**, **2) Write the AI Prompt & Paste the Output Code**, **3) Explain the Output Code**. Exercises 9.1-9.3 are all DOM-free (a loop, a recursive function that only logs, and a recursive function that returns a computed value — none of them touch the racing track), so all three get a **Console Output**-only panel; only 9.4 moves `#obstacle` via the real animation loop, so it's the only one that keeps the **Live Racing Game Preview**. **Verify grades the Prompt box only**, on prompt-writing quality (clarity, specificity, completeness).
 
-* **Exercise 9.1: The Return-Value Position Stepper**
-  * *Goal given to the student:* build a pure function `nextObstaclePosition(y, speed, resetY, wrapY)` that **returns** `y + speed` normally, or `resetY` once that would pass `wrapY`, with no `requestAnimationFrame`/DOM code inside it, then call it with a few example values and log each result.
-  * *A strong answer shows:* a self-contained `nextObstaclePosition()` with 4 parameters and a `return` in every branch, demonstrably called; an explanation correctly stating that separating this math from the loop/DOM lets it be tested directly with known inputs, without a running animation or a browser at all.
-  * *Why:* The frame-by-frame math (where should the obstacle go next?) doesn't need to know anything about timers or the DOM — separating it is what makes it testable on its own.
-* **Exercise 9.2: The Ghost Frame Bug**
-  * *Goal given to the student:* given the exact bug (a `gameActive` guard placed AFTER `requestAnimationFrame(gameLoop)` has already re-queued a frame), move the guard to the very first line of `gameLoop()`, before anything else runs.
-  * *A strong answer shows:* the guard as the first statement in `gameLoop()`, logging and returning before moving the obstacle or scheduling the next frame; an explanation correctly identifying that a guard placed late still lets one "ghost frame" complete before the loop actually stops.
-  * *Why:* Harder than a simply-missing guard — this bug demonstrates that WHERE a check runs inside a function matters as much as whether it exists at all.
-* **Exercise 9.3: Wiring the Return Value into a Persisting Loop**
-  * *Goal given to the student:* build `gameLoop()` so it assigns `nextObstaclePosition()`'s **returned** value to `obstacleY` (moving `#obstacle` to match, bumping `score` on a wrap), guarded on `gameActive`, while logging a `frameCount` declared OUTSIDE the function so it accumulates across every recursive call.
-  * *A strong answer shows:* the return value correctly assigned back into shared state, plus a `frameCount` that climbs every frame because it lives outside `gameLoop()`; an explanation correctly stating that a `frameCount` declared with `let` INSIDE `gameLoop()` would reset to a fresh value on every single call, so it would never actually climb.
-  * *Why:* A recursive function's own local variables don't survive between calls — only variables declared outside it do, which is the same local-vs-global idea from Session 8, now applied to a repeating loop instead of two sibling functions.
-* **Exercise 9.4: Combining It All — The Complete Animation Engine**
-  * *Goal given to the student:* build the complete system — `nextObstaclePosition()` shared with the loop, a `gameActive` guard that's genuinely first, and a `frameCount` that survives across every recursive call, all self-scheduling via `requestAnimationFrame`.
-  * *A strong answer shows:* all 4 pieces defined together and demonstrably working (the obstacle scrolls/wraps, score climbs on wrap, `frameCount` climbs every frame, and the guard halts everything cleanly); an explanation correctly confirming that moving the guard after the `frameCount` increment would still let that increment (and everything else before the guard) run one extra time after Game Over.
-  * *Why:* Every concept from 9.1-9.3 (return value, loop-ordering, persisting outer-scope state) integrated into one working animation engine — one step short of the Project Task's own-track-height version.
+* **Exercise 9.1: The Loop Countdown**
+  * *Goal given to the student:* build a `for` loop that logs a climbing count from 0 to 4, all running immediately, one after another — a Session 7 review, and the baseline the next exercise will contrast against.
+  * *A strong answer shows:* a `for` loop (e.g. `for (let i = 0; i <= 4; i++)`) logging all 5 values; an explanation correctly stating all 5 log lines appear together, immediately, in one continuous pass — no delay between repeats.
+  * *Why:* Recursion needs something concrete to be compared AGAINST. Re-anchoring the loop mechanism here, right before recursion, is what makes Exercise 9.2's "same result, different mechanism" contrast land.
+* **Exercise 9.2: The Recursive Countdown**
+  * *Goal given to the student:* build the exact same 5-line output as Exercise 9.1, but via a function calling ITSELF again (with an updated argument) instead of a loop.
+  * *A strong answer shows:* `tickRecursive(n)` logging `n`, then calling `tickRecursive(n + 1)` only while `n < 4`, started by a single `tickRecursive(0)` call — producing the identical 5 values as 9.1 (verified live: both log 0,1,2,3,4); an explanation correctly identifying that the function's own parameter `n` takes over the loop counter's job, and the `if (n < 4)` check takes over the loop's stopping condition.
+  * *Why:* This is recursion in its classic textbook shape — a function calling itself with an updated argument, stopping at a condition — proven equivalent to a loop on identical input/output before anything about timing or games is introduced.
+* **Exercise 9.3: The Recursive Predictor**
+  * *Goal given to the student:* build a recursive function `predictPosition(startY, speed, ticksRemaining)` that RETURNS the obstacle's position after that many more ticks — no loop, no `console.log` inside the function itself.
+  * *A strong answer shows:* `predictPosition()` returning `startY` once `ticksRemaining` is 0 (the base case), otherwise returning `predictPosition(startY + speed, speed, ticksRemaining - 1)`, demonstrably called and logged; an explanation that correctly traces `predictPosition(0, 10, 3)` call by call — it calls `predictPosition(10, 10, 2)`, which calls `predictPosition(20, 10, 1)`, which calls `predictPosition(30, 10, 0)`, which returns 30, and that 30 flows back up through every waiting call as the final answer (verified live).
+  * *Why:* Exercise 9.2's recursion only ever logged — it never handed anything back. This is recursion doing real computational work: calling itself AND returning a built-up answer, the genuine advanced form of the SAME mechanism as 9.2 (unlike the earlier `setTimeout` version, this one still builds and unwinds a real call stack).
+* **Exercise 9.4: Recursion in the Game**
+  * *Goal given to the student:* build the real animation engine — `nextObstaclePosition()` (a pure, return-value function, the same idea as 9.3's `predictPosition()` but one tick at a time), a `gameActive` guard that's genuinely first, and a `frameCount` that survives across every call — self-scheduling via `requestAnimationFrame`, introduced fresh here.
+  * *A strong answer shows:* all pieces defined together and demonstrably working (the obstacle scrolls/wraps, score climbs on wrap, `frameCount` climbs every frame, and the guard halts everything cleanly); an explanation correctly stating that calling `gameLoop()` directly again (the way 9.2/9.3's functions called themselves) would run every call instantly with no timing control and risk a runaway stack, while `requestAnimationFrame` waits for the current call to finish and return, then schedules the next one only once the browser is ready to draw the next frame.
+  * *Why:* This is the payoff — a return-value function like 9.3's, now combined with a loop that keeps calling itself over time instead of just once, moving something real on screen, with guard-first ordering integrated into one working animation engine.
+
+### 3a. 📘 Teacher Exercise Guide & Reference Solutions
+
+Mirrors the in-app "📘 Teacher Exercise Guide & Reference Solutions" panel (teacher view only, `exerciseGuide` in `src/curriculumData.js`) — one worked reference prompt and its real generated output per exercise, so a teacher can sanity-check a student's own prompt/code against a known-good answer without re-deriving one live.
+
+* **Exercise 9.1: The Loop Countdown** — *For Loop Review — the Baseline Before Recursion*
+  * 🎯 **Reference Prompt:** "Write a JavaScript for loop that logs 'tickCount: ' followed by the current count, running for values 0 through 4."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    for (let i = 0; i <= 4; i++) {
+      console.log('tickCount:', i);
+    }
+    ```
+* **Exercise 9.2: The Recursive Countdown** — *Same Task, Recursion Instead of a Loop*
+  * 🎯 **Reference Prompt:** "Write a JavaScript function tickRecursive(n) that logs 'tickCount: ' + n, then calls tickRecursive(n + 1) again only if n is less than 4. Call tickRecursive(0) to start it."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    function tickRecursive(n) {
+      console.log('tickCount:', n);
+      if (n < 4) {
+        tickRecursive(n + 1);
+      }
+    }
+
+    tickRecursive(0);
+    ```
+* **Exercise 9.3: The Recursive Predictor** — *Recursion That Returns a Computed Value (True Stack-Based Recursion)*
+  * 🎯 **Reference Prompt:** "Write a function predictPosition(startY, speed, ticksRemaining) that returns startY once ticksRemaining is 0, otherwise returns predictPosition(startY + speed, speed, ticksRemaining - 1). Call it with a few example values and console.log each result."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    function predictPosition(startY, speed, ticksRemaining) {
+      if (ticksRemaining === 0) {
+        return startY;
+      }
+      return predictPosition(startY + speed, speed, ticksRemaining - 1);
+    }
+
+    console.log(predictPosition(0, 10, 3));
+    console.log(predictPosition(50, 5, 10));
+    console.log(predictPosition(100, 20, 0));
+    ```
+* **Exercise 9.4: Recursion in the Game** — *Return-Value Recursion + Self-Scheduling (requestAnimationFrame) + Guard-First, Applied to a Real Element*
+  * 🎯 **Reference Prompt:** "Write a pure function nextObstaclePosition(y, speed, resetY, wrapY) that returns the next position, an outer frameCount, gameActive, obstacleY, and score all declared and initialized, and a gameLoop() that checks gameActive FIRST (returning immediately if false), assigns nextObstaclePosition()'s result to obstacleY and moves #obstacle to match, adds 10 to score whenever a wrap happens, increments frameCount, and calls requestAnimationFrame(gameLoop) to schedule its own next call. Call gameLoop() once to start it."
+  * 💻 **Reference Output Code:**
+    ```javascript
+    // 9.3's predictPosition() returned a value computed by calling itself directly.
+    // gameLoop() does the same kind of return-value math (nextObstaclePosition), but
+    // instead of calling itself again immediately, it schedules its NEXT call via
+    // requestAnimationFrame — so it keeps running over time instead of just once.
+
+    let obstacleY = -100;
+    let gameActive = true;
+    let score = 0;
+    let frameCount = 0;
+
+    function nextObstaclePosition(y, speed, resetY, wrapY) {
+      const next = y + speed;
+      if (next > wrapY) {
+        return resetY;
+      }
+      return next;
+    }
+
+    function gameLoop() {
+      if (!gameActive) return;
+
+      const next = nextObstaclePosition(obstacleY, 20, -100, 500);
+      if (next === -100) {
+        score += 10;
+      }
+      obstacleY = next;
+      document.getElementById('obstacle').style.top = obstacleY + 'px';
+
+      frameCount++;
+      console.log('frameCount:', frameCount);
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+    ```
 
 ### 4. Project Task Milestone — Expected Student Answers (3-box format)
 

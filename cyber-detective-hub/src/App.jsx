@@ -3259,47 +3259,47 @@ const S8_EXERCISES = [
 const S9_EXERCISES = [
   {
     num: 1,
-    title: "Exercise 9.1: The Return-Value Position Stepper",
-    problem: "A game loop repeats the same calculation every frame — but the actual math (where should the obstacle go next?) doesn't need to know anything about requestAnimationFrame or the DOM at all. A pure function that takes the current position and hands back the next one keeps that math testable on its own, separate from the loop that will eventually call it. Since this Output Code box runs standalone, also have the AI call the new function with a few example inputs and console.log each result, so you can confirm exactly what it returns without needing a running game loop.",
-    instruction: "Goal: build a pure function that computes and RETURNS the obstacle's next position, without touching requestAnimationFrame or the DOM at all. 1) Plan: name the inputs (parameters) this function needs and what value it should hand back. 2) Prompt: ask the AI for a function nextObstaclePosition(y, speed, resetY, wrapY) that returns y + speed normally, or resetY if that sum would pass wrapY — paste its real code into Output Code and call it with a few test values. 3) Explain: why does keeping this calculation separate from requestAnimationFrame and the DOM make it easier to test on its own?",
-    planPlaceholder: "Name nextObstaclePosition()'s 4 parameters (y, speed, resetY, wrapY) and what value it hands back.",
+    title: "Exercise 9.1: The Loop Countdown",
+    problem: "Before this session's game loop, see the two different ways JavaScript can repeat something. Session 7 already covered this one: a for loop repeats a block of code a fixed number of times, all back-to-back, immediately — no waiting between repeats. Build that familiar version first, so Exercise 9.2 can build the exact same result a completely different way. Since this Output Code box runs standalone, ask for the loop only — nothing else.",
+    instruction: "Goal: build a for loop that logs a climbing count from 0 to 4, all running immediately, one after another. 1) Plan: name the loop's 3 parts (starting value, stopping condition, how it changes each pass) and what gets logged on each pass. 2) Prompt: ask the AI for a for loop that logs 'tickCount: ' followed by the current count, running for values 0 through 4. 3) Explain: when do all 5 log lines appear relative to each other — one at a time over several seconds, or all together, immediately? Complete this by writing your own prompt and pasting back whatever code the AI gives you — don't hand-edit or debug the code yourself. If the result isn't right, describe what happened to the AI and ask it to fix it.",
+    planPlaceholder: "Name the loop's 3 parts (start, stop condition, how it changes each pass) and what gets logged on each pass.",
     promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "nextObstaclePosition(y, speed, resetY, wrapY) should be a pure function with 4 parameters that returns y + speed normally, or resetY once that sum would exceed wrapY, with no requestAnimationFrame or DOM code inside it at all. The explanation should correctly say separating this math from the loop/DOM lets it be tested directly with known inputs and expected outputs, without needing a running animation or a browser at all. Don't require the literal function name or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "A for loop (e.g. for (let i = 0; i <= 4; i++)) that logs a climbing count for values 0 through 4. The explanation should correctly say all 5 log lines appear together, immediately, in one continuous pass — a for loop runs every repeat back-to-back with no delay between them. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 2,
-    title: "Exercise 9.2: The Ghost Frame Bug",
-    problem: "Bug: gameLoop() DOES check gameActive — but the check comes AFTER requestAnimationFrame(gameLoop) has already been called again, so one more 'ghost' frame is already queued and will run even after the game has technically ended. Guarding late is barely better than not guarding at all. Since this Output Code box is tested on its own, ask for the complete gameLoop() (with the misplaced guard) — not just the guard line — plus obstacleY/gameActive declared and initialized (there's a single #obstacle element, not an array), and a call to start the loop, so you can watch the ghost frame happen in the Preview before fixing it.",
-    instruction: "Goal: move the gameActive guard to the very first line of gameLoop(), before anything else runs. 1) Plan: explain why checking gameActive AFTER already scheduling the next frame still lets one more frame through. 2) Prompt: ask the AI to move the gameActive check to the top of gameLoop(), returning immediately — before moving the obstacle OR scheduling the next frame — if it's false, plus a console.log(\"Loop halted\") right before that return — paste the fixed code into Output Code and run it. 3) Explain: why must the guard be the very FIRST thing the function does, not just present somewhere in the function?",
-    planPlaceholder: "Why does checking gameActive AFTER calling requestAnimationFrame(gameLoop) still let one more frame run?",
-    promptPlaceholder: "Describe the bug and what you want fixed, in your own words.",
-    outputCodePlaceholder: "Paste the AI's fixed code here.",
+    title: "Exercise 9.2: The Recursive Countdown",
+    problem: "Same result as Exercise 9.1 — log a climbing count from 0 to 4 — but built a completely different way: instead of a loop repeating itself, a function calls ITSELF again, each time with an updated value, until it decides to stop. This is the core idea behind recursion: a function that is part of its own definition. Since this Output Code box runs standalone, ask for the complete function plus the call that starts it.",
+    instruction: "Goal: build a function that logs the same climbing count as Exercise 9.1, but by calling itself again instead of using a loop. 1) Plan: what value does this function need to pass to itself on each call, and what condition tells it to stop calling itself? 2) Prompt: ask the AI for a function tickRecursive(n) that logs 'tickCount: ' + n, then calls tickRecursive(n + 1) again ONLY if n is less than 4 — then a line that calls tickRecursive(0) to start it. 3) Explain: compare this to your 9.1 loop — do they produce the same 5 log lines? What in this function replaces the loop's own counter and stopping condition? Complete this by writing your own prompt and pasting back whatever code the AI gives you — don't hand-edit or debug the code yourself. If the result isn't right, describe what happened to the AI and ask it to fix it.",
+    planPlaceholder: "What value does tickRecursive() pass to itself each call, and what condition stops it from calling itself again?",
+    promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
+    outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The gameActive guard must be the very first line inside gameLoop(), logging something like 'Loop halted' and returning immediately — before moving the obstacle or calling requestAnimationFrame again. A guard placed after either of those still lets that one frame complete. The explanation should correctly say order matters: checking late still allows one 'ghost' frame to run before the loop actually stops. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "tickRecursive(n) should log 'tickCount: ' + n, then call itself again as tickRecursive(n + 1) only while n is less than 4, started by a single tickRecursive(0) call — producing the exact same 5 values as Exercise 9.1's loop. The explanation should correctly say the output is identical to 9.1's; the function's own parameter n takes over the loop counter's job, and the if (n < 4) check takes over the loop's stopping condition — recursion can do the same repeating job as a loop, just by a function calling itself with an updated argument instead of a loop variable incrementing. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 3,
-    title: "Exercise 9.3: Wiring the Return Value into a Persisting Loop",
-    problem: "nextObstaclePosition() from Exercise 9.1 only computes an answer — nothing moves on screen until gameLoop() takes that returned number and assigns it to the shared obstacleY, then applies it to the real #obstacle element. This is also where a frame counter earns its keep: declared OUTSIDE gameLoop(), it accumulates across every recursive call; declared inside, it would reset to the same value every single frame, since each call starts the function fresh. Since this Output Code box is tested on its own, ask for nextObstaclePosition() defined again in this same snippet, gameLoop() built using it (guarded on gameActive), an outer frameCount, and obstacleY/gameActive/score declared and initialized, plus a call to start the loop.",
-    instruction: "Goal: build gameLoop() so it assigns nextObstaclePosition()'s RETURNED value to obstacleY, moves #obstacle to match, adds 10 to score on every wrap, and logs a frameCount declared outside the function. 1) Plan: plan the assignment — what does gameLoop() do with the number nextObstaclePosition() hands back? Where must frameCount live to actually accumulate? 2) Prompt: ask the AI to wire this together — paste its real code into Output Code and run it, watching frameCount climb every frame. 3) Explain: if frameCount were declared with let INSIDE gameLoop() instead of outside it, what would its logged value be on every single frame?",
-    planPlaceholder: "Plan: what does gameLoop() DO with the number nextObstaclePosition() returns? Where must frameCount be declared to keep counting?",
-    promptPlaceholder: "Describe the goal to the AI, in your own words.",
+    title: "Exercise 9.3: The Recursive Predictor",
+    problem: "Exercise 9.2's recursion only ever logged values — it never handed anything back. Recursion can do more than that: a function can call itself AND return a real, computed answer, built up across every nested call. Given the obstacle's starting position and speed, predict exactly where it will be after a certain number of ticks — using ONLY recursion to compute and return that answer, no loop involved. Since this Output Code box runs standalone, ask for the function plus a few example calls that log what it returns.",
+    instruction: "Goal: build a recursive function predictPosition(startY, speed, ticksRemaining) that RETURNS the obstacle's position after that many more ticks — no loop, no console.log inside the function itself. 1) Plan: what should this function return once ticksRemaining reaches 0 (the base case)? What changes on each recursive call on the way there? 2) Prompt: ask the AI for a function predictPosition(startY, speed, ticksRemaining) that returns startY once ticksRemaining is 0, otherwise returns predictPosition(startY + speed, speed, ticksRemaining - 1) — then call it with a few example values (like predictPosition(0, 10, 3)) and console.log each result. 3) Explain: trace predictPosition(0, 10, 3) by hand, call by call — what does each nested call return, and what's the final answer? Complete this by writing your own prompt and pasting back whatever code the AI gives you — don't hand-edit or debug the code yourself. If the result isn't right, describe what happened to the AI and ask it to fix it.",
+    planPlaceholder: "What should predictPosition() return when ticksRemaining reaches 0? What changes on each recursive call?",
+    promptPlaceholder: "Write your own prompt for the goal above — describe what you want in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "gameLoop() must assign nextObstaclePosition()'s return value into obstacleY (and move #obstacle to match, adding 10 to score on a wrap), guarded by gameActive at the top, while frameCount is declared OUTSIDE gameLoop() so it persists and increments across every recursive call. The explanation should correctly say a frameCount declared with let INSIDE gameLoop() would reset to a fresh value every single call, so it would always log the same number (e.g. always 1) instead of climbing. Don't require the literal code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "predictPosition(startY, speed, ticksRemaining) should return startY once ticksRemaining is 0 (the base case), otherwise return predictPosition(startY + speed, speed, ticksRemaining - 1) — a genuinely recursive function that RETURNS a computed value, unlike 9.2's tickRecursive() which only logged. The explanation should correctly trace predictPosition(0, 10, 3): it calls predictPosition(10, 10, 2), which calls predictPosition(20, 10, 1), which calls predictPosition(30, 10, 0), which returns 30 — and that 30 then flows back up through every waiting call as the final answer. Don't require the literal code in the plan/prompt prose — judge the reasoning."
   },
   {
     num: 4,
-    title: "Exercise 9.4: Combining It All — The Complete Animation Engine",
-    problem: "Every piece from 9.1-9.3 belongs in one final loop: a pure, return-based nextObstaclePosition() driving the obstacle's motion, a gameActive guard that's genuinely first, and a frameCount that survives across every recursive call — this is the actual shape of a real game loop. Since this Output Code box is tested on its own, ask for every piece defined together in this same snippet so it runs standalone in the Preview.",
-    instruction: "Goal: build the complete animation engine using every piece from this session. 1) Plan: list the 4 pieces this system needs and their call order (guard check -> nextObstaclePosition -> move #obstacle/score -> frameCount -> schedule next frame). 2) Prompt: ask the AI for nextObstaclePosition(y, speed, resetY, wrapY) (returns the next position), an outer frameCount and gameActive, and a gameLoop() that: returns immediately if gameActive is false (checked FIRST), assigns nextObstaclePosition()'s result to obstacleY and moves #obstacle to match, adds 10 to score whenever a wrap happens, increments the outer frameCount, and calls requestAnimationFrame(gameLoop) — paste its real code into Output Code and run it. 3) Explain: if the gameActive guard were placed after the frameCount increment instead of before it, would frameCount still climb for one extra frame after Game Over?",
-    planPlaceholder: "List the 4 pieces and their call order, plus where gameActive is checked and where frameCount lives.",
+    title: "Exercise 9.4: Recursion in the Game",
+    problem: "This is exactly how the real racing game works, combining everything from this session: a pure function computes the obstacle's next position and returns it — the same idea as Exercise 9.3's predictPosition(), just one tick at a time instead of several ticks ahead. But a real game needs this to keep happening, forever, in sync with the screen — so instead of calling itself again immediately (like 9.2 and 9.3 did), gameLoop() calls requestAnimationFrame(gameLoop) to schedule ANOTHER call to itself once the browser is ready to draw the next frame. Since this Output Code box is tested on its own, ask for every piece defined together in this same snippet so it runs standalone in the Preview.",
+    instruction: "Goal: build the real animation engine, combining a return-value function (like 9.3's predictPosition()) with a loop that keeps calling itself over time instead of just once. 1) Plan: list the pieces this needs and their call order (guard check -> compute next position -> move #obstacle/score -> frameCount -> schedule next frame). 2) Prompt: ask the AI for a pure function nextObstaclePosition(y, speed, resetY, wrapY) that returns the next position (one tick's worth), an outer frameCount, gameActive, obstacleY, and score all declared and initialized, and a gameLoop() that: returns immediately if gameActive is false (checked FIRST, before anything else runs), assigns nextObstaclePosition()'s result to obstacleY and moves #obstacle to match, adds 10 to score whenever a wrap happens, increments frameCount, and calls requestAnimationFrame(gameLoop) to schedule its own next call — paste its real code into Output Code and run it. 3) Explain: gameLoop() calls itself, just like 9.2's and 9.3's functions did — so why does it need requestAnimationFrame instead of just calling gameLoop() directly again inside itself? Complete this by prompting the AI for the full engine and pasting back its real code — don't hand-edit or debug the code yourself. If something's wrong, describe what happened to the AI and ask it to fix it.",
+    planPlaceholder: "List the pieces and their call order, plus where gameActive is checked and where frameCount lives.",
     promptPlaceholder: "Describe the goal to the AI, in your own words.",
     outputCodePlaceholder: "Paste the actual code the AI generated from your prompt here.",
     runnable: true,
-    expectedConcepts: "The final gameLoop() should check gameActive first (returning immediately if false, before anything else), then assign nextObstaclePosition()'s return value to obstacleY (moving #obstacle and bumping score on wrap), increment an outer, persisting frameCount, and re-schedule itself via requestAnimationFrame — the same 4 pieces from 9.1-9.3 integrated into one loop. The explanation should correctly say YES — placing the guard after the frameCount increment would still let frameCount (and everything before the guard) execute one extra time after gameActive becomes false. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
+    expectedConcepts: "gameLoop() should check gameActive FIRST (returning immediately if false, before anything else), assign a pure nextObstaclePosition()'s return value to obstacleY (moving #obstacle and bumping score on wrap), increment an outer, persisting frameCount, and re-schedule itself via requestAnimationFrame — combining 9.3's return-value recursion with a loop that keeps calling itself over time instead of just once. The explanation should correctly say calling gameLoop() directly again (the way 9.2's and 9.3's functions called themselves) would run every call instantly, back-to-back, with no timing control at all — risking a runaway stack of nested calls and never syncing with the screen's actual repaint; requestAnimationFrame instead waits for the current call to finish and return, then schedules the next one only once the browser is ready to draw the next frame. Don't require the literal numbers or exact code in the plan/prompt prose — judge the reasoning."
   }
   // Note (2026-08-05): a 5th "combine everything into the complete animation engine"
   // capstone exercise used to live here, but it duplicated this session's Project Task
@@ -3310,9 +3310,41 @@ const S9_EXERCISES = [
   // (nextObstaclePosition) and a harder loop-ordering bug (guard placed after scheduling,
   // not simply missing), plus a frameCount that must live outside the recursive function to
   // persist across calls; 9.4 combines every piece into one engine — still short of the
-  // Project Task's own-track-height requirement, so the two don't overlap. 9.1 has no
-  // requestAnimationFrame/DOM code at all, so its sandbox tab shows Console Output only
-  // (see the s9ActiveExercise === 1 branch below), matching the S8.1/S10/S12 precedent.
+  // Project Task's own-track-height requirement, so the two don't overlap.
+  // Redesigned again 2026-09-03 (self-scheduling isolated as new 9.1): superseded by the
+  // pass below the same day — kept only as history in the two curriculum docs.
+  // Redesigned again 2026-09-03 (loop -> recursion -> advanced recursion -> game): the
+  // isolated tick() demo alone didn't actually teach recursion — it never contrasted
+  // recursion against the loop mechanism students already know from Session 7, or showed
+  // recursion's classic "function calls itself with an updated argument, stops at a
+  // condition" shape at all. Full rebuild: 9.1 is a plain for loop (Session 7 review,
+  // establishes the "all repeats happen immediately, back-to-back" baseline). 9.2 builds
+  // the IDENTICAL result via a self-calling function (tickRecursive(n), classic synchronous
+  // recursion with a stopping condition) — same output, direct side-by-side contrast with
+  // 9.1's loop. [9.3's original version at this pass used setTimeout — see the next note,
+  // it was replaced the same day.]
+  // Redesigned again 2026-09-03 (9.3 swapped for a genuinely recursive sample): the
+  // setTimeout version of 9.3 ("recursive setTimeout") isn't actually the same mechanism as
+  // 9.2's call-stack recursion — it never grows a call stack, since each invocation starts
+  // and fully finishes before the next is even scheduled. Even after simplifying the wording
+  // twice, the underlying SAMPLE CODE was still the ambiguous one, so 9.3 was swapped for a
+  // genuinely, unambiguously recursive example instead: predictPosition(startY, speed,
+  // ticksRemaining), true synchronous stack-based recursion (calls itself directly, builds
+  // and unwinds a real call stack, no setTimeout anywhere) that RETURNS a computed value —
+  // unlike 9.2's tickRecursive(), which only logs. This is also a genuine step up in
+  // usefulness from 9.2 (recursion that computes and hands back an answer, not just prints),
+  // and it's thematically tied to the game (predicting the obstacle's future position).
+  // Since 9.3 no longer covers self-scheduling at all, 9.4 now introduces requestAnimationFrame
+  // fresh and self-contained — its own Explain step asks WHY gameLoop() needs
+  // requestAnimationFrame instead of just calling itself directly like 9.2/9.3 did (answer:
+  // calling directly would run instantly with no timing control and risk a runaway stack;
+  // requestAnimationFrame waits for the current call to finish, then schedules the next one
+  // only once the browser is ready to repaint) — folding in the old "Ghost Frame Bug"
+  // guard-ordering lesson as a construction requirement (guard checked first, by design)
+  // rather than a seeded-bug hunt, consistent with the platform's standing "no manual
+  // debugging yet" policy. 9.1-9.3 are all DOM-free (loop/recursion demos with no game
+  // element at all), so all three get the Console Output-only panel — only 9.4 uses the
+  // Live Racing Game Preview (see the s9ActiveExercise <= 3 branch below).
 ];
 
 const S10_EXERCISES = [
@@ -8595,13 +8627,15 @@ export default function App() {
                   </div>
 
                   <div className="glass-panel" style={{ padding: '16px' }}>
-                    <div className="panel-header"><h3>{s9ActiveExercise === 1 ? 'Console Output' : 'Live Racing Game Preview'}</h3></div>
+                    <div className="panel-header"><h3>{s9ActiveExercise <= 3 ? 'Console Output' : 'Live Racing Game Preview'}</h3></div>
                     <div className="sim-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px 0 0' }}>
-                      {/* Only 9.1 (nextObstaclePosition) is a pure function with no DOM code at
-                          all — it never touches obstacleY or #obstacle, so the racing-track
-                          graphic would just sit there implying something should move. 9.2-9.4
-                          all move #obstacle via the animation loop, so they keep the visible track. */}
-                      {s9ActiveExercise === 1 ? (
+                      {/* 9.1 (a plain for loop), 9.2 (tickRecursive(), recursion that only logs),
+                          and 9.3 (predictPosition(), recursion that returns a value) are all
+                          DOM-free — none of them touch obstacleY or #obstacle, so the racing-track
+                          graphic would just sit there implying something should move. Only 9.4
+                          moves #obstacle via the real animation loop, so it's the only one that
+                          keeps the visible track. */}
+                      {s9ActiveExercise <= 3 ? (
                         <iframe
                           srcDoc={buildJsConsoleOnlyPreview(S9_EXERCISES[s9ActiveExercise - 1].runnable ? s9OutputCodeInput : '')}
                           style={{ display: 'none' }}
@@ -8619,7 +8653,7 @@ export default function App() {
                         <div className="state-terminal-logs" style={{ height: '150px', overflowY: 'auto', background: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '4px' }}>
                           {simConsoleLogs.length === 0 ? (
                             <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                              {s9ActiveExercise === 1 ? 'No console output yet. Add console.log(...) to your Output Code to see values here.' : 'Click inside the preview, then press arrow keys to test your code.'}
+                              {s9ActiveExercise <= 3 ? 'No console output yet. Add console.log(...) to your Output Code to see values here.' : 'Click inside the preview, then press arrow keys to test your code.'}
                             </div>
                           ) : simConsoleLogs.map((log, idx) => (
                             <div key={idx} className={`terminal-log-item ${log.type}`} style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
